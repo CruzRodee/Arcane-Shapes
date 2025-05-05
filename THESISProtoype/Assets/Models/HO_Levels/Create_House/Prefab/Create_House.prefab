@@ -117,6 +117,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Create_House
       objectReference: {fileID: 0}
+    - target: {fileID: -6689036041284674117, guid: 72d2e6953d7736f40a0f752bab5507d7,
+        type: 3}
+      propertyPath: m_TagString
+      value: Spell
+      objectReference: {fileID: 0}
     - target: {fileID: -5885616825998823062, guid: 72d2e6953d7736f40a0f752bab5507d7,
         type: 3}
       propertyPath: m_LocalScale.x
