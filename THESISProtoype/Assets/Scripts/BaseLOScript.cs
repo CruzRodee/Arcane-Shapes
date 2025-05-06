@@ -76,6 +76,22 @@ public class BaseLOScript : MonoBehaviour
         obj.transform.position = endPosition;
     }
 
+    protected IEnumerator LocalMoveOverTime(GameObject obj, float duration, Vector3 endLocalPosition)
+    {
+        var startLocalPosition = obj.transform.localPosition;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.localPosition = Vector3.Lerp(startLocalPosition, endLocalPosition, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.localPosition = endLocalPosition;
+    }
+
     protected IEnumerator LocalEulerOverTime(GameObject obj, float duration, Vector3 endEulerAngle)
     {
         var startAngle = obj.transform.localEulerAngles;
