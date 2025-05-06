@@ -76,6 +76,22 @@ public class BaseLOScript : MonoBehaviour
         obj.transform.position = endPosition;
     }
 
+    protected IEnumerator LocalEulerOverTime(GameObject obj, float duration, Vector3 endEulerAngle)
+    {
+        var startAngle = obj.transform.localEulerAngles;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.localEulerAngles = Vector3.Lerp(startAngle, endEulerAngle, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.localEulerAngles = endEulerAngle;
+    }
+
     public virtual void SuccessfulCast()
     {
         //Get animator component

@@ -31,9 +31,6 @@ public class CreateHouseScript : BaseLOScript
         //Change materials to mana material
         house.transform.Find("Object_2").gameObject.GetComponent<Renderer>().material = manaMateriall;
         house.transform.Find("Object_3").gameObject.GetComponent<Renderer>().material = manaMateriall;
-
-        // and deactivate object later
-        house.SetActive(false);
     }
 
     public override void SuccessfulCast()
