@@ -108,6 +108,24 @@ public class BaseLOScript : MonoBehaviour
         obj.transform.localEulerAngles = endEulerAngle;
     }
 
+    protected IEnumerator LightRangeOverTime(GameObject obj, float duration, float endRange)
+    {
+        Light light = obj.GetComponent<Light>();
+        
+        var startRange = light.range;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            light.range = Mathf.Lerp(startRange, endRange, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        light.range = endRange;
+    }
+
     public virtual void SuccessfulCast()
     {
         //Get animator component
