@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 1592474943517757020}
   m_Layer: 0
   m_Name: Thor_Hammer
-  m_TagString: Untagged
+  m_TagString: Spell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
