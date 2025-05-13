@@ -6,7 +6,7 @@ using UnityEngine;
 public class FormulaAnalyzer : MonoBehaviour
 {
     private float evalAnswer = -1; //Contains the answer to the evaluated expression, default: -1
-    private float inputAnswer = -9999; //Contains the answer from player input, default: -9999
+    private string inputAnswer = ""; //Contains the answer from player input, default: "", to be parsed into a float if needed
     private string evalString = "", displayString = ""; //Strings for storing the input, first for eval second for display to UI
     private bool isValidFormula = false; //Contains result of eval
     private bool equMode = false; //If true, user has inputed "=" and formula eval + checking correct answer begins
@@ -21,6 +21,7 @@ public class FormulaAnalyzer : MonoBehaviour
     public bool DEBUG = false;
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
+    public MonoBehaviour gb; //Reference to GB script, assign this during GB Awaken()
     
     // Start is called before the first frame update
     void Start()
@@ -56,35 +57,43 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             //Identical between eval and display
             case "Lpar":
+                if (equMode) break;
                 evalString += "(";
                 displayString += "(";
                 break;
             case "Rpar":
+                if (equMode) break;
                 evalString += ")";
                 displayString += ")";
                 break;
             case "dec":
-                evalString += ".";
+                if (!equMode)
+                    evalString += ".";
                 displayString += ".";
                 break;
             case "min":
+                if (equMode) break;
                 evalString += "-";
                 displayString += "-";
                 break;
             case "plu":
+                if (equMode) break;
                 evalString += "+";
                 displayString += "+";
                 break;
             //Different between eval and display
             case "div":
+                if (equMode) break;
                 evalString += "/";
                 displayString += "\u00f7";
                 break;
             case "tim":
+                if (equMode) break;
                 evalString += "*";
                 displayString += "\u00d7";
                 break;
             case "pi":
+                if (equMode) break; //Not 100% sure if pi not needed in answering
                 evalString += input;
                 displayString += "\u03C0";
                 break;
@@ -101,21 +110,52 @@ public class FormulaAnalyzer : MonoBehaviour
                 
                 if (!equMode)
                 {
+                    //Add symbol to dispLay but not eval
+                    displayString += "=";
+
                     //Call EvaluateFormula and GetFormulaShape(Maybe, needs testing since not sure where to call)
                     EvaluateFormula();
                     if (DEBUG && isValidFormula) //Also need to check if valid formula
                         Debug.Log("FA: Formula Shape is " + GetFormulaShape());
-                    //Flag equMode to start getting input answer
+                    //Flag equMode to start getting input answer if valid formula
+                    if(isValidFormula)
+                        equMode = true;
+                    else if (!isValidFormula) //Reset analyzer if invalid
+                    {
+                        if (DEBUG)
+                        {
+                            Debug.Log("FA: Invalid input, try again");
+                        }
+                        ResetAnalyzer();
+                    }
                 }
                 else if (equMode)
                 {
+                    //Compare evalAnswer and inputAnswer, send to GB script if equal
+                    if (CheckInputAnswer())
+                    {
+                        //Reset Analyzer to base state if equal
+                        ResetAnalyzer();
+                        break; //Early break to stop from running code below
+                    }
 
+                    //Else reset inputAnswer and remove all nums after = in displayAnswer to try again
+                    ResetInputAns();
+                    displayString = displayString.Remove(displayString.IndexOf("=") + 1);
+                    if (DEBUG)
+                    {
+                        DebugDisplay();
+                        Debug.Log("displayString length: " + displayString.Length);
+                    }
                 }
                     break;
             //Numbers
             default:
-                evalString += input;
+                if(!equMode) //Dont add if in equMode
+                    evalString += input;
                 displayString += input;
+                if (equMode) //In equMode,
+                    inputAnswer += input;
                 break;
         }
 
@@ -123,15 +163,37 @@ public class FormulaAnalyzer : MonoBehaviour
             DebugDisplay();
     }
 
-    private void CheckUserAnswer()
+    private bool CheckInputAnswer()
     {
         //TODO: USE THIS METHOD TO CHECK IF USER SOLVED MATH INPUT CORRECTLY
+        if(evalAnswer.ToString() == inputAnswer)
+        {
+            //TODO: send a message or activate a method in GB that
+
+            //DEBUG
+            if (DEBUG)
+            {
+                DebugDisplay();
+                Debug.Log("FA: evalAnswer is same as inputAnswer, sending answer to gb for final check");
+            }
+            
+            //return true
+            return true;
+        }
+
+        //DEBUG
+        if (DEBUG)
+        {
+            DebugDisplay();
+            Debug.Log("FA: evalAnswer not same as inputAnswer, user calcs incorrect or error, try again...");
+        }
+        return false; //Default response
     }
 
     //Evualutaes the string formula with NCalc Expression.Evaluate(), stores answer in evalAnswer formula validity in isValidFormula
     private void EvaluateFormula()
     {
-        if(displayString.Length < 3) //There must be at least 2 vals and 1 operator ergo 3 chars
+        if(displayString.Length - 1 < 3) //There must be at least 2 vals and 1 operator ergo 3 chars, reduce length by 1 to remove "="
         {
             isValidFormula = false; //Formula not valid if exception
             if (!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
@@ -175,7 +237,7 @@ public class FormulaAnalyzer : MonoBehaviour
     }
     private void ResetInputAns()
     {
-        inputAnswer = -9999;
+        inputAnswer = "";
     }
     private void ResetString()
     {
@@ -311,6 +373,6 @@ public class FormulaAnalyzer : MonoBehaviour
         if (!DEBUG) //Do nothing if not debug mode
             return;
         Debug.Log("evalString: " + evalString + " | displayString: " + displayString + " | sideA: " + sideA);
-        Debug.Log("isValidFormula: " + isValidFormula + " | answer: " + evalAnswer + " | sideB: " + sideB);
+        Debug.Log("isValidFormula: " + isValidFormula + " | evalAnswer: " + evalAnswer + " | inputAnswer: " + inputAnswer + " | sideB: " + sideB);
     }
 }
