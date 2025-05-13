@@ -55,7 +55,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private float timer = 0f;
     private bool clear = false;
     private bool hasDrawn = false; //Prevents the OCR from starting before drawing
-    private bool processing = false; //Stops drawing if needed
+    public bool processing = false; //Stops drawing if needed
 
     //Variable for OCR model in .onnx and the model and worker vars
     public ModelAsset OCRModel;
@@ -67,6 +67,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private LineRenderer line; //Store LR component of above on Start()
     private Vector3 previousPosition, currentPosition; //Variables for VFX line positions
     public float vfxLineMinDistance = 0.1f;
+    public float vfxLinePlaneOffset = 0.01f; //Offset from drawing plane, change if not visible
     private List<GameObject> vfxLineClones;
 
     //Local raycast variables turned into fields
@@ -85,6 +86,10 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
     //Path to OCR input image
     private string path;
+
+    //GameObject that contains the script for processing OCR output
+    public GameObject outputProcessor;
+    private FormulaAnalyzer fa;
 
     private void Start()
     {
@@ -109,6 +114,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
         //Init OCR model
         runtimeModel = ModelLoader.Load(OCRModel);
+
+        //Get FormulaAnalyzer to avoid repeated GetComponent() calls
+        fa = outputProcessor.GetComponent<FormulaAnalyzer>();
     }
 
     private void Update()
@@ -174,7 +182,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         currentPosition = hit.point; //Draw on raycast hit position
 
         //NOTE: CHANGE SIGN OF OFFSET DEPENDING ON DIRECTION OF CAMERA
-        currentPosition.z = vfxLineGO.transform.position.z + 0.01f; //Spawn line slightly above the OCR and VFX planes
+        currentPosition.z = vfxLineGO.transform.position.z + vfxLinePlaneOffset; //Spawn line slightly above the OCR and VFX planes
 
         //Only add new point if distance to new position is greater than min distance
         if(Vector3.Distance(currentPosition, previousPosition) > vfxLineMinDistance)
@@ -356,7 +364,8 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Debug Only
         Debug.Log("imgClass: " + imgClass);
 
-        //TODO: Add way to transmit the class output, either through message or reference of target object
+        //Transmit the class output, either through message or reference of target object
+        fa.InputString(imgClass);
 
         processing = false; //reset flag
     }
