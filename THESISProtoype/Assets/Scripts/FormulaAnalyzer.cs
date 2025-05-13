@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class FormulaAnalyzer : MonoBehaviour
@@ -25,6 +26,8 @@ public class FormulaAnalyzer : MonoBehaviour
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
     public MonoBehaviour gb; //Reference to GB script, assign this during GB Awaken()
+    public GameObject formulaDispObj; //Insert tmp object here
+    private TextMeshProUGUI formulaDispGUI; //Set this during Start() with get component
     
     // Start is called before the first frame update
     void Start()
@@ -32,6 +35,11 @@ public class FormulaAnalyzer : MonoBehaviour
         //DEBUG
         if(DEBUG)
             Debug.Log("FA: HELLO WORLD");
+
+        //Grab GUI of textmeshpro object
+        formulaDispGUI = formulaDispObj.GetComponent<TextMeshProUGUI>();
+        //Init text for GUI
+        formulaDispGUI.text = "Enter Formula by Drawing on the Board";
     }
 
     // Update is called once per frame
@@ -76,7 +84,10 @@ public class FormulaAnalyzer : MonoBehaviour
 
         //Clear calc display
         calcDispString = "";
-        
+
+        //Update GUI
+        formulaDispGUI.text = calcDispString;
+
         //Store input data in temp
         tempDisp = displayString;
         tempEval = evalString;
@@ -108,6 +119,9 @@ public class FormulaAnalyzer : MonoBehaviour
         isFinalAnswer = tempFinal;
         sideA = tempA;
         sideB = tempB;
+
+        //Update GUI
+        formulaDispGUI.text = displayString;
 
         //Reset flag for calc mode debug
         if (DEBUG) DEBUGCALCFLAG = false; //Set flag for debug
@@ -242,8 +256,15 @@ public class FormulaAnalyzer : MonoBehaviour
                 break;
         }
 
+        //Debug info
         if(!input.Equals("equ"))
             DebugDisplay();
+
+        //Update TMP display
+        if (!calcMode)
+            formulaDispGUI.text = displayString;
+        else if (calcMode)
+            formulaDispGUI.text = calcDispString;
     }
 
     private bool CheckInputAnswer()
@@ -334,7 +355,7 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             //Final eval, check shape
             formulaShape = EvalFormulaShape();
-            if (formulaShape == GameBehaviour.SHAPES.NONE) //If no shape, formula invalid if not calcMode
+            if (formulaShape == GameBehaviour.SHAPES.NONE && !calcMode) //If no shape, formula invalid if not calcMode
                 isValidFormula = false;
             DebugDisplay();
         }
@@ -476,6 +497,15 @@ public class FormulaAnalyzer : MonoBehaviour
         //Store vals as sideA and sideB
         sideA = float.Parse(vals[0]);
         sideB = float.Parse(vals[1]);
+
+        //No shape if there are operators other than *, /, and =
+        foreach (string op in ops) 
+        { 
+            if(op == "-" || op == "+")
+            {
+                return GameBehaviour.SHAPES.NONE;
+            }
+        }
 
         // 1.) if has 0.5 or 1/2 but no pi, is triangle
         if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72")) && !displayString.Contains("\u03C0"))
