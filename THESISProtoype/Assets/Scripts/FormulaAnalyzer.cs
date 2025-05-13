@@ -10,6 +10,7 @@ public class FormulaAnalyzer : MonoBehaviour
     private string evalString = "", displayString = ""; //Strings for storing the input, first for eval second for display to UI
     private bool isValidFormula = false; //Contains result of eval
     private bool equMode = false; //If true, user has inputed "=" and formula eval + checking correct answer begins
+    private GameBehaviour.SHAPES formulaShape = GameBehaviour.SHAPES.NONE;
     public bool isFinalAnswer = false; //Boolean trigger for comparing inputAnswer and evalAnswer to determine if player formula input is good
 
     private float sideA = 0, sideB = 0; //Floats for side legths of shape
@@ -70,6 +71,8 @@ public class FormulaAnalyzer : MonoBehaviour
                 if (!equMode)
                     evalString += ".";
                 displayString += ".";
+                if (equMode)
+                    inputAnswer += ".";
                 break;
             case "min":
                 if (equMode) break;
@@ -113,10 +116,10 @@ public class FormulaAnalyzer : MonoBehaviour
                     //Add symbol to dispLay but not eval
                     displayString += "=";
 
-                    //Call EvaluateFormula and GetFormulaShape(Maybe, needs testing since not sure where to call)
+                    //Call EvaluateFormula
                     EvaluateFormula();
                     if (DEBUG && isValidFormula) //Also need to check if valid formula
-                        Debug.Log("FA: Formula Shape is " + GetFormulaShape());
+                        Debug.Log("FA: Formula Shape is " + formulaShape);
                     //Flag equMode to start getting input answer if valid formula
                     if(isValidFormula)
                         equMode = true;
@@ -201,13 +204,32 @@ public class FormulaAnalyzer : MonoBehaviour
             DebugDisplay();
             return;
         }
-        
+
+        if (DEBUG) Debug.Log("FA: PASS 1");
+
+        //Check if ending char of evalString is a number or ".", if not, invalid formula
+        bool endIsNumber = false;
+        foreach(string val in VALUES)
+        {
+            if (evalString[^1] == val.ToCharArray()[0])
+            {
+                endIsNumber = true;
+                break;
+            }
+        }
+
+        if (!endIsNumber){
+            isValidFormula = false;
+            return;
+        }
+
+        if (DEBUG) Debug.Log("FA: PASS 2");
+
         try
         {
             isValidFormula = ExpressionEvaluator.Evaluate(evalString, out evalAnswer);
             //Round evalAnswer to 2 decimal places, do same for all answers
             evalAnswer = (float)System.Math.Round(evalAnswer, 2);
-            DebugDisplay();
         }
         catch (System.Exception e)
         {
@@ -216,6 +238,14 @@ public class FormulaAnalyzer : MonoBehaviour
             if(!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
                 ResetEvalAns();
 
+            
+        }
+        finally 
+        {
+            //Final eval, check shape
+            formulaShape = EvalFormulaShape();
+            if(formulaShape == GameBehaviour.SHAPES.NONE) //If no shape, formula invalid
+                isValidFormula = false;
             DebugDisplay();
         }
     }
@@ -230,6 +260,7 @@ public class FormulaAnalyzer : MonoBehaviour
         ResetValidForm();
         ResetEquMode();
         ResetFinalAns();
+        ResetFormulaShape();
     }
     private void ResetEvalAns()
     {
@@ -261,6 +292,10 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         isFinalAnswer = false;
     }
+    private void ResetFormulaShape()
+    {
+        formulaShape = GameBehaviour.SHAPES.NONE;
+    }
 
     //Getters
     public float GetEvalAns() //Can be used to get output of calc mode?
@@ -275,9 +310,14 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         return sideB;
     }
+    public GameBehaviour.SHAPES GetFormulaShape()
+    {
+        return formulaShape;
+    }
+
 
     //Returns the shape of the formula
-    public GameBehaviour.SHAPES GetFormulaShape()
+    private GameBehaviour.SHAPES EvalFormulaShape()
     {
         //Store in duplicate string and remove all 0.5 or 1/2 or pi from duplicate string to easily find vals
         string duplicateString = new('a', displayString.Length);
@@ -285,6 +325,12 @@ public class FormulaAnalyzer : MonoBehaviour
         duplicateString = duplicateString.Replace("0.5", "");
         duplicateString = duplicateString.Replace("1\u00f72", ""); // 1/2
         duplicateString = duplicateString.Replace("\u03C0",""); //pi
+        duplicateString = duplicateString.Replace("=", ""); // remove the "=" too
+
+        if (DEBUG)
+        {
+            Debug.Log("FA: duplicateString: " + duplicateString);
+        }
 
         //Separate duplicateString into operators and values to determine if rect or square
         List<string> vals = new();
@@ -316,7 +362,7 @@ public class FormulaAnalyzer : MonoBehaviour
             //Else add char to vals.Last()
             if (!isOps) //If not an operator
             {
-                vals[vals.IndexOf(vals.Last())] += duplicateString[i];
+                vals[^1] += duplicateString[i];
             }
             isOps = false; //Reset flag
         }
@@ -348,7 +394,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Compare if values are equal, square if yes otherwise rect, invalid if there are more than 2 vals
         if (vals.Count() > 1 && vals.Count() < 3)
         {
-            if (vals[0].Equals(vals[1]))
+            if (sideA == sideB) //Compare parsed instaed, should be equal if same value
             {
                 // 2.) if pi is present and same sides, is circle if no 0.5 or 1/2 else semicircle
                 if (displayString.Contains("\u03C0"))
