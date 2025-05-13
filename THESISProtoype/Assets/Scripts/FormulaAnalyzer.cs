@@ -5,20 +5,22 @@ using UnityEngine;
 
 public class FormulaAnalyzer : MonoBehaviour
 {
-    private float evalAnswer = -1; //Contains the answer to the evaluated expression, default: -1
+    private float evalAnswer = -1, tempAns = -1; //Contains the answer to the evaluated expression, default: -1
     private string inputAnswer = ""; //Contains the answer from player input, default: "", to be parsed into a float if needed
     private string evalString = "", displayString = ""; //Strings for storing the input, first for eval second for display to UI
-    private bool isValidFormula = false; //Contains result of eval
-    private bool equMode = false; //If true, user has inputed "=" and formula eval + checking correct answer begins
-    private GameBehaviour.SHAPES formulaShape = GameBehaviour.SHAPES.NONE;
-    public bool isFinalAnswer = false; //Boolean trigger for comparing inputAnswer and evalAnswer to determine if player formula input is good
+    private string calcDispString = "", tempDisp = "", tempEval = "", tempInput = ""; //Strings for calcMode
+    private bool isValidFormula = false, tempValid = false; //Contains result of eval
+    private bool equMode = false, tempEqu = false; //If true, user has inputed "=" and formula eval + checking correct answer begins
+    private GameBehaviour.SHAPES formulaShape = GameBehaviour.SHAPES.NONE, tempShape = GameBehaviour.SHAPES.NONE;
+    public bool isFinalAnswer = false, tempFinal = false; //Boolean trigger for comparing inputAnswer and evalAnswer to determine if player formula input is good
 
-    private float sideA = 0, sideB = 0; //Floats for side legths of shape
+    private float sideA = 0, sideB = 0, tempA = 0, tempB = 0; //Floats for side legths of shape
 
     //String arrays containing values and operators. NOTE: NEEDS TO BE MATCHED TO CLASSES ARRAY IN OCROBJECT
     private readonly string[] VALUES = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." }; //"." for decimals
     private readonly string[] OPERATORS = { "\u00f7", "=", "-", "+", "\u00d7" };
 
+    private bool DEBUGCALCFLAG = false;
     public bool DEBUG = false;
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
@@ -45,7 +47,72 @@ public class FormulaAnalyzer : MonoBehaviour
                 Debug.Log("FA: ANALYZER RESET!");
                 DebugDisplay();
             }
+
+            if (calcMode && !DEBUGCALCFLAG)
+            {
+                //run EnterCalc
+                EnterCalc();
+            }
+
+            if (!calcMode && DEBUGCALCFLAG) //If not calcMode and tempDisp != "" (temps contain something and still need exit)
+            {
+                //Run ExitCalc(), clear tempDisp and tempEval
+                ExitCalc();
+            }
         }
+    }
+
+    private void UpdateCalcDisp(string updateString)
+    {
+        if (calcMode)
+        {
+            calcDispString = updateString;
+        }
+    }
+
+    private void EnterCalc()
+    {
+        if(DEBUG) DEBUGCALCFLAG = true; //Set flag for debug
+
+        //Clear calc display
+        calcDispString = "";
+        
+        //Store input data in temp
+        tempDisp = displayString;
+        tempEval = evalString;
+        tempInput = inputAnswer;
+        tempAns = evalAnswer;
+        tempValid = isValidFormula;
+        tempEqu = equMode;
+        tempShape = formulaShape;
+        tempFinal = isFinalAnswer;
+        tempA = sideA;
+        tempB = sideB;
+
+        //Clear data
+        ResetAnalyzer();
+
+        if(DEBUG) DebugDisplay();
+    }
+
+    private void ExitCalc()
+    {
+        //Restore data from temp
+        displayString = tempDisp;
+        evalString = tempEval;
+        inputAnswer = tempInput;
+        evalAnswer = tempAns;
+        isValidFormula = tempValid;
+        equMode = tempEqu;
+        formulaShape = tempShape;
+        isFinalAnswer = tempFinal;
+        sideA = tempA;
+        sideB = tempB;
+
+        //Reset flag for calc mode debug
+        if (DEBUG) DEBUGCALCFLAG = false; //Set flag for debug
+
+        if (DEBUG) DebugDisplay();
     }
 
     //Method for appending to the input string variables
@@ -61,11 +128,13 @@ public class FormulaAnalyzer : MonoBehaviour
                 if (equMode) break;
                 evalString += "(";
                 displayString += "(";
+                UpdateCalcDisp(displayString);
                 break;
             case "Rpar":
                 if (equMode) break;
                 evalString += ")";
                 displayString += ")";
+                UpdateCalcDisp(displayString);
                 break;
             case "dec":
                 if (!equMode)
@@ -73,41 +142,51 @@ public class FormulaAnalyzer : MonoBehaviour
                 displayString += ".";
                 if (equMode)
                     inputAnswer += ".";
+                UpdateCalcDisp(displayString);
                 break;
             case "min":
                 if (equMode) break;
                 evalString += "-";
                 displayString += "-";
+                UpdateCalcDisp(displayString);
                 break;
             case "plu":
                 if (equMode) break;
                 evalString += "+";
                 displayString += "+";
+                UpdateCalcDisp(displayString);
                 break;
             //Different between eval and display
             case "div":
                 if (equMode) break;
                 evalString += "/";
                 displayString += "\u00f7";
+                UpdateCalcDisp(displayString);
                 break;
             case "tim":
                 if (equMode) break;
                 evalString += "*";
                 displayString += "\u00d7";
+                UpdateCalcDisp(displayString);
                 break;
             case "pi":
                 if (equMode) break; //Not 100% sure if pi not needed in answering
                 evalString += input;
                 displayString += "\u03C0";
+                UpdateCalcDisp(displayString);
                 break;
             //Special case: equ start evaluating the evalString and compares evalAnswer with inputAnswer after a trigger
             case "equ":
                 if (calcMode)
                 {
+                    //Required to not break things
+                    displayString += "=";
+
                     //Evaluate Formula, show answer, then clear inputs
                     EvaluateFormula();
-                    Debug.Log("FA: Answer -> " + evalAnswer); //Just for debug, add actual method to release answer
-                    ResetString();
+                    UpdateCalcDisp(evalAnswer.ToString());
+                    Debug.Log("FA: calcDispString -> " + calcDispString); //Just for debug, add actual method to release answer
+                    ResetAnalyzer();
                     break;
                 }
                 
@@ -159,6 +238,7 @@ public class FormulaAnalyzer : MonoBehaviour
                 displayString += input;
                 if (equMode) //In equMode,
                     inputAnswer += input;
+                UpdateCalcDisp(displayString);
                 break;
         }
 
@@ -254,7 +334,7 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             //Final eval, check shape
             formulaShape = EvalFormulaShape();
-            if(formulaShape == GameBehaviour.SHAPES.NONE) //If no shape, formula invalid
+            if (formulaShape == GameBehaviour.SHAPES.NONE) //If no shape, formula invalid if not calcMode
                 isValidFormula = false;
             DebugDisplay();
         }
@@ -428,7 +508,10 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         if (!DEBUG) //Do nothing if not debug mode
             return;
-        Debug.Log("evalString: " + evalString + " | displayString: " + displayString + " | sideA: " + sideA);
+        if(!calcMode)
+            Debug.Log("evalString: " + evalString + " | displayString: " + displayString + " | sideA: " + sideA);
+        else
+            Debug.Log("evalString: " + evalString + " | calcDispString: " + calcDispString + " | sideA: " + sideA);
         Debug.Log("isValidFormula: " + isValidFormula + " | evalAnswer: " + evalAnswer + " | inputAnswer: " + inputAnswer + " | sideB: " + sideB);
     }
 }
