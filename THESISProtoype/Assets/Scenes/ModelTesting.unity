@@ -241,6 +241,7 @@ MonoBehaviour:
   DEBUG: 1
   DEBUG_RESET: 0
   calcMode: 0
+  gb: {fileID: 0}
 --- !u!4 &434897725
 Transform:
   m_ObjectHideFlags: 0

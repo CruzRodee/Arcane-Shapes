@@ -207,16 +207,26 @@ public class FormulaAnalyzer : MonoBehaviour
 
         if (DEBUG) Debug.Log("FA: PASS 1");
 
-        //Check if ending char of evalString is a number or ".", if not, invalid formula
+        //Check if ending char of evalString is a number, "pi" or ".", if not, invalid formula
         bool endIsNumber = false;
+        char[] maybePi = new char[2];
         foreach(string val in VALUES)
         {
+            maybePi[0] = evalString[^2];
+            maybePi[1] = evalString[^1];
+            if(maybePi[0].ToString() + maybePi[1].ToString() == "pi")
+            {
+                endIsNumber = true;
+                break;
+            }
             if (evalString[^1] == val.ToCharArray()[0])
             {
                 endIsNumber = true;
                 break;
             }
         }
+
+        if (DEBUG) Debug.Log("FA: maybePi: " + maybePi[0].ToString() + maybePi[1].ToString());
 
         if (!endIsNumber){
             isValidFormula = false;
