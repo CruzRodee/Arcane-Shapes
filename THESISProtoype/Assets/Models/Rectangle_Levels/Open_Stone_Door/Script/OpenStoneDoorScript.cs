@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class OpenStoneDoorScript : BaseLOScript
 {
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     private const float time = 2.0f;
     private Vector3 OFFSET = new Vector3(0f, 0f, 0f);
     private const float SCALING_VAR = 1.5f;
@@ -15,27 +19,26 @@ public class OpenStoneDoorScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // Play burst vfx
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        // Play burst vfx
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
 
-            // Get the two door meshes
-            GameObject door1 = this.transform.Find("Door1").gameObject;
-            GameObject door2 = this.transform.Find("Door2").gameObject;
+        // Get the two door meshes
+        GameObject door1 = this.transform.Find("Door1").gameObject;
+        GameObject door2 = this.transform.Find("Door2").gameObject;
 
-            // MoveOvertime for both
-            StartCoroutine(MoveOverTime(door1, CAST_DURATION, this.transform.position + MOVEOFFSET));
-            StartCoroutine(MoveOverTime(door2, CAST_DURATION, this.transform.position - MOVEOFFSET));
-        }
+        // MoveOvertime for both
+        StartCoroutine(MoveOverTime(door1, CAST_DURATION, this.transform.position + MOVEOFFSET));
+        StartCoroutine(MoveOverTime(door2, CAST_DURATION, this.transform.position - MOVEOFFSET));
+
+        //Shakycam
+        cameraShakeScript.shakeDuration = CAST_DURATION*1.1f;
+        cameraShakeScript.shakeAmount = 0.05f;
     }
 }

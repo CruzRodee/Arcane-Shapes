@@ -5,7 +5,11 @@ using UnityEngine;
 public class ShockwaveSpellScript : BaseLOScript
 {
     public GameObject[] floorRows;
-    
+
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     private const float time = 2.0f;
     private const float SCALING_VAR = 1.5f;
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
@@ -17,27 +21,22 @@ public class ShockwaveSpellScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // Play burst vfx
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            // Call ShockMotion on each row with a slight delay
-            int multiplier = 1;
-            foreach (GameObject row in floorRows)
-            {
-                StartCoroutine(ShockMotion(row, multiplier));
-                multiplier++;
-            }
+
+        // Call ShockMotion on each row with a slight delay
+        int multiplier = 1;
+        foreach (GameObject row in floorRows)
+        {
+            StartCoroutine(ShockMotion(row, multiplier));
+            multiplier++;
         }
     }
 
@@ -45,7 +44,11 @@ public class ShockwaveSpellScript : BaseLOScript
     {
         //Wait delay
         yield return new WaitForSeconds(SHOCK_DELAY * multiplier);
-        
+
+        //Shakycam
+        cameraShakeScript.shakeDuration = CAST_DURATION*2.5f;
+        cameraShakeScript.shakeAmount = 0.5f;
+
         StartCoroutine(MoveOverTime(obj, CAST_DURATION, obj.transform.position + MOVEOFFSET));
 
         //Wait Duration

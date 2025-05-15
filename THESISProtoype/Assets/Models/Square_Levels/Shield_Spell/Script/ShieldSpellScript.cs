@@ -5,6 +5,10 @@ using UnityEngine.VFX;
 
 public class ShieldSpellScript : BaseLOScript
 {
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     private const float time = 0.5f;
     private Vector3 OFFSET = new Vector3(0, 0, -7f);
     private const float SCALING_VAR = 0.25f;
@@ -16,6 +20,9 @@ public class ShieldSpellScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     new void Start()
@@ -34,5 +41,13 @@ public class ShieldSpellScript : BaseLOScript
 
         // TODO: Add detonation vfx
         Instantiate(vfxSet[1], this.transform.position + OFFSET, Quaternion.identity);
+        Invoke(nameof(Shaky), CAST_DURATION + 0.25f);
+    }
+
+    private void Shaky()
+    {
+        //Shakycam
+        cameraShakeScript.shakeDuration = CAST_DURATION * 0.5f;
+        cameraShakeScript.shakeAmount = 0.1f;
     }
 }
