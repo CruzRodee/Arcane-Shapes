@@ -17,22 +17,12 @@ public class ConjureLightScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            // Enable VFX
-            this.GetComponent<VisualEffect>().enabled = true;
+        // Enable VFX
+        this.GetComponent<VisualEffect>().enabled = true;
 
-            // Enable Lights
-            this.transform.Find("Lights").gameObject.SetActive(true);
-        }
-
+        // Enable Lights
+        this.transform.Find("Lights").gameObject.SetActive(true);
     }
 }
