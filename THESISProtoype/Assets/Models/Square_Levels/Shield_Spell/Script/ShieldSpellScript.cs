@@ -22,17 +22,8 @@ public class ShieldSpellScript : BaseLOScript
     {
         base.Start();
 
-        try
-        {
-            // Idicator VFX
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-        }
+        // Idicator VFX
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
     }
 
     public override void SuccessfulCast()
@@ -41,15 +32,7 @@ public class ShieldSpellScript : BaseLOScript
         this.GetComponent<Renderer>().enabled = true;
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
 
-        try
-        {
-            // TODO: Add detonation vfx
-            temp.Add(Instantiate(vfxSet[1], this.transform.position + OFFSET, Quaternion.identity));
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-        }
+        // TODO: Add detonation vfx
+        Instantiate(vfxSet[1], this.transform.position + OFFSET, Quaternion.identity);
     }
 }

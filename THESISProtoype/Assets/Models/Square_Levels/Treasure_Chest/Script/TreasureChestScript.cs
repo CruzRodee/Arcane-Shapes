@@ -16,15 +16,6 @@ public class TreasureChestScript : BaseLOScript
     {
         base.SuccessfulCast();
 
-        try
-        {
-            // TODO: Add VFX Graph magic effects here later
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-        } 
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation);
     }
 }
