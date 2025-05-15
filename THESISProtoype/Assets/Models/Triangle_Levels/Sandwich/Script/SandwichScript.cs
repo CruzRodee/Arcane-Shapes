@@ -19,18 +19,9 @@ public class SandwichScript : BaseLOScript
         //Get sandwich object
         GameObject sandwich = this.transform.Find("SandwichAndPlate/Sandwich").gameObject;
 
-        try
-        {
-            // VFX Graph flash on sandwich
-            temp.Add(Instantiate(vfxSet[0], sandwich.transform.position + OFFSET, sandwich.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], sandwich.transform.position + OFFSET, sandwich.transform.rotation).transform.localScale = SCALING;
 
-            // Enable Mesh Renderer for sandwich
-            sandwich.GetComponent<Renderer>().enabled = true;
-        }
+        // Enable Mesh Renderer for sandwich
+        sandwich.GetComponent<Renderer>().enabled = true;
     }
 }

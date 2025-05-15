@@ -15,18 +15,9 @@ public class IceSpikesScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            // Enable Mesh Renderer for ice
-            this.GetComponent<Renderer>().enabled = true;
-        }
+        // Enable Mesh Renderer for ice
+        this.GetComponent<Renderer>().enabled = true;
     }
 }
