@@ -372,6 +372,7 @@ public class FormulaAnalyzer : MonoBehaviour
         ResetEquMode();
         ResetFinalAns();
         ResetFormulaShape();
+        ResetGUI();
     }
     private void ResetEvalAns()
     {
@@ -406,6 +407,11 @@ public class FormulaAnalyzer : MonoBehaviour
     private void ResetFormulaShape()
     {
         formulaShape = GameBehaviour.SHAPES.NONE;
+    }
+    private void ResetGUI()
+    {
+        //Whoops, forgot to reset the GUI on reset
+        formulaDispGUI.text = displayString;
     }
 
     //Getters
