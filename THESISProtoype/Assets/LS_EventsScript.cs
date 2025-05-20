@@ -1,9 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
+using TMPro;
+using static GameBehaviour;
+using System.Runtime.InteropServices;
+using UnityEditor;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 
 public class LS_EventsScript : MonoBehaviour
@@ -126,7 +134,8 @@ public class LS_EventsScript : MonoBehaviour
             saverLoader.saveGame(savePath, savedGame);
         }
 
-        Debug.Log(savedGame.playerName);
+        //CHANGED: Debug.Log -> UnityEngine.Debug.Log
+        UnityEngine.Debug.Log(savedGame.playerName);
         initLevels(savedGame);
 
 
@@ -288,10 +297,10 @@ public class LS_EventsScript : MonoBehaviour
 //////////// SIDE BAR BUTTONS
 
     public void toggleMute(){
-        Debug.Log("MUTE BUTTON PRESSED");
+        UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
         savedGame.prefMute = !savedGame.prefMute; // Invert mute state
 
-        Debug.Log(savedGame.prefMute);
+        UnityEngine.Debug.Log(savedGame.prefMute);
 
         if (!savedGame.prefMute)
         {
@@ -307,7 +316,7 @@ public class LS_EventsScript : MonoBehaviour
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
     public void GoHome(){
-        Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
+        UnityEngine.Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
 
         //SceneChange to main menu
         screenFade.SetTrigger("sceneOut");
@@ -321,11 +330,11 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void showTutorial(){
-        Debug.Log("Show tutorial screenshot");
+        UnityEngine.Debug.Log("Show tutorial screenshot");
     }
 
     public void showGrimoire(){
-        Debug.Log("Show tutorial screenshot");
+        UnityEngine.Debug.Log("Show tutorial screenshot");
     }
 
 
@@ -346,7 +355,7 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void enterRectangle(){
-        Debug.Log("Rectangle Room");
+        UnityEngine.Debug.Log("Rectangle Room");
 
         //Load data
         GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
@@ -357,7 +366,7 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void enterCircle(){
-        Debug.Log("Circle Room");
+        UnityEngine.Debug.Log("Circle Room");
 
         //Load data
         GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
@@ -368,7 +377,7 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void enterSquare(){
-        Debug.Log("Square Room");
+        UnityEngine.Debug.Log("Square Room");
 
         //Load data
         GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
@@ -378,7 +387,7 @@ public class LS_EventsScript : MonoBehaviour
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
     public void enterTriangle(){
-        Debug.Log("Triangle Room");
+        UnityEngine.Debug.Log("Triangle Room");
         //example muna naten to since eto namanna den ung nakagawa na
         //panelHallway.SetActive(false);
         //panelDialogue.SetActive(false);
@@ -399,7 +408,7 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void enterSemiCircle(){
-        Debug.Log("Semi-Circle Room");
+        UnityEngine.Debug.Log("Semi-Circle Room");
 
         //Load data
         GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
@@ -410,7 +419,7 @@ public class LS_EventsScript : MonoBehaviour
     }
 
     public void enterCompound(){
-        Debug.Log("Compound Floor, check if complete all at least once");
+        UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
 
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
 

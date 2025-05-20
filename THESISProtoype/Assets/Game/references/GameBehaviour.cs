@@ -11,6 +11,7 @@ using UnityEditor;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 
 
@@ -60,13 +61,62 @@ public class GameBehaviour : MonoBehaviour
     private const string correctShapePropmt = "Tama na ba ang shape na pinili?";
 
     //----------------------------------------------
+    //////////Copied from old repo
+    //my changes in case mag boom boom lahat
+    private GameData savedGame;
+    private SaveLoadController saverLoader = new SaveLoadController();
+    private string savePath;
+
+    private RectTransform rtDialogue;
+    private RectTransform rtSlider;
+
+    bool isDoneMeasuring;
+    //panels na toggable, containers lang
+    public GameObject panelMagicScroll;
+    public GameObject pConfirm;
+    public GameObject pLowerScroll;
+    public GameObject pNotify;
+    private GameObject pDialogue;
+    private GameObject pDiaButtons;
+    private GameObject pSlider;
+
+    private Text pNotifyText;
+    private Text textAns;
+    private Text textAnsSC;
+    private Text  textAnsRect;
+    private Text   textAnsCir;
+    private Text   textAnsSqr;
+    private Text   textAnsTri;
+    private Text manaReq;
+    private Text characterSay;
+    private Text textFinish;
+
+    public Text confirmText;
+    public Text textHUD;
+    public GameObject pEquationTriangle;
+    public GameObject pEquationSquare;
+    public GameObject pEquationRectangle;
+    public GameObject pEquationSCircle;
+    public GameObject pEquationCircle;
+
+    
+
+    private string currentShapeToSolve;
+    private string chosenShape;
+
+
+    //----------------------------------------------
+
 
     void Awake()
     {
+        savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
+        savedGame = saverLoader.loadGame(savePath);
+
         currentShape = SHAPES.NONE;
         screenFadeAnimator = GameObject.Find("ScreenFade").GetComponent<Animator>();
         animScript = GameObject.Find("AnimHolder").GetComponent<AnimScript>();
-        quit = GameObject.Find("Quit").GetComponent<Button>();
+        // quit = GameObject.Find("Quit").GetComponent<Button>();
         defaultOptions = new List<TMP_Dropdown.OptionData>();
     }
 
@@ -87,15 +137,15 @@ public class GameBehaviour : MonoBehaviour
             Destroy(go);
         }
 
-        dropdown.gameObject.SetActive(true);
-        dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        CopyOptions(dropdown.options, defaultOptions); // Reset options
-        dropdown.value = 0;
+        // dropdown.gameObject.SetActive(true);
+        // dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
+        // CopyOptions(dropdown.options, defaultOptions); // Reset options
+        // dropdown.value = 0;
         text.text = "";
         manaMeasure.text = "0";
-        dropdown.RefreshShownValue();
-        dropdown.onValueChanged.AddListener(OnOptionSelect); //Start Listening
-        UnityEngine.Debug.Log("Dropdown Len: " + dropdown.options.Count);
+        // dropdown.RefreshShownValue();
+        // dropdown.onValueChanged.AddListener(OnOptionSelect); //Start Listening
+        // UnityEngine.Debug.Log("Dropdown Len: " + dropdown.options.Count);
 
         currentShape = SHAPES.NONE;
 
@@ -214,9 +264,265 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
+//--------------------------------------------------------
+/////////////////added from old repo
+// just button events
+    public void onRestart(){
+        SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
+    }
+
+    public void onQuit()
+    {
+        error = 100f; //Prevent accidental saving due to 0f error
+        screenFadeAnimator.SetTrigger("sceneOut");
+        Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
+    }
+
+    public void onUndo()
+    {
+        lineSnapper.OnUndoPressed();
+    }
+
+    public void toggleConfirmScreen(string spell){
+        if (pConfirm != null){
+            pConfirm.SetActive(!pConfirm.active);
+        }
+
+        if (pConfirm.active){
+            confirmText.text = "[ "+spell+" ]";
+        }
+    }
+
+    public void toggleMagicScroll(){
+        if (pLowerScroll != null){
+            pLowerScroll.SetActive(!pLowerScroll.active);
+        }
+    }
+    public void chooseSquare(){
+        toggleConfirmScreen("SQUARE");
+    }
+
+    public void chooseSemiCircle(){
+        chosenShape = "SEMI_CIRCLE";
+        toggleConfirmScreen(chosenShape);
+    }
+
+    public void chooseCircle(){
+        chosenShape = "CIRCLE";
+        toggleConfirmScreen(chosenShape);
+    }
+
+    public void chooseRectangle(){
+        chosenShape = "RECTANGLE";
+        toggleConfirmScreen(chosenShape);
+    }
+
+    public void chooseTriangle(){
+        chosenShape = "TRIANGLE";
+        toggleConfirmScreen(chosenShape);
+    }
+
+    public void btnNo()
+    {
+        toggleConfirmScreen("");
+        // pConfirm.SetActive(false);
+    }
+
+
+    public void toggleSlider(){
+        //just move to right
+        rtSlider.anchoredPosition = new Vector2(-525f,rtSlider.anchoredPosition.y);
+    }
+
+    public void toggleDialogueBox()
+    {
+        if (rtDialogue.anchoredPosition.y == 100)
+        {
+            rtDialogue.anchoredPosition = new Vector2(600f, -59f);
+            // pDialogue.y = -59;
+        }
+        else{
+            rtDialogue.anchoredPosition = new Vector2(600f, 100f);
+            // pDialogue.y = 100; //tago
+        }
+    }
+
+    public void btnYes(){
+            
+            //IF SHAPE IS CORRECT:
+            // SHAPES.SQUARE 
+            // if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
+            // {
+            //     //TODO: just read from the JSON file to figure out the current shape needed due to the room you entered - done eme
+            UnityEngine.Debug.Log("chosenshape -> "+ chosenShape);
+            UnityEngine.Debug.Log("savedGame.currRoom -> "+ savedGame.currRoom);
+
+
+            //hide the spellbook after choosing
+            
+            if (savedGame.currRoom == chosenShape){
+                panelMagicScroll.SetActive(false);
+                //show na den undo and cast buttons
+                pDiaButtons.SetActive(true);
+                toggleDialogueBox();
+                characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
+                manaReq.text = "Katumbas na Mana";
+                manaMeasure.gameObject.SetActive(true);
+                //slider.gameObject.SetActive(true);
+                //confirmMeasurement.gameObject.SetActive(true);
+                //correctionPerc.gameObject.SetActive(true);
+                slider.gameObject.SetActive(false); //test
+
+                dropdown.gameObject.SetActive(false);
+                lineSnapper.gameObject.SetActive(true);
+                undo.gameObject.SetActive(true);
+
+
+                //show correct casting equation
+                //not entering correctly
+                if (chosenShape == "TRIANGLE"){
+                    pEquationTriangle.SetActive(true);
+                    
+                }
+                else if (chosenShape == "SQUARE"){
+                    pEquationSquare.SetActive(true);
+                    // textAns = GameObject.Find("textAnsTri").GetComponent<Text>();
+                    // textAns = GameObject.Find("textAnsSqr").GetComponent<Text>();
+                    // textAns = GameObject.Find("textAnsRect").GetComponent<Text>();
+                    // textAns = GameObject.Find("textAnsCir").GetComponent<Text>();
+                    // textAns = GameObject.Find("textAnsSC").GetComponent<Text>();
+
+                }
+                else if (chosenShape == "RECTANGLE"){
+                    pEquationRectangle.SetActive(true);
+                }
+                else if (chosenShape == "CIRCLE"){
+                    pEquationCircle.SetActive(true);
+                }
+                else if (chosenShape == "SEMI_CIRCLE"){
+                    pEquationSCircle.SetActive(true);
+                }
+                //am too tired to figure out lol why not working switch
+                // switch(chosenShape){
+                //     case "TRIANGLE":
+                //         UnityEngine.Debug.Log("SHOWING TRIANGLE");
+                //         pEquationTriangle.SetActive(true);
+                //         break;
+                //     case "SQUARE":
+                //         UnityEngine.Debug.Log("SHOWING SQUARE");
+                //         pEquationSquare.SetActive(true);
+                //         break;
+                //     case "CIRCLE":
+                //         pEquationCircle.SetActive(true);
+                //         break;
+                //     case "SEMI_CIRCLE":
+                //         pEquationSCircle.SetActive(true);
+                //         break;
+                //     case "RECTANGLE":
+                //         pEquationRectangle.SetActive(true);
+                //         break;
+                // }
+                //ensure only 1 active exists
+            }
+            else    //IF SHAPE CHOSEN IS WRONGG:
+            {
+                notifyWrongShape();
+                // text.gameObject.SetActive(true); //Reactivate if not active
+                // text.text = "Ang shape na pinili ay mali. Subukan ulit.";
+
+                //Play shake head anim
+                animScript.playerScript.BadTrace();
+            }
+            toggleConfirmScreen("");
+    }
+
+    public void notifyWrongShape()
+    {
+        if (pNotify != null){
+            pNotify.SetActive(!pNotify.active);
+        }
+    }
+
+    public void onCast()
+    {
+        //added NTS
+        
+        if (!isDoneMeasuring)    //pag mag sslider plang
+        {
+            // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
+            toggleDialogueBox(); //show
+            toggleSlider();
+            isDoneMeasuring=true;
+            textFinish.text = "Cast Spell";
+            slider.gameObject.SetActive(true);
+        }
+        else{
+            toggleDialogueBox(); //hide
+            CalcError();
+            
+            correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
+            //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+
+            correctionPerc.gameObject.SetActive(true); //Show error
+
+            Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
+        }
+    }
+
+
+
+    ///------------------------- edn
+
     void Start()
     {
-        // ScreenfadeIn for first run
+        //copied from old repo
+
+        characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
+        manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
+        textFinish= GameObject.Find("textFinish").GetComponent<Text>();
+
+        isDoneMeasuring = false;
+
+        pDiaButtons = GameObject.Find("pDiaButtons");
+        pSlider = GameObject.Find("pSlider");
+
+        textAnsSC = GameObject.Find("textAnsSC")?.GetComponent<Text>();
+        textAnsRect = GameObject.Find("textAnsRect")?.GetComponent<Text>();
+        textAnsCir = GameObject.Find("textAnsCir")?.GetComponent<Text>();
+        textAnsSqr = GameObject.Find("textAnsSqr")?.GetComponent<Text>();
+        textAnsTri = GameObject.Find("textAnsTri")?.GetComponent<Text>();
+
+        pDialogue = GameObject.Find("PanelCasting");
+        rtDialogue = pDialogue.GetComponent<RectTransform>();
+        rtSlider = pSlider.GetComponent<RectTransform>();
+
+
+        savedGame =  saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+        currentShapeToSolve = savedGame.currRoom;
+        textHUD.text = savedGame.currRoom + " ROOM";
+
+
+        pDialogue.SetActive(true);
+        pConfirm.SetActive(false);  //hide first
+        pLowerScroll.SetActive(true); //show muna para less empty space
+        pNotify.SetActive(false);
+    
+        pEquationTriangle.SetActive(false);
+        pEquationSquare.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        pEquationCircle.SetActive(false);
+
+        //hide lang muna
+        pDiaButtons.SetActive(false);
+        manaReq.text = "";//clear
+
+
+        // end
+
+        //////////////////////////////////////
+
+
         if (STARTUP)
         {
             Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
@@ -224,22 +530,25 @@ public class GameBehaviour : MonoBehaviour
         }
 
         //UnityEngine.Debug.Log(dropdown);
-        restart = GameObject.Find("Restart").GetComponent<Button>();
-        restart.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
-        });
-        quit.onClick.AddListener(() => {
-            error = 100f; //Prevent accidental saving due to 0f error
-            screenFadeAnimator.SetTrigger("sceneOut");
-            Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
-        });
 
-        dropdown = GameObject.Find("Dropdown").GetComponent<TMP_Dropdown>();
-        CopyOptions(defaultOptions, dropdown.options); //Store these for reset
-        dropdown.value = 0;
-        dropdown.RefreshShownValue();
-        dropdown.onValueChanged.AddListener(OnOptionSelect);
+
+        //removed listeners
+        // restart = GameObject.Find("Restart").GetComponent<Button>();
+        // restart.onClick.AddListener(() =>
+        // {
+        //     SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
+        // });
+        // quit.onClick.AddListener(() => {
+        //     error = 100f; //Prevent accidental saving due to 0f error
+        //     screenFadeAnimator.SetTrigger("sceneOut");
+        //     Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
+        // });
+
+        // dropdown = GameObject.Find("Dropdown").GetComponent<TMP_Dropdown>();
+        // CopyOptions(defaultOptions, dropdown.options); //Store these for reset
+        // dropdown.value = 0;
+        // dropdown.RefreshShownValue();
+        // dropdown.onValueChanged.AddListener(OnOptionSelect);
 
         text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
         text.text = "";
@@ -253,7 +562,9 @@ public class GameBehaviour : MonoBehaviour
         confirmMeasurement = GameObject.Find("ConfirmMeasurement").GetComponent<Button>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
         lineSnapper = GameObject.Find("Gesture").GetComponent<LineSnapper>();
-        undo = GameObject.Find("Undo").GetComponent<Button>();
+        // undo = GameObject.Find("Undo").GetComponent<Button>();
+        undo = GameObject.Find("btnUndo").GetComponent<Button>();
+        //CHANGED: Undo-> btnUndo
 
         //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
@@ -314,8 +625,23 @@ public class GameBehaviour : MonoBehaviour
 
         slider.onValueChanged.AddListener((value) =>
         {
-            manaMeasure.text = value.ToString();  
-            
+            manaMeasure.text = value.ToString();
+            if (chosenShape == "TRIANGLE"){
+                textAnsTri.text = manaMeasure.text;
+            }
+            else if (chosenShape == "SQUARE"){
+                textAnsSqr.text = manaMeasure.text;
+            }
+            else if (chosenShape == "RECTANGLE"){
+                textAnsRect.text = manaMeasure.text;
+            }
+            else if (chosenShape == "CIRCLE"){
+                textAnsCir.text = manaMeasure.text;
+            }
+            else if (chosenShape == "SEMI_CIRCLE"){
+                textAnsSC.text = manaMeasure.text;
+            }
+
             // TODO: make slider rounding change based on level?
             slider.value = Mathf.Round(value * 10f) / 10f;  // Rounds to nearest 0.1
 
@@ -332,52 +658,55 @@ public class GameBehaviour : MonoBehaviour
             shapeFiller.isFillingActive = true;
         });
 
-        yesButton.onClick.AddListener(() =>
-        {
-            yesButton.gameObject.SetActive(false);
-            noButton.gameObject.SetActive(false);
+
+
+    //CHANGES: removed listeners
+        // yesButton.onClick.AddListener(() =>
+        // {
+        //     yesButton.gameObject.SetActive(false);
+        //     noButton.gameObject.SetActive(false);
             
-            if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
-            {
-                text.text = GlobalVariables.ShapeFormulaText(this.spellCastEvent.problem.problemShape);
+        //     if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
+        //     {
+        //         text.text = GlobalVariables.ShapeFormulaText(this.spellCastEvent.problem.problemShape);
 
-                manaMeasure.gameObject.SetActive(true);
-                //slider.gameObject.SetActive(true);
-                //confirmMeasurement.gameObject.SetActive(true);
-                //correctionPerc.gameObject.SetActive(true);
-                dropdown.gameObject.SetActive(false);
-                lineSnapper.gameObject.SetActive(true);
-                undo.gameObject.SetActive(true);
-                text.gameObject.SetActive(true); //Reactivate if not active
-            }
-            else
-            {
-                text.gameObject.SetActive(true); //Reactivate if not active
-                text.text = "Ang shape na pinili ay mali. Subukan ulit.";
+        //         manaMeasure.gameObject.SetActive(true);
+        //         //slider.gameObject.SetActive(true);
+        //         //confirmMeasurement.gameObject.SetActive(true);
+        //         //correctionPerc.gameObject.SetActive(true);
+        //         // dropdown.gameObject.SetActive(false);
+        //         lineSnapper.gameObject.SetActive(true);
+        //         undo.gameObject.SetActive(true);
+        //         text.gameObject.SetActive(true); //Reactivate if not active
+        //     }
+        //     else
+        //     {
+        //         text.gameObject.SetActive(true); //Reactivate if not active
+        //         text.text = "Ang shape na pinili ay mali. Subukan ulit.";
 
-                //Play shake head anim
-                animScript.playerScript.BadTrace();
-            }
-        });
+        //         //Play shake head anim
+        //         animScript.playerScript.BadTrace();
+        //     }
+        // });
 
-        confirmMeasurement.onClick.AddListener(() =>
-        {
-            CalcError();
-            correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
-            //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+        // confirmMeasurement.onClick.AddListener(() =>
+        // {
+        //     CalcError();
+        //     correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
+        //     //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
 
-            correctionPerc.gameObject.SetActive(true); //Show error
+        //     correctionPerc.gameObject.SetActive(true); //Show error
 
-            Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
-        });
+        //     Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
+        // });
 
-        noButton.onClick.AddListener(() =>
-        {
-            yesButton.gameObject.SetActive(false);
-            noButton.gameObject.SetActive(false);
-        });
+        // noButton.onClick.AddListener(() =>
+        // {
+        //     yesButton.gameObject.SetActive(false);
+        //     noButton.gameObject.SetActive(false);
+        // });
 
-        //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
+        // //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
         changeCameraButton.onClick.AddListener(() =>
         {
@@ -611,17 +940,17 @@ public class GameBehaviour : MonoBehaviour
 
     public void OnOptionSelect(int option)
     {
-        if(dropdown.options.Count > 5) // When first selecting before removing default
-       {
-           dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-           dropdown.options.RemoveAt(0); // Remove "Select Shape" Default Option
-           dropdown.value -= 1; // move dropdown option to correct one
-           option -= 1; //Reduce index by 1 to compensate for removed option
-           dropdown.onValueChanged.AddListener(OnOptionSelect); // Start Listening
-        }
+    //     if(dropdown.options.Count > 5) // When first selecting before removing default
+    //    {
+    //        dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
+    //        dropdown.options.RemoveAt(0); // Remove "Select Shape" Default Option
+    //        dropdown.value -= 1; // move dropdown option to correct one
+    //        option -= 1; //Reduce index by 1 to compensate for removed option
+    //        dropdown.onValueChanged.AddListener(OnOptionSelect); // Start Listening
+    //     }
 
         text.gameObject.SetActive(true); //Reactivate if not active
-        text.text = correctShapePropmt;
+        // text.text = correctShapePropmt;
 
         /* UnityEngine.Debug.Log(option);*/
         currentOptionSelected = option;

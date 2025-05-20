@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 public class GameData{
     public string playerName;
     public bool prefMute;   //settings stuff
+    public string currRoom; //just room marker for the level selecvt thingy
+
     
     //levels
     public float squarePercent; //highest score - need to 100% a level in order to unlock next level?
@@ -38,7 +40,7 @@ public class SaveLoadController
 
     public void saveGame(string savePath, string playerName, bool isMute, float squarePercent, int squareLvl,
                         float circlePercent, int circleLvl, float scirclePercent, int scircleLvl,
-                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl)
+                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, string currRoom)
     {
         GameData data = new GameData()
         {
@@ -56,6 +58,8 @@ public class SaveLoadController
             triPercent = triPercent,
             triLvl = triLvl,
 
+            currRoom = currRoom,
+
             compLvl= compLvl
         };
         
@@ -68,6 +72,16 @@ public class SaveLoadController
 
     public void saveGame(string savePath, GameData data) // Just pass raw gamedata
     {
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(savePath, json);
+
+        Debug.Log("SUCCESS, Player Name:  " + data.playerName);
+
+    }
+
+    public void updateRoom(string savePath, GameData data, string newRoom) // Just pass raw gamedata
+    {
+        data.currRoom = newRoom;    //save only room
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(savePath, json);
 

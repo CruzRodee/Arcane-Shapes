@@ -28,7 +28,8 @@ public class Tut_UIEventsScript : MonoBehaviour
     public GameObject panelInputName;
     private InputField nameInputField;
 
-    public Button btnMute;
+    public GameObject btnMute;  //have to be gameobj
+    public GameObject btnUnmute;
     public Button btnHome;
     
     public Button btnSkip;
@@ -75,7 +76,7 @@ public class Tut_UIEventsScript : MonoBehaviour
         // GameObject pHall = GameObject.Find("PanelHall").GetComponent<GameObject>();
         
         panelHall.SetActive(false); //hude all buttons from the hall if not skipping
-
+        btnUnmute.SetActive(false); //hide btn if unmuted
         panelProceedYN.SetActive(false);
         panelInputName.SetActive(false);
         playerName = savedGame.playerName;
@@ -90,21 +91,33 @@ public class Tut_UIEventsScript : MonoBehaviour
     }
     private List<SayModel> initDialogue(){
         List<SayModel> messages = new List<SayModel>();
-        messages.Add(new SayModel{code="say", charName=playerName, exp = "shock", msg="Wow! I'm finally here at Arcana Academy..."});
-        messages.Add(new SayModel{code="say", charName=playerName, exp = "happy", msg="I wonder which class I'll be in?"});
-        messages.Add(new SayModel{code="say", charName=profName, exp = "shock", msg="Duck!"});
-        //cue magic sounds lol
-        messages.Add(new SayModel{code="say", charName=profName, exp = "shock", msg="Hey there, student! Didn't see ya there..."});
-        messages.Add(new SayModel{code="say", charName=profName, exp = "question", msg="Oh you must be new here, I can still see the wonder in your eyes!"});
-        messages.Add(new SayModel{code="say", charName=profName, exp = "happy", msg="I'm Professor Oz, the Wizard, yes hehe that's me."});
-        messages.Add(new SayModel{code="say", charName=profName, exp = "happy", msg="What's your name?"});
-
-        messages.Add(new SayModel{code="say", charName=playerName, exp = "happy", msg="My name is..."});
-        //cue input name
-        messages.Add(new SayModel{code="input", msg="NAME"});
-        messages.Add(new SayModel{code="say", charName=playerName, exp = "happy", msg="My name is..." + playerName+"!"});
-        messages.Add(new SayModel{code="say", charName=profName, exp = "happy", msg="Okay, "+playerName+" Welcome to Arcana Academy! You can click on which Lesson you wanna enter. I'll see you in class!"});
         
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Grabe! Nandito na talaga ako sa Arcana Academy!"});
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana."});
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Hindi pa rin ako makapaniwala… estudyante na ako dito!"});
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Hmm… Saan kaya ako magsisimula?"});
+
+        messages.Add(new SayModel{code="say", charName=profName, msg="Oy! Lumayo ka muna diyan!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Ay, sorry! Halos tamaan ka ng lebitating scroll ko. Minsan mahirap kontrolin 'yan, hehe."});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Bago ka lang dito, 'no? Kita ko pa sa'yo yung kislap sa mata mo!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Ako nga pala si Propesor Oz! Oo, wizard ako—pero wag kang mag-alala, hindi ako nangangagat!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Ikaw? Anong pangalan mo?"});
+
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Ah… Ako si..."});
+        messages.Add(new SayModel{code="input", msg="NAME"});
+        messages.Add(new SayModel{code="say", charName=playerName, msg="Ako si "+playerName+"! Astig makilala ka, Propesor Oz!"});
+
+        messages.Add(new SayModel{code="say", charName=profName, msg="Aba, magaling, "+playerName+"! Maligayang pagdating sa Arcana Academy!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Handa ka na bang matutong gumamit ng anyo at mana para makalikha ng kahit anong maisip mo?"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Dito sa Academy, tuturuan ka naming magbuo ng mga bagay mula sa simpleng hugis hanggang sa mga mas komplikadong disenyo."});
+        messages.Add(new SayModel{code="say", charName=profName, msg="At bawat klase, may mga leksyon na matututuhan mo, kaya siguraduhin subukan mong lahat!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="O siya, pumili ka lang ng pintuan na gusto mong pasukin. Kahit ano diyan!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Naghihintay na ang mga guro sa loob, kaya huwag ka nang mahiyang pumasok."});
+
+
+        messages.Add(new SayModel{code="say", charName=profName, msg="Ah, teka lang! Isang paalala… 'wag ka munang dadaan sa huling pintuan ha? 'Yun yung advanced na klase, at kailangan mo munang matutunan ang basics bago ka pumasok diyan."});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Tsaka, tiwala lang. Pag ready ka na, ako na ang magsasabi sa'yo!"});
+        messages.Add(new SayModel{code="say", charName=profName, msg="Oh siya, ingat ka, "+playerName+", at good luck sa unang aralin mo!"});
 
         return messages;
     }
@@ -116,7 +129,7 @@ public class Tut_UIEventsScript : MonoBehaviour
         //after this, reload the messages list to contain the new playerName
 
         //check if working huhu TODO OKAY IT WORKS NOW
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false,0,0,0,0,0,0,0,0,0,0,0);
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false,0,0,0,0,0,0,0,0,0,0,0,"NONE");
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         Debug.Log(savedGame.playerName);
 
@@ -252,12 +265,14 @@ public class Tut_UIEventsScript : MonoBehaviour
         if (muted)
         {
 
-            btnMuteImg.sprite = Resources.Load<Sprite>("/Sprites/UI Assets/ICONS/SoundsOFF.png");
+            btnMute.SetActive(false); //hide btn if unmuted
+            btnUnmute.SetActive(true); //hide btn if unmuted
             bgmSrc.volume = 1f;
         }
         else
         {
-            btnMuteImg.sprite = Resources.Load<Sprite>("/Sprites/UI Assets/ICONS/SoundsON.png");
+            btnMute.SetActive(true); //hide btn if unmuted
+            btnUnmute.SetActive(false); //hide btn if unmuted
             bgmSrc.volume = 0f;
         }
     }

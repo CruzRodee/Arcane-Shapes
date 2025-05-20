@@ -69,7 +69,7 @@ public class MM_UIScript : MonoBehaviour
 
             overlayPanel.SetActive(true);
             Text overlayText = GameObject.Find("PanelText").GetComponent<Text>();
-            overlayText.text = "Previous game file already exists. Overwrite data?";
+            overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
         }
         else
             LoadFirstScene();
@@ -85,9 +85,9 @@ public class MM_UIScript : MonoBehaviour
         panelNotify.SetActive(true);
         Text overlayText = GameObject.Find("TextOverlay").GetComponent<Text>();
 
-        overlayText.text = "Creating a new game!";
+        overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,"NONE");
         // saveGame("You",false,0,0,0,0,0,0,0,0,0,0,0);
 
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
