@@ -43,16 +43,7 @@ public class LS_EventsScript : MonoBehaviour
     //UI active
     public GameObject panelHallway;
     public GameObject panelDialogue;
-    
 
-
-    //dialogue boxes for the spells that contain the equations
-    private GameObject panelTriangle;
-    private GameObject panelRectangle;
-    private GameObject panelSquare;
-    private GameObject panelCircle;
-    private GameObject panelSCircle;
-    private GameObject tempObject;
 
     // Saving
     private SaveLoadController saverLoader = new SaveLoadController();
@@ -75,18 +66,6 @@ public class LS_EventsScript : MonoBehaviour
     void Start()
     {
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
-
-        panelTriangle = GameObject.Find("EquationTriangle");
-        panelSquare = GameObject.Find("EquationSquare");
-        panelCircle = GameObject.Find("EquationCircle");
-        panelRectangle = GameObject.Find("EquationRect");
-        panelSCircle = GameObject.Find("EquationSCircle");
-
-        panelTriangle.SetActive(false);
-        panelSquare.SetActive(false);
-        panelRectangle.SetActive(false);
-        panelCircle.SetActive(false);
-        panelSCircle.SetActive(false);
 
         //Save Data after game
         if (GlobalVariables.gameFinished)
