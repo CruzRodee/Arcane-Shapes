@@ -373,7 +373,7 @@ public class GameBehaviour : MonoBehaviour
                 //correctionPerc.gameObject.SetActive(true);
                 slider.gameObject.SetActive(false); //test
 
-                dropdown.gameObject.SetActive(false);
+                // dropdown.gameObject.SetActive(false);
                 lineSnapper.gameObject.SetActive(true);
                 undo.gameObject.SetActive(true);
 
@@ -756,9 +756,9 @@ public class GameBehaviour : MonoBehaviour
         ls = lineSnapper.gameObject.activeSelf;
         u = undo.IsActive();
         t = text.IsActive();
-        d = dropdown.IsActive();
-        r = restart.IsActive();
-        q = quit.IsActive();
+        // d = dropdown.IsActive();
+        // r = restart.IsActive();
+        // q = quit.IsActive();
 
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
@@ -769,9 +769,9 @@ public class GameBehaviour : MonoBehaviour
         lineSnapper.gameObject.SetActive(false);
         undo.gameObject.SetActive(false);
         text.gameObject.SetActive(false);
-        dropdown.gameObject.SetActive(false);
-        restart.gameObject.SetActive(false);
-        quit.gameObject.SetActive(false);
+        // dropdown.gameObject.SetActive(false);
+        // restart.gameObject.SetActive(false);
+        // quit.gameObject.SetActive(false);
 
         mainCamera.SetActive(false);
         classroomCamera.SetActive(true);
@@ -791,9 +791,9 @@ public class GameBehaviour : MonoBehaviour
         lineSnapper.gameObject.SetActive(ls);
         undo.gameObject.SetActive(u);
         text.gameObject.SetActive(t);
-        dropdown.gameObject.SetActive(d);
-        restart.gameObject.SetActive(r);
-        quit.gameObject.SetActive(q);
+        // dropdown.gameObject.SetActive(d);
+        // restart.gameObject.SetActive(r);
+        // quit.gameObject.SetActive(q);
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);

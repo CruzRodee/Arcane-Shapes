@@ -43,8 +43,7 @@ public class LS_EventsScript : MonoBehaviour
     //UI active
     public GameObject panelHallway;
     public GameObject panelDialogue;
-    public GameObject panelMagicScroll;
-    public GameObject panelCasting;
+    
 
 
     //dialogue boxes for the spells that contain the equations
@@ -144,11 +143,6 @@ public class LS_EventsScript : MonoBehaviour
         //TODO: load the other levels here
         panelHallway = GameObject.Find("PanelHall");
         panelDialogue = GameObject.Find("PanelDialogue");
-        panelCasting = GameObject.Find("PanelCasting");
-        panelMagicScroll = GameObject.Find("PanelMagicScroll");
-
-        panelCasting.SetActive(false); //hide lang muna
-        panelMagicScroll.SetActive(false); //hide lang muna
 
         TextHUD = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
 
@@ -353,6 +347,71 @@ public class LS_EventsScript : MonoBehaviour
     {
         SceneManager.LoadScene("HOGame"); //Load Level scene
     }
+//pasted from old repo
+public void enterRectangle(){
+        UnityEngine.Debug.Log("Rectangle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
+        GlobalVariables.level = savedGame.rectLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "RECTANGLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterCircle(){
+        UnityEngine.Debug.Log("Circle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
+        GlobalVariables.level = savedGame.circleLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "CIRCLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterSquare(){
+        UnityEngine.Debug.Log("Square Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
+        GlobalVariables.level = savedGame.squareLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "SQUARE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+    public void enterTriangle(){
+        UnityEngine.Debug.Log("Triangle Room");
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
+        GlobalVariables.level = savedGame.triLvl; //LOAD LEVEL DATA
+        //SAVE THS TO JSON -> just a marker for next scene
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "TRIANGLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterSemiCircle(){
+        UnityEngine.Debug.Log("Semi-Circle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
+        GlobalVariables.level = savedGame.scircleLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "SEMI_CIRCLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterCompound(){
+        UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+
+        GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
+    }
+
+/*
 
     public void enterRectangle(){
         UnityEngine.Debug.Log("Rectangle Room");
@@ -386,6 +445,7 @@ public class LS_EventsScript : MonoBehaviour
         screenFade.SetTrigger("sceneOut");
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
+    /*
     public void enterTriangle(){
         UnityEngine.Debug.Log("Triangle Room");
         //example muna naten to since eto namanna den ung nakagawa na
@@ -426,6 +486,7 @@ public class LS_EventsScript : MonoBehaviour
         screenFade.SetTrigger("sceneOut");
         Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
     }
+    */
 
     public void calcEquation(){
         //Randomizer based on range of easiness
