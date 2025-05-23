@@ -157,3 +157,15 @@ by: David Skalin
 "Battle hammer" (https://skfb.ly/6RFyL) by David Skalin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 -----------------------------------------------------------------------------------------------
+
+Handwritten math symbols dataset: https://www.kaggle.com/datasets/xainano/handwrittenmathsymbols
+by: Xai Nano
+License - CC0: Public Domain
+
+-----------------------------------------------------------------------------------------------
+
+Handwritten math symbol and digit dataset: https://www.kaggle.com/datasets/clarencezhao/handwritten-math-symbol-dataset
+by: clarence zhao
+License - Data files © Original Authors
+
+-----------------------------------------------------------------------------------------------
