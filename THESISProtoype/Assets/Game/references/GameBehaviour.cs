@@ -299,7 +299,8 @@ public class GameBehaviour : MonoBehaviour
         }
     }
     public void chooseSquare(){
-        toggleConfirmScreen("SQUARE");
+        chosenShape = "SQUARE";
+        toggleConfirmScreen(chosenShape);
     }
 
     public void chooseSemiCircle(){
