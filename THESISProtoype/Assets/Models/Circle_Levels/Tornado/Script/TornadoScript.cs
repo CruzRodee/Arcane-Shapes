@@ -5,6 +5,10 @@ using UnityEngine.VFX;
 
 public class TornadoScript : BaseLOScript
 {
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     private const float SCALING_VAR = 0.6f;
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
     private const float CAST_DURATION = 7f;
@@ -15,29 +19,32 @@ public class TornadoScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
-        this.SPELLDURATION = 5.0f; // Set custom spell duration for longer/shorter spells
+        this.SPELLDURATION = 6.0f; // Set custom spell duration for longer/shorter spells
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            //Enable spin
-            base.SuccessfulCast();
+        //Enable spin
+        base.SuccessfulCast();
 
-            // Enable Model
-            this.transform.Find("Sketchfab_model").gameObject.SetActive(true);
+        // Enable Model
+        this.transform.Find("Sketchfab_model").gameObject.SetActive(true);
 
-            // Scale larger
-            StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
-        }
+        // Scale larger
+        StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
+
+        Invoke(nameof(Shaky), 0.6f);
+    }
+
+    private void Shaky()
+    {
+        //Shakycam
+        cameraShakeScript.shakeDuration = CAST_DURATION * 1.1f;
+        cameraShakeScript.shakeAmount = 0.1f;
     }
 }

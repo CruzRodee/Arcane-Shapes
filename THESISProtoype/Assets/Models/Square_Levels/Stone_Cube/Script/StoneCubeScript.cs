@@ -20,21 +20,12 @@ public class StoneCubeScript : BaseLOScript
         // Enable Mesh Renderer
         this.transform.Find("Stone_Cube").gameObject.GetComponent<Renderer>().enabled = true;
 
-        try
-        {
-            // TODO: Add VFX Graph magic effects here later
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-            // VFX after cube expansion
-            Invoke(nameof(AfterFlash), time);
-        }
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation);
+        Invoke(nameof(AfterFlash), time);
     }
 
     private void AfterFlash()
     {
-        temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation);
     }
 }

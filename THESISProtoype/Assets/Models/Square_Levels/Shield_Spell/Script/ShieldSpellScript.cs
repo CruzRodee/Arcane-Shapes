@@ -5,6 +5,10 @@ using UnityEngine.VFX;
 
 public class ShieldSpellScript : BaseLOScript
 {
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     private const float time = 0.5f;
     private Vector3 OFFSET = new Vector3(0, 0, -7f);
     private const float SCALING_VAR = 0.25f;
@@ -16,23 +20,17 @@ public class ShieldSpellScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     new void Start()
     {
         base.Start();
 
-        try
-        {
-            // Idicator VFX
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-        }
+        // Idicator VFX
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
     }
 
     public override void SuccessfulCast()
@@ -41,15 +39,15 @@ public class ShieldSpellScript : BaseLOScript
         this.GetComponent<Renderer>().enabled = true;
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
 
-        try
-        {
-            // TODO: Add detonation vfx
-            temp.Add(Instantiate(vfxSet[1], this.transform.position + OFFSET, Quaternion.identity));
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        // TODO: Add detonation vfx
+        Instantiate(vfxSet[1], this.transform.position + OFFSET, Quaternion.identity);
+        Invoke(nameof(Shaky), CAST_DURATION + 0.25f);
+    }
 
-        }
+    private void Shaky()
+    {
+        //Shakycam
+        cameraShakeScript.shakeDuration = CAST_DURATION * 0.5f;
+        cameraShakeScript.shakeAmount = 0.1f;
     }
 }

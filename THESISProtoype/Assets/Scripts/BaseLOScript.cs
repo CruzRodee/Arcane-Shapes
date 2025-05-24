@@ -7,7 +7,7 @@ public class BaseLOScript : MonoBehaviour
 {
     public GameObject[] vfxSet;
     protected Animator animator;
-    [SerializeReference] protected List<GameObject> temp;
+    //[SerializeReference] protected List<GameObject> temp;
     public bool TEST = false;
     private const float CLEANTIME = 15.0f;
     private const float TESTDELAY = 0.01f;
@@ -25,7 +25,7 @@ public class BaseLOScript : MonoBehaviour
         if(TEST)
             Invoke(nameof(SuccessfulCast), TESTDELAY);
 
-        Invoke(nameof(CleanUp), CLEANTIME); // Cleaning objects
+        //Invoke(nameof(CleanUp), CLEANTIME); // Cleaning objects
     }
 
     // Update is called once per frame
@@ -34,14 +34,14 @@ public class BaseLOScript : MonoBehaviour
     //
     //}
 
-    private void CleanUp()
-    {
-        foreach(GameObject obj in temp)
-        {
-            GameObject.Destroy(obj);
-        }
-        temp = null;
-    }
+    //private void CleanUp()
+    //{
+    //    foreach(GameObject obj in temp)
+    //    {
+    //        GameObject.Destroy(obj);
+    //    }
+    //    temp = null;
+    //}
 
     // Source: https://discussions.unity.com/t/how-to-gradually-scale-an-object-between-different-sizes/883714/3 by: sonicbelmont
     protected IEnumerator LocalScaleOverTime(GameObject obj, float duration, Vector3 endScale)
@@ -74,6 +74,56 @@ public class BaseLOScript : MonoBehaviour
         }
 
         obj.transform.position = endPosition;
+    }
+
+    protected IEnumerator LocalMoveOverTime(GameObject obj, float duration, Vector3 endLocalPosition)
+    {
+        var startLocalPosition = obj.transform.localPosition;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.localPosition = Vector3.Lerp(startLocalPosition, endLocalPosition, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.localPosition = endLocalPosition;
+    }
+
+    protected IEnumerator LocalEulerOverTime(GameObject obj, float duration, Vector3 endEulerAngle)
+    {
+        var startAngle = obj.transform.localEulerAngles;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.localEulerAngles = Vector3.Lerp(startAngle, endEulerAngle, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.localEulerAngles = endEulerAngle;
+    }
+
+    protected IEnumerator LightRangeOverTime(GameObject obj, float duration, float endRange)
+    {
+        Light light = obj.GetComponent<Light>();
+        
+        var startRange = light.range;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            light.range = Mathf.Lerp(startRange, endRange, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        light.range = endRange;
     }
 
     public virtual void SuccessfulCast()

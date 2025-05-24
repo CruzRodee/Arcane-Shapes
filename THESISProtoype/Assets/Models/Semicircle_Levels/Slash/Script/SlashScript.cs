@@ -5,6 +5,10 @@ using UnityEngine.VFX;
 
 public class SlashScript : BaseLOScript
 {
+    //Gameobject for camera, aquired by name and used for shaky cam
+    private CameraShake cameraShakeScript;
+    public string cameraName = "ClassroomCamera"; //Default name
+
     public GameObject cube1, cube2;
     
     private const float SCALING_VAR = 1.2f;
@@ -17,6 +21,9 @@ public class SlashScript : BaseLOScript
     private void Awake()
     {
         this.transform.localPosition += SPAWNOFFSET;
+
+        //Get Camera object
+        cameraShakeScript = GameObject.Find(cameraName).GetComponent<CameraShake>();
     }
 
     public override void SuccessfulCast()
@@ -30,19 +37,14 @@ public class SlashScript : BaseLOScript
 
     private void Flash()
     {
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], this.transform.Find("Spark").position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.Find("Spark").position, this.transform.rotation).transform.localScale = SCALING;
 
-            // Move Cubes sideways a bit for slash gap
-            cube1.transform.localPosition -= CUTDIF;
-            cube2.transform.localPosition += CUTDIF;
-        }
+        // Move Cubes sideways a bit for slash gap
+        cube1.transform.localPosition -= CUTDIF;
+        cube2.transform.localPosition += CUTDIF;
+
+        //Shakycam
+        cameraShakeScript.shakeDuration = 0.5f;
+        cameraShakeScript.shakeAmount = 0.1f;
     }
 }

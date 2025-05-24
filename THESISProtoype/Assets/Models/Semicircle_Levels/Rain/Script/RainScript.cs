@@ -18,19 +18,9 @@ public class RainScript : BaseLOScript
     public override void SuccessfulCast()
     {
         Transform rain = this.transform.Find("RainAndClouds");
+        Instantiate(vfxSet[0], rain.position, this.transform.rotation).transform.localScale = SCALING;
 
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], rain.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-            // Enable VFX
-            rain.gameObject.GetComponent<VisualEffect>().enabled = true;
-        }
+        // Enable VFX
+        rain.gameObject.GetComponent<VisualEffect>().enabled = true;
     }
 }

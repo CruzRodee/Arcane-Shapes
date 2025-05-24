@@ -17,34 +17,17 @@ public class MoveSpellScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // Magical Burst effect before moving
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        // Magical Burst effect before moving
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            StartCoroutine(MoveOverTime(this.gameObject, time, this.transform.position + OFFSET));
+        StartCoroutine(MoveOverTime(this.gameObject, time, this.transform.position + OFFSET));
 
-            //Magical burst effect after moving
-            Invoke(nameof(AfterFlash), time * 1.2f);
-        }
+        //Magical burst effect after moving
+        Invoke(nameof(AfterFlash), time * 1.2f);
     }
 
     private void AfterFlash()
     {
-        try
-        {
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[1].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
-
-        }
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
     }
 }

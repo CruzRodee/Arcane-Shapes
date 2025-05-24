@@ -17,21 +17,12 @@ public class MushroomScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // VFX Graph flash
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
 
-            // Enable all children
-            foreach (Transform child in this.transform)
-            {
-                child.gameObject.SetActive(true);
-            }
+        // Enable all children
+        foreach (Transform child in this.transform)
+        {
+            child.gameObject.SetActive(true);
         }
     }
 }

@@ -18,19 +18,11 @@ public class PaintAWallScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        try
-        {
-            // TODO: Add VFX Graph magic effects here later
-            temp.Add(Instantiate(vfxSet[0], this.transform.position, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        // TODO: Add VFX Graph magic effects here later
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-            // TODO: Change color of object material to random color
-            paintColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
-            this.GetComponent<Renderer>().material.SetColor("_BaseColor", paintColor);
-        } 
+        // TODO: Change color of object material to random color
+        paintColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+        this.GetComponent<Renderer>().material.SetColor("_BaseColor", paintColor);
     }
 }

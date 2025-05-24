@@ -17,19 +17,11 @@ public class TableAddClothScript : BaseLOScript
     }
     public override void SuccessfulCast()
     {
-        try
-        {
-            // TODO: Add VFX Graph magic effects here later
-            temp.Add(Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation));
-            temp[0].transform.localScale = SCALING;
-        }
-        finally
-        {
-            Debug.Log("How bout I run anyway?");
+        // TODO: Add VFX Graph magic effects here later
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
 
-            // TODO: Get cloth component and turn on renderer
-            GameObject tempObject = this.transform.Find("Cloth").gameObject;
-            tempObject.GetComponent<Renderer>().enabled = true;
-        }
+        // TODO: Get cloth component and turn on renderer
+        GameObject tempObject = this.transform.Find("Cloth").gameObject;
+        tempObject.GetComponent<Renderer>().enabled = true;
     }
 }
