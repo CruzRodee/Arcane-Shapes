@@ -72,6 +72,8 @@ public class GameBehaviour : MonoBehaviour
 
     bool isDoneMeasuring;
     //panels na toggable, containers lang
+    public GameObject hud;
+    public GameObject quickMenu;
     public GameObject panelMagicScroll;
     public GameObject pConfirm;
     public GameObject pLowerScroll;
@@ -285,17 +287,17 @@ public class GameBehaviour : MonoBehaviour
 
     public void toggleConfirmScreen(string spell){
         if (pConfirm != null){
-            pConfirm.SetActive(!pConfirm.active);
+            pConfirm.SetActive(!pConfirm.activeInHierarchy);
         }
 
-        if (pConfirm.active){
+        if (pConfirm.activeInHierarchy){
             confirmText.text = "[ "+spell+" ]";
         }
     }
 
     public void toggleMagicScroll(){
         if (pLowerScroll != null){
-            pLowerScroll.SetActive(!pLowerScroll.active);
+            pLowerScroll.SetActive(!pLowerScroll.activeInHierarchy);
         }
     }
     public void chooseSquare(){
@@ -339,11 +341,13 @@ public class GameBehaviour : MonoBehaviour
     {
         if (rtDialogue.anchoredPosition.y == 100)
         {
-            rtDialogue.anchoredPosition = new Vector2(600f, -59f);
+            rtDialogue.anchoredPosition = new Vector2(600f, -100f);
+            pDiaButtons.GetComponent<RectTransform>().anchoredPosition = new Vector2(239, 150);
             // pDialogue.y = -59;
         }
         else{
             rtDialogue.anchoredPosition = new Vector2(600f, 100f);
+            pDiaButtons.GetComponent<RectTransform>().anchoredPosition = new Vector2(239, 123);
             // pDialogue.y = 100; //tago
         }
     }
@@ -440,7 +444,7 @@ public class GameBehaviour : MonoBehaviour
     public void notifyWrongShape()
     {
         if (pNotify != null){
-            pNotify.SetActive(!pNotify.active);
+            pNotify.SetActive(!pNotify.activeInHierarchy);
         }
     }
 
@@ -528,6 +532,12 @@ public class GameBehaviour : MonoBehaviour
         {
             Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
             screenFadeAnimator.SetTrigger("fadeIn");
+
+            //Hide new UI at start
+            HideNewUI();
+
+            //Except Hud
+            hud.SetActive(true);
         }
 
         //UnityEngine.Debug.Log(dropdown);
@@ -824,6 +834,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void DelayedCastAnimation()
     {
+        //Hide UI elems
+        HideNewUI();
+        
         if (error == 0f)
         {
             animScript.playerScript.GoodCast(SendShapeToPlayer(currentShape));
@@ -1228,6 +1241,27 @@ public class GameBehaviour : MonoBehaviour
         screenFadeAnimator.SetTrigger("fade");
         Invoke(nameof(ToUI), TRANSITIONTIME);
         Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
+        Invoke(nameof(ShowNewUI), TRANSITIONTIME);
+        Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
+    }
+
+    private void HideNewUI()
+    {
+        hud.SetActive(false);
+        pDialogue.SetActive(false);
+        panelMagicScroll.SetActive(false);
+        quickMenu.SetActive(false);
+    }
+    private void ShowNewUI()
+    {
+        hud.SetActive(true);
+        pDialogue.SetActive(true);
+        panelMagicScroll.SetActive(true);
+        quickMenu.SetActive(true);
+    }
+    private void RemoveRoomText()
+    {
+        hud.SetActive(false);
     }
 
     /**Call to reset/set the level problem*/
