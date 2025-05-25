@@ -41,7 +41,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Grab GUI of textmeshpro object
         formulaDispGUI = formulaDispObj.GetComponent<TextMeshProUGUI>();
         //Init text for GUI
-        formulaDispGUI.text = "Enter Formula by Drawing on the Board";
+        formulaDispGUI.text = "Enter Formula in Board";
 
         //Grab Gamebehavior script if LO
         if(isLOGame)
@@ -278,7 +278,12 @@ public class FormulaAnalyzer : MonoBehaviour
         //TODO: USE THIS METHOD TO CHECK IF USER SOLVED MATH INPUT CORRECTLY
         if(evalAnswer.ToString() == inputAnswer)
         {
-            //TODO: send a message or activate a method in GB that
+            //Send a message or activate LO GB the input answer, end early
+            if (isLOGame)
+            {
+                gb.InputAnswer(float.Parse(inputAnswer));
+                return true;
+            }
 
             //DEBUG
             if (DEBUG)
@@ -368,7 +373,7 @@ public class FormulaAnalyzer : MonoBehaviour
     }
 
     //Resetters
-    private void ResetAnalyzer()
+    public void ResetAnalyzer()
     {
         ResetEvalAns();
         ResetInputAns();
@@ -507,8 +512,14 @@ public class FormulaAnalyzer : MonoBehaviour
         }
 
         //Store vals as sideA and sideB
-        sideA = float.Parse(vals[0]);
-        sideB = float.Parse(vals[1]);
+        try
+        {
+            sideA = float.Parse(vals[0]);
+            sideB = float.Parse(vals[1]);
+        } catch (System.Exception)
+        {
+            return GameBehaviour.SHAPES.NONE; //Either invalid input or logic error
+        }
 
         //No shape if there are operators other than *, /, and =
         foreach (string op in ops) 

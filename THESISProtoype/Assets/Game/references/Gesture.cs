@@ -38,6 +38,14 @@ public class LineSnapper : MonoBehaviour
         }
     }
 
+    public void ToggleLineText()
+    {
+        if (firstLineText != null)
+            firstLineText.SetActive(!firstLineText.activeInHierarchy);
+        if (secondLineText != null)
+            secondLineText.SetActive(!secondLineText.activeInHierarchy);
+    }
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -82,12 +90,12 @@ public class LineSnapper : MonoBehaviour
 
     void Update()
     {
-        int maxLines = GetMaxLinesForShape();
-        if (lineCount >= maxLines)
+        if (lineCount >= GetMaxLinesForShape())
         {
-            main.SetCastingState(true); return;
+            //main.SetCastingState(true);
+            return;
         }
-        else { main.SetCastingState(false); }
+        //else { main.SetCastingState(false); }
 
         if (lineCount == 0)
             currentLine = firstLine;
@@ -378,13 +386,14 @@ public class LineSnapper : MonoBehaviour
 
     public void OnUndoPressed()
     {
-        if (lineCount <= 0) return;
+        if (lineCount <= 0)
+        {
+            lineCount = 0;
+            return;
+        }
 
         //Toggle Dialogue Box, reset button, flag and dialogue text
-        main.textFinish.text = "Measure";
-        main.isDoneMeasuring = false;
-        if(main.rtDialogue.anchoredPosition.y == 100) //Only trigger if dilogue is not hidden
-            main.toggleDialogueBox();
+        main.UndoMeasure();
 
         lineCount--; // Reduce lines by one if there is > 0 lines
 

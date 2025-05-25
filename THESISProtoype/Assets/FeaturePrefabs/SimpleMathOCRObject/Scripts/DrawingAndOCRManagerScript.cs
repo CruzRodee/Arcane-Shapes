@@ -55,6 +55,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private float timer = 0f;
     private bool clear = false;
     private bool hasDrawn = false; //Prevents the OCR from starting before drawing
+    private bool hasHit = false; //Determines if the OCR board was hit when drawing
     public bool processing = false; //Stops drawing if needed
 
     //Variable for OCR model in .onnx and the model and worker vars
@@ -153,7 +154,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             //Make new LR object for multiple lines
             MakeNewLine();
 
-            if (clear && hasDrawn)
+            if (clear && hasDrawn && hasHit)
             {
                 RotateImage(generatedTexture, -90f); //Rotate texture first since it is tilted for some reason
                 
@@ -217,7 +218,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     }
 
     //Function for clearing vfx, to avoid clutter on Update()
-    private void ResetVFX()
+    public void ResetVFX()
     {
         line = vfxLineGO.GetComponent<LineRenderer>(); //Go back to default
 
@@ -235,6 +236,14 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         ray = cam.ScreenPointToRay(Input.mousePosition);//Get a ray from the center of the camera to the mouse position
         if (Physics.Raycast(ray, out hit, raycast_range))//Check if the ray hits something
         {
+            //If the board was not hit by the raycast, do nothing
+            if (hit.collider == null)
+            {
+                hasHit = false;
+                return;
+            }
+            hasHit = true; //If collider not null then it hit
+            
             point.position = hit.point;//Move to pointer to the place where the mouse intersects the canvas
             xPixel = (int)((point.localPosition.x - topLeftCorner.localPosition.x) * xMult); //Calculate the position in pixels
             yPixel = (int)((point.localPosition.y - topLeftCorner.localPosition.y) * yMult);
@@ -287,7 +296,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         generatedTexture.Apply();
     }
 
-    void ResetColor() //This function resets the color to white
+    public void ResetColor() //This function resets the color to white
     {
         for (int i = 0; i < colorMap.Length; i++)
             colorMap[i] = Color.white;

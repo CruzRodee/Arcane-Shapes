@@ -345,6 +345,11 @@ MonoBehaviour:
   pEquationRectangle: {fileID: 2132351598}
   pEquationSCircle: {fileID: 2132351597}
   pEquationCircle: {fileID: 2132351596}
+  ocrInput: {fileID: 2062185997}
+  formulaDisplay: {fileID: 451637218}
+  rightStartTransObj: {fileID: 2083741571}
+  rightEndTransObj: {fileID: 862825194}
+  formulaAnalyzerObj: {fileID: 2062185998}
 --- !u!1 &451637218
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,7 +764,7 @@ Transform:
   m_GameObject: {fileID: 862825194}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18, y: 5, z: -1}
+  m_LocalPosition: {x: 17, y: 5, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1385,7 +1390,7 @@ Transform:
   m_GameObject: {fileID: 1732195968}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 5, z: -1}
+  m_LocalPosition: {x: 11, y: 5, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1476,17 +1481,17 @@ PrefabInstance:
     - target: {fileID: 3496397040311864625, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.90000004
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3496397040311864625, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.90000004
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3496397040311864625, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.90000004
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3496397040311864625, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
@@ -1588,6 +1593,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a5b28a9ee1c15049ad359663f957bb5, type: 3}
+--- !u!1 &2062185997 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6739646986842005187, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+    type: 3}
+  m_PrefabInstance: {fileID: 2062185996}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2062185998 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9120416953951716866, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+    type: 3}
+  m_PrefabInstance: {fileID: 2062185996}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2074031436
 GameObject:
   m_ObjectHideFlags: 0

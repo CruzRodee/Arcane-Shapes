@@ -44,7 +44,7 @@ public class GameBehaviour : MonoBehaviour
     private GameObject mainCamera, classroomCamera;
     private Material uiMaterial, classroomMaterial;
     private Animator screenFadeAnimator;
-    private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 0.3f, STARTDELAY = 3.0f;
+    private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1f, STARTDELAY = 3.0f;
     private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
 
     private AnimScript animScript;
@@ -62,10 +62,10 @@ public class GameBehaviour : MonoBehaviour
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
 
-    public RectTransform rtDialogue;
+    private RectTransform rtDialogue;
     private RectTransform rtSlider;
 
-    public bool isDoneMeasuring;
+    private bool isDoneMeasuring;
     //panels na toggable, containers lang
     public GameObject hud;
     public GameObject quickMenu;
@@ -86,7 +86,7 @@ public class GameBehaviour : MonoBehaviour
     private Text   textAnsTri;
     private Text manaReq;
     private Text characterSay;
-    public Text textFinish;
+    private Text textFinish;
 
     public Text confirmText;
     public Text textHUD;
@@ -102,6 +102,20 @@ public class GameBehaviour : MonoBehaviour
     private string chosenShape;
 
 
+    private const string castBtnText1 = "Cast Spell";
+    private const string castBtnText2 = "Redo Input";
+    private const float DIALOGUESLIDETIME = 0.25f;
+    private const float OCRSLIDETIME = 0.35f;
+    private DrawingAndOCRManagerScript ocrScript;
+    private FormulaAnalyzer fa;
+    private Vector2 origDiaRT;
+    // References to OCR input that will replace the slider
+    public GameObject ocrInput;
+    public GameObject formulaDisplay;
+    public GameObject rightStartTransObj, rightEndTransObj;
+    public GameObject formulaAnalyzerObj;
+    private float inputAnswer = 0f; //Float field for entering answer via InputAnswer()
+
     //----------------------------------------------
 
 
@@ -115,6 +129,12 @@ public class GameBehaviour : MonoBehaviour
         animScript = GameObject.Find("AnimHolder").GetComponent<AnimScript>();
         // quit = GameObject.Find("Quit").GetComponent<Button>();
         defaultOptions = new List<TMP_Dropdown.OptionData>();
+
+        //Get OCR script
+        ocrScript = ocrInput.transform.Find("DrawingAndOCRManager").GetComponent<DrawingAndOCRManagerScript>();
+
+        //Get FA script
+        fa = formulaAnalyzerObj.GetComponent<FormulaAnalyzer>();
     }
 
     /*
@@ -265,6 +285,11 @@ public class GameBehaviour : MonoBehaviour
 /////////////////added from old repo
 // just button events
     public void onRestart(){
+        screenFadeAnimator.SetTrigger("sceneOut");
+        Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
+    }
+    private void LoadSceneDelay()
+    {
         SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
     }
 
@@ -334,7 +359,6 @@ public class GameBehaviour : MonoBehaviour
 
     public void toggleDialogueBox()
     {
-        const float DIALOGUESLIDETIME = 0.25f;
         Vector2 RTAWAYTRANS = new (600f, -100f);
         Vector2 PDIAAWAYTRANS = new (239, 150);
         Vector2 RTONTRANS = new (600f, 100f);
@@ -483,26 +507,142 @@ public class GameBehaviour : MonoBehaviour
 
             //ALSO TODO: FIX LINE LENGTHS DISPLAY
 
-            toggleDialogueBox(); //show
-            toggleSlider();
-            isDoneMeasuring=true;
-            textFinish.text = "Cast Spell";
-            slider.gameObject.SetActive(true);
+            DoneMeasure();
         }
-        else{
-            toggleDialogueBox(); //hide
-            CalcError();
-            
-            correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
-            //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
-
-            correctionPerc.gameObject.SetActive(true); //Show error
-
-            Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
+        else{ //Reset the OCRInput board
+            fa.ResetAnalyzer();
         }
     }
 
+    public void InputAnswer(float ans = 0f) //Sends final answer
+    {
+        inputAnswer = ans;
+        
+        toggleDialogueBox(); //hide                  
 
+        //DisableNewUI
+        HideNewUI();
+
+        //Disable OCR board and formulaDisplay
+        StartCoroutine(SlideOCRBoard(false));
+
+        CalcError();
+
+        correctionPerc.text = "Incorrectness: " + Math.Abs(error) + "%";
+        //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+
+        correctionPerc.gameObject.SetActive(true); //Show error
+
+        Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
+    }
+
+    public void DoneMeasure()
+    {
+        isDoneMeasuring = true;
+        textFinish.text = castBtnText2;
+
+        //OLD SLIDER CODE
+        //toggleSlider();
+        //slider.gameObject.SetActive(true);
+
+        //NEW OCR SHOW CODE
+        StartCoroutine(SlideOCRBoard(true));
+        lineSnapper.ToggleLineText(); //Toggle off
+    }
+    public void UndoMeasure()
+    {
+        //Hide OCR Board
+        if (isDoneMeasuring)
+        {
+            StartCoroutine(SlideOCRBoard(false));
+            Invoke(nameof(ToggleLineDelay), OCRSLIDETIME); //Toggle on
+        }
+
+        textFinish.text = castBtnText1;
+        isDoneMeasuring = false;
+    }
+    private void ToggleLineDelay()
+    {
+        lineSnapper.ToggleLineText();
+    }
+
+    private IEnumerator SlideOCRBoard(bool show) //Boolean determins if showing or hiding
+    {
+        if (show)
+        {
+            toggleDialogueBox(); //Show
+
+            yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
+            
+            ocrInput.SetActive(true); //Activate the board
+            StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightEndTransObj.transform.position));
+
+            //Slide and Scale Dialogue Box
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
+            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.7f, 0.7f, 0.7f)));
+        }
+        else if (!show)
+        {
+            ocrScript.processing = true; //Stop accepting input
+
+            formulaDisplay.SetActive(false); //Hide OCR input Display
+
+            StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightStartTransObj.transform.position));
+
+            //Slide Dialogue Box
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
+            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(1f, 1f, 1f))); //Scale to Normal
+        }
+
+        yield return new WaitForSeconds(OCRSLIDETIME); //Wait until OCR board stops moving
+
+        if (show)
+        {
+            //Reset Board
+            ocrScript.ResetColor();
+            ocrScript.ResetVFX();
+
+            ocrScript.processing = false; //Start accepting input
+            formulaDisplay.SetActive(true); //Show OCR input Display
+        }
+        else if (!show)
+        {
+            ocrInput.SetActive(false); //Deactivate the board once off screen
+            toggleDialogueBox(); //Hide
+        }
+    }
+
+    private IEnumerator MoveOverTime(GameObject obj, float duration, Vector3 endPosition)
+    {
+        var startPosition = obj.transform.position;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.position = endPosition;
+    }
+
+    private IEnumerator LocalScaleOverTime(GameObject obj, float duration, Vector3 endScale)
+    {
+        var startScale = obj.transform.localScale;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            obj.transform.localScale = Vector3.Lerp(startScale, endScale, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        obj.transform.localScale = endScale;
+    }
 
     ///------------------------- edn
 
@@ -513,6 +653,7 @@ public class GameBehaviour : MonoBehaviour
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
         manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
         textFinish= GameObject.Find("textFinish").GetComponent<Text>();
+        textFinish.text = castBtnText1;
 
         isDoneMeasuring = false;
 
@@ -527,6 +668,7 @@ public class GameBehaviour : MonoBehaviour
 
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
+        origDiaRT = rtDialogue.anchoredPosition; //Save original pos
         rtSlider = pSlider.GetComponent<RectTransform>();
 
 
@@ -771,6 +913,8 @@ public class GameBehaviour : MonoBehaviour
     private void CalcError()
     {
         float clamped = spellCastEvent.GetFillPercentage();
+        shapeFiller.fillMaxValue = clamped; //Fill Shape when input
+        shapeFiller.isFillingActive = true; //Start filling
         if (clamped > 2.0f)
             clamped = 2.0f;
 
@@ -1223,7 +1367,7 @@ public class GameBehaviour : MonoBehaviour
 
             //12.4565735753735 => 1245
             float compX = (float)Math.Round(result*10)/10.0f;
-            float compY = this.main.slider.value;//int.Parse(this.main.manaMeasure.text);
+            float compY = main.inputAnswer;//int.Parse(this.main.manaMeasure.text);
             /**/
             /*UnityEngine.Debug.Log("X Measure = " + compX);
             //UnityEngine.Debug.Log("S Measure = " + s_measure);
