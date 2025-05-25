@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -25,7 +24,10 @@ public class FormulaAnalyzer : MonoBehaviour
     public bool DEBUG = false;
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
-    public MonoBehaviour gb; //Reference to GB script, assign this during GB Awaken()
+    public bool isLOGame = true; //Boolean that determins if game is LO or HO
+
+    public GameObject gbHolder; //Object that holds GB
+    private GameBehaviour gb; //Reference to GB script, assign this during Start()
     public GameObject formulaDispObj; //Insert tmp object here
     private TextMeshProUGUI formulaDispGUI; //Set this during Start() with get component
     
@@ -40,6 +42,10 @@ public class FormulaAnalyzer : MonoBehaviour
         formulaDispGUI = formulaDispObj.GetComponent<TextMeshProUGUI>();
         //Init text for GUI
         formulaDispGUI.text = "Enter Formula by Drawing on the Board";
+
+        //Grab Gamebehavior script if LO
+        if(isLOGame)
+            gb = gbHolder.GetComponent<GameBehaviour>();
     }
 
     // Update is called once per frame

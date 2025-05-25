@@ -1,8 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System;
-using Unity.VisualScripting;
 
 public class LineSnapper : MonoBehaviour
 {
@@ -15,14 +12,14 @@ public class LineSnapper : MonoBehaviour
     private bool isDrawing = false;
     private Camera mainCamera;
     private const float SNAP_INTERVAL = 0.25f;
-    private int lineCount = 0;
+    public int lineCount = 0;
     public GridSystem gridSystem;
     private GameBehaviour main;
 
     //NEW
     public AnimScript animScript;
 
-    private int GetMaxLinesForShape()
+    public int GetMaxLinesForShape()
     {
         if (main.spellCastEvent == null)
             return 0;
@@ -382,6 +379,12 @@ public class LineSnapper : MonoBehaviour
     public void OnUndoPressed()
     {
         if (lineCount <= 0) return;
+
+        //Toggle Dialogue Box, reset button, flag and dialogue text
+        main.textFinish.text = "Measure";
+        main.isDoneMeasuring = false;
+        if(main.rtDialogue.anchoredPosition.y == 100) //Only trigger if dilogue is not hidden
+            main.toggleDialogueBox();
 
         lineCount--; // Reduce lines by one if there is > 0 lines
 

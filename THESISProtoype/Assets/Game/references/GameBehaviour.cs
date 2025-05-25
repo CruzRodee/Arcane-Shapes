@@ -1,14 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static GameBehaviour;
-using System.Runtime.InteropServices;
-using UnityEditor;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using System.IO;
@@ -67,10 +62,10 @@ public class GameBehaviour : MonoBehaviour
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
 
-    private RectTransform rtDialogue;
+    public RectTransform rtDialogue;
     private RectTransform rtSlider;
 
-    bool isDoneMeasuring;
+    public bool isDoneMeasuring;
     //panels na toggable, containers lang
     public GameObject hud;
     public GameObject quickMenu;
@@ -91,7 +86,7 @@ public class GameBehaviour : MonoBehaviour
     private Text   textAnsTri;
     private Text manaReq;
     private Text characterSay;
-    private Text textFinish;
+    public Text textFinish;
 
     public Text confirmText;
     public Text textHUD;
@@ -339,17 +334,38 @@ public class GameBehaviour : MonoBehaviour
 
     public void toggleDialogueBox()
     {
+        const float DIALOGUESLIDETIME = 0.25f;
+        Vector2 RTAWAYTRANS = new (600f, -100f);
+        Vector2 PDIAAWAYTRANS = new (239, 150);
+        Vector2 RTONTRANS = new (600f, 100f);
+        Vector2 PDIAONTRANS = new (239, 123);
+
         if (rtDialogue.anchoredPosition.y == 100)
         {
-            rtDialogue.anchoredPosition = new Vector2(600f, -100f);
-            pDiaButtons.GetComponent<RectTransform>().anchoredPosition = new Vector2(239, 150);
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
             // pDialogue.y = -59;
         }
         else{
-            rtDialogue.anchoredPosition = new Vector2(600f, 100f);
-            pDiaButtons.GetComponent<RectTransform>().anchoredPosition = new Vector2(239, 123);
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
+            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
             // pDialogue.y = 100; //tago
         }
+    }
+    private IEnumerator RectTransformOverTime(RectTransform rt, float duration, Vector2 endTransform)
+    {
+        var startTransform = rt.anchoredPosition;
+        var elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            var t = elapsed / duration;
+            rt.anchoredPosition = Vector2.Lerp(startTransform, endTransform, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rt.anchoredPosition = endTransform;
     }
 
     public void btnYes(){
@@ -455,6 +471,18 @@ public class GameBehaviour : MonoBehaviour
         if (!isDoneMeasuring)    //pag mag sslider plang
         {
             // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
+
+            //Check if Lines is maxed out first
+            if(lineSnapper.lineCount != lineSnapper.GetMaxLinesForShape())
+            {
+                // TODO: DISPLAY POPUP OF NOT DONE MEASURING YET
+
+                //QUIT BECAUSE BUTTON DOES NOTHING
+                return;
+            }
+
+            //ALSO TODO: FIX LINE LENGTHS DISPLAY
+
             toggleDialogueBox(); //show
             toggleSlider();
             isDoneMeasuring=true;

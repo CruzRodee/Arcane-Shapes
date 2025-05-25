@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6564c8a2f1b7a684999ad812083d7231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lineCount: 0
   gridSystem: {fileID: 0}
   animScript: {fileID: 0}
 --- !u!4 &101808943
@@ -1555,8 +1556,13 @@ PrefabInstance:
     - target: {fileID: 8351192689900581865, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: DEBUG
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8351192689900581865, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: gbHolder
+      value: 
+      objectReference: {fileID: 330947010}
     - target: {fileID: 8351192689900581865, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: formulaDispObj
@@ -1567,6 +1573,11 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: processing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: vfxLinePlaneOffset
