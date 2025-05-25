@@ -173,6 +173,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
                 ResetVFX(); //Reset VFX line and whatever effects are added later
 
                 clear = false; // Reset clear flag
+                hasHit = false; //Reset flag
             }
         }
     }

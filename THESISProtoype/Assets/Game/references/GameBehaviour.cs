@@ -44,7 +44,7 @@ public class GameBehaviour : MonoBehaviour
     private GameObject mainCamera, classroomCamera;
     private Material uiMaterial, classroomMaterial;
     private Animator screenFadeAnimator;
-    private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1f, STARTDELAY = 3.0f;
+    private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
     private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
 
     private AnimScript animScript;
@@ -267,7 +267,7 @@ public class GameBehaviour : MonoBehaviour
                 measure2--;
         }
 
-        UnityEngine.Debug.Log("Measure1: " + measure1 + " | Measure2: " + measure2);
+        Debug.Log("Measure1: " + measure1 + " | Measure2: " + measure2);
         SetManualProblem(GlobalVariables.loSelectedShape, measure1, measure2);
     }
 
@@ -285,6 +285,7 @@ public class GameBehaviour : MonoBehaviour
 /////////////////added from old repo
 // just button events
     public void onRestart(){
+        formulaDisplay.SetActive(false); //Disable this since its visible above the screenfade for some reason
         screenFadeAnimator.SetTrigger("sceneOut");
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
@@ -511,6 +512,10 @@ public class GameBehaviour : MonoBehaviour
         }
         else{ //Reset the OCRInput board
             fa.ResetAnalyzer();
+
+            //Reset Board
+            ocrScript.ResetColor();
+            ocrScript.ResetVFX();
         }
     }
 
@@ -528,7 +533,7 @@ public class GameBehaviour : MonoBehaviour
 
         CalcError();
 
-        correctionPerc.text = "Incorrectness: " + Math.Abs(error) + "%";
+        correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
         //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
 
         correctionPerc.gameObject.SetActive(true); //Show error
@@ -757,6 +762,9 @@ public class GameBehaviour : MonoBehaviour
         classroomCamera.SetActive(true);
 
         lineSnapper.animScript = this.animScript;
+
+        StartCoroutine(WaitForComponent());
+
         //Set grid sizes based on difficulty ?? Not really working
         switch (GlobalVariables.level)
         {
@@ -770,22 +778,20 @@ public class GameBehaviour : MonoBehaviour
                 lineSnapper.gridSystem.minorGridSize = 1.0f;
                 break;
             case 3:
-                lineSnapper.gridSystem.majorGridSize = 1.0f;
-                lineSnapper.gridSystem.minorGridSize = 0.5f;
+                lineSnapper.gridSystem.majorGridSize = 2.0f;
+                lineSnapper.gridSystem.minorGridSize = 1.0f;
+                //lineSnapper.SNAP_INTERVAL = 0.5f;
                 break;
             default:
-                UnityEngine.Debug.Log("ERROR: Invalid level(Gamebehaviour)");
+                Debug.Log("ERROR: Invalid level(Gamebehaviour)");
                 break;
         }
-        UnityEngine.Debug.Log("Level: " + GlobalVariables.level);
+        Debug.Log("Level: " + GlobalVariables.level);
 
         uiMaterial = Resources.Load<Material>("Materials/UI_Material");
         classroomMaterial = Resources.Load<Material>("Materials/ClassroomScreenMaterial");
 
         //----------------------------------------------
-
-        StartCoroutine(WaitForComponent());
-       
 
        /* UnityEngine.Debug.Log(yesButton);
         UnityEngine.Debug.Log(noButton);*/
@@ -1192,7 +1198,7 @@ public class GameBehaviour : MonoBehaviour
 
             if (x == -1 && y == -1)
             {
-
+                Debug.Log("Random Problem!");
                 switch (this.problemShape)
                 {
                     case SHAPES.SQUARE:
@@ -1228,6 +1234,8 @@ public class GameBehaviour : MonoBehaviour
 
             else
             {
+                Debug.Log("Manual Problem!");
+
                 p_measure = x;
                 s_measure = y;
 
@@ -1236,6 +1244,8 @@ public class GameBehaviour : MonoBehaviour
                     offX = -(p_measure / LVL3XOFF);
                     offY = -(s_measure / LVL3YOFF);
                 }
+
+                Debug.Log("p_measure: " + p_measure + " | s_measure: " + s_measure);
 
                 switch (this.problemShape)
                 {
@@ -1366,7 +1376,7 @@ public class GameBehaviour : MonoBehaviour
             }
 
             //12.4565735753735 => 1245
-            float compX = (float)Math.Round(result*10)/10.0f;
+            float compX = (float)Math.Round(result, 2);
             float compY = main.inputAnswer;//int.Parse(this.main.manaMeasure.text);
             /**/
             /*UnityEngine.Debug.Log("X Measure = " + compX);
@@ -1475,6 +1485,9 @@ public class GameBehaviour : MonoBehaviour
                 throw new Exception("Invalid shape");
                 //throw this shit 
         }
+
+        //DEBUG
+        Debug.Log("Result: " + Math.Round(result, 2));
 
         slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));
         this.spellCastEvent = new SpellCastEvent(this, problem);
