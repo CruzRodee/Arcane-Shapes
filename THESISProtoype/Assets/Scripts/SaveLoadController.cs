@@ -8,12 +8,13 @@ using UnityEngine.SceneManagement;
 
 //save game file
 [Serializable]
-public class GameData{
+public class GameData
+{
     public string playerName;
     public bool prefMute;   //settings stuff
     public string currRoom; //just room marker for the level selecvt thingy
 
-    
+
     //levels
     public float squarePercent; //highest score - need to 100% a level in order to unlock next level?
     public int squareLvl;       //Lvl 0-3 - Beginner, Intermediate, Advanced
@@ -34,7 +35,7 @@ public class GameData{
 
 public class SaveLoadController
 {
-    
+
     // private string savePath;
     public bool gameExists;
 
@@ -60,13 +61,13 @@ public class SaveLoadController
 
             currRoom = currRoom,
 
-            compLvl= compLvl
+            compLvl = compLvl
         };
-        
+
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(savePath, json);
 
-        Debug.Log("SUCCESS, Player Name:  "+data.playerName);
+        Debug.Log("SUCCESS, Player Name:  " + data.playerName);
 
     }
 
@@ -90,12 +91,14 @@ public class SaveLoadController
     }
 
 
-    public GameData loadGame(string savePath){
+    public GameData loadGame(string savePath)
+    {
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
             GameData loadedData = JsonUtility.FromJson<GameData>(json);
-            Debug.Log("SUCCESS, Player Name:  "+loadedData.playerName);
+            Debug.Log("SUCCESS, Player Name:  " + loadedData.playerName);
+            Debug.Log("Save File Found in: " + Application.persistentDataPath);
             return loadedData;
         }
         else
@@ -115,7 +118,7 @@ public class SaveLoadController
     //     else{
     //         gameExists = false;
     //     }
-        
+
     //     // if (loadGame() == 1) //success, open saved game
 
     //     //saveGame("Emerut", false,0,0,0,0,0,0,0,0,0,0,0);
