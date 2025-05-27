@@ -242,6 +242,7 @@ public class GameBehaviour : MonoBehaviour
                 measure2 = GlobalVariables.loMeasures1[UnityEngine.Random.Range(0, numMeasures)];
                 break;
             case 2:
+            case 3: //Same code as case 2 now
                 if (GlobalVariables.loSelectedShape == SHAPES.CIRCLE || GlobalVariables.loSelectedShape == SHAPES.SEMI_CIRCLE)
                 {
                     // If Circle/SemiCircle, use different measures array
@@ -254,6 +255,7 @@ public class GameBehaviour : MonoBehaviour
                 measure1 = GlobalVariables.loMeasures2[UnityEngine.Random.Range(0, numMeasures)];
                 measure2 = GlobalVariables.loMeasures2[UnityEngine.Random.Range(0, numMeasures)];
                 break;
+            /* //0.25 measures are broken so discard code
             case 3:
                 if (GlobalVariables.loSelectedShape == SHAPES.CIRCLE || GlobalVariables.loSelectedShape == SHAPES.SEMI_CIRCLE)
                 {
@@ -267,6 +269,7 @@ public class GameBehaviour : MonoBehaviour
                 measure1 = GlobalVariables.loMeasures3[UnityEngine.Random.Range(0, numMeasures)];
                 measure2 = GlobalVariables.loMeasures3[UnityEngine.Random.Range(0, numMeasures)];
                 break;
+            */
         }
 
         //Make sure mearure2 not same as 1 if rectangle, simplify into subracting 1 from either 1 or 2 at random
@@ -613,7 +616,7 @@ public class GameBehaviour : MonoBehaviour
     {
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
-        if(GlobalVariables.level < 3 && GlobalVariables.isLOGame)
+        if(GlobalVariables.level < 3)
             calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
 
         //OLD SLIDER CODE
@@ -837,6 +840,7 @@ public class GameBehaviour : MonoBehaviour
 
         StartCoroutine(WaitForComponent());
 
+        /* //Changing grid snapping seems unusable so disaple this code
         //Set grid sizes based on difficulty ?? Not really working
         switch (GlobalVariables.level)
         {
@@ -858,6 +862,7 @@ public class GameBehaviour : MonoBehaviour
                 Debug.Log("ERROR: Invalid level(Gamebehaviour)");
                 break;
         }
+        */
         Debug.Log("Level: " + GlobalVariables.level);
 
         uiMaterial = Resources.Load<Material>("Materials/UI_Material");
@@ -1311,11 +1316,13 @@ public class GameBehaviour : MonoBehaviour
                 p_measure = x;
                 s_measure = y;
 
+                /* Broken code so disable
                 if (GlobalVariables.level >= 3) // Offset for lvl3 LO
                 {
                     offX = -(p_measure / LVL3XOFF);
                     offY = -(s_measure / LVL3YOFF);
                 }
+                */
 
                 Debug.Log("p_measure: " + p_measure + " | s_measure: " + s_measure);
 
