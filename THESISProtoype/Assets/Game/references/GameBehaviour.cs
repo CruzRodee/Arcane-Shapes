@@ -116,6 +116,8 @@ public class GameBehaviour : MonoBehaviour
     public GameObject rightStartTransObj, rightEndTransObj;
     public GameObject formulaAnalyzerObj;
     private float inputAnswer = 0f; //Float field for entering answer via InputAnswer()
+    public GameObject calcBtnObj;
+    private Text calcBtnText;
 
     //----------------------------------------------
 
@@ -139,6 +141,12 @@ public class GameBehaviour : MonoBehaviour
 
         //Get notif text
         pNotifyText = notifyTextObj.GetComponent<Text>();
+
+        //Get calcBtn text
+        calcBtnText = calcBtnObj.transform.Find("textFinish").gameObject.GetComponent<Text>();
+
+        //Disable calcBtn
+        calcBtnObj.SetActive(false);
     }
 
     /*
@@ -530,6 +538,24 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
+    public void ToggleCalcMode() //For calculator button
+    {
+        //Reset Board
+        ocrScript.ResetColor();
+        ocrScript.ResetVFX();
+
+        if (fa.calcMode)
+        {
+            calcBtnText.text = "Calculator";
+            fa.ExitCalc();
+        }
+        else if (!fa.calcMode)
+        {
+            calcBtnText.text = "Formula Input";
+            fa.EnterCalc();
+        }
+    }
+
     public void onCast()
     {
         //added NTS
@@ -552,6 +578,7 @@ public class GameBehaviour : MonoBehaviour
             DoneMeasure();
         }
         else{ //Reset the OCRInput board
+            fa.ResetCalcDisp();
             fa.ResetAnalyzer();
 
             //Reset Board
@@ -586,6 +613,8 @@ public class GameBehaviour : MonoBehaviour
     {
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
+        if(GlobalVariables.level < 3 && GlobalVariables.isLOGame)
+            calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
 
         //OLD SLIDER CODE
         //toggleSlider();
@@ -605,6 +634,8 @@ public class GameBehaviour : MonoBehaviour
         }
 
         textFinish.text = castBtnText1;
+        if(calcBtnObj.activeInHierarchy)
+            calcBtnObj.SetActive(false); //Deactivate calculator button
         isDoneMeasuring = false;
     }
     private void ToggleLineDelay()

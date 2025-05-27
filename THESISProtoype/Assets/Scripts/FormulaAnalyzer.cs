@@ -31,6 +31,9 @@ public class FormulaAnalyzer : MonoBehaviour
     private GameBehaviour gb; //Reference to GB script, assign this during Start()
     public GameObject formulaDispObj; //Insert tmp object here
     private TextMeshProUGUI formulaDispGUI; //Set this during Start() with get component
+
+    private const string formulaDefaultText = "Enter Formula in Board";
+    private const string calculatorDefaultText = "Calculator";
     
     // Start is called before the first frame update
     void Start()
@@ -42,7 +45,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Grab GUI of textmeshpro object
         formulaDispGUI = formulaDispObj.GetComponent<TextMeshProUGUI>();
         //Init text for GUI
-        formulaDispGUI.text = "Enter Formula in Board";
+        formulaDispGUI.text = formulaDefaultText;
 
         //Grab Gamebehavior script if LO
         if(isLOGame)
@@ -85,9 +88,11 @@ public class FormulaAnalyzer : MonoBehaviour
         }
     }
 
-    private void EnterCalc()
+    public void EnterCalc()
     {
         if(DEBUG) DEBUGCALCFLAG = true; //Set flag for debug
+
+        calcMode = true; //Trigger flag
 
         //Clear calc display
         calcDispString = "";
@@ -113,8 +118,10 @@ public class FormulaAnalyzer : MonoBehaviour
         if(DEBUG) DebugDisplay();
     }
 
-    private void ExitCalc()
+    public void ExitCalc()
     {
+        calcMode = false; //Resey flag
+
         //Restore data from temp
         displayString = tempDisp;
         evalString = tempEval;
@@ -128,7 +135,10 @@ public class FormulaAnalyzer : MonoBehaviour
         sideB = tempB;
 
         //Update GUI
-        formulaDispGUI.text = displayString;
+        if(displayString.Length > 0) //If display contains anything, show that
+            formulaDispGUI.text = displayString;
+        else //Else show default text
+            formulaDispGUI.text = formulaDefaultText;
 
         //Reset flag for calc mode debug
         if (DEBUG) DEBUGCALCFLAG = false; //Set flag for debug
@@ -284,6 +294,8 @@ public class FormulaAnalyzer : MonoBehaviour
             formulaDispGUI.text = displayString;
         else if (calcMode)
             formulaDispGUI.text = calcDispString;
+
+        PrintDefaultText();
     }
 
     private bool CheckInputAnswer()
@@ -389,6 +401,15 @@ public class FormulaAnalyzer : MonoBehaviour
         }
     }
 
+    private void PrintDefaultText()
+    {
+        //Display default text based on mode
+        if (!calcMode && displayString.Length < 1)
+            formulaDispGUI.text = formulaDefaultText;
+        else if (calcMode && calcDispString.Length < 1)
+            formulaDispGUI.text = calculatorDefaultText;
+    }
+
     //Resetters
     public void ResetAnalyzer()
     {
@@ -401,6 +422,7 @@ public class FormulaAnalyzer : MonoBehaviour
         ResetFinalAns();
         ResetFormulaShape();
         ResetGUI();
+        PrintDefaultText();
     }
     private void ResetEvalAns()
     {
@@ -440,6 +462,10 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         //Whoops, forgot to reset the GUI on reset
         formulaDispGUI.text = displayString;
+    }
+    public void ResetCalcDisp()
+    {
+        calcDispString = "";
     }
 
     //Getters
