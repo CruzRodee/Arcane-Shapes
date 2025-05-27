@@ -15,6 +15,7 @@ public class LineSnapper : MonoBehaviour
     public int lineCount = 0;
     public GridSystem gridSystem;
     private GameBehaviour main;
+    public string value1 = "???", value2 = "???";
 
     //NEW
     public AnimScript animScript;
@@ -84,6 +85,12 @@ public class LineSnapper : MonoBehaviour
         textMesh.text = value.ToString("F2");  // Standardized to 2 decimal places
         textMesh.characterSize = 0.4f;
         textMesh.anchor = TextAnchor.MiddleCenter;
+
+        //Save values
+        if(lineCount >= 1)
+            value2 = value.ToString("F2");
+        if (lineCount < 1)
+            value1 = value.ToString("F2");
 
         return textObj;
     }

@@ -581,8 +581,8 @@ public class FormulaAnalyzer : MonoBehaviour
         Regex semiCircleRegex = new(@"\(\u03C0?\u00d7?\d+\.?\d*\u00d7?\u03C0?\u00d7\d+\.?\d*\u00d7?\u03C0?\)\u00f72");
 
         // 1.) if has 0.5 or 1/2 or ()÷2 but no pi, is triangle
-        if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72")) ||
-            triangleRegex.IsMatch(displayString) && !displayString.Contains("\u03C0"))
+        if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
+            triangleRegex.IsMatch(displayString)) && !displayString.Contains("\u03C0"))
             return GameBehaviour.SHAPES.TRIANGLE;
 
         //Compare if values are equal, square if yes otherwise rect, invalid if there are more than 2 vals

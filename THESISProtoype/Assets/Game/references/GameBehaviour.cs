@@ -121,6 +121,9 @@ public class GameBehaviour : MonoBehaviour
 
     //----------------------------------------------
 
+    //References to the GUI display for line Lengths
+    public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
+    private GameObject var1Display, var2Display; //Variables for determining which ones will be modified
 
     void Awake()
     {
@@ -147,6 +150,28 @@ public class GameBehaviour : MonoBehaviour
 
         //Disable calcBtn
         calcBtnObj.SetActive(false);
+
+        //Get the text objects that will be used to display the line lengths of the shape
+        switch (GlobalVariables.loSelectedShape)
+        {
+            case SHAPES.SQUARE:
+                var1Display = sqVarDisp1;
+                break;
+            case SHAPES.RECTANGLE:
+                var1Display = rectVarDisp1;
+                var2Display = rectVarDisp2;
+                break;
+            case SHAPES.TRIANGLE:
+                var1Display = triVarDisp1;
+                var2Display = triVarDisp2;
+                break;
+            case SHAPES.CIRCLE:
+                var1Display = cirVarDisp1;
+                break;
+            case SHAPES.SEMI_CIRCLE:
+                var1Display = semiVarDisp1;
+                break;
+        }
     }
 
     /*
@@ -619,6 +644,13 @@ public class GameBehaviour : MonoBehaviour
         if(GlobalVariables.level < 3)
             calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
 
+        //Update dialogue displays for line lengths
+        Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
+        if (var1Display != null)
+            var1Display.GetComponent<Text>().text = lineSnapper.value1;
+        if (var2Display != null)
+            var2Display.GetComponent<Text>().text = lineSnapper.value2;
+
         //OLD SLIDER CODE
         //toggleSlider();
         //slider.gameObject.SetActive(true);
@@ -629,6 +661,12 @@ public class GameBehaviour : MonoBehaviour
     }
     public void UndoMeasure()
     {
+        //Reset line values based on linecount
+        if (lineSnapper.lineCount >= 1)
+            lineSnapper.value2 = "???";
+        if (lineSnapper.lineCount < 1)
+            lineSnapper.value1 = "???";
+
         //Hide OCR Board
         if (isDoneMeasuring)
         {

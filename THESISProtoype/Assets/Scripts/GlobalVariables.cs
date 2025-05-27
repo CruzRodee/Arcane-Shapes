@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static GameBehaviour;
-
 public static class GlobalVariables
 {
     // LO variables
@@ -17,7 +12,7 @@ public static class GlobalVariables
     public static float[] loCircleMeasures2 = { 3, 4, 5, 6, 7, 8 };
     public static float[] loCircleMeasures3 = { 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 7, 7.5f, 8 };
 
-    private static readonly int thresholdHO = 1;
+    private static readonly int thresholdHO = 2;
     public static bool IsHOUnlocked(GameData save)
     {
         if(save.squareLvl >= thresholdHO && save.rectLvl >= thresholdHO && 
