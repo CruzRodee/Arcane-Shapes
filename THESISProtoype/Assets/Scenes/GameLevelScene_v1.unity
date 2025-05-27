@@ -338,6 +338,7 @@ MonoBehaviour:
   pConfirm: {fileID: 2132351605}
   pLowerScroll: {fileID: 2132351604}
   pNotify: {fileID: 2132351603}
+  notifyTextObj: {fileID: 2068019611}
   confirmText: {fileID: 2132351602}
   textHUD: {fileID: 2132351601}
   pEquationTriangle: {fileID: 2132351600}
@@ -1605,6 +1606,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2062185996}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2068019611 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3652779222042025933, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 2132351595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2074031436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2276,7 +2283,7 @@ PrefabInstance:
     - target: {fileID: 8892925952558525524, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: notifyWrongShape
+      value: CloseNotification
       objectReference: {fileID: 0}
     - target: {fileID: 8933575710999220236, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}

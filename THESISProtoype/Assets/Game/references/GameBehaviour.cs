@@ -77,6 +77,7 @@ public class GameBehaviour : MonoBehaviour
     private GameObject pDiaButtons;
     private GameObject pSlider;
 
+    public GameObject notifyTextObj;
     private Text pNotifyText;
     private Text textAns;
     private Text textAnsSC;
@@ -135,6 +136,9 @@ public class GameBehaviour : MonoBehaviour
 
         //Get FA script
         fa = formulaAnalyzerObj.GetComponent<FormulaAnalyzer>();
+
+        //Get notif text
+        pNotifyText = notifyTextObj.GetComponent<Text>();
     }
 
     /*
@@ -482,10 +486,47 @@ public class GameBehaviour : MonoBehaviour
             toggleConfirmScreen("");
     }
 
+    public void CloseNotification()
+    {
+        if (pNotify != null)
+        {
+            pNotify.SetActive(false);
+        }
+
+        if (isDoneMeasuring) //For resuming OCR after notification
+            Invoke(nameof(ResumeOCR), 0.1f);
+    }
+    
     public void notifyWrongShape()
     {
         if (pNotify != null){
-            pNotify.SetActive(!pNotify.activeInHierarchy);
+            pNotify.SetActive(true);
+        }
+    }
+
+    private void ResumeOCR()
+    {
+        ocrScript.processing = false;
+    }
+
+    public void NotifyInvalidFormula()
+    {
+        ocrScript.processing = true; //Prevent input from occuring
+        
+        if (pNotify != null)
+        {
+            pNotify.SetActive(true);
+            pNotifyText.text = "Hindi wasto ang ibinigay na formula.";
+        }
+    }
+    public void NotifyMismatchedAnswer()
+    {
+        ocrScript.processing = true; //Prevent input from occuring
+
+        if (pNotify != null)
+        {
+            pNotify.SetActive(true);
+            pNotifyText.text = "Hindi tugma sa formula ang ibinigay na sagot.";
         }
     }
 

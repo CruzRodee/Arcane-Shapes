@@ -230,6 +230,12 @@ public class FormulaAnalyzer : MonoBehaviour
                             Debug.Log("FA: Invalid input, try again");
                         }
                         ResetAnalyzer();
+
+                        //Notify gb of invalid formula
+                        if(gb != null)
+                        {
+                            gb.NotifyInvalidFormula();
+                        }
                     }
                 }
                 else if (equMode)
@@ -249,6 +255,12 @@ public class FormulaAnalyzer : MonoBehaviour
                     {
                         DebugDisplay();
                         Debug.Log("displayString length: " + displayString.Length);
+                    }
+
+                    //Notify gb of invalid answer
+                    if (gb != null)
+                    {
+                        gb.NotifyMismatchedAnswer();
                     }
                 }
                     break;
@@ -282,8 +294,12 @@ public class FormulaAnalyzer : MonoBehaviour
             //Send a message or activate LO GB the input answer, end early
             if (isLOGame)
             {
-                gb.InputAnswer(float.Parse(inputAnswer));
-                return true;
+                if(gb!= null)
+                {
+                    gb.InputAnswer(float.Parse(inputAnswer));
+                    return true;
+                }
+                return false; //Error if gb is not defined for some reason
             }
 
             //DEBUG

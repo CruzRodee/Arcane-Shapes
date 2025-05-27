@@ -57,6 +57,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private bool hasDrawn = false; //Prevents the OCR from starting before drawing
     private bool hasHit = false; //Determines if the OCR board was hit when drawing
     public bool processing = false; //Stops drawing if needed
+    private bool doingOCR = false; //Same as processing but only for internal use
 
     //Variable for OCR model in .onnx and the model and worker vars
     public ModelAsset OCRModel;
@@ -122,7 +123,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
     private void Update()
     {
-        if (processing) //do nothing if OCR is not done
+        if (processing || doingOCR) //do nothing if OCR or some other process is not done
             return;
         
         if(timer > 0f) //Decrease time if not zero
@@ -345,7 +346,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     //To avoid clutter on update()
     private void PerformOCR()
     {
-        processing = true; //flag this
+        doingOCR = true; //flag this
         
         // Load input data to tensor
         Tensor<float> inputTensor = new Tensor<float>(new TensorShape(1, 3, 45, 45));
@@ -377,6 +378,6 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Transmit the class output, either through message or reference of target object
         fa.InputString(imgClass);
 
-        processing = false; //reset flag
+        doingOCR = false; //reset flag
     }
 }
