@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -447,13 +448,16 @@ public class FormulaAnalyzer : MonoBehaviour
     //Returns the shape of the formula
     private GameBehaviour.SHAPES EvalFormulaShape()
     {
-        //Store in duplicate string and remove all 0.5 or 1/2 or pi from duplicate string to easily find vals
+        //Store in duplicate string and remove all 0.5 or 1/2 or pi or unreadables from duplicate string to easily find vals
         string duplicateString = new('a', displayString.Length);
         duplicateString = duplicateString.Replace(duplicateString, displayString); //Copy display string
         duplicateString = duplicateString.Replace("0.5", "");
         duplicateString = duplicateString.Replace("1\u00f72", ""); // 1/2
+        duplicateString = duplicateString.Replace("\u00f72", ""); // /2, removed after 1/2 to not mess things up
         duplicateString = duplicateString.Replace("\u03C0",""); //pi
         duplicateString = duplicateString.Replace("=", ""); // remove the "=" too
+        duplicateString = duplicateString.Replace("(", ""); // remove the "(" too
+        duplicateString = duplicateString.Replace(")", ""); // remove the ")" too
 
         if (DEBUG)
         {
@@ -530,19 +534,25 @@ public class FormulaAnalyzer : MonoBehaviour
             }
         }
 
-        // 1.) if has 0.5 or 1/2 but no pi, is triangle
-        if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72")) && !displayString.Contains("\u03C0"))
+        Regex triangleRegex = new(@"\(\d+\.?\d*\u00d7\d+\.?\d*\)\u00f72"); //Checks if the formula is surrounded by () div 2
+        //Checks if the formula is surrounded by () div 2 and has pi
+        Regex semiCircleRegex = new(@"\(\u03C0?\u00d7?\d+\.?\d*\u00d7?\u03C0?\u00d7\d+\.?\d*\u00d7?\u03C0?\)\u00f72");
+
+        // 1.) if has 0.5 or 1/2 or ()÷2 but no pi, is triangle
+        if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72")) ||
+            triangleRegex.IsMatch(displayString) && !displayString.Contains("\u03C0"))
             return GameBehaviour.SHAPES.TRIANGLE;
 
         //Compare if values are equal, square if yes otherwise rect, invalid if there are more than 2 vals
         if (vals.Count() > 1 && vals.Count() < 3)
         {
-            if (sideA == sideB) //Compare parsed instaed, should be equal if same value
+            if (sideA == sideB) //Compare parsed instead, should be equal if same value
             {
-                // 2.) if pi is present and same sides, is circle if no 0.5 or 1/2 else semicircle
+                // 2.) if pi is present and same sides, is circle if no 0.5 or 1/2 or () div 2 else semicircle
                 if (displayString.Contains("\u03C0"))
                 {
-                    if (displayString.Contains("0.5") || displayString.Contains("1\u00f72"))
+                    if (displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
+                        semiCircleRegex.IsMatch(displayString))
                         return GameBehaviour.SHAPES.SEMI_CIRCLE;
                     else return GameBehaviour.SHAPES.CIRCLE;
                 }
