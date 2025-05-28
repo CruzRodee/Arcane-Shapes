@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class ShapePlacementManager : MonoBehaviour
 {
-    [Header("References")]
+/*    [Header("References")]
     public ShapeGenerator shapeGenerator;
     public GridSystem gridSystem;
 
@@ -657,5 +657,5 @@ public class ShapePlacementManager : MonoBehaviour
             return placedShapes[index];
         }
         return null;
-    }
+    }*/
 }
