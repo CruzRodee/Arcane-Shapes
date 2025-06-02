@@ -17,19 +17,7 @@ public class GameBehaviour : MonoBehaviour
   
     SHAPES currentShape;
     public SpellCastEvent spellCastEvent;
-    TMP_Dropdown dropdown;
-    public TMP_Text text;
-    TMP_Text manaMeasure;
     TMP_Text correctionPerc;
-    public Slider slider;
-
-    Button yesButton;
-    Button noButton;
-    Button confirmMeasurement;
-    Button restart;
-    Button undo;
-    Button quit;
-    int currentOptionSelected;
 
     public ShapeGenerator shapeGenerator;
     public ShapeFiller shapeFiller;
@@ -38,7 +26,6 @@ public class GameBehaviour : MonoBehaviour
 
     //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
-    private Button changeCameraButton;
     private bool isUICamera = true;
     private bool y, n, m, s, cm, cp, ls, u, t, d, r, q; //Activity states of UI components
     private GameObject mainCamera, classroomCamera;
@@ -52,7 +39,6 @@ public class GameBehaviour : MonoBehaviour
     public float error = 100f;
     private bool isQuit = false;
     private const float TRANSITIONDELAY = 0.5f;
-    private List<TMP_Dropdown.OptionData> defaultOptions; //Use for reset
     private const string correctShapePropmt = "Tama na ba ang shape na pinili?";
 
     //----------------------------------------------
@@ -63,7 +49,6 @@ public class GameBehaviour : MonoBehaviour
     private string savePath;
 
     private RectTransform rtDialogue;
-    private RectTransform rtSlider;
 
     private bool isDoneMeasuring;
     //panels na toggable, containers lang
@@ -75,7 +60,6 @@ public class GameBehaviour : MonoBehaviour
     public GameObject pNotify;
     private GameObject pDialogue;
     private GameObject pDiaButtons;
-    private GameObject pSlider;
 
     public GameObject notifyTextObj;
     private Text pNotifyText;
@@ -133,8 +117,6 @@ public class GameBehaviour : MonoBehaviour
         currentShape = SHAPES.NONE;
         screenFadeAnimator = GameObject.Find("ScreenFade").GetComponent<Animator>();
         animScript = GameObject.Find("AnimHolder").GetComponent<AnimScript>();
-        // quit = GameObject.Find("Quit").GetComponent<Button>();
-        defaultOptions = new List<TMP_Dropdown.OptionData>();
 
         //Get OCR script
         ocrScript = ocrInput.transform.Find("DrawingAndOCRManager").GetComponent<DrawingAndOCRManagerScript>();
@@ -185,34 +167,12 @@ public class GameBehaviour : MonoBehaviour
 
     void Reset()
     {
-        //Cleanup possible temporary vfx and clones
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Temporary"))
-        {
-            Destroy(go);
-        }
-
-        // dropdown.gameObject.SetActive(true);
-        // dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        // CopyOptions(dropdown.options, defaultOptions); // Reset options
-        // dropdown.value = 0;
-        text.text = "";
-        manaMeasure.text = "0";
-        // dropdown.RefreshShownValue();
-        // dropdown.onValueChanged.AddListener(OnOptionSelect); //Start Listening
-        // UnityEngine.Debug.Log("Dropdown Len: " + dropdown.options.Count);
-
         currentShape = SHAPES.NONE;
 
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false); slider.value = 0f;
-        confirmMeasurement.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         if(!STARTUP) // If not first run
             Destroy(this.spellCastEvent.problem.problemObjectShape);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
 
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
@@ -221,15 +181,8 @@ public class GameBehaviour : MonoBehaviour
         if(!STARTUP)
             screenFadeAnimator.SetTrigger("fadeIn");
 
-        //Cleanup previous spell objects
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Spell"))
-        {
-            Destroy(go);
-        }
-
         //Start with watching the spawn anim again in reset
         ToClass();
-        DeactivateChangeCamera();
         Invoke(nameof(StartLevelAnim), STARTDELAY);
 
         // TODO: ADD SOMETHING THAT ALLOWS SWITCHING BETWEEN RANDOM PROBLEM AND MANUAL PROBLEM MAYBE
@@ -392,12 +345,6 @@ public class GameBehaviour : MonoBehaviour
         // pConfirm.SetActive(false);
     }
 
-
-    public void toggleSlider(){
-        //just move to right
-        rtSlider.anchoredPosition = new Vector2(-525f,rtSlider.anchoredPosition.y);
-    }
-
     public void toggleDialogueBox()
     {
         Vector2 RTAWAYTRANS = new (600f, -100f);
@@ -453,15 +400,9 @@ public class GameBehaviour : MonoBehaviour
                 toggleDialogueBox();
                 characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
                 manaReq.text = "Katumbas na Mana";
-                manaMeasure.gameObject.SetActive(true);
-                //slider.gameObject.SetActive(true);
-                //confirmMeasurement.gameObject.SetActive(true);
-                //correctionPerc.gameObject.SetActive(true);
-                slider.gameObject.SetActive(false); //test
 
                 // dropdown.gameObject.SetActive(false);
                 lineSnapper.gameObject.SetActive(true);
-                undo.gameObject.SetActive(true);
 
 
                 //show correct casting equation
@@ -651,10 +592,6 @@ public class GameBehaviour : MonoBehaviour
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper.value2;
 
-        //OLD SLIDER CODE
-        //toggleSlider();
-        //slider.gameObject.SetActive(true);
-
         //NEW OCR SHOW CODE
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper.ToggleLineText(); //Toggle off
@@ -776,7 +713,6 @@ public class GameBehaviour : MonoBehaviour
         isDoneMeasuring = false;
 
         pDiaButtons = GameObject.Find("pDiaButtons");
-        pSlider = GameObject.Find("pSlider");
 
         textAnsSC = GameObject.Find("textAnsSC")?.GetComponent<Text>();
         textAnsRect = GameObject.Find("textAnsRect")?.GetComponent<Text>();
@@ -787,7 +723,6 @@ public class GameBehaviour : MonoBehaviour
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
-        rtSlider = pSlider.GetComponent<RectTransform>();
 
 
         savedGame =  saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
@@ -828,46 +763,8 @@ public class GameBehaviour : MonoBehaviour
             hud.SetActive(true);
         }
 
-        //UnityEngine.Debug.Log(dropdown);
-
-
-        //removed listeners
-        // restart = GameObject.Find("Restart").GetComponent<Button>();
-        // restart.onClick.AddListener(() =>
-        // {
-        //     SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
-        // });
-        // quit.onClick.AddListener(() => {
-        //     error = 100f; //Prevent accidental saving due to 0f error
-        //     screenFadeAnimator.SetTrigger("sceneOut");
-        //     Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
-        // });
-
-        // dropdown = GameObject.Find("Dropdown").GetComponent<TMP_Dropdown>();
-        // CopyOptions(defaultOptions, dropdown.options); //Store these for reset
-        // dropdown.value = 0;
-        // dropdown.RefreshShownValue();
-        // dropdown.onValueChanged.AddListener(OnOptionSelect);
-
-        text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
-        text.text = "";
-        manaMeasure = GameObject.Find("ManaValue").GetComponent<TMP_Text>();
-        manaMeasure.text = "0";
-
-        slider = GameObject.Find("Slider").GetComponent<Slider>();
-
-        yesButton = GameObject.Find("ConfirmYes").GetComponent<Button>();
-        noButton = GameObject.Find("ConfirmNo").GetComponent<Button>();
-        confirmMeasurement = GameObject.Find("ConfirmMeasurement").GetComponent<Button>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
         lineSnapper = GameObject.Find("Gesture").GetComponent<LineSnapper>();
-        // undo = GameObject.Find("Undo").GetComponent<Button>();
-        undo = GameObject.Find("btnUndo").GetComponent<Button>();
-        //CHANGED: Undo-> btnUndo
-
-        //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
-
-        changeCameraButton = GameObject.Find("ChangeCamera").GetComponent<Button>();
 
         mainCamera = GameObject.Find("Main Camera");
         mainCamera.SetActive(false);
@@ -878,29 +775,6 @@ public class GameBehaviour : MonoBehaviour
 
         StartCoroutine(WaitForComponent());
 
-        /* //Changing grid snapping seems unusable so disaple this code
-        //Set grid sizes based on difficulty ?? Not really working
-        switch (GlobalVariables.level)
-        {
-            case 0:
-            case 1: //Needs to be changed to whole numbers later maybe
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                break;
-            case 2:
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                break;
-            case 3:
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                //lineSnapper.SNAP_INTERVAL = 0.5f;
-                break;
-            default:
-                Debug.Log("ERROR: Invalid level(Gamebehaviour)");
-                break;
-        }
-        */
         Debug.Log("Level: " + GlobalVariables.level);
 
         uiMaterial = Resources.Load<Material>("Materials/UI_Material");
@@ -908,122 +782,8 @@ public class GameBehaviour : MonoBehaviour
 
         //----------------------------------------------
 
-       /* UnityEngine.Debug.Log(yesButton);
-        UnityEngine.Debug.Log(noButton);*/
-
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
-        confirmMeasurement.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
-
-        undo.onClick.AddListener(() =>
-        {
-            lineSnapper.OnUndoPressed();
-        });
-
-        slider.onValueChanged.AddListener((value) =>
-        {
-            manaMeasure.text = value.ToString();
-            if (chosenShape == "TRIANGLE"){
-                textAnsTri.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SQUARE"){
-                textAnsSqr.text = manaMeasure.text;
-            }
-            else if (chosenShape == "RECTANGLE"){
-                textAnsRect.text = manaMeasure.text;
-            }
-            else if (chosenShape == "CIRCLE"){
-                textAnsCir.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SEMI_CIRCLE"){
-                textAnsSC.text = manaMeasure.text;
-            }
-
-            // TODO: make slider rounding change based on level?
-            slider.value = Mathf.Round(value * 10f) / 10f;  // Rounds to nearest 0.1
-
-            //Change fill value
-            shapeFiller.fillMaxValue = spellCastEvent.GetFillPercentage();
-
-            //Check if area match
-            CalcError();
-            if (error == 0f)
-                shapeFiller.isPerfectMatch = true;
-            else 
-                shapeFiller.isPerfectMatch = false;
-
-            shapeFiller.isFillingActive = true;
-        });
-
-
-
-    //CHANGES: removed listeners
-        // yesButton.onClick.AddListener(() =>
-        // {
-        //     yesButton.gameObject.SetActive(false);
-        //     noButton.gameObject.SetActive(false);
-            
-        //     if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
-        //     {
-        //         text.text = GlobalVariables.ShapeFormulaText(this.spellCastEvent.problem.problemShape);
-
-        //         manaMeasure.gameObject.SetActive(true);
-        //         //slider.gameObject.SetActive(true);
-        //         //confirmMeasurement.gameObject.SetActive(true);
-        //         //correctionPerc.gameObject.SetActive(true);
-        //         // dropdown.gameObject.SetActive(false);
-        //         lineSnapper.gameObject.SetActive(true);
-        //         undo.gameObject.SetActive(true);
-        //         text.gameObject.SetActive(true); //Reactivate if not active
-        //     }
-        //     else
-        //     {
-        //         text.gameObject.SetActive(true); //Reactivate if not active
-        //         text.text = "Ang shape na pinili ay mali. Subukan ulit.";
-
-        //         //Play shake head anim
-        //         animScript.playerScript.BadTrace();
-        //     }
-        // });
-
-        // confirmMeasurement.onClick.AddListener(() =>
-        // {
-        //     CalcError();
-        //     correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
-        //     //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
-
-        //     correctionPerc.gameObject.SetActive(true); //Show error
-
-        //     Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
-        // });
-
-        // noButton.onClick.AddListener(() =>
-        // {
-        //     yesButton.gameObject.SetActive(false);
-        //     noButton.gameObject.SetActive(false);
-        // });
-
-        // //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
-
-        changeCameraButton.onClick.AddListener(() =>
-        {
-            //Deactivate all UI if in ui, store previous states first though, then switch to classroom cam
-            if (isUICamera)
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToClass), TRANSITIONTIME);
-            }
-            else if (!isUICamera) // Reactivate UI if not in UI, switch to main cam
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToUI), TRANSITIONTIME);
-            }
-        });
 
         //----------------------------------------------
 
@@ -1043,65 +803,33 @@ public class GameBehaviour : MonoBehaviour
         error = ((1 - clamped) * 100); //Get error float
     }
 
-    public void SetCastingState(bool state)
-    {
-        slider.gameObject.SetActive(state);
-        confirmMeasurement.gameObject.SetActive(state);
-    }
+    //TODO: Maybe use this to activate and deactivate cast button?, Reactivate and implement code if so
+    //public void SetCastingState(bool state) 
+    //{
+    //    
+    //}
 
     private void ToClass()
     {
-        y = yesButton.IsActive();
-        n = noButton.IsActive();
-        m = manaMeasure.IsActive();
-        s = slider.IsActive();
-        cm = confirmMeasurement.IsActive();
         cp = correctionPerc.IsActive();
         ls = lineSnapper.gameObject.activeSelf;
-        u = undo.IsActive();
-        t = text.IsActive();
-        // d = dropdown.IsActive();
-        // r = restart.IsActive();
-        // q = quit.IsActive();
 
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
-        confirmMeasurement.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
-        text.gameObject.SetActive(false);
-        // dropdown.gameObject.SetActive(false);
-        // restart.gameObject.SetActive(false);
-        // quit.gameObject.SetActive(false);
 
         mainCamera.SetActive(false);
         classroomCamera.SetActive(true);
-        changeCameraButton.GetComponent<Image>().material = uiMaterial; //Change material to UI mat
 
         isUICamera = false;
     }
 
     private void ToUI()
     {
-        yesButton.gameObject.SetActive(y);
-        noButton.gameObject.SetActive(n);
-        manaMeasure.gameObject.SetActive(m);
-        slider.gameObject.SetActive(s);
-        confirmMeasurement.gameObject.SetActive(cm);
         correctionPerc.gameObject.SetActive(cp);
         lineSnapper.gameObject.SetActive(ls);
-        undo.gameObject.SetActive(u);
-        text.gameObject.SetActive(t);
-        // dropdown.gameObject.SetActive(d);
-        // restart.gameObject.SetActive(r);
-        // quit.gameObject.SetActive(q);
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);
-        changeCameraButton.GetComponent<Image>().material = classroomMaterial; //Change material to classroom mat
 
         isUICamera = true;
     }
@@ -1194,26 +922,12 @@ public class GameBehaviour : MonoBehaviour
         SceneManager.LoadScene("LevelSelect");
     }
 
-    private void DeactivateChangeCamera()
-    {
-        //Require reset dialogue or script to reactivate
-        changeCameraButton.enabled = false;
-        changeCameraButton.GetComponent<Image>().enabled = false;
-    }
-
-    private void ActivateChangeCamera()
-    {
-        changeCameraButton.enabled = true;
-        changeCameraButton.GetComponent<Image>().enabled = true;
-    }
-
     //TODO: Maybe make a method that will be called to activate an end screen???
 
     private void CallCastAnimation()
     {
         screenFadeAnimator.SetTrigger("fade");
 
-        Invoke(nameof(DeactivateChangeCamera), TRANSITIONTIME);
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
     }
@@ -1232,58 +946,6 @@ public class GameBehaviour : MonoBehaviour
         CIRCLE,
         SEMI_CIRCLE,
     }
-
-  
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        //UnityEngine.Debug.Log("Line Snapper Value: " + lineSnapper.getMeasuredValue());
-
-    }
-
-
-    public void OnOptionSelect(int option)
-    {
-    //     if(dropdown.options.Count > 5) // When first selecting before removing default
-    //    {
-    //        dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-    //        dropdown.options.RemoveAt(0); // Remove "Select Shape" Default Option
-    //        dropdown.value -= 1; // move dropdown option to correct one
-    //        option -= 1; //Reduce index by 1 to compensate for removed option
-    //        dropdown.onValueChanged.AddListener(OnOptionSelect); // Start Listening
-    //     }
-
-        text.gameObject.SetActive(true); //Reactivate if not active
-        // text.text = correctShapePropmt;
-
-        /* UnityEngine.Debug.Log(option);*/
-        currentOptionSelected = option;
-        UnityEngine.Debug.Log("CurrentOption: " + currentOptionSelected);
-        //currentShape
-        /*       switch (option)
-               {
-                   case 0:
-                      break;
-                   case 1:
-                      break;
-                   case 2:
-                       break;
-                       case 3:
-                       break;
-                       case 4:
-                       break;
-
-               }*/
-
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(true);
-    }
-
-
-
     public class Problem
     {
         //Random actual value; Fixed Shape
@@ -1353,14 +1015,6 @@ public class GameBehaviour : MonoBehaviour
 
                 p_measure = x;
                 s_measure = y;
-
-                /* Broken code so disable
-                if (GlobalVariables.level >= 3) // Offset for lvl3 LO
-                {
-                    offX = -(p_measure / LVL3XOFF);
-                    offY = -(s_measure / LVL3YOFF);
-                }
-                */
 
                 Debug.Log("p_measure: " + p_measure + " | s_measure: " + s_measure);
 
@@ -1539,7 +1193,6 @@ public class GameBehaviour : MonoBehaviour
     {
         screenFadeAnimator.SetTrigger("fade");
         Invoke(nameof(ToUI), TRANSITIONTIME);
-        Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
         Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
     }
@@ -1606,7 +1259,6 @@ public class GameBehaviour : MonoBehaviour
         //DEBUG
         Debug.Log("Result: " + Math.Round(result, 2));
 
-        slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));
         this.spellCastEvent = new SpellCastEvent(this, problem);
 
         //Instantiate Spell Animation
@@ -1647,8 +1299,6 @@ public class GameBehaviour : MonoBehaviour
                 throw new Exception("Invalid shape");
                 //throw this shit 
         }
-
-        slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));
 
         this.spellCastEvent = new SpellCastEvent(this, problem);
 

@@ -297,7 +297,6 @@ public class LineSnapper : MonoBehaviour
     {
         Vector3 start = currentLine.GetPosition(0);
         Vector3 end = currentLine.GetPosition(1);
-        float result = 0f;
         if (Vector3.Distance(start, end) > 0.01f)
         {
             isDrawing = false;
@@ -306,70 +305,12 @@ public class LineSnapper : MonoBehaviour
                 firstLine = currentLine;
                 float value = CalculateLineValue(firstLine);
                 firstLineText = CreateValueText(end, value);
-
-                string currentText = main.text.text;
-                switch (main.spellCastEvent.problem.problemShape)
-                {
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        currentText = currentText.Replace("[B]", value.ToString("F2"));
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        currentText = currentText.Replace("[L]", value.ToString("F2"));
-                        break;
-                    case GameBehaviour.SHAPES.SQUARE:
-                        currentText = currentText.Replace("[S]", value.ToString("F2"));
-
-                        result = (float)Math.Pow(value, 2);
-                        result = (float)Math.Round(result * 10) / 10.0f;
-
-                        currentText = currentText.Replace("[A]", result.ToString("F2"));
-                        break;
-                    case GameBehaviour.SHAPES.CIRCLE:
-                        currentText = currentText.Replace("[R]", value.ToString("F2"));
-
-                        result = (float)(Math.PI * Math.Pow(value, 2));
-                        result = (float)Math.Round(result * 10) / 10.0f;
-
-                        currentText = currentText.Replace("[A]", result.ToString("F2"));
-                        break;
-                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                        currentText = currentText.Replace("[R]", value.ToString("F2"));
-
-                        result = (float)(0.5 * (Math.PI * Math.Pow(value, 2)));
-                        result = (float)Math.Round(result * 10) / 10.0f;
-
-                        currentText = currentText.Replace("[A]", result.ToString("F2"));
-                        break;
-                }
-                main.text.text = currentText;
             }
             else if (lineCount == 1)
             {
                 secondLine = currentLine;
                 float value = CalculateLineValue(secondLine);
                 secondLineText = CreateValueText(end, value);
-
-                string currentText = main.text.text;
-                switch (main.spellCastEvent.problem.problemShape)
-                {
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        currentText = currentText.Replace("[H]", value.ToString("F2"));
-
-                        result = (0.5f * CalculateLineValue(firstLine) * value);
-                        result = (float)Math.Round(result * 10) / 10.0f;
-
-                        currentText = currentText.Replace("[A]", result.ToString("F2"));
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        currentText = currentText.Replace("[W]", value.ToString("F2"));
-
-                        result = (CalculateLineValue(firstLine) * value);
-                        result = (float)Math.Round(result * 10) / 10.0f;
-
-                        currentText = currentText.Replace("[A]", result.ToString("F2"));
-                        break;
-                }
-                main.text.text = currentText;
             }
             lineCount++;
         }
@@ -404,14 +345,9 @@ public class LineSnapper : MonoBehaviour
 
         lineCount--; // Reduce lines by one if there is > 0 lines
 
-        // Reset text to base form
-        main.text.text = GlobalVariables.ShapeFormulaText(main.spellCastEvent.problem.problemShape);
-
         //Reset shape fill
         main.shapeFiller.fillMaxValue = 0f;
         main.shapeFiller.isFillingActive = true;
-        //Reset slider
-        main.slider.value = 0f;
 
         // Redo text replacements : Partially Copy pasted from above
         if (lineCount > 0) // If there is one line remaining
@@ -423,19 +359,6 @@ public class LineSnapper : MonoBehaviour
             secondLineText = null;
 
             float value = CalculateLineValue(firstLine);
-
-            string currentText = main.text.text;
-            switch (main.spellCastEvent.problem.problemShape)
-            {
-                case GameBehaviour.SHAPES.TRIANGLE:
-                    currentText = currentText.Replace("[B]", value.ToString("F2"));
-                    break;
-                case GameBehaviour.SHAPES.RECTANGLE:
-                    currentText = currentText.Replace("[L]", value.ToString("F2"));
-                    break;
-                // No need for square, circle or semicircle since they only have one line
-            }
-            main.text.text = currentText;
         }
         else if (lineCount <= 0) // Nuke first line if linecount <= 0
         {
