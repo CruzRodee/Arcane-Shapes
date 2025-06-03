@@ -62,7 +62,14 @@ public class LS_EventsScript : MonoBehaviour
         savedGame = saverLoader.loadGame(savePath);
 
         //Load Save data stuff onto GlobalVariables
-        GlobalVariables.isMute = savedGame.prefMute;
+        if (savedGame != null)
+        {
+            GlobalVariables.isMute = savedGame.prefMute;
+        }
+        else
+        {
+            GlobalVariables.isMute = false; // Default to unmuted
+        }
 
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
     }

@@ -25,14 +25,14 @@ void Awake()
         return;
     }
     
-     buttonAudio.clip = btnSFX; //Assign buttonSFX as audio clip
-     buttonAudio.pitch = pitch; //Speed-up sfx
+     buttonAudio.playOnAwake = false;
+     buttonAudio.pitch = pitch; // speed-up sfx if desired
  }
     
     //Detects whenever the button is pressed
 public void OnPointerDown(PointerEventData eventData)
  {
-    if(!GlobalVariables.isMute && buttonAudio != null && buttonAudio.clip != null) //If sounds are not muted and audio is properly configured
-         buttonAudio.Play(); //Play sound on button press
+    if (!GlobalVariables.isMute && btnSFX != null)
+        buttonAudio.PlayOneShot(btnSFX);
  }
 }

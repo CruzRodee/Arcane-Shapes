@@ -5,6 +5,7 @@ using UnityEngine.UI;   //text
 using System.IO;
 using System;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 //save game file
 
 public class MM_UIScript : MonoBehaviour
@@ -120,11 +121,16 @@ if (savedGame != null)
         Debug.Log("Quitting Game");
         try
         {
-            QuitApplicationUtility.MoveAndroidApplicationToBack();
+            //Check what platform first to make the button work everywhere
+            if(Application.platform == RuntimePlatform.Android)
+                QuitApplicationUtility.MoveAndroidApplicationToBack();
+            else if(Application.platform == RuntimePlatform.WindowsEditor)
+                UnityEditor.EditorApplication.isPlaying = false;
+            else
+                Application.Quit();
         }
         catch (Exception ex) 
         {
-            Debug.Log("Probably in UnityEditor which causes exception. Otherwise see next log:");
             Debug.LogException(ex);
         }
     }
