@@ -149,6 +149,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &15645477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,6 +165,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &416325979 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4460272851529631694, guid: 3af7d2d8aa826144a84e6137ed8367f5,
@@ -185,6 +187,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &917030665
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,6 +473,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &1059722054 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2003225912086330041, guid: 3af7d2d8aa826144a84e6137ed8367f5,
@@ -491,6 +495,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &1226209367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +511,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1001 &1373432544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -763,6 +769,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &1484096209 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4583489636429366402, guid: 3af7d2d8aa826144a84e6137ed8367f5,
@@ -790,6 +797,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &1564829134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1068,6 +1076,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1001 &2109814951
 PrefabInstance:
   m_ObjectHideFlags: 0

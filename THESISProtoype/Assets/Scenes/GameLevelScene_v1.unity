@@ -151,6 +151,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &41535631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +167,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &65147480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,6 +1064,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,6 +1515,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!114 &1202657296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1527,6 +1531,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!114 &1202657297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1542,6 +1547,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!224 &1390878845 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
@@ -1641,6 +1647,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &1499067302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1656,6 +1663,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &1499067303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1671,6 +1679,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &1499067304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1686,6 +1695,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!114 &1499067305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1701,6 +1711,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &1524871660
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,6 +1818,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &1636076555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1982,6 +1994,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &1732195968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2013,6 +2026,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1751850829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6058796877440873828, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 2132351595}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1751850830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751850829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 803f3d94a91e2b345aad3fe0101100ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
+  pitch: 3
+  volume: 1
+  buttonSoundType: 0
 --- !u!1001 &1760331650
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2461,6 +2496,11 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 171587488042760342, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 553667205504187816, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2495,6 +2535,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 63.427
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320106223456794660, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1333137703298528139, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
@@ -2786,6 +2831,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onUndo
       objectReference: {fileID: 0}
+    - target: {fileID: 5439201954244514956, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5960702592915196584, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2860,6 +2910,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 7293152167636886036, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7436789169333240388, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
@@ -2991,6 +3046,11 @@ PrefabInstance:
       propertyPath: m_FontData.m_Alignment
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 9140650058129742020, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8983737354118231024, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf, type: 3}
     m_RemovedGameObjects:
@@ -3059,6 +3119,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1499067301}
+    - targetCorrespondingSourceObject: {fileID: 6058796877440873828, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1751850830}
     - targetCorrespondingSourceObject: {fileID: 7569353209064532894, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       insertIndex: -1
@@ -3165,6 +3229,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1001 &7986668988368439310
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -339,6 +339,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &93436029
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,6 +830,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &210212324
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,6 +980,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &352800569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1264,6 +1267,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
   volume: 0.5
+  buttonSoundType: 1
 --- !u!1 &507020988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1417,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1001 &925745582
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2121,6 +2126,7 @@ MonoBehaviour:
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
   volume: 1
+  buttonSoundType: 0
 --- !u!1 &1272420773
 GameObject:
   m_ObjectHideFlags: 0
@@ -2255,6 +2261,7 @@ GameObject:
   - component: {fileID: 1471049824}
   - component: {fileID: 1471049823}
   - component: {fileID: 1471049822}
+  - component: {fileID: 1471049825}
   m_Layer: 5
   m_Name: CHARACTER
   m_TagString: Untagged
@@ -2375,6 +2382,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1471049820}
   m_CullTransparentMesh: 1
+--- !u!114 &1471049825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471049820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 803f3d94a91e2b345aad3fe0101100ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
+  pitch: 3
+  volume: 1
+  buttonSoundType: 0
 --- !u!1 &1484833383
 GameObject:
   m_ObjectHideFlags: 0

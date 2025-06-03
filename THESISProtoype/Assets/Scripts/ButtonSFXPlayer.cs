@@ -9,6 +9,8 @@ public class ButtonSFXPlayer : MonoBehaviour, IPointerDownHandler
     private AudioSource buttonAudio; //AudioSource to play the clip, assugn to the parent object during Awake()
     public float pitch = 3.0f; //Speed of audio clip, default 3.0f for radio button click
     public float volume = 1.0f;
+    //Field that makes selecting the same type of button by code easier (0: Long sound, 1: short sound, more to come ???) 
+    public int buttonSoundType = 0;
 
     void Awake()
     {
