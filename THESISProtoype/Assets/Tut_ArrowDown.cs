@@ -1,13 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tut_ArrowDown : MonoBehaviour
 {
+/*
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -22,10 +22,12 @@ public class Tut_ArrowDown : MonoBehaviour
 
     }
 
-    private IEnumerator Wait(float delay){      
-        while(true)
+    private IEnumerator Wait(float delay)
+    {
+        while (true)
         {
             yield return new WaitForSeconds(delay);
         }
     }
+*/
 }

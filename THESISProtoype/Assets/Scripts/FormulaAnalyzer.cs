@@ -34,12 +34,12 @@ public class FormulaAnalyzer : MonoBehaviour
 
     private const string formulaDefaultText = "Enter Formula in Board";
     private const string calculatorDefaultText = "Calculator";
-    
+
     // Start is called before the first frame update
     void Start()
     {
         //DEBUG
-        if(DEBUG)
+        if (DEBUG)
             Debug.Log("FA: HELLO WORLD");
 
         //Grab GUI of textmeshpro object
@@ -48,7 +48,7 @@ public class FormulaAnalyzer : MonoBehaviour
         formulaDispGUI.text = formulaDefaultText;
 
         //Grab Gamebehavior script if LO
-        if(isLOGame)
+        if (isLOGame)
             gb = gbHolder.GetComponent<GameBehaviour>();
     }
 
@@ -90,7 +90,7 @@ public class FormulaAnalyzer : MonoBehaviour
 
     public void EnterCalc()
     {
-        if(DEBUG) DEBUGCALCFLAG = true; //Set flag for debug
+        if (DEBUG) DEBUGCALCFLAG = true; //Set flag for debug
 
         calcMode = true; //Trigger flag
 
@@ -115,7 +115,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Clear data
         ResetAnalyzer();
 
-        if(DEBUG) DebugDisplay();
+        if (DEBUG) DebugDisplay();
     }
 
     public void ExitCalc()
@@ -135,7 +135,7 @@ public class FormulaAnalyzer : MonoBehaviour
         sideB = tempB;
 
         //Update GUI
-        if(displayString.Length > 0) //If display contains anything, show that
+        if (displayString.Length > 0) //If display contains anything, show that
             formulaDispGUI.text = displayString;
         else //Else show default text
             formulaDispGUI.text = formulaDefaultText;
@@ -148,7 +148,7 @@ public class FormulaAnalyzer : MonoBehaviour
 
     //Method for appending to the input string variables
     public void InputString(string input)
-    {     
+    {
         //Check for the non-number inputs that may be different between evalString and displayString
         //Else, number strings are same in both
         //Special function for switching to comparing if equ is input
@@ -220,7 +220,7 @@ public class FormulaAnalyzer : MonoBehaviour
                     ResetAnalyzer();
                     break;
                 }
-                
+
                 if (!equMode)
                 {
                     //Add symbol to dispLay but not eval
@@ -231,7 +231,7 @@ public class FormulaAnalyzer : MonoBehaviour
                     if (DEBUG && isValidFormula) //Also need to check if valid formula
                         Debug.Log("FA: Formula Shape is " + formulaShape);
                     //Flag equMode to start getting input answer if valid formula
-                    if(isValidFormula)
+                    if (isValidFormula)
                         equMode = true;
                     else if (!isValidFormula) //Reset analyzer if invalid
                     {
@@ -242,7 +242,7 @@ public class FormulaAnalyzer : MonoBehaviour
                         ResetAnalyzer();
 
                         //Notify gb of invalid formula
-                        if(gb != null)
+                        if (gb != null)
                         {
                             gb.NotifyInvalidFormula();
                         }
@@ -273,10 +273,10 @@ public class FormulaAnalyzer : MonoBehaviour
                         gb.NotifyMismatchedAnswer();
                     }
                 }
-                    break;
+                break;
             //Numbers
             default:
-                if(!equMode) //Dont add if in equMode
+                if (!equMode) //Dont add if in equMode
                     evalString += input;
                 displayString += input;
                 if (equMode) //In equMode,
@@ -286,7 +286,7 @@ public class FormulaAnalyzer : MonoBehaviour
         }
 
         //Debug info
-        if(!input.Equals("equ"))
+        if (!input.Equals("equ"))
             DebugDisplay();
 
         //Update TMP display
@@ -301,12 +301,12 @@ public class FormulaAnalyzer : MonoBehaviour
     private bool CheckInputAnswer()
     {
         //TODO: USE THIS METHOD TO CHECK IF USER SOLVED MATH INPUT CORRECTLY
-        if(evalAnswer.ToString() == inputAnswer)
+        if (evalAnswer.ToString() == inputAnswer)
         {
             //Send a message or activate LO GB the input answer, end early
             if (isLOGame)
             {
-                if(gb!= null)
+                if (gb != null)
                 {
                     gb.InputAnswer(float.Parse(inputAnswer));
                     return true;
@@ -320,7 +320,7 @@ public class FormulaAnalyzer : MonoBehaviour
                 DebugDisplay();
                 Debug.Log("FA: evalAnswer is same as inputAnswer, sending answer to gb for final check");
             }
-            
+
             //return true
             return true;
         }
@@ -337,7 +337,7 @@ public class FormulaAnalyzer : MonoBehaviour
     //Evualutaes the string formula with NCalc Expression.Evaluate(), stores answer in evalAnswer formula validity in isValidFormula
     private void EvaluateFormula()
     {
-        if(displayString.Length - 1 < 3) //There must be at least 2 vals and 1 operator ergo 3 chars, reduce length by 1 to remove "="
+        if (displayString.Length - 1 < 3) //There must be at least 2 vals and 1 operator ergo 3 chars, reduce length by 1 to remove "="
         {
             isValidFormula = false; //Formula not valid if exception
             if (!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
@@ -351,11 +351,11 @@ public class FormulaAnalyzer : MonoBehaviour
         //Check if ending char of evalString is a number, "pi" or ".", if not, invalid formula
         bool endIsNumber = false;
         char[] maybePi = new char[2];
-        foreach(string val in VALUES)
+        foreach (string val in VALUES)
         {
             maybePi[0] = evalString[^2];
             maybePi[1] = evalString[^1];
-            if(maybePi[0].ToString() + maybePi[1].ToString() == "pi")
+            if (maybePi[0].ToString() + maybePi[1].ToString() == "pi")
             {
                 endIsNumber = true;
                 break;
@@ -369,7 +369,8 @@ public class FormulaAnalyzer : MonoBehaviour
 
         if (DEBUG) Debug.Log("FA: maybePi: " + maybePi[0].ToString() + maybePi[1].ToString());
 
-        if (!endIsNumber){
+        if (!endIsNumber)
+        {
             isValidFormula = false;
             return;
         }
@@ -386,12 +387,12 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             Debug.LogException(e); //Logs exception
             isValidFormula = false; //Formula not valid if exception
-            if(!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
+            if (!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
                 ResetEvalAns();
 
-            
+
         }
-        finally 
+        finally
         {
             //Final eval, check shape
             formulaShape = EvalFormulaShape();
@@ -496,7 +497,7 @@ public class FormulaAnalyzer : MonoBehaviour
         duplicateString = duplicateString.Replace("0.5", "");
         duplicateString = duplicateString.Replace("1\u00f72", ""); // 1/2
         duplicateString = duplicateString.Replace("\u00f72", ""); // /2, removed after 1/2 to not mess things up
-        duplicateString = duplicateString.Replace("\u03C0",""); //pi
+        duplicateString = duplicateString.Replace("\u03C0", ""); //pi
         duplicateString = duplicateString.Replace("=", ""); // remove the "=" too
         duplicateString = duplicateString.Replace("(", ""); // remove the "(" too
         duplicateString = duplicateString.Replace(")", ""); // remove the ")" too
@@ -512,20 +513,20 @@ public class FormulaAnalyzer : MonoBehaviour
         List<string> ops = new();
         bool isOps = false; //Check for if char is an operator
 
-        for(int i = 0; i < duplicateString.Length; i++)
+        for (int i = 0; i < duplicateString.Length; i++)
         {
             if (DEBUG)
                 Debug.Log("FA: current char is -> " + duplicateString.ToCharArray()[i]);
-            
+
             //Check if char in OPERATORS, add new blank vals element if i < duplicateString.Length and vals.Last() != ""
-            foreach(string s in OPERATORS)
-            {                
+            foreach (string s in OPERATORS)
+            {
                 if (duplicateString.ToCharArray()[i] == s.ToCharArray()[0])
                 {
                     if (DEBUG)
                         Debug.Log("FA: Operator found! -> " + s);
-                    
-                    if(i < duplicateString.Length && vals.Last() != "")
+
+                    if (i < duplicateString.Length && vals.Last() != "")
                         vals.Add("");
                     ops.Add(s);
                     isOps = true; //char is an operator
@@ -544,13 +545,14 @@ public class FormulaAnalyzer : MonoBehaviour
         if (DEBUG)
         {
             Debug.Log("FA: vals length is " + vals.Count());
-            foreach (string s in vals) {
+            foreach (string s in vals)
+            {
                 Debug.Log("FA: vals contains " + s);
             }
         }
 
         //Prune All Empty strings from vals until non-empty is reached
-        while(vals.Last() == "")
+        while (vals.Last() == "")
         {
             if (DEBUG)
                 Debug.Log("FA: Removed empty string!");
@@ -562,15 +564,16 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             sideA = float.Parse(vals[0]);
             sideB = float.Parse(vals[1]);
-        } catch (System.Exception)
+        }
+        catch (System.Exception)
         {
             return GameBehaviour.SHAPES.NONE; //Either invalid input or logic error
         }
 
         //No shape if there are operators other than *, /, and =
-        foreach (string op in ops) 
-        { 
-            if(op == "-" || op == "+")
+        foreach (string op in ops)
+        {
+            if (op == "-" || op == "+")
             {
                 return GameBehaviour.SHAPES.NONE;
             }
@@ -613,7 +616,7 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         if (!DEBUG) //Do nothing if not debug mode
             return;
-        if(!calcMode)
+        if (!calcMode)
             Debug.Log("evalString: " + evalString + " | displayString: " + displayString + " | sideA: " + sideA);
         else
             Debug.Log("evalString: " + evalString + " | calcDispString: " + calcDispString + " | sideA: " + sideA);

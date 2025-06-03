@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HolyHaloScript : BaseLOScript
@@ -21,7 +20,7 @@ public class HolyHaloScript : BaseLOScript
     public override void SuccessfulCast()
     {
         //Show Halo
-        foreach(GameObject o in vfxSet)
+        foreach (GameObject o in vfxSet)
         {
             o.SetActive(true);
         }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TransitionScript : MonoBehaviour
@@ -21,7 +20,7 @@ public class TransitionScript : MonoBehaviour
     {
         yield return new WaitForSeconds(DELAY);
         StartCoroutine(LocalScaleOverTime(this.gameObject, SHRINKTIME, SHRINKSCALE)); //Shrink
-        yield return new WaitForSeconds(SHRINKTIME+0.1f);
+        yield return new WaitForSeconds(SHRINKTIME + 0.1f);
         this.gameObject.GetComponent<Renderer>().enabled = false; //Invisible
     }
 

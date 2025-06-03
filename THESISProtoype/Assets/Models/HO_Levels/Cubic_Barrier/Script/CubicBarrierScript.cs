@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -9,7 +8,7 @@ public class CubicBarrierScript : BaseLOScript
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.15f, 0.0f);
-    private Vector3 SHIELDCENTER = new Vector3(0f, SCALING_VAR/2, 00f);
+    private Vector3 SHIELDCENTER = new Vector3(0f, SCALING_VAR / 2, 00f);
 
     private float TIMETOCENTER = 0.5f;
     private float EXPANDTIME = 0.2f;

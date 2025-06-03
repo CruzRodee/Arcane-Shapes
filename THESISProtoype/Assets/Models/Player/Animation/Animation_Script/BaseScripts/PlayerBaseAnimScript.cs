@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBaseAnimScript : StateMachineBehaviour
@@ -12,9 +9,21 @@ public class PlayerBaseAnimScript : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        faceMeshRenderer = GameObject.FindWithTag("PlayerFaceMesh").GetComponent<Renderer>();
-        player = GameObject.FindWithTag("Player");
-        if(faceMeshRenderer == null ) { Debug.Log("Failed to find player face renderer"); }
+        var faceMeshObj = GameObject.FindWithTag("PlayerFaceMesh");
+        if (faceMeshObj == null) {
+            Debug.LogError("Failed to find GameObject with tag 'PlayerFaceMesh'");
+        } else {
+            faceMeshRenderer = faceMeshObj.GetComponent<Renderer>();
+            if (faceMeshRenderer == null) {
+                Debug.LogError("Renderer component missing on 'PlayerFaceMesh' GameObject");
+            }
+        }
+        var playerObj = GameObject.FindWithTag("Player");
+        if (playerObj == null) {
+            Debug.LogError("Failed to find GameObject with tag 'Player'");
+        } else {
+            player = playerObj;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

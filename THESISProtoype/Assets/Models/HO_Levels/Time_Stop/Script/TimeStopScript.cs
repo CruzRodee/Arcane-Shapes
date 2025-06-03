@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class TimeStopScript : BaseLOScript
 {
     private bool timeStopped = false; //Boolean for time stop effect
-    
+
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.0f, 0.0f);
 
     //Gameobject for camera, aquired by name and used for shaky cam

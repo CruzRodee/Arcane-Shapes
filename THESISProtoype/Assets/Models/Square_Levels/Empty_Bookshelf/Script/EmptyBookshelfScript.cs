@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EmptyBookshelfScript : BaseLOScript
 {
-    private const float time = (float) 0.5;
+    private const float time = (float)0.5;
     private Vector3 OFFSET = new Vector3(0, (float)2.5, 0);
     private const float SCALING_VAR = (float)1.5;
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
@@ -23,10 +20,17 @@ public class EmptyBookshelfScript : BaseLOScript
         GameObject[] tempObjects = GameObject.FindGameObjectsWithTag("EmptyBookshelfPart");
         foreach (GameObject obj in tempObjects)
         {
-            obj.GetComponent<Renderer>().enabled = true;
+            Renderer renderer = obj.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.enabled = true;
+            }
         }
 
         // TODO: Add VFX Graph magic effects here later
-        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        if (vfxSet != null && vfxSet.Length > 0)
+        {
+            Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        }
     }
 }

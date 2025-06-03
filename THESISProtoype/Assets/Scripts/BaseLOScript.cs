@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class BaseLOScript : MonoBehaviour
 {
@@ -22,7 +20,7 @@ public class BaseLOScript : MonoBehaviour
     protected void Start()
     {
         //TESTING
-        if(TEST)
+        if (TEST)
             Invoke(nameof(SuccessfulCast), TESTDELAY);
 
         //Invoke(nameof(CleanUp), CLEANTIME); // Cleaning objects
@@ -111,7 +109,7 @@ public class BaseLOScript : MonoBehaviour
     protected IEnumerator LightRangeOverTime(GameObject obj, float duration, float endRange)
     {
         Light light = obj.GetComponent<Light>();
-        
+
         var startRange = light.range;
         var elapsed = 0f;
 

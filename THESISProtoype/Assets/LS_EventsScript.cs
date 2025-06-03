@@ -1,17 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using static GameBehaviour;
-using System.Runtime.InteropServices;
-using UnityEditor;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class LS_EventsScript : MonoBehaviour
@@ -21,7 +11,7 @@ public class LS_EventsScript : MonoBehaviour
     public Button btnHome;
     public Button btnTutorial;  //TODO: Screenshot + Edit what those mean
     public Button btnGrimoire;
-    
+
     //ROOMS BUTTON
     public Button btnTriangle;  //TODO: Screenshot + Edit what those mean
     public Button btnSquare;
@@ -32,8 +22,9 @@ public class LS_EventsScript : MonoBehaviour
 
     //Mute Related
     //private bool muted = false; // Use save data instead
-    private const float defaultVolume = 0.5f;
     private Image btnMuteImg;
+    public Sprite btnMutedSprite;
+    public Sprite btnUnmutedSprite;
     private AudioSource bgmSrc;
 
     // Other
@@ -61,7 +52,20 @@ public class LS_EventsScript : MonoBehaviour
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
         savedGame = saverLoader.loadGame(savePath);
 
+        //Load Save data stuff onto GlobalVariables
+        savedGame = saverLoader.loadGame(savePath);
+        if (savedGame == null)          // prevent NREs downstream, quit to main menu
+        {
+            //SceneChange to main menu
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
+            return;
+        }
+
+        GlobalVariables.isMute = savedGame.prefMute;
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+
+        btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
     }
     void Start()
     {
@@ -75,10 +79,8 @@ public class LS_EventsScript : MonoBehaviour
             if (GlobalVariables.playerWin && GlobalVariables.level < 3)
                 GlobalVariables.level++; //Level up after win until 3
 
-            
-
             //Save to GameData
-            if(GlobalVariables.isLOGame) //Saving for LO game
+            if (GlobalVariables.isLOGame) //Saving for LO game
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -130,20 +132,30 @@ public class LS_EventsScript : MonoBehaviour
 
         bgmSrc = GameObject.Find("BGMAudioSource").GetComponent<AudioSource>();
         bgmSrc.Play();
-        if (!savedGame.prefMute) // If not muted, play sound
-            bgmSrc.volume = defaultVolume;
+
+        //Update mute button state and volume based on prefs
+        if (!savedGame.prefMute)
+        {
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+        }
         else
-            bgmSrc.volume = 0.0f;
-        btnMuteImg = btnMute.GetComponent<Image>();
+        {
+            if (btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
+            bgmSrc.volume = 0f;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    void initLevels(GameData data){
+    void initLevels(GameData data)
+    {
         GameObject.Find("DialogueCharNameText").GetComponent<Text>().text = data.playerName;
 
         // tempObject = GameObject.Find("TrianglePercent").GetComponent<Text>();
@@ -152,10 +164,10 @@ public class LS_EventsScript : MonoBehaviour
 
         // Array of skill level texts
         string[] skillLevels = { "Walang Datos", "Baguhan", "Bihasa", "Dalubhasa" };
-        
-        GameObject.Find("TrianglePercent").GetComponent<Text>().text = "Lvl "+data.triLvl;
+
+        GameObject.Find("TrianglePercent").GetComponent<Text>().text = "Lvl " + data.triLvl;
         //test
-        switch(data.triLvl)
+        switch (data.triLvl)
         {
             case 0:
                 GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[0];
@@ -265,30 +277,40 @@ public class LS_EventsScript : MonoBehaviour
             }
         }
     }
- 
 
-//////////// SIDE BAR BUTTONS
 
-    public void toggleMute(){
-        UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
-        savedGame.prefMute = !savedGame.prefMute; // Invert mute state
+    //////////// SIDE BAR BUTTONS
+
+    public void toggleMute()
+     {
+         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
+        if (savedGame == null)
+        {
+            savedGame = new GameData();        // initialise a fresh save or early-out
+        }
+
+        savedGame.prefMute = !savedGame.prefMute;     // invert state
+        GlobalVariables.isMute = savedGame.prefMute;  // sync global flag
 
         UnityEngine.Debug.Log(savedGame.prefMute);
 
         if (!savedGame.prefMute)
         {
-            //idk where it is
-            bgmSrc.volume = defaultVolume;
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
         }
         else
         {
-            //blank sprite idkk
+            if(btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
 
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
-    public void GoHome(){
+    public void GoHome()
+    {
         UnityEngine.Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
 
         //SceneChange to main menu
@@ -302,20 +324,22 @@ public class LS_EventsScript : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void showTutorial(){
+    public void showTutorial()
+    {
         UnityEngine.Debug.Log("Show tutorial screenshot");
     }
 
-    public void showGrimoire(){
+    public void showGrimoire()
+    {
         UnityEngine.Debug.Log("Show tutorial screenshot");
     }
 
 
 
 
-////////////////////////////////////////
-///// ENTERING ROOMS ///////////////////
-////////////////////////////////////////
+    ////////////////////////////////////////
+    ///// ENTERING ROOMS ///////////////////
+    ////////////////////////////////////////
 
     private void DelayedRoomEnter()
     {
@@ -326,8 +350,9 @@ public class LS_EventsScript : MonoBehaviour
     {
         SceneManager.LoadScene("HOGame"); //Load Level scene
     }
-//pasted from old repo
-public void enterRectangle(){
+    //pasted from old repo
+    public void enterRectangle()
+    {
         UnityEngine.Debug.Log("Rectangle Room");
 
         //Load data
@@ -338,7 +363,8 @@ public void enterRectangle(){
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
 
-    public void enterCircle(){
+    public void enterCircle()
+    {
         UnityEngine.Debug.Log("Circle Room");
 
         //Load data
@@ -349,7 +375,8 @@ public void enterRectangle(){
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
 
-    public void enterSquare(){
+    public void enterSquare()
+    {
         UnityEngine.Debug.Log("Square Room");
 
         //Load data
@@ -359,7 +386,8 @@ public void enterRectangle(){
         screenFade.SetTrigger("sceneOut");
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
-    public void enterTriangle(){
+    public void enterTriangle()
+    {
         UnityEngine.Debug.Log("Triangle Room");
         //Load data
         GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
@@ -370,7 +398,8 @@ public void enterRectangle(){
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
 
-    public void enterSemiCircle(){
+    public void enterSemiCircle()
+    {
         UnityEngine.Debug.Log("Semi-Circle Room");
 
         //Load data
@@ -381,7 +410,8 @@ public void enterRectangle(){
         Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
     }
 
-    public void enterCompound(){
+    public void enterCompound()
+    {
         UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
 
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
@@ -390,86 +420,87 @@ public void enterRectangle(){
         Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
     }
 
-/*
-
-    public void enterRectangle(){
-        UnityEngine.Debug.Log("Rectangle Room");
-
-        //Load data
-        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
-        GlobalVariables.level = savedGame.rectLvl; //LOAD LEVEL DATA
-
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
-    }
-
-    public void enterCircle(){
-        UnityEngine.Debug.Log("Circle Room");
-
-        //Load data
-        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
-        GlobalVariables.level = savedGame.circleLvl; //LOAD LEVEL DATA
-
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
-    }
-
-    public void enterSquare(){
-        UnityEngine.Debug.Log("Square Room");
-
-        //Load data
-        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
-        GlobalVariables.level = savedGame.squareLvl; //LOAD LEVEL DATA
-
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
-    }
     /*
-    public void enterTriangle(){
-        UnityEngine.Debug.Log("Triangle Room");
-        //example muna naten to since eto namanna den ung nakagawa na
-        //panelHallway.SetActive(false);
-        //panelDialogue.SetActive(false);
-        //panelCasting.SetActive(true);
-        //panelMagicScroll.SetActive(true);
-        //TextHUD.text = "Triangle Lv1"; //not yet loaded TODO
-        //panelTriangle.SetActive(true);
 
-        //TODO, add the animation snippet here first
-        //for testig purposes muna to complete 1 level
+        public void enterRectangle(){
+            UnityEngine.Debug.Log("Rectangle Room");
 
-        //Load data
-        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
-        GlobalVariables.level = savedGame.triLvl; //LOAD LEVEL DATA
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
+            GlobalVariables.level = savedGame.rectLvl; //LOAD LEVEL DATA
 
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
-    }
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
 
-    public void enterSemiCircle(){
-        UnityEngine.Debug.Log("Semi-Circle Room");
+        public void enterCircle(){
+            UnityEngine.Debug.Log("Circle Room");
 
-        //Load data
-        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
-        GlobalVariables.level = savedGame.scircleLvl; //LOAD LEVEL DATA
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
+            GlobalVariables.level = savedGame.circleLvl; //LOAD LEVEL DATA
 
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
-    }
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
 
-    public void enterCompound(){
-        UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+        public void enterSquare(){
+            UnityEngine.Debug.Log("Square Room");
 
-        GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
+            GlobalVariables.level = savedGame.squareLvl; //LOAD LEVEL DATA
 
-        screenFade.SetTrigger("sceneOut");
-        Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
-    }
-    */
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+        /*
+        public void enterTriangle(){
+            UnityEngine.Debug.Log("Triangle Room");
+            //example muna naten to since eto namanna den ung nakagawa na
+            //panelHallway.SetActive(false);
+            //panelDialogue.SetActive(false);
+            //panelCasting.SetActive(true);
+            //panelMagicScroll.SetActive(true);
+            //TextHUD.text = "Triangle Lv1"; //not yet loaded TODO
+            //panelTriangle.SetActive(true);
 
-    public void calcEquation(){
+            //TODO, add the animation snippet here first
+            //for testig purposes muna to complete 1 level
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
+            GlobalVariables.level = savedGame.triLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterSemiCircle(){
+            UnityEngine.Debug.Log("Semi-Circle Room");
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
+            GlobalVariables.level = savedGame.scircleLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterCompound(){
+            UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+
+            GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
+        }
+        */
+
+    public void calcEquation()
+    {
         //Randomizer based on range of easiness
-        
+
     }
 
 }
