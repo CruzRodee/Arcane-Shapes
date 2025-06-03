@@ -9,6 +9,7 @@ public class ButtonSFXPlayer : MonoBehaviour, IPointerDownHandler
     public AudioClip btnSFX; //Audio clip containing the sound, assign in editor
     private AudioSource buttonAudio; //AudioSource to play the clip, assugn to the parent object during Awake()
     public float pitch = 3.0f; //Speed of audio clip, default 3.0f for radio button click
+    public float volume = 1.0f;
     
 void Awake()
  {
@@ -27,6 +28,7 @@ void Awake()
     
      buttonAudio.playOnAwake = false;
      buttonAudio.pitch = pitch; // speed-up sfx if desired
+     buttonAudio.volume = volume;
  }
     
     //Detects whenever the button is pressed

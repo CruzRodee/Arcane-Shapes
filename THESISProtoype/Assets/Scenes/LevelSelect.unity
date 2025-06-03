@@ -711,6 +711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
+  volume: 0.5
 --- !u!1 &303060472
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +862,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1 &405784629
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,6 +1013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1001 &487038577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1360,6 +1363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
+  volume: 0.5
 --- !u!1 &899870581
 GameObject:
   m_ObjectHideFlags: 0
@@ -2002,6 +2006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
+  volume: 0.5
 --- !u!1 &1183927875
 GameObject:
   m_ObjectHideFlags: 0
@@ -2152,6 +2157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1 &1187108651
 GameObject:
   m_ObjectHideFlags: 0
@@ -2529,6 +2535,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
   pitch: 2
+  volume: 0.5
 --- !u!1 &1225459960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2876,6 +2883,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1 &1309357752
 GameObject:
   m_ObjectHideFlags: 0
@@ -3867,6 +3875,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1 &1791235881
 GameObject:
   m_ObjectHideFlags: 0
@@ -4017,6 +4026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
   pitch: 3
+  volume: 1
 --- !u!1 &1845623452
 GameObject:
   m_ObjectHideFlags: 0
