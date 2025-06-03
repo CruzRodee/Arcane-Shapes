@@ -61,6 +61,9 @@ public class LS_EventsScript : MonoBehaviour
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
         savedGame = saverLoader.loadGame(savePath);
 
+        //Load Save data stuff onto GlobalVariables
+        GlobalVariables.isMute = savedGame.prefMute;
+
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
     }
     void Start()
@@ -272,6 +275,7 @@ public class LS_EventsScript : MonoBehaviour
     public void toggleMute(){
         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
         savedGame.prefMute = !savedGame.prefMute; // Invert mute state
+        GlobalVariables.isMute = savedGame.prefMute; //Store new state in GlobalVars
 
         UnityEngine.Debug.Log(savedGame.prefMute);
 

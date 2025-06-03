@@ -49,6 +49,7 @@ public static class GlobalVariables
     public static bool playerWin = false; //If player wins, make true, increase counter to levelup or level or something then set to false
     public static bool gameFinished = false;
     public static bool isLOGame = false;
+    public static bool isMute = false;
 
     //------------------
 }

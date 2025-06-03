@@ -38,15 +38,17 @@ public class MM_UIScript : MonoBehaviour
         // saveGame("Emerut", false,0,0,0,0,0,0,0,0,0,0,0);
 
         savedGame = saverLoader.loadGame(savePath);
-        if (savedGame != null)
-        {
-            gameExists = true;
-            btnContinue.interactable = true;
-        }
-        else{
-            btnContinue.interactable = false;
-        }
-
+if (savedGame != null)
+     {
+         gameExists = true;
+         btnContinue.interactable = true;
+        GlobalVariables.isMute = savedGame.prefMute;
+     }
+     else
+     {
+         btnContinue.interactable = false;
+        GlobalVariables.isMute = false;
+     }
         overlayPanel.SetActive(false);
         panelNotify.SetActive(false);
 
