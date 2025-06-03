@@ -22,8 +22,9 @@ public class LS_EventsScript : MonoBehaviour
 
     //Mute Related
     //private bool muted = false; // Use save data instead
-    private const float defaultVolume = 0.5f;
     private Image btnMuteImg;
+    public Sprite btnMutedSprite;
+    public Sprite btnUnmutedSprite;
     private AudioSource bgmSrc;
 
     // Other
@@ -62,6 +63,8 @@ public class LS_EventsScript : MonoBehaviour
         }
 
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+
+        btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
     }
     void Start()
     {
@@ -130,11 +133,20 @@ public class LS_EventsScript : MonoBehaviour
 
         bgmSrc = GameObject.Find("BGMAudioSource").GetComponent<AudioSource>();
         bgmSrc.Play();
-        if (!savedGame.prefMute) // If not muted, play sound
-            bgmSrc.volume = defaultVolume;
+
+        //Update mute button state and volume based on prefs
+        if (!savedGame.prefMute)
+        {
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+        }
         else
-            bgmSrc.volume = 0.0f;
-        btnMuteImg = btnMute.GetComponent<Image>();
+        {
+            if (btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
+            bgmSrc.volume = 0f;
+        }
     }
 
     // Update is called once per frame
@@ -271,21 +283,28 @@ public class LS_EventsScript : MonoBehaviour
     //////////// SIDE BAR BUTTONS
 
     public void toggleMute()
-    {
-        UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
-        savedGame.prefMute = !savedGame.prefMute; // Invert mute state
-        GlobalVariables.isMute = savedGame.prefMute; //Store new state in GlobalVars
+     {
+         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
+        if (savedGame == null)
+        {
+            savedGame = new GameData();        // initialise a fresh save or early-out
+        }
+
+        savedGame.prefMute = !savedGame.prefMute;     // invert state
+        GlobalVariables.isMute = savedGame.prefMute;  // sync global flag
 
         UnityEngine.Debug.Log(savedGame.prefMute);
 
         if (!savedGame.prefMute)
         {
-            //idk where it is
-            bgmSrc.volume = defaultVolume;
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
         }
         else
         {
-            //blank sprite idkk
+            if(btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
 

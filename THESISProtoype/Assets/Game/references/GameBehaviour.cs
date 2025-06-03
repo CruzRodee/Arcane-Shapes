@@ -253,7 +253,7 @@ public class GameBehaviour : MonoBehaviour
         //Make sure mearure2 not same as 1 if rectangle, simplify into subracting 1 from either 1 or 2 at random
         if (GlobalVariables.loSelectedShape == SHAPES.RECTANGLE && measure1 == measure2)
         {
-            int coinFlip = UnityEngine.Random.Range(0, 1);
+            int coinFlip = UnityEngine.Random.Range(0, 2); // returns 0 or 1
             if (coinFlip == 0)
                 measure1--;
             else if (coinFlip == 1)
@@ -930,7 +930,7 @@ public class GameBehaviour : MonoBehaviour
         else
         {
             GlobalVariables.playerWin = false;
-            GlobalVariables.percent = 1 - error;
+            GlobalVariables.percent = Mathf.Clamp01(1 - Mathf.Abs(error) / 100f);
         }
 
         if (!isQuit) // Only activate flags if not quitting

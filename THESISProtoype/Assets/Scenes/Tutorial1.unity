@@ -344,7 +344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1010435601
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1036,6 +1036,8 @@ MonoBehaviour:
   panelProceedYN: {fileID: 2109814958}
   panelInputName: {fileID: 2109814957}
   btnMute: {fileID: 2109814956}
+  btnMutedSprite: {fileID: 21300000, guid: 1a5a2a36589d3524a9a23f85094d03c4, type: 3}
+  btnUnmutedSprite: {fileID: 21300000, guid: 9979a624ed4f29e42ae2a4f78ae72ef0, type: 3}
   btnUnmute: {fileID: 1010435600}
   btnHome: {fileID: 2109814955}
   btnSkip: {fileID: 2109814954}
@@ -1085,6 +1087,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 161050771241592070, guid: 3af7d2d8aa826144a84e6137ed8367f5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9979a624ed4f29e42ae2a4f78ae72ef0,
+        type: 3}
     - target: {fileID: 949727598791540048, guid: 3af7d2d8aa826144a84e6137ed8367f5,
         type: 3}
       propertyPath: m_Text

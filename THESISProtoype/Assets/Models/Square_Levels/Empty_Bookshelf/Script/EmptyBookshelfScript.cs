@@ -20,10 +20,17 @@ public class EmptyBookshelfScript : BaseLOScript
         GameObject[] tempObjects = GameObject.FindGameObjectsWithTag("EmptyBookshelfPart");
         foreach (GameObject obj in tempObjects)
         {
-            obj.GetComponent<Renderer>().enabled = true;
+            Renderer renderer = obj.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.enabled = true;
+            }
         }
 
         // TODO: Add VFX Graph magic effects here later
-        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        if (vfxSet != null && vfxSet.Length > 0)
+        {
+            Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        }
     }
 }

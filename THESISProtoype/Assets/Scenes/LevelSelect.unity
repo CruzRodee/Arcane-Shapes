@@ -4506,6 +4506,8 @@ MonoBehaviour:
   btnCircle: {fileID: 303060474}
   btnRectangle: {fileID: 1791235883}
   btnCompound: {fileID: 1183927877}
+  btnMutedSprite: {fileID: 21300000, guid: 55c6e8e82c7dfd9479d76418f7ce033b, type: 3}
+  btnUnmutedSprite: {fileID: 21300000, guid: 9979a624ed4f29e42ae2a4f78ae72ef0, type: 3}
   TextHUD: {fileID: 1504548894}
   panelHallway: {fileID: 1538407630}
   panelDialogue: {fileID: 727009600}

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Tut_ArrowDown : MonoBehaviour
 {
+/*
     // Start is called before the first frame update
     void Start()
     {
@@ -28,4 +29,5 @@ public class Tut_ArrowDown : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
     }
+*/
 }

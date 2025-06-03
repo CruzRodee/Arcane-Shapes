@@ -50,6 +50,7 @@ public static class GlobalVariables
     public static bool gameFinished = false;
     public static bool isLOGame = false;
     public static bool isMute = false;
+    public static float defaultBGMVolume = 0.5f;
 
     //------------------
 }

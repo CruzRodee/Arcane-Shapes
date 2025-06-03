@@ -26,14 +26,13 @@ public class MM_UIScript : MonoBehaviour
     private void Awake()
     {
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+        overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
     }
     void Start()
     {
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
-        // // loadGame();
-        // saveGame("Emerut", false,0,0,0,0,0,0,0,0,0,0,0);
 
         savedGame = saverLoader.loadGame(savePath);
         if (savedGame != null)
@@ -57,8 +56,6 @@ public class MM_UIScript : MonoBehaviour
         Debug.Log("CONTINUE");
         panelNotify.SetActive(true); //nts: always set active true because if inactive ndi makikita ung children comps
 
-        Text overlayText = GameObject.Find("TextOverlay").GetComponent<Text>();
-
         overlayText.text = "Saved game Loaded!";
         //Jump to the game immediately (load all saved data)
         LoadHallScene(); //Data loaded at start, continue button disabled by default so fast fingers cant press accidentalt
@@ -70,7 +67,6 @@ public class MM_UIScript : MonoBehaviour
         {
 
             overlayPanel.SetActive(true);
-            Text overlayText = GameObject.Find("PanelText").GetComponent<Text>();
             overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
         }
         else
@@ -87,12 +83,10 @@ public class MM_UIScript : MonoBehaviour
     {
         Debug.Log("new game");
         panelNotify.SetActive(true);
-        Text overlayText = GameObject.Find("TextOverlay").GetComponent<Text>();
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
         saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
-        // saveGame("You",false,0,0,0,0,0,0,0,0,0,0,0);
 
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);

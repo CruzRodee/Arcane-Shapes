@@ -28,7 +28,9 @@ public class Tut_UIEventsScript : MonoBehaviour
     private InputField nameInputField;
 
     public GameObject btnMute;  //have to be gameobj
-    public GameObject btnUnmute;
+    private Image btnMuteImg;
+    public Sprite btnMutedSprite;
+    public Sprite btnUnmutedSprite;
     public Button btnHome;
 
     public Button btnSkip;
@@ -42,8 +44,6 @@ public class Tut_UIEventsScript : MonoBehaviour
 
     private bool talking = true;
 
-    private bool muted = false;
-    private Image btnMuteImg;
     private AudioSource bgmSrc;
 
     private SaveLoadController saverLoader = new SaveLoadController();
@@ -53,10 +53,12 @@ public class Tut_UIEventsScript : MonoBehaviour
 
     private Animator screenFade;
     private float TRANSITIONDELAY = 3.0f;
+    private string savePath;
 
     private void Awake()
     {
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+        savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
     }
     void Start()
     {
@@ -64,18 +66,19 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         bgmSrc = GameObject.Find("BGMAudioSource").GetComponent<AudioSource>();
         bgmSrc.Play();
-        btnMuteImg = btnMute.GetComponent<Image>();
+        bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+
+        btnMuteImg = btnMute.GetComponent<Image>(); //Get component for manipulation later
 
         //load saved game if meron (automatic na meron if after main menu)
         // savedGame =  saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
-        savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+        savedGame = saverLoader.loadGame(savePath);
 
 
         TextHUD.text = "Arcana Hallway I";
         // GameObject pHall = GameObject.Find("PanelHall").GetComponent<GameObject>();
 
         panelHall.SetActive(false); //hude all buttons from the hall if not skipping
-        btnUnmute.SetActive(false); //hide btn if unmuted
         panelProceedYN.SetActive(false);
         panelInputName.SetActive(false);
         playerName = savedGame.playerName;
@@ -270,20 +273,29 @@ public class Tut_UIEventsScript : MonoBehaviour
     public void toggleMute()
     {
         Debug.Log("MUTE BUTTON PRESSED");
-        muted = !muted;
-        if (muted)
-        {
 
-            btnMute.SetActive(false); //hide btn if unmuted
-            btnUnmute.SetActive(true); //hide btn if unmuted
-            bgmSrc.volume = 1f;
+        if (savedGame == null)
+        {
+            savedGame = new GameData();        // initialise a fresh save or early-out
+        }
+
+        savedGame.prefMute = !savedGame.prefMute;     // invert state
+        GlobalVariables.isMute = savedGame.prefMute;  // sync global flag
+
+        if (!savedGame.prefMute)
+        {
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
         }
         else
         {
-            btnMute.SetActive(true); //hide btn if unmuted
-            btnUnmute.SetActive(false); //hide btn if unmuted
+            if (btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
+
+        saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
     public void GoHome()
     {
