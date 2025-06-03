@@ -53,15 +53,16 @@ public class LS_EventsScript : MonoBehaviour
         savedGame = saverLoader.loadGame(savePath);
 
         //Load Save data stuff onto GlobalVariables
-        if (savedGame != null)
+        savedGame = saverLoader.loadGame(savePath);
+        if (savedGame == null)          // prevent NREs downstream, quit to main menu
         {
-            GlobalVariables.isMute = savedGame.prefMute;
-        }
-        else
-        {
-            GlobalVariables.isMute = false; // Default to unmuted
+            //SceneChange to main menu
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
+            return;
         }
 
+        GlobalVariables.isMute = savedGame.prefMute;
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
 
         btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
@@ -77,8 +78,6 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level = 1; //Set level to 1 after playing
             if (GlobalVariables.playerWin && GlobalVariables.level < 3)
                 GlobalVariables.level++; //Level up after win until 3
-
-
 
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game

@@ -18,7 +18,12 @@ public class PlayerBaseAnimScript : StateMachineBehaviour
                 Debug.LogError("Renderer component missing on 'PlayerFaceMesh' GameObject");
             }
         }
-        player = GameObject.FindWithTag("Player");
+        var playerObj = GameObject.FindWithTag("Player");
+        if (playerObj == null) {
+            Debug.LogError("Failed to find GameObject with tag 'Player'");
+        } else {
+            player = playerObj;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

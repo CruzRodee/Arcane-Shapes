@@ -255,9 +255,9 @@ public class GameBehaviour : MonoBehaviour
         {
             int coinFlip = UnityEngine.Random.Range(0, 2); // returns 0 or 1
             if (coinFlip == 0)
-                measure1--;
+                measure1 = Mathf.Max(1, measure1 - 1);
             else if (coinFlip == 1)
-                measure2--;
+                measure2 = Mathf.Max(1, measure2 - 1);
         }
 
         Debug.Log("Measure1: " + measure1 + " | Measure2: " + measure2);
@@ -1190,7 +1190,9 @@ public class GameBehaviour : MonoBehaviour
         while (shapeGenerator == null)
         {
             UnityEngine.Debug.Log("Hi here...");
-            shapeGenerator = GameObject.Find("ShapeGenerator").GetComponent<ShapeGenerator>();
+            var go = GameObject.Find("ShapeGenerator");
+            if (go != null)
+                shapeGenerator = go.GetComponent<ShapeGenerator>();
 
             yield return new WaitForEndOfFrame();
         }
