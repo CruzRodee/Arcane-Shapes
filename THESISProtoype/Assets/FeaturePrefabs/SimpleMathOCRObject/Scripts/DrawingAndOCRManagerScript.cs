@@ -1,11 +1,10 @@
 // Source: https://www.youtube.com/watch?v=qOP83fot3c0
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-using Unity.Sentis;
 using System.Linq;
+using Unity.Sentis;
+using UnityEngine;
 
 public class DrawingAndOCRManagerScript : MonoBehaviour
 {
@@ -125,16 +124,16 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     {
         if (processing || doingOCR) //do nothing if OCR or some other process is not done
             return;
-        
-        if(timer > 0f) //Decrease time if not zero
+
+        if (timer > 0f) //Decrease time if not zero
         {
             timer -= Time.deltaTime;
-            if(timer <= 0f) //If timer is done set clear to true
+            if (timer <= 0f) //If timer is done set clear to true
             {
                 clear = true;
             }
-        }    
-        
+        }
+
         if (Input.GetMouseButton(0))//If the mouse is pressed, call the function
         {
             //Function for drawing stuff on the OCR input
@@ -158,7 +157,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             if (clear && hasDrawn && hasHit)
             {
                 RotateImage(generatedTexture, -90f); //Rotate texture first since it is tilted for some reason
-                
+
                 //Call OCR model method, this will also pass the output to wherever later
                 PerformOCR();
 
@@ -188,9 +187,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         currentPosition.z = vfxLineGO.transform.position.z + vfxLinePlaneOffset; //Spawn line slightly above the OCR and VFX planes
 
         //Only add new point if distance to new position is greater than min distance
-        if(Vector3.Distance(currentPosition, previousPosition) > vfxLineMinDistance)
+        if (Vector3.Distance(currentPosition, previousPosition) > vfxLineMinDistance)
         {
-            if(previousPosition == vfxLineGO.transform.position) //Fix to sudden jump if not starting in center
+            if (previousPosition == vfxLineGO.transform.position) //Fix to sudden jump if not starting in center
             {
                 line.SetPosition(0, currentPosition); //Set starting point to current position
             }
@@ -225,7 +224,8 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         line = vfxLineGO.GetComponent<LineRenderer>(); //Go back to default
 
         //Delete all clones
-        foreach (GameObject go in vfxLineClones) { 
+        foreach (GameObject go in vfxLineClones)
+        {
             Destroy(go);
         }
 
@@ -245,7 +245,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
                 return;
             }
             hasHit = true; //If collider not null then it hit
-            
+
             point.position = hit.point;//Move to pointer to the place where the mouse intersects the canvas
             xPixel = (int)((point.localPosition.x - topLeftCorner.localPosition.x) * xMult); //Calculate the position in pixels
             yPixel = (int)((point.localPosition.y - topLeftCorner.localPosition.y) * yMult);
@@ -347,7 +347,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private void PerformOCR()
     {
         doingOCR = true; //flag this
-        
+
         // Load input data to tensor
         Tensor<float> inputTensor = new Tensor<float>(new TensorShape(1, 3, 45, 45));
         TextureConverter.ToTensor(generatedTexture, inputTensor, new TextureTransform());

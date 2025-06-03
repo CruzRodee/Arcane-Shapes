@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -10,7 +8,7 @@ public class SlashScript : BaseLOScript
     public string cameraName = "ClassroomCamera"; //Default name
 
     public GameObject cube1, cube2;
-    
+
     private const float SCALING_VAR = 1.2f;
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
     private Vector3 CUTDIF = new Vector3(0, 0, 0.2f);

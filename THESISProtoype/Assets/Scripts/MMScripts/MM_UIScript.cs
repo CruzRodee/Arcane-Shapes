@@ -1,22 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;   //text
-using System.IO;
 using System;
+using System.IO;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+using UnityEngine.UI;   //text
 //save game file
 
 public class MM_UIScript : MonoBehaviour
 {
-    private Text overlayText; 
-    public GameObject overlayPanel; 
+    private Text overlayText;
+    public GameObject overlayPanel;
     public Button btnContinue;
-    public GameObject panelNotify; 
+    public GameObject panelNotify;
 
     private string savePath;
-    private bool gameExists=false;
+    private bool gameExists = false;
     // Start is called before the first frame update
 
     private GameData savedGame;
@@ -39,23 +36,24 @@ public class MM_UIScript : MonoBehaviour
         // saveGame("Emerut", false,0,0,0,0,0,0,0,0,0,0,0);
 
         savedGame = saverLoader.loadGame(savePath);
-if (savedGame != null)
-     {
-         gameExists = true;
-         btnContinue.interactable = true;
-        GlobalVariables.isMute = savedGame.prefMute;
-     }
-     else
-     {
-         btnContinue.interactable = false;
-        GlobalVariables.isMute = false;
-     }
+        if (savedGame != null)
+        {
+            gameExists = true;
+            btnContinue.interactable = true;
+            GlobalVariables.isMute = savedGame.prefMute;
+        }
+        else
+        {
+            btnContinue.interactable = false;
+            GlobalVariables.isMute = false;
+        }
         overlayPanel.SetActive(false);
         panelNotify.SetActive(false);
 
     }
 
-    public void DoContinue(){
+    public void DoContinue()
+    {
         Debug.Log("CONTINUE");
         panelNotify.SetActive(true); //nts: always set active true because if inactive ndi makikita ung children comps
 
@@ -67,8 +65,9 @@ if (savedGame != null)
     }
 
     public void DoNewGame()
-    {        
-        if (gameExists){
+    {
+        if (gameExists)
+        {
 
             overlayPanel.SetActive(true);
             Text overlayText = GameObject.Find("PanelText").GetComponent<Text>();
@@ -79,25 +78,28 @@ if (savedGame != null)
         // Moved the rest to to LoadFirstScene since that is where new games always go anyways
     }
 
-    public void DoCredits(){
-        Debug.Log("Open Credits");   
+    public void DoCredits()
+    {
+        Debug.Log("Open Credits");
     }
 
-    public void LoadFirstScene(){
+    public void LoadFirstScene()
+    {
         Debug.Log("new game");
         panelNotify.SetActive(true);
         Text overlayText = GameObject.Find("TextOverlay").GetComponent<Text>();
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,"NONE");
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
         // saveGame("You",false,0,0,0,0,0,0,0,0,0,0,0);
 
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
-        
+
     }
-    public void LoadHallScene(){
+    public void LoadHallScene()
+    {
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedHall), TRANSITIONDELAY);
     }
@@ -122,14 +124,22 @@ if (savedGame != null)
         try
         {
             //Check what platform first to make the button work everywhere
-            if(Application.platform == RuntimePlatform.Android)
+            if (Application.platform == RuntimePlatform.Android)
+            {
                 QuitApplicationUtility.MoveAndroidApplicationToBack();
-            else if(Application.platform == RuntimePlatform.WindowsEditor)
-                UnityEditor.EditorApplication.isPlaying = false;
-            else
+            }
+            else if (Application.platform == RuntimePlatform.WindowsPlayer)
+            {
                 Application.Quit();
+            }
+            else if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Debug.LogException(ex);
         }

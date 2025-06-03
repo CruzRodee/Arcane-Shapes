@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;   //Text
 using System.IO;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;   //Text
 
 [System.Serializable]
 public class SayModel
@@ -31,7 +30,7 @@ public class Tut_UIEventsScript : MonoBehaviour
     public GameObject btnMute;  //have to be gameobj
     public GameObject btnUnmute;
     public Button btnHome;
-    
+
     public Button btnSkip;
     public Text TextHUD;
 
@@ -40,10 +39,10 @@ public class Tut_UIEventsScript : MonoBehaviour
 
 
     private List<SayModel> messages;
-    
-    private bool talking = true; 
 
-    private bool muted = false; 
+    private bool talking = true;
+
+    private bool muted = false;
     private Image btnMuteImg;
     private AudioSource bgmSrc;
 
@@ -69,12 +68,12 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         //load saved game if meron (automatic na meron if after main menu)
         // savedGame =  saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
-        savedGame =  saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+        savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
 
 
         TextHUD.text = "Arcana Hallway I";
         // GameObject pHall = GameObject.Find("PanelHall").GetComponent<GameObject>();
-        
+
         panelHall.SetActive(false); //hude all buttons from the hall if not skipping
         btnUnmute.SetActive(false); //hide btn if unmuted
         panelProceedYN.SetActive(false);
@@ -89,35 +88,36 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         // initDialogue();//initialize msgs first once
     }
-    private List<SayModel> initDialogue(){
+    private List<SayModel> initDialogue()
+    {
         List<SayModel> messages = new List<SayModel>();
-        
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Grabe! Nandito na talaga ako sa Arcana Academy!"});
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana."});
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Hindi pa rin ako makapaniwala… estudyante na ako dito!"});
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Hmm… Saan kaya ako magsisimula?"});
 
-        messages.Add(new SayModel{code="say", charName=profName, msg="Oy! Lumayo ka muna diyan!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Ay, sorry! Halos tamaan ka ng lebitating scroll ko. Minsan mahirap kontrolin 'yan, hehe."});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Bago ka lang dito, 'no? Kita ko pa sa'yo yung kislap sa mata mo!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Ako nga pala si Propesor Oz! Oo, wizard ako—pero wag kang mag-alala, hindi ako nangangagat!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Ikaw? Anong pangalan mo?"});
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Grabe! Nandito na talaga ako sa Arcana Academy!" });
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana." });
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Hindi pa rin ako makapaniwala… estudyante na ako dito!" });
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Hmm… Saan kaya ako magsisimula?" });
 
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Ah… Ako si..."});
-        messages.Add(new SayModel{code="input", msg="NAME"});
-        messages.Add(new SayModel{code="say", charName=playerName, msg="Ako si "+playerName+"! Astig makilala ka, Propesor Oz!"});
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Oy! Lumayo ka muna diyan!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Ay, sorry! Halos tamaan ka ng lebitating scroll ko. Minsan mahirap kontrolin 'yan, hehe." });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Bago ka lang dito, 'no? Kita ko pa sa'yo yung kislap sa mata mo!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Ako nga pala si Propesor Oz! Oo, wizard ako—pero wag kang mag-alala, hindi ako nangangagat!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Ikaw? Anong pangalan mo?" });
 
-        messages.Add(new SayModel{code="say", charName=profName, msg="Aba, magaling, "+playerName+"! Maligayang pagdating sa Arcana Academy!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Handa ka na bang matutong gumamit ng anyo at mana para makalikha ng kahit anong maisip mo?"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Dito sa Academy, tuturuan ka naming magbuo ng mga bagay mula sa simpleng hugis hanggang sa mga mas komplikadong disenyo."});
-        messages.Add(new SayModel{code="say", charName=profName, msg="At bawat klase, may mga leksyon na matututuhan mo, kaya siguraduhin subukan mong lahat!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="O siya, pumili ka lang ng pintuan na gusto mong pasukin. Kahit ano diyan!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Naghihintay na ang mga guro sa loob, kaya huwag ka nang mahiyang pumasok."});
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Ah… Ako si..." });
+        messages.Add(new SayModel { code = "input", msg = "NAME" });
+        messages.Add(new SayModel { code = "say", charName = playerName, msg = "Ako si " + playerName + "! Astig makilala ka, Propesor Oz!" });
+
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Aba, magaling, " + playerName + "! Maligayang pagdating sa Arcana Academy!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Handa ka na bang matutong gumamit ng anyo at mana para makalikha ng kahit anong maisip mo?" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Dito sa Academy, tuturuan ka naming magbuo ng mga bagay mula sa simpleng hugis hanggang sa mga mas komplikadong disenyo." });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "At bawat klase, may mga leksyon na matututuhan mo, kaya siguraduhin subukan mong lahat!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "O siya, pumili ka lang ng pintuan na gusto mong pasukin. Kahit ano diyan!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Naghihintay na ang mga guro sa loob, kaya huwag ka nang mahiyang pumasok." });
 
 
-        messages.Add(new SayModel{code="say", charName=profName, msg="Ah, teka lang! Isang paalala… 'wag ka munang dadaan sa huling pintuan ha? 'Yun yung advanced na klase, at kailangan mo munang matutunan ang basics bago ka pumasok diyan."});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Tsaka, tiwala lang. Pag ready ka na, ako na ang magsasabi sa'yo!"});
-        messages.Add(new SayModel{code="say", charName=profName, msg="Oh siya, ingat ka, "+playerName+", at good luck sa unang aralin mo!"});
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Ah, teka lang! Isang paalala… 'wag ka munang dadaan sa huling pintuan ha? 'Yun yung advanced na klase, at kailangan mo munang matutunan ang basics bago ka pumasok diyan." });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Tsaka, tiwala lang. Pag ready ka na, ako na ang magsasabi sa'yo!" });
+        messages.Add(new SayModel { code = "say", charName = profName, msg = "Oh siya, ingat ka, " + playerName + ", at good luck sa unang aralin mo!" });
 
         return messages;
     }
@@ -129,7 +129,7 @@ public class Tut_UIEventsScript : MonoBehaviour
         //after this, reload the messages list to contain the new playerName
 
         //check if working huhu TODO OKAY IT WORKS NOW
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false,0,0,0,0,0,0,0,0,0,0,0,"NONE");
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         Debug.Log(savedGame.playerName);
 
@@ -137,13 +137,14 @@ public class Tut_UIEventsScript : MonoBehaviour
         messages = initDialogue();
         //this wont reset the index dw
 
-        talking=true;   //continue talking
+        talking = true;   //continue talking
         panelInputName.SetActive(false);
 
 
     }
 
-    private void Say(int index){      
+    private void Say(int index)
+    {
         //this func show the changes in the textboxes
         string who = messages[index].charName;
         string what = messages[index].msg;
@@ -154,19 +155,19 @@ public class Tut_UIEventsScript : MonoBehaviour
         {
             textWho.text = who;
             textWhat.text = what;
-        //todo edit the chat sprite to change exps to exp+.png
-            Debug.Log("Who: "+who+" : \""+what+"\"");
+            //todo edit the chat sprite to change exps to exp+.png
+            Debug.Log("Who: " + who + " : \"" + what + "\"");
 
             btnSkip.interactable = true;
 
         }
-        else if(code == "input")
+        else if (code == "input")
         {
             btnSkip.interactable = false;
 
             //ask for player input
             panelInputName.SetActive(true);
-            talking=false;
+            talking = false;
         }
 
         //is there gonna be another option? idk for now eh, making this with room for expansion in mind
@@ -177,14 +178,17 @@ public class Tut_UIEventsScript : MonoBehaviour
     }
 
     //basically +1 sa msgs index, to magaganap if naclick ung dialogue box
-    public void nextLine(){
-        if(talking)
+    public void nextLine()
+    {
+        if (talking)
         {
-            if(msgIndex<messages.Count-1){
-                msgIndex+=1;
+            if (msgIndex < messages.Count - 1)
+            {
+                msgIndex += 1;
                 Say(msgIndex);
             }
-            else{
+            else
+            {
                 //end of lines
                 talking = false;
                 panelHall.SetActive(true);
@@ -193,16 +197,18 @@ public class Tut_UIEventsScript : MonoBehaviour
                 loadLevelSelect();
             }
         }
-        else{
+        else
+        {
             btnSkip.interactable = false;
         }
 
-        
+
     }
 
-    public void SkipDialogue(){
+    public void SkipDialogue()
+    {
         //skips everything and goes to the main hall for choosing which class
-        talking=false;
+        talking = false;
         panelProceedYN.SetActive(true);
     }
 
@@ -210,8 +216,9 @@ public class Tut_UIEventsScript : MonoBehaviour
      * Old Text: Redo Stage? The variables won't reset. Your Stage progress will be unaffected.
      */
 
-    public void skipYes(){
-        skipped=true;
+    public void skipYes()
+    {
+        skipped = true;
         talking = false;
         panelHall.SetActive(true);
 
@@ -225,7 +232,8 @@ public class Tut_UIEventsScript : MonoBehaviour
         loadLevelSelect();
     }
 
-    public void skipNo(){
+    public void skipNo()
+    {
         panelProceedYN.SetActive(false);
         talking = true;
     }
@@ -259,7 +267,8 @@ public class Tut_UIEventsScript : MonoBehaviour
 
     //////////// OTHER BUTTONS
 
-    public void toggleMute(){
+    public void toggleMute()
+    {
         Debug.Log("MUTE BUTTON PRESSED");
         muted = !muted;
         if (muted)
@@ -276,15 +285,18 @@ public class Tut_UIEventsScript : MonoBehaviour
             bgmSrc.volume = 0f;
         }
     }
-    public void GoHome(){
+    public void GoHome()
+    {
         Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
     }
 
-    public void showTutorial(){
+    public void showTutorial()
+    {
         Debug.Log("Show tutorial screenshot");
     }
 
-    public void showGrimoire(){
+    public void showGrimoire()
+    {
         Debug.Log("Show tutorial screenshot");
     }
 
@@ -292,7 +304,7 @@ public class Tut_UIEventsScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         // if(!talking) //check if panelHall is inactive, meaning the player didnt skipped the dialogue button yet ">>"
         // {
         //     talking = true;//checker, also para isa lang ung instance
@@ -307,24 +319,25 @@ public class Tut_UIEventsScript : MonoBehaviour
         //     }
         // }
 
-        if(talking)
+        if (talking)
         {//inactive hall meaning ndi pa naskip
             btnSkip.interactable = true;
 
         }
-        else{
+        else
+        {
             btnSkip.interactable = false;
         }
-            // if(skipLine)
-            // {
-            //     skipLine=!skipLine; //player clicked last tick, avoid double click
-            // }
-            // else{
-            //     if (Input.GetKeyDown(KeyCode.Space))
-            //     {
-            //         skipLine = true;
-            //         yield return new WaitForSeconds(0.05f); //avoid accidental double click
-            //     }
-            // }
+        // if(skipLine)
+        // {
+        //     skipLine=!skipLine; //player clicked last tick, avoid double click
+        // }
+        // else{
+        //     if (Input.GetKeyDown(KeyCode.Space))
+        //     {
+        //         skipLine = true;
+        //         yield return new WaitForSeconds(0.05f); //avoid accidental double click
+        //     }
+        // }
     }
 }

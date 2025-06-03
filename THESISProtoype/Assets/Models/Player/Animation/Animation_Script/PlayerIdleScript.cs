@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerIdleScript : PlayerBaseAnimScript
@@ -20,10 +17,12 @@ public class PlayerIdleScript : PlayerBaseAnimScript
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         //Blinking animation
-        if (elapsed >= BLINKTIME) { 
+        if (elapsed >= BLINKTIME)
+        {
             faceMeshRenderer.material.SetTexture("_BaseMap", blinkFace);
         }
-        if (elapsed >= BLINKTIME + BLINKDURATION) { 
+        if (elapsed >= BLINKTIME + BLINKDURATION)
+        {
             faceMeshRenderer.material.SetTexture("_BaseMap", defaultFace);
             elapsed = 0f; //Reset counter
             BLINKTIME = UnityEngine.Random.Range(2.0f, 5.0f); //Randomized blink time

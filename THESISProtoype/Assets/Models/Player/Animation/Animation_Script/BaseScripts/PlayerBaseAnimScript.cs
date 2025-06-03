@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBaseAnimScript : StateMachineBehaviour
@@ -14,7 +11,7 @@ public class PlayerBaseAnimScript : StateMachineBehaviour
     {
         faceMeshRenderer = GameObject.FindWithTag("PlayerFaceMesh").GetComponent<Renderer>();
         player = GameObject.FindWithTag("Player");
-        if(faceMeshRenderer == null ) { Debug.Log("Failed to find player face renderer"); }
+        if (faceMeshRenderer == null) { Debug.Log("Failed to find player face renderer"); }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

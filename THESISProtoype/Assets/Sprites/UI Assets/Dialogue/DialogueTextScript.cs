@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DialogueTextScript : MonoBehaviour
 {
-    
+
     public string text;
     // public Text textbox;
     private int lineNum;
@@ -19,7 +19,8 @@ public class DialogueTextScript : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))    //check if working with gesture
         {
-            switch(lineNum){
+            switch (lineNum)
+            {
                 case 0:
                     text = "Eme di ko pa napagisipan anu sasabhiin nya";
                     break;

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShockwaveSpellScript : BaseLOScript
@@ -46,7 +45,7 @@ public class ShockwaveSpellScript : BaseLOScript
         yield return new WaitForSeconds(SHOCK_DELAY * multiplier);
 
         //Shakycam
-        cameraShakeScript.shakeDuration = CAST_DURATION*2.5f;
+        cameraShakeScript.shakeDuration = CAST_DURATION * 2.5f;
         cameraShakeScript.shakeAmount = 0.5f;
 
         StartCoroutine(MoveOverTime(obj, CAST_DURATION, obj.transform.position + MOVEOFFSET));

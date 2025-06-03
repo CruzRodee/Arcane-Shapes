@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OpenStoneDoorScript : BaseLOScript
@@ -38,7 +36,7 @@ public class OpenStoneDoorScript : BaseLOScript
         StartCoroutine(MoveOverTime(door2, CAST_DURATION, this.transform.position - MOVEOFFSET));
 
         //Shakycam
-        cameraShakeScript.shakeDuration = CAST_DURATION*1.1f;
+        cameraShakeScript.shakeDuration = CAST_DURATION * 1.1f;
         cameraShakeScript.shakeAmount = 0.05f;
     }
 }

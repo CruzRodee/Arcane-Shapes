@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerGoodCastScript : PlayerBaseAnimScript
@@ -47,8 +45,8 @@ public class PlayerGoodCastScript : PlayerBaseAnimScript
                     break;
                 }
         }
-        
-        temp = Instantiate(shapeObj, player.transform.position + (player.transform.forward*3) + OFFSET, player.transform.rotation);
+
+        temp = Instantiate(shapeObj, player.transform.position + (player.transform.forward * 3) + OFFSET, player.transform.rotation);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerModelScript : MonoBehaviour
 {
     public Texture elfFace, swirlyFace;
-    
+
     private Animator animator;
     private Renderer faceMeshRenderer;
     public bool TEST = false;

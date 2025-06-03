@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -39,7 +37,7 @@ public class CreateHouseScript : BaseLOScript
         house.SetActive(true);
 
         //Scale to Max size
-        StartCoroutine(LocalScaleOverTime(house, ANIMTIME-1f, SCALING));
+        StartCoroutine(LocalScaleOverTime(house, ANIMTIME - 1f, SCALING));
 
         //Remove Mana Material
         Invoke(nameof(ShowObject), ANIMTIME);

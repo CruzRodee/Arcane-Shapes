@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -94,7 +93,7 @@ public class ThorHammerScript : BaseLOScript
 
         //MagicBurst2 and Rain vfx(give random pos and enable VisualEffect)
         transform.Find("MagicalBurst2").gameObject.GetComponent<VisualEffect>().enabled = true;
-        foreach(GameObject rain in rainClouds)
+        foreach (GameObject rain in rainClouds)
         {
             rain.transform.localPosition = RandomRainPos();
             rain.GetComponent<VisualEffect>().enabled = true;

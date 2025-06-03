@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -45,7 +44,7 @@ public class GravityWellScript : BaseLOScript
     private IEnumerator BlackHoleEffect()
     {
         //Suction effect
-        
+
         yield return new WaitForSeconds(DELAY);
 
         //Shakycam
@@ -59,7 +58,7 @@ public class GravityWellScript : BaseLOScript
 
         //Cleanup
 
-        yield return new WaitForSeconds(CAST_DURATION*1.5f);
+        yield return new WaitForSeconds(CAST_DURATION * 1.5f);
 
         foreach (GameObject c in cubes)
         {

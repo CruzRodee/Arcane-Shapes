@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TableAddClothScript : BaseLOScript
 {
-    private const float time = (float) 0.5;
+    private const float time = (float)0.5;
     private Vector3 OFFSET = new Vector3(0, (float)2.5, 0);
     private const float SCALING_VAR = (float)1.25;
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);

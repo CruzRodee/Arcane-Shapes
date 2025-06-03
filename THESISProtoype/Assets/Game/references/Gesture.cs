@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public class LineSnapper : MonoBehaviour
 {
@@ -87,7 +86,7 @@ public class LineSnapper : MonoBehaviour
         textMesh.anchor = TextAnchor.MiddleCenter;
 
         //Save values
-        if(lineCount >= 1)
+        if (lineCount >= 1)
             value2 = value.ToString("F2");
         if (lineCount < 1)
             value1 = value.ToString("F2");
@@ -375,93 +374,93 @@ public class LineSnapper : MonoBehaviour
         currentLine = (lineCount == 1) ? secondLine : firstLine;
     }
 
-        /*
-        public void OnUndoPressed()
+    /*
+    public void OnUndoPressed()
+    {
+        if (lineCount <= 0) return;
+
+        //Remove Area value on any undo
+        main.text.text = main.text.text.Replace(main.text.text.Split("=")[1], " [A]");
+        //Reset shape fill
+        main.shapeFiller.fillMaxValue = 0f;
+        main.shapeFiller.isFillingActive = true;
+        //Reset slider
+        main.slider.value = 0f;
+
+        void RestorePlaceholder(GameObject textObj, string placeholder)
         {
-            if (lineCount <= 0) return;
-
-            //Remove Area value on any undo
-            main.text.text = main.text.text.Replace(main.text.text.Split("=")[1], " [A]");
-            //Reset shape fill
-            main.shapeFiller.fillMaxValue = 0f;
-            main.shapeFiller.isFillingActive = true;
-            //Reset slider
-            main.slider.value = 0f;
-
-            void RestorePlaceholder(GameObject textObj, string placeholder)
+            if (textObj != null)
             {
-                if (textObj != null)
+                string valueToReplace = textObj.GetComponent<TextMesh>().text;
+                if (!string.IsNullOrEmpty(valueToReplace) && float.TryParse(valueToReplace, out float value))
                 {
-                    string valueToReplace = textObj.GetComponent<TextMesh>().text;
-                    if (!string.IsNullOrEmpty(valueToReplace) && float.TryParse(valueToReplace, out float value))
-                    {
-                        string standardizedValue = value.ToString("F2");
-                        main.text.text = main.text.text.Replace(standardizedValue, placeholder);
-                    }
+                    string standardizedValue = value.ToString("F2");
+                    main.text.text = main.text.text.Replace(standardizedValue, placeholder);
                 }
             }
-
-            if (lineCount == 2 && secondLine != null)
-            {
-                switch (main.spellCastEvent.problem.problemShape)
-                {
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        RestorePlaceholder(secondLineText, "[H]");
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        RestorePlaceholder(secondLineText, "[W]");
-                        break;
-                }
-                Destroy(secondLine.gameObject);
-                if (secondLineText != null) Destroy(secondLineText);
-                secondLine = null;
-                secondLineText = null;
-            }
-            else if (lineCount == 1 && firstLine != null)
-            {
-                switch (main.spellCastEvent.problem.problemShape)
-                {
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        RestorePlaceholder(firstLineText, "[B]");
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        RestorePlaceholder(firstLineText, "[L]");
-                        break;
-                    case GameBehaviour.SHAPES.SQUARE:
-                        RestorePlaceholder(firstLineText, "[S]");
-                        break;
-                    case GameBehaviour.SHAPES.CIRCLE:
-                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                        RestorePlaceholder(firstLineText, "[R]");
-                        break;
-                }
-                firstLine.SetPosition(0, Vector3.zero);
-                firstLine.SetPosition(1, Vector3.zero);
-                if (firstLineText != null) Destroy(firstLineText);
-                firstLineText = null;
-            }
-
-            lineCount--;
-            if (lineCount < 0) lineCount = 0;
-
-            isDrawing = false;
-            currentLine = (lineCount == 1) ? secondLine : firstLine;
         }
-        */
 
-        public float getMeasuredValue()
+        if (lineCount == 2 && secondLine != null)
         {
-            LineRenderer lineToMeasure = (lineCount == 2) ? secondLine : firstLine;
-
-            if (lineToMeasure != null)
+            switch (main.spellCastEvent.problem.problemShape)
             {
-                Vector3 start = lineToMeasure.GetPosition(0);
-                Vector3 end = lineToMeasure.GetPosition(1);
-                float xDiff = Mathf.Abs(end.x - start.x);
-                float yDiff = Mathf.Abs(end.y - start.y);
-                float distance = Mathf.Max(xDiff, yDiff);
-                return distance / SNAP_INTERVAL / 4f;
+                case GameBehaviour.SHAPES.TRIANGLE:
+                    RestorePlaceholder(secondLineText, "[H]");
+                    break;
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    RestorePlaceholder(secondLineText, "[W]");
+                    break;
             }
-            return 0f;
+            Destroy(secondLine.gameObject);
+            if (secondLineText != null) Destroy(secondLineText);
+            secondLine = null;
+            secondLineText = null;
         }
+        else if (lineCount == 1 && firstLine != null)
+        {
+            switch (main.spellCastEvent.problem.problemShape)
+            {
+                case GameBehaviour.SHAPES.TRIANGLE:
+                    RestorePlaceholder(firstLineText, "[B]");
+                    break;
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    RestorePlaceholder(firstLineText, "[L]");
+                    break;
+                case GameBehaviour.SHAPES.SQUARE:
+                    RestorePlaceholder(firstLineText, "[S]");
+                    break;
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    RestorePlaceholder(firstLineText, "[R]");
+                    break;
+            }
+            firstLine.SetPosition(0, Vector3.zero);
+            firstLine.SetPosition(1, Vector3.zero);
+            if (firstLineText != null) Destroy(firstLineText);
+            firstLineText = null;
+        }
+
+        lineCount--;
+        if (lineCount < 0) lineCount = 0;
+
+        isDrawing = false;
+        currentLine = (lineCount == 1) ? secondLine : firstLine;
     }
+    */
+
+    public float getMeasuredValue()
+    {
+        LineRenderer lineToMeasure = (lineCount == 2) ? secondLine : firstLine;
+
+        if (lineToMeasure != null)
+        {
+            Vector3 start = lineToMeasure.GetPosition(0);
+            Vector3 end = lineToMeasure.GetPosition(1);
+            float xDiff = Mathf.Abs(end.x - start.x);
+            float yDiff = Mathf.Abs(end.y - start.y);
+            float distance = Mathf.Max(xDiff, yDiff);
+            return distance / SNAP_INTERVAL / 4f;
+        }
+        return 0f;
+    }
+}

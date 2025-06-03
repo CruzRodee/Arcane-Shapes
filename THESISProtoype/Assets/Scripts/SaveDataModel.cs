@@ -1,15 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 //delete
-
-
-
-
-
-
-
 
 [System.Serializable]
 public class SaveDataModel
