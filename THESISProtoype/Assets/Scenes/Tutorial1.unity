@@ -488,9 +488,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 803f3d94a91e2b345aad3fe0101100ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btnSFX: {fileID: 8300000, guid: 54fd56598e9406448bda8e4dbbdb424b, type: 3}
-  pitch: 3
-  volume: 1
+  btnSFX: {fileID: 8300000, guid: 0638bda5a768673488ce1c4bed781802, type: 3}
+  pitch: 2
+  volume: 0.5
 --- !u!114 &1226209367
 MonoBehaviour:
   m_ObjectHideFlags: 0

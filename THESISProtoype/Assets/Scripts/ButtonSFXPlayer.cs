@@ -20,15 +20,12 @@ void Awake()
         buttonAudio = gameObject.AddComponent<AudioSource>();
     }
     
+    buttonAudio.playOnAwake = false;
+    buttonAudio.pitch       = pitch;
+    buttonAudio.volume      = volume;
+
     if (btnSFX == null)
-    {
         Debug.LogWarning($"ButtonSFXPlayer on {gameObject.name}: No audio clip assigned!");
-        return;
-    }
-    
-     buttonAudio.playOnAwake = false;
-     buttonAudio.pitch = pitch; // speed-up sfx if desired
-     buttonAudio.volume = volume;
  }
     
     //Detects whenever the button is pressed
