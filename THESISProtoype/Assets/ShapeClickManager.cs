@@ -17,7 +17,7 @@ public class ShapeClickManager : MonoBehaviour
     [System.Serializable]
     public class ShapeClickData
     {
-        public HOGameBeh.SHAPES shapeType;
+        public GameBehaviour.SHAPES shapeType;
         public Vector3 worldPosition;
         public Vector3 gridPosition;
         public Vector2 size;
@@ -49,6 +49,9 @@ public class ShapeClickManager : MonoBehaviour
     private Dictionary<GameObject, HOGameBeh.ShapeObject> shapeRegistry = new Dictionary<GameObject, HOGameBeh.ShapeObject>();
     private Dictionary<GameObject, Color> originalColors = new Dictionary<GameObject, Color>();
 
+    // NEW: Track clickable state
+    private bool shapesClickable = true;
+
     void Start()
     {
         if (enableDebugMode) Debug.Log("ShapeClickManager: Starting...");
@@ -62,12 +65,9 @@ public class ShapeClickManager : MonoBehaviour
         if (hoGameBeh == null)
         {
             Debug.LogError("ShapeClickManager: HOGameBeh not found! Some functionality might be impaired.");
-            // Note: The manager can still function for click detection,
-            // but MakeShapesClickable might need to be called manually if hoGameBeh remains null.
         }
 
-        // Subscribe to our own events for built-in feedback
-        OnShapeClicked -= HandleShapeClickFeedback; // Defensive unsubscribe
+        OnShapeClicked -= HandleShapeClickFeedback;
         OnShapeClicked += HandleShapeClickFeedback;
 
         StartCoroutine(AutoSetupShapes());
@@ -75,7 +75,7 @@ public class ShapeClickManager : MonoBehaviour
 
     private System.Collections.IEnumerator AutoSetupShapes()
     {
-        yield return new UnityEngine.WaitForSeconds(0.5f); // Ensure HOGameBeh has had time to create shapes
+        yield return new UnityEngine.WaitForSeconds(0.5f);
         MakeShapesClickable();
     }
 
@@ -83,9 +83,6 @@ public class ShapeClickManager : MonoBehaviour
     {
         if (enableDebugMode) Debug.Log("ShapeClickManager: OnDestroy called.");
         OnShapeClicked -= HandleShapeClickFeedback;
-        // Clear static event subscribers if this manager is destroyed to prevent memory leaks
-        // if other objects don't unsubscribe correctly.
-        // However, be careful if you have multiple ShapeClickManagers (which you shouldn't for a static event like this)
         if (OnShapeClicked != null)
         {
             foreach (Delegate d in OnShapeClicked.GetInvocationList())
@@ -94,6 +91,46 @@ public class ShapeClickManager : MonoBehaviour
             }
             if (enableDebugMode) Debug.Log("ShapeClickManager: Cleared all subscribers from OnShapeClicked upon destruction.");
         }
+    }
+
+    // NEW: Function to disable clicking on all subscribed shapes
+    public void SetShapesClickable(bool clickable)
+    {
+        shapesClickable = clickable;
+
+        if (enableDebugMode)
+            Debug.Log($"ShapeClickManager: Setting all shapes clickable state to: {clickable}");
+
+        // Update all registered shape handlers
+        foreach (var kvp in shapeRegistry)
+        {
+            GameObject shapeObj = kvp.Key;
+            if (shapeObj != null)
+            {
+                ShapeClickHandler handler = shapeObj.GetComponent<ShapeClickHandler>();
+                if (handler != null)
+                {
+                    handler.SetClickable(clickable);
+                }
+            }
+        }
+    }
+
+    // NEW: Convenience methods
+    public void DisableShapeClicking()
+    {
+        SetShapesClickable(false);
+    }
+
+    public void EnableShapeClicking()
+    {
+        SetShapesClickable(true);
+    }
+
+    // NEW: Get current clickable state
+    public bool AreShapesClickable()
+    {
+        return shapesClickable;
     }
 
     public void MakeShapesClickable()
@@ -154,6 +191,9 @@ public class ShapeClickManager : MonoBehaviour
         }
         clickHandler.Initialize(this, shapeObj);
 
+        // NEW: Set initial clickable state
+        clickHandler.SetClickable(shapesClickable);
+
         shapeRegistry[shapeGameObj] = shapeObj;
 
         MeshRenderer renderer = shapeGameObj.GetComponent<MeshRenderer>();
@@ -189,12 +229,10 @@ public class ShapeClickManager : MonoBehaviour
                 Debug.Log($"ShapeClickManager: Invoking OnShapeClicked. Number of subscribers: {OnShapeClicked.GetInvocationList().Length}");
                 foreach (Delegate handler in OnShapeClicked.GetInvocationList())
                 {
-                    // Construct a more informative string for the target
                     string targetInfo = "Static or Unknown";
                     if (handler.Target != null)
                     {
                         targetInfo = handler.Target.GetType().FullName;
-                        // If it's a MonoBehaviour, include GameObject name for easier debugging
                         if (handler.Target is MonoBehaviour monoBehaviourTarget)
                         {
                             targetInfo += $" (GameObject: {monoBehaviourTarget.gameObject.name})";
@@ -224,11 +262,11 @@ public class ShapeClickManager : MonoBehaviour
     {
         if (!originalColors.TryGetValue(renderer.gameObject, out Color originalColor))
         {
-            originalColor = renderer.material.color; // Fallback if not stored
+            originalColor = renderer.material.color;
         }
         renderer.material.color = flashColor;
         yield return new UnityEngine.WaitForSeconds(duration);
-        if (renderer != null) // Check if object still exists
+        if (renderer != null)
         {
             renderer.material.color = originalColor;
         }
@@ -238,17 +276,13 @@ public class ShapeClickManager : MonoBehaviour
     {
         if (enableDebugMode) Debug.Log($"ShapeClickManager: Adding collider to {shapeGameObj.name}");
 
-        // Prefer MeshCollider if a MeshFilter exists
         MeshFilter meshFilter = shapeGameObj.GetComponent<MeshFilter>();
         if (meshFilter?.sharedMesh != null)
         {
             if (enableDebugMode) Debug.Log($"ShapeClickManager: Adding MeshCollider to {shapeGameObj.name} as it has a MeshFilter.");
             MeshCollider meshCollider = shapeGameObj.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = meshFilter.sharedMesh;
-            // Convex can be true if your shapes are simple and you don't need concave detection.
-            // For complex 2D shapes made of meshes, convex might need to be true or you might need to decompose them.
-            // For simple generated meshes (like Unity primitives or your custom ones), non-convex should work.
-            meshCollider.convex = true; // Often better for dynamic objects or simpler meshes
+            meshCollider.convex = true;
             meshCollider.enabled = true;
 
             if (enableDebugMode)
@@ -258,11 +292,8 @@ public class ShapeClickManager : MonoBehaviour
         }
         else
         {
-            // Fallback to BoxCollider if no mesh or if you prefer simpler colliders
             if (enableDebugMode) Debug.Log($"ShapeClickManager: Adding BoxCollider to {shapeGameObj.name} (no MeshFilter or preferred).");
             BoxCollider boxCollider = shapeGameObj.AddComponent<BoxCollider>();
-            // Ensure some thickness for raycasting, especially if camera is perfectly aligned.
-            // Size will be based on renderer bounds if available, else default.
             Renderer rend = shapeGameObj.GetComponent<Renderer>();
             if (rend != null)
             {
@@ -270,7 +301,7 @@ public class ShapeClickManager : MonoBehaviour
             }
             else
             {
-                boxCollider.size = new Vector3(1f, 1f, 0.1f); // Default size
+                boxCollider.size = new Vector3(1f, 1f, 0.1f);
             }
             boxCollider.enabled = true;
             if (enableDebugMode)
@@ -285,7 +316,6 @@ public class ShapeClickManager : MonoBehaviour
         if (enableDebugMode && Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Input.mousePosition;
-            // Debug.Log($"ShapeClickManager: Mouse clicked at screen position: {mousePos}"); // Can be noisy
 
             Camera cam = Camera.main;
             if (cam == null)
@@ -295,17 +325,11 @@ public class ShapeClickManager : MonoBehaviour
             }
 
             Ray ray = cam.ScreenPointToRay(mousePos);
-            // Debug.Log($"ShapeClickManager: Ray origin: {ray.origin}, direction: {ray.direction}"); // Can be noisy
 
             RaycastHit hit;
-            // LayerMask could be useful here if you have many colliders
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 Debug.Log($"ShapeClickManager (DEBUG RAYCAST): Raycast hit: {hit.collider.gameObject.name} at distance {hit.distance} on layer {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-            }
-            else
-            {
-                // Debug.Log("ShapeClickManager (DEBUG RAYCAST): Raycast hit nothing."); // Can be noisy
             }
         }
     }
@@ -314,6 +338,9 @@ public class ShapeClickManager : MonoBehaviour
     {
         private ShapeClickManager manager;
         private HOGameBeh.ShapeObject linkedShapeObject;
+
+        // NEW: Track if this individual shape is clickable
+        private bool isClickable = true;
 
         public void Initialize(ShapeClickManager clickManager, HOGameBeh.ShapeObject shapeObj)
         {
@@ -326,8 +353,35 @@ public class ShapeClickManager : MonoBehaviour
             }
         }
 
+        // NEW: Set clickable state for this shape
+        public void SetClickable(bool clickable)
+        {
+            isClickable = clickable;
+
+            if (manager != null && manager.enableDebugMode)
+            {
+                Debug.Log($"ShapeClickHandler: Setting {gameObject.name} clickable state to: {clickable}");
+            }
+        }
+
+        // NEW: Get clickable state
+        public bool IsClickable()
+        {
+            return isClickable;
+        }
+
         private void OnMouseDown()
         {
+            // NEW: Check if clicking is enabled before processing
+            if (!isClickable)
+            {
+                if (manager != null && manager.enableDebugMode)
+                {
+                    Debug.Log($"ShapeClickHandler: OnMouseDown called on {gameObject.name} but clicking is disabled - ignoring");
+                }
+                return;
+            }
+
             if (manager != null && manager.enableDebugMode)
             {
                 Debug.Log($"ShapeClickHandler: OnMouseDown called on {gameObject.name} (Shape: {linkedShapeObject?.shape})");
@@ -349,19 +403,11 @@ public class ShapeClickManager : MonoBehaviour
         private void OnMouseEnter()
         {
             // Optional: Add hover feedback if desired
-            // if (manager != null && manager.enableDebugMode)
-            // {
-            //     Debug.Log($"ShapeClickHandler: Mouse entered {gameObject.name}");
-            // }
         }
 
         private void OnMouseExit()
         {
             // Optional: Remove hover feedback if desired
-            // if (manager != null && manager.enableDebugMode)
-            // {
-            //     Debug.Log($"ShapeClickHandler: Mouse exited {gameObject.name}");
-            // }
         }
     }
 }

@@ -53,4 +53,5 @@ public static class GlobalVariables
     public static float defaultBGMVolume = 0.5f;
 
     //------------------
+
 }

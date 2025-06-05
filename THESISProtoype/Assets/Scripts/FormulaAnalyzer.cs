@@ -25,7 +25,7 @@ public class FormulaAnalyzer : MonoBehaviour
     public bool DEBUG = false;
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
-    public bool isLOGame = true; //Boolean that determins if game is LO or HO
+    private bool isLOGame = true; //Boolean that determins if game is LO or HO
 
     public GameObject gbHolder; //Object that holds GB
     private GameBehaviour gb; //Reference to GB script, assign this during Start()
@@ -34,6 +34,8 @@ public class FormulaAnalyzer : MonoBehaviour
 
     private const string formulaDefaultText = "Enter Formula in Board";
     private const string calculatorDefaultText = "Calculator";
+
+    public HOGameScript hgb = null;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +50,17 @@ public class FormulaAnalyzer : MonoBehaviour
         formulaDispGUI.text = formulaDefaultText;
 
         //Grab Gamebehavior script if LO
-        if (isLOGame)
+        //hgb = gbHolder.GetComponent<HOGameScript>();
+
+        if (hgb != null)
+        {
+            print("HIGHER ORDER GAME MODE");
+            isLOGame = false;
+        }
+        else
+        {
             gb = gbHolder.GetComponent<GameBehaviour>();
+        }
     }
 
     // Update is called once per frame
@@ -304,14 +315,28 @@ public class FormulaAnalyzer : MonoBehaviour
         if (evalAnswer.ToString() == inputAnswer)
         {
             //Send a message or activate LO GB the input answer, end early
+            //print("Test");
+            //print(isLOGame);
+            //print(gb != null);
             if (isLOGame)
             {
+                UnityEngine.Debug.Log("LO Game Check");
+
                 if (gb != null)
                 {
+                    UnityEngine.Debug.Log("Parse Attempt");
                     gb.InputAnswer(float.Parse(inputAnswer));
                     return true;
                 }
                 return false; //Error if gb is not defined for some reason
+            }
+            else
+            {
+                if (hgb != null)
+                {
+                    hgb.InputAnswer(float.Parse(inputAnswer));
+                    return true;
+                }
             }
 
             //DEBUG
@@ -583,7 +608,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Checks if the formula is surrounded by () div 2 and has pi
         Regex semiCircleRegex = new(@"\(\u03C0?\u00d7?\d+\.?\d*\u00d7?\u03C0?\u00d7\d+\.?\d*\u00d7?\u03C0?\)\u00f72");
 
-        // 1.) if has 0.5 or 1/2 or ()˜2 but no pi, is triangle
+        // 1.) if has 0.5 or 1/2 or ()ÅE but no pi, is triangle
         if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
             triangleRegex.IsMatch(displayString)) && !displayString.Contains("\u03C0"))
             return GameBehaviour.SHAPES.TRIANGLE;
