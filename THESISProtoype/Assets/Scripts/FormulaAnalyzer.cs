@@ -635,7 +635,7 @@ public class FormulaAnalyzer : MonoBehaviour
 
         return GameBehaviour.SHAPES.NONE; //Either invalid input or logic error
     }
-
+    //
     //Prints debug info to Log
     public void DebugDisplay()
     {
