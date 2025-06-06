@@ -11,6 +11,40 @@ public class BaseLOScript : MonoBehaviour
     private const float TESTDELAY = 0.01f;
     protected float SPELLDURATION = 2.0f; // Default value for extra delay on winning, change for longer spells
 
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    private AudioSource sfxSource;
+    public int spellSoundType = 0;
+
+    protected void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+    }
+
+    protected void PlaySFX(AudioClip clip, float pitch = 1f, float volume = 1f)
+    {
+        if (sfxSource != null)
+            sfxSource.pitch = pitch;
+        
+        if (sfxSet.Length > 0 && clip != null)
+            sfxSource.PlayOneShot(clip, volume);
+    }
+
+    protected void PlayRandomSFX(int clipsMaxIndex, float[] pitch, float[] volume)
+    {
+        int i = Random.Range(0, clipsMaxIndex);
+
+        PlaySFX(sfxSet[i], pitch[i], volume[i]);
+    }
+
     public float GetSpellDuration() //Method for getting value
     {
         return SPELLDURATION;

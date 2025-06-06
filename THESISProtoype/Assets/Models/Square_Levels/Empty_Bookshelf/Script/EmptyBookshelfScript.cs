@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EmptyBookshelfScript : BaseLOScript
@@ -8,8 +9,9 @@ public class EmptyBookshelfScript : BaseLOScript
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.28f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
     }
 
@@ -27,7 +29,18 @@ public class EmptyBookshelfScript : BaseLOScript
             }
         }
 
-        // TODO: Add VFX Graph magic effects here later
+        StartCoroutine(CastAnimAndSFX());
+    }
+
+    private IEnumerator CastAnimAndSFX()
+    {
+        //Play sfx
+        float[] p = { 1, 1 }, v = { 1, 1 };
+        PlayRandomSFX(1, p, v);
+
+        yield return new WaitForSeconds(0.05f); //Wait for sync
+
+        // Play VFX
         if (vfxSet != null && vfxSet.Length > 0)
         {
             Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
