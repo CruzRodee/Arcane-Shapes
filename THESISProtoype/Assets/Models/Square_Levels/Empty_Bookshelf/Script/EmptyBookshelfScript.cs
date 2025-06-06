@@ -35,7 +35,6 @@ public class EmptyBookshelfScript : BaseLOScript
     private IEnumerator CastAnimAndSFX()
     {
         //Play sfx
-        float[] p = { 1, 1 }, v = { 1, 1 };
         PlayRandomSFX(1, p, v);
 
         yield return new WaitForSeconds(0.05f); //Wait for sync

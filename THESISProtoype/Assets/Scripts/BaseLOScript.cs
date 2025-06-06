@@ -15,6 +15,7 @@ public class BaseLOScript : MonoBehaviour
     public AudioClip[] sfxSet;
     private AudioSource sfxSource;
     public int spellSoundType = 0;
+    protected float[] p = { 1, 1 }, v = { 1, 1 }; //Default pitch and vol value for MagicBurst SFX, just put here cuz lazy
 
     protected void Awake()
     {
@@ -40,7 +41,7 @@ public class BaseLOScript : MonoBehaviour
 
     protected void PlayRandomSFX(int clipsMaxIndex, float[] pitch, float[] volume)
     {
-        int i = Random.Range(0, clipsMaxIndex);
+        int i = Random.Range(0, clipsMaxIndex + 1); //Add plus 1 to reach MaxIndex since exclusive
 
         PlaySFX(sfxSet[i], pitch[i], volume[i]);
     }
