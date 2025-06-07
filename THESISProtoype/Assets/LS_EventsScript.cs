@@ -348,7 +348,7 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedHORoomEnter()
     {
-        SceneManager.LoadScene("HOGame"); //Load Level scene
+        SceneManager.LoadScene("GameLevelScene_v3"); //Load Level scene
     }
     //pasted from old repo
     public void enterRectangle()

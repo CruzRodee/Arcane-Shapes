@@ -9,10 +9,18 @@ public class HOGameBeh : MonoBehaviour
     public SpellCastEvent spellCastEvent;
     public ShapeGenerator shapeGenerator;
     public ShapeClickManager shapeClickManager;
+    public HOGameScript script;
+
+   
 
     void Start()
     {
-        Debug.Log("HOGameBeh: Start called.");
+        
+        
+    }
+
+    public void Initiate()
+    {
         StartCoroutine(WaitForComponent());
     }
 
@@ -64,10 +72,10 @@ public class HOGameBeh : MonoBehaviour
 
         // Define the "house" shape configuration
         List<ShapeObject> house = new List<ShapeObject>();
-        house.Add(new ShapeObject(2, UNUSED, SHAPES.SQUARE).setIsToBeFilled());
-        house.Add(new ShapeObject(2, 2, SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(1, 0, 0)).tilt(90));
-        house.Add(new ShapeObject(2, 2, SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(-1, 0, 0)).tilt(-90));
-        house.Add(new ShapeObject(2, 2, SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new Vector3(0, 2, 0)));
+        house.Add(new ShapeObject(2, UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
+        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(1, 0, 0)).tilt(90));
+        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(-1, 0, 0)).tilt(-90));
+        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new Vector3(0, 2, 0)));
 
         SetManualProblem(house);
     }
@@ -87,28 +95,19 @@ public class HOGameBeh : MonoBehaviour
         }
     }
 
-    public enum SHAPES
-    {
-        NONE,
-        TRIANGLE,
-        SQUARE,
-        RECTANGLE,
-        CIRCLE,
-        SEMI_CIRCLE,
-    }
 
     public class ShapeObject
     {
         public int x = UNUSED;
         public int y = UNUSED;
-        public SHAPES shape;
+        public GameBehaviour.SHAPES shape;
         public GameObject actualShapeObj;
         public Vector3 offset = Vector3.zero;
         public bool isToBeFilled = false;
         public float angle = 0;
         public bool isExcess = false;
 
-        public ShapeObject(int x, int y, SHAPES shape)
+        public ShapeObject(int x, int y, GameBehaviour.SHAPES shape)
         {
             this.x = x;
             this.y = y;
@@ -173,15 +172,15 @@ public class HOGameBeh : MonoBehaviour
 
             switch (obj.shape)
             {
-                case SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.SQUARE:
                     return this.main.shapeGenerator.CreateSquare(obj.offset, obj.x);
-                case SHAPES.TRIANGLE:
+                case GameBehaviour.SHAPES.TRIANGLE:
                     return this.main.shapeGenerator.CreateTriangle(obj.offset, obj.x, obj.y);
-                case SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.CIRCLE:
                     return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, false);
-                case SHAPES.RECTANGLE:
+                case GameBehaviour.SHAPES.RECTANGLE:
                     return this.main.shapeGenerator.CreateRectangle(obj.offset, obj.x, obj.y);
-                case SHAPES.SEMI_CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
                     return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, true);
                 default:
                     UnityEngine.Debug.LogWarning($"Unsupported shape type for generation: {obj.shape}");
@@ -201,16 +200,52 @@ public class HOGameBeh : MonoBehaviour
             }
             this.shapes.Clear();
         }
+
+        public void setHiddenStateAllShapes(bool value)
+        {
+            if (shapes == null) return;
+
+            foreach (ShapeObject obj in shapes)
+            {
+                
+                if (obj != null && obj.actualShapeObj != null)
+                {
+                    //obj.actualShapeObj.SetActive(value);
+                    SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value);
+                }
+            }
+        }
+
+        private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value)
+        {
+            if (value)
+            {
+                float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
+                renderer.material.color = new Color(r,g,b,0);
+            }
+
+            else
+            {
+                float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
+                renderer.material.color = new Color(r, g, b, 1.0f);
+            }
+        }
     }
 
     private void OnAnyShapeClicked(ShapeClickManager.ShapeClickData clickData)
     {
+        script.UIAfterShapeSelect(clickData);
         // Your custom logic here - you get ALL the shape information!
         // UnityEngine.Debug.Log($"HOGameBeh.OnAnyShapeClicked: Test that please... Clicked {clickData.shapeType} at {clickData.worldPosition}");
 
-        UnityEngine.Debug.Log(clickData.originalShapeObject.x);
-        UnityEngine.Debug.Log(clickData.originalShapeObject.y);
-        UnityEngine.Debug.Log(clickData.originalShapeObject.shape);
+        //GlobalVariables.clickedShapeData = clickData;
+
+
+        //UnityEngine.Debug.Log(clickData.originalShapeObject.x);
+        //UnityEngine.Debug.Log(clickData.originalShapeObject.y);
+        //UnityEngine.Debug.Log(clickData.originalShapeObject.shape);
+
+
 
 
         // Example actions:

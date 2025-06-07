@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class LineSnapper : MonoBehaviour
 {
@@ -19,22 +20,47 @@ public class LineSnapper : MonoBehaviour
     //NEW
     public AnimScript animScript;
 
+    private HOGameScript hoMain;
+    private float result; // Added this since it's used in your calculations
+
     public int GetMaxLinesForShape()
     {
-        if (main.spellCastEvent == null)
-            return 0;
-
-        switch (main.spellCastEvent.problem.problemShape)
+        if (hoMain == null)
         {
-            case GameBehaviour.SHAPES.TRIANGLE:
-            case GameBehaviour.SHAPES.RECTANGLE:
-                return 2;
-            case GameBehaviour.SHAPES.SQUARE:
-            case GameBehaviour.SHAPES.CIRCLE:
-            case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                return 1;
-            default:
+            if (main.spellCastEvent == null)
                 return 0;
+
+            switch (main.spellCastEvent.problem.problemShape)
+            {
+                case GameBehaviour.SHAPES.TRIANGLE:
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    return 2;
+                case GameBehaviour.SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
+        else
+        {
+            if (hoMain.spellCastEvent == null)
+                return 0;
+
+            switch (hoMain.spellCastEvent.problem.problemShape)
+            {
+                case GameBehaviour.SHAPES.TRIANGLE:
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    return 2;
+                case GameBehaviour.SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    return 1;
+                default:
+                    return 0;
+            }
         }
     }
 
@@ -52,6 +78,7 @@ public class LineSnapper : MonoBehaviour
         firstLine = CreateNewLineRenderer();
         gridSystem = FindObjectOfType<GridSystem>();
         main = FindObjectOfType<GameBehaviour>();
+        hoMain = FindObjectOfType<HOGameScript>();
     }
 
     private LineRenderer CreateNewLineRenderer()
@@ -216,48 +243,6 @@ public class LineSnapper : MonoBehaviour
         return snappedPos;
     }
 
-    /*    public Vector3 SnapToGrid(Vector3 position, bool debug = false)
-        {
-            Camera cam = Camera.main;
-            float height = 2f * cam.orthographicSize * 1.5f;
-            float width = height * cam.aspect * 1.5f;
-
-            Vector3 camPos = cam.transform.position;
-            float spacing = gridSystem.minorGridSize / 4.0f;
-
-            //float x = Mathf.Floor(camPos.x / spacing) * spacing - width / 2;
-            //float y = Mathf.Floor(camPos.y / spacing) * spacing - height / 2;
-
-              Vector3 snappedPos = new Vector3(
-                  Mathf.Round(position.x / spacing) * spacing,
-                  Mathf.Round(position.y / spacing) * spacing,
-                  position.z
-              );
-
-           *//* Vector3 snappedPos = new Vector3(
-                  Mathf.Floor(position.x / spacing) * spacing - width / 2,
-                  Mathf.Floor(position.y / spacing) * spacing - height / 2,
-                  position.z
-              );*//*
-
-
-
-            if (debug)
-            {
-                UnityEngine.Debug.Log("Height: " + height);
-                UnityEngine.Debug.Log("Width: " + width);
-                UnityEngine.Debug.Log("Cam Pos: " + camPos);
-                //UnityEngine.Debug.Log("X: " + x);
-                //UnityEngine.Debug.Log("Y: " + y);
-                UnityEngine.Debug.Log("sP_X: " + snappedPos.x);
-                UnityEngine.Debug.Log("sP_Y: " + snappedPos.y);
-            }
-
-
-
-            return snappedPos;
-        }*/
-
     void StartDrawing(Vector3 worldPos)
     {
         isDrawing = true;
@@ -304,12 +289,86 @@ public class LineSnapper : MonoBehaviour
                 firstLine = currentLine;
                 float value = CalculateLineValue(firstLine);
                 firstLineText = CreateValueText(end, value);
+
+                // Get current text and problem shape from appropriate script
+                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+                GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+
+                switch (problemShape)
+                {
+                    case GameBehaviour.SHAPES.TRIANGLE:
+                        currentText = currentText.Replace("[B]", value.ToString("F2"));
+                        break;
+                    case GameBehaviour.SHAPES.RECTANGLE:
+                        currentText = currentText.Replace("[L]", value.ToString("F2"));
+                        break;
+                    case GameBehaviour.SHAPES.SQUARE:
+                        currentText = currentText.Replace("[S]", value.ToString("F2"));
+
+                        result = (float)Math.Pow(value, 2);
+                        result = (float)Math.Round(result * 10) / 10.0f;
+
+                        currentText = currentText.Replace("[A]", result.ToString("F2"));
+                        break;
+                    case GameBehaviour.SHAPES.CIRCLE:
+                        currentText = currentText.Replace("[R]", value.ToString("F2"));
+
+                        result = (float)(Math.PI * Math.Pow(value, 2));
+                        result = (float)Math.Round(result * 10) / 10.0f;
+
+                        currentText = currentText.Replace("[A]", result.ToString("F2"));
+                        break;
+                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                        currentText = currentText.Replace("[R]", value.ToString("F2"));
+
+                        result = (float)(0.5 * (Math.PI * Math.Pow(value, 2)));
+                        result = (float)Math.Round(result * 10) / 10.0f;
+
+                        currentText = currentText.Replace("[A]", result.ToString("F2"));
+                        break;
+                }
+
+                // Update text in appropriate script
+                if (hoMain == null)
+                    main.text.text = currentText;
+                else
+                    hoMain.text.text = currentText;
             }
             else if (lineCount == 1)
             {
                 secondLine = currentLine;
                 float value = CalculateLineValue(secondLine);
                 secondLineText = CreateValueText(end, value);
+
+                // Get current text and problem shape from appropriate script
+                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+                GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+
+                switch (problemShape)
+                {
+                    case GameBehaviour.SHAPES.TRIANGLE:
+                        currentText = currentText.Replace("[H]", value.ToString("F2"));
+
+                        result = (0.5f * CalculateLineValue(firstLine) * value);
+                        result = (float)Math.Round(result * 10) / 10.0f;
+
+                        currentText = currentText.Replace("[A]", result.ToString("F2"));
+                        break;
+                    case GameBehaviour.SHAPES.RECTANGLE:
+                        currentText = currentText.Replace("[W]", value.ToString("F2"));
+
+                        result = (CalculateLineValue(firstLine) * value);
+                        result = (float)Math.Round(result * 10) / 10.0f;
+
+                        currentText = currentText.Replace("[A]", result.ToString("F2"));
+                        break;
+                }
+
+                // Update text in appropriate script
+                if (hoMain == null)
+                    main.text.text = currentText;
+                else
+                    hoMain.text.text = currentText;
             }
             lineCount++;
         }
@@ -340,13 +399,36 @@ public class LineSnapper : MonoBehaviour
         }
 
         //Toggle Dialogue Box, reset button, flag and dialogue text
-        main.UndoMeasure();
+        if (hoMain == null)
+            main.UndoMeasure();
+        else
+            hoMain.UndoMeasure();
 
         lineCount--; // Reduce lines by one if there is > 0 lines
 
+        // Reset text to base form
+        GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+
+        if (hoMain == null)
+            main.text.text = GlobalVariables.ShapeFormulaText(problemShape);
+        else
+            hoMain.text.text = GlobalVariables.ShapeFormulaText(problemShape);
+
         //Reset shape fill
-        main.shapeFiller.fillMaxValue = 0f;
-        main.shapeFiller.isFillingActive = true;
+        if (hoMain == null)
+        {
+            main.shapeFiller.fillMaxValue = 0f;
+            main.shapeFiller.isFillingActive = true;
+            //Reset slider
+            main.slider.value = 0f;
+        }
+        else
+        {
+            hoMain.shapeFiller.fillMaxValue = 0f;
+            hoMain.shapeFiller.isFillingActive = true;
+            //Reset slider
+            hoMain.slider.value = 0f;
+        }
 
         // Redo text replacements : Partially Copy pasted from above
         if (lineCount > 0) // If there is one line remaining
@@ -358,6 +440,24 @@ public class LineSnapper : MonoBehaviour
             secondLineText = null;
 
             float value = CalculateLineValue(firstLine);
+
+            string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+
+            switch (problemShape)
+            {
+                case GameBehaviour.SHAPES.TRIANGLE:
+                    currentText = currentText.Replace("[B]", value.ToString("F2"));
+                    break;
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    currentText = currentText.Replace("[L]", value.ToString("F2"));
+                    break;
+                    // No need for square, circle or semicircle since they only have one line
+            }
+
+            if (hoMain == null)
+                main.text.text = currentText;
+            else
+                hoMain.text.text = currentText;
         }
         else if (lineCount <= 0) // Nuke first line if linecount <= 0
         {
