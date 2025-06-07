@@ -224,3 +224,15 @@ by: SoundReality
 License: pixabay Content License - https://pixabay.com/service/license-summary/
 
 -----------------------------------------------------------------------------------------------
+
+freeze1: https://pixabay.com/sound-effects/freeze1-91358/
+by: asdftekno (Freesound)
+License: pixabay Content License - https://pixabay.com/service/license-summary/
+
+-----------------------------------------------------------------------------------------------
+
+Explosion 3: https://pixabay.com/sound-effects/explosion-3-274684/
+by: kalsstockmedia
+License: pixabay Content License - https://pixabay.com/service/license-summary/
+
+-----------------------------------------------------------------------------------------------

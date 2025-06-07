@@ -230,8 +230,13 @@ MonoBehaviour:
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
   - {fileID: 5271865573828511304, guid: d031dde3575c2794ea65fc122dd61700, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: 873ac10ced420fb40a27e837f44e0ace, type: 3}
+  spellSoundType: 0
+  cameraName: ClassroomCamera
 --- !u!4 &774529012529820397 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1295367a974603f49aca5d5856cabae1,

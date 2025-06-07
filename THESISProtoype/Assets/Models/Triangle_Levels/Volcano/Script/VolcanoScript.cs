@@ -15,8 +15,9 @@ public class VolcanoScript : BaseLOScript
     private GameObject temp1;
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 1.0f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
         this.SPELLDURATION = 5.0f; // Set custom spell duration for longer/shorter spells
 
@@ -26,7 +27,13 @@ public class VolcanoScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        //Play SFX burst at max volume
+        v[0] = 1f;
+        v[1] = v[0];
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
 
         // Enable Volcano object and its children
         this.GetComponent<Renderer>().enabled = true;
@@ -36,7 +43,20 @@ public class VolcanoScript : BaseLOScript
         Invoke(nameof(Eruption), time);
     }
 
+    private void BurstVFX()
+    {
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+    }
+
     private void Eruption()
+    {
+        //Volcano SFX
+        PlaySFX(sfxSet[2]);
+
+        Invoke(nameof(DelayEruptVFX), 0.05f);
+    }
+
+    private void DelayEruptVFX()
     {
         temp1 = Instantiate(vfxSet[1], this.transform.position + OFFSET * 2, Quaternion.identity);
         Invoke(nameof(StopErupt), ERUPTDURATION);
@@ -49,5 +69,6 @@ public class VolcanoScript : BaseLOScript
     private void StopErupt()
     {
         temp1.GetComponent<VisualEffect>().SetBool("isErupting", false);
+        sfxSource.Stop(); //Stop SFX too
     }
 }
