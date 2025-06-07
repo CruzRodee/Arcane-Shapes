@@ -95,6 +95,16 @@ public class HOGameBeh : MonoBehaviour
         }
     }
 
+    public bool isAllAttemptedSolve()
+    {
+        foreach (ShapeObject shape in this.spellCastEvent.shapes)
+        {
+            if (!shape.actualShapeObj.transform.Find("FillShape"))
+                return false;
+        }
+        return true;
+    }
+
 
     public class ShapeObject
     {

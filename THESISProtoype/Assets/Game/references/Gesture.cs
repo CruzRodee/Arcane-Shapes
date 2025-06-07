@@ -291,7 +291,7 @@ public class LineSnapper : MonoBehaviour
                 firstLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+                string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
 
                 switch (problemShape)
@@ -330,7 +330,10 @@ public class LineSnapper : MonoBehaviour
 
                 // Update text in appropriate script
                 if (hoMain == null)
-                    main.text.text = currentText;
+                {
+
+                }
+                   // main.text.text = currentText;
                 else
                     hoMain.text.text = currentText;
             }
@@ -341,7 +344,7 @@ public class LineSnapper : MonoBehaviour
                 secondLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+                string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
 
                 switch (problemShape)
@@ -366,7 +369,10 @@ public class LineSnapper : MonoBehaviour
 
                 // Update text in appropriate script
                 if (hoMain == null)
-                    main.text.text = currentText;
+                {
+
+                }
+                   // main.text.text = currentText;
                 else
                     hoMain.text.text = currentText;
             }
@@ -410,7 +416,10 @@ public class LineSnapper : MonoBehaviour
         GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
 
         if (hoMain == null)
-            main.text.text = GlobalVariables.ShapeFormulaText(problemShape);
+        {
+
+        }
+            //main.text.text = GlobalVariables.ShapeFormulaText(problemShape);
         else
             hoMain.text.text = GlobalVariables.ShapeFormulaText(problemShape);
 
@@ -420,7 +429,7 @@ public class LineSnapper : MonoBehaviour
             main.shapeFiller.fillMaxValue = 0f;
             main.shapeFiller.isFillingActive = true;
             //Reset slider
-            main.slider.value = 0f;
+           // main.slider.value = 0f;
         }
         else
         {
@@ -441,7 +450,7 @@ public class LineSnapper : MonoBehaviour
 
             float value = CalculateLineValue(firstLine);
 
-            string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+            string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
 
             switch (problemShape)
             {
@@ -455,7 +464,10 @@ public class LineSnapper : MonoBehaviour
             }
 
             if (hoMain == null)
-                main.text.text = currentText;
+            {
+
+            }
+                //main.text.text = currentText;
             else
                 hoMain.text.text = currentText;
         }
