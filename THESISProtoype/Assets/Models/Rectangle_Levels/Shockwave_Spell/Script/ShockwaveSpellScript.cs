@@ -17,8 +17,10 @@ public class ShockwaveSpellScript : BaseLOScript
     private Vector3 MOVEOFFSET = new Vector3(0f, 0.75f, 0f);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.5f, 7.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+        
         this.transform.localPosition += SPAWNOFFSET;
 
         //Get Camera object
@@ -27,8 +29,14 @@ public class ShockwaveSpellScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
+        //Play SFX burst
+        PlayRandomSFX(1, p, v);
 
+        //Play Shockwave SFX
+        PlaySFX(sfxSet[2]);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
 
         // Call ShockMotion on each row with a slight delay
         int multiplier = 1;
@@ -37,6 +45,11 @@ public class ShockwaveSpellScript : BaseLOScript
             StartCoroutine(ShockMotion(row, multiplier));
             multiplier++;
         }
+    }
+
+    private void BurstVFX()
+    {
+        Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
     }
 
     private IEnumerator ShockMotion(GameObject obj, int multiplier)
