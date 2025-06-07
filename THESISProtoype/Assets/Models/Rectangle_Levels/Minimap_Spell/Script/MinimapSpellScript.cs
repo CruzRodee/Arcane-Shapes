@@ -8,8 +8,9 @@ public class MinimapSpellScript : BaseLOScript
     private Vector3 ENDSCALE = new Vector3(0.75f, 0.5f, 0.5f);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 4.0f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
     }
 
@@ -19,5 +20,9 @@ public class MinimapSpellScript : BaseLOScript
         this.GetComponent<Renderer>().enabled = true;
         this.transform.Find("MinimapTexture").gameObject.GetComponent<Renderer>().enabled = true;
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
+
+        //Play SFX
+        if(sfxSet.Length > 0)
+            PlaySFX(sfxSet[0], 0.8f, 0.6f);
     }
 }

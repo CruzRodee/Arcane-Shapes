@@ -181,5 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vfxSet: []
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: d05427e975470564ea36a2a6e1fb70fa, type: 3}
+  spellSoundType: 0

@@ -299,8 +299,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: d7ff589b3d129774d86c6e7f34653ad1, type: 3}
+  spellSoundType: 0
+  cameraName: ClassroomCamera
 --- !u!1 &5722636736558167829
 GameObject:
   m_ObjectHideFlags: 0

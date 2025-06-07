@@ -11,9 +11,9 @@ public class BaseLOScript : MonoBehaviour
 
     //Audio/SFX Stuff
     public AudioClip[] sfxSet;
-    private AudioSource sfxSource;
+    protected AudioSource sfxSource;
     public int spellSoundType = 0;
-    protected float[] p = { 1, 1 }, v = { 1, 1 }; //Default pitch and vol value for MagicBurst SFX, just put here cuz lazy
+    protected float[] p = { 1, 1 }, v = { 0.8f, 0.8f }; //Default pitch and vol value for MagicBurst SFX, just put here cuz lazy
     protected float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
 
     protected void Awake()
