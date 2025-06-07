@@ -291,8 +291,8 @@ public class LineSnapper : MonoBehaviour
                 firstLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+                string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
                 switch (problemShape)
                 {
@@ -329,9 +329,7 @@ public class LineSnapper : MonoBehaviour
                 }
 
                 // Update text in appropriate script
-                if (hoMain == null)
-                    main.text.text = currentText;
-                else
+                if (hoMain != null)
                     hoMain.text.text = currentText;
             }
             else if (lineCount == 1)
@@ -341,8 +339,8 @@ public class LineSnapper : MonoBehaviour
                 secondLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? main.text.text : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+                string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
                 switch (problemShape)
                 {
@@ -365,9 +363,7 @@ public class LineSnapper : MonoBehaviour
                 }
 
                 // Update text in appropriate script
-                if (hoMain == null)
-                    main.text.text = currentText;
-                else
+                if (hoMain != null)
                     hoMain.text.text = currentText;
             }
             lineCount++;
@@ -409,20 +405,11 @@ public class LineSnapper : MonoBehaviour
         // Reset text to base form
         GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
 
-        if (hoMain == null)
-            main.text.text = GlobalVariables.ShapeFormulaText(problemShape);
-        else
+        if (hoMain != null)
             hoMain.text.text = GlobalVariables.ShapeFormulaText(problemShape);
 
         //Reset shape fill
-        if (hoMain == null)
-        {
-            main.shapeFiller.fillMaxValue = 0f;
-            main.shapeFiller.isFillingActive = true;
-            //Reset slider
-            main.slider.value = 0f;
-        }
-        else
+        if (hoMain != null)
         {
             hoMain.shapeFiller.fillMaxValue = 0f;
             hoMain.shapeFiller.isFillingActive = true;
@@ -441,7 +428,7 @@ public class LineSnapper : MonoBehaviour
 
             float value = CalculateLineValue(firstLine);
 
-            string currentText = hoMain == null ? main.text.text : hoMain.text.text;
+            string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
             switch (problemShape)
             {
@@ -454,9 +441,7 @@ public class LineSnapper : MonoBehaviour
                     // No need for square, circle or semicircle since they only have one line
             }
 
-            if (hoMain == null)
-                main.text.text = currentText;
-            else
+            if (hoMain != null)
                 hoMain.text.text = currentText;
         }
         else if (lineCount <= 0) // Nuke first line if linecount <= 0
