@@ -47,6 +47,14 @@ public class BaseLOScript : MonoBehaviour
         PlaySFX(sfxSet[i], pitch[i], volume[i]);
     }
 
+    //Overload with minimum index setting instead of defaulting to 0 index as start
+    protected void PlayRandomSFX(int clipsMinIndex, int clipsMaxIndex, float[] pitch, float[] volume)
+    {
+        int i = Random.Range(clipsMinIndex, clipsMaxIndex + 1); //Add plus 1 to reach MaxIndex since exclusive
+
+        PlaySFX(sfxSet[i], pitch[i], volume[i]);
+    }
+
     public float GetSpellDuration() //Method for getting value
     {
         return SPELLDURATION;

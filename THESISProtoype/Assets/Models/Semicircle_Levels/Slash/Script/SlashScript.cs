@@ -16,8 +16,10 @@ public class SlashScript : BaseLOScript
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 4.0f, 0.0f);
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+        
         this.transform.localPosition += SPAWNOFFSET;
 
         //Get Camera object
@@ -30,7 +32,7 @@ public class SlashScript : BaseLOScript
         this.GetComponent<VisualEffect>().enabled = true;
 
         // VFX flash and move
-        Invoke(nameof(Flash), FLASHDELAY);
+        Invoke(nameof(Flash), FLASHDELAY + 0.05f);
     }
 
     private void Flash()
@@ -44,5 +46,10 @@ public class SlashScript : BaseLOScript
         //Shakycam
         cameraShakeScript.shakeDuration = 0.5f;
         cameraShakeScript.shakeAmount = 0.1f;
+
+        //Play Random Slash Sound Effect
+        float[] pitch = { 1, 1, 1, 1, 1 };
+        float[] volume = { 1, 1, 1, 1, 1 };
+        PlayRandomSFX(2, pitch, volume);
     }
 }
