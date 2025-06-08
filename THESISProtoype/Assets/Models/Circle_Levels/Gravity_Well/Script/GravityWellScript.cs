@@ -17,8 +17,9 @@ public class GravityWellScript : BaseLOScript
     private Vector3 SINGULARITY;
     public GameObject[] cubes;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
         SINGULARITY = this.transform.position;
         this.SPELLDURATION = 6.0f; // Set custom spell duration for longer/shorter spells
@@ -28,6 +29,17 @@ public class GravityWellScript : BaseLOScript
     }
 
     public override void SuccessfulCast()
+    {
+        //Play SFX burst at max volume
+        v[0] = 1f;
+        v[1] = v[0];
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+    }
+
+    private void BurstVFX()
     {
         Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
@@ -51,14 +63,18 @@ public class GravityWellScript : BaseLOScript
         cameraShakeScript.shakeDuration = CAST_DURATION * 1.75f;
         cameraShakeScript.shakeAmount = 0.3f;
 
+        //Succ sound
+        PlaySFX(sfxSet[2]);
+
         foreach (GameObject c in cubes)
         {
             StartCoroutine(MoveOverTime(c, CAST_DURATION, SINGULARITY));
         }
 
-        //Cleanup
+        //Cleanup and SFX stop after delay
+        yield return new WaitForSeconds(CAST_DURATION * 1.75f);
 
-        yield return new WaitForSeconds(CAST_DURATION * 1.5f);
+        sfxSource.Stop();
 
         foreach (GameObject c in cubes)
         {

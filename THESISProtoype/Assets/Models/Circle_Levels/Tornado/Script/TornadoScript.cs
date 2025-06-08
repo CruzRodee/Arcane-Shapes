@@ -13,8 +13,9 @@ public class TornadoScript : BaseLOScript
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.2f, 0.0f);
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
         this.SPELLDURATION = 6.0f; // Set custom spell duration for longer/shorter spells
 
@@ -23,6 +24,17 @@ public class TornadoScript : BaseLOScript
     }
 
     public override void SuccessfulCast()
+    {
+        //Play SFX burst at max volume
+        v[0] = 1f;
+        v[1] = v[0];
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+    }
+
+    private void BurstVFX()
     {
         Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
@@ -34,6 +46,9 @@ public class TornadoScript : BaseLOScript
 
         // Scale larger
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
+
+        //Enable Tornado Sound
+        PlaySFX(sfxSet[2], 1f, 0.5f);
 
         Invoke(nameof(Shaky), 0.6f);
     }
