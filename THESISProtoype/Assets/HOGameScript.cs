@@ -603,7 +603,7 @@ public class HOGameScript : MonoBehaviour
 
         CalcError();
 
-        correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
+        //correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
         //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
 
         correctionPerc.gameObject.SetActive(true); //Show error
@@ -611,7 +611,8 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.shapeClickManager.EnableShapeClicking();
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
 
-        Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX);
+        ModifiedToUIAgain();
+        //Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX * 2);
         //Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
 
 
@@ -1100,16 +1101,11 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.gameObject.SetActive(false);
         characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
         SetVisibilityNewUI(false, true, false, true);
-
+        
         if (hoGameBeh.isAllAttemptedSolve())
         {
-            string logMessage = "Shape Answers: \n";
-            foreach (KeyValuePair<GameObject, float> pair in recordedAnswer)
-            {
-                logMessage += pair.Value + "\n";
-            }
-
-            Debug.Log(logMessage);
+            foreach (float answer in recordedAnswer.Values)
+                Debug.Log("Size: " + answer + "\n");
         }
 
     }
