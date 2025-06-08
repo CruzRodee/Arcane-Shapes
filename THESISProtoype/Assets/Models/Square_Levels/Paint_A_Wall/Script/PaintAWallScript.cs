@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PaintAWallScript : BaseLOScript
@@ -9,17 +10,28 @@ public class PaintAWallScript : BaseLOScript
     private Color paintColor;
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 3.5f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
     }
 
     public override void SuccessfulCast()
     {
-        // TODO: Add VFX Graph magic effects here later
+        StartCoroutine(CastAnimAndSFX());
+    }
+
+    private IEnumerator CastAnimAndSFX()
+    {
+        //Play sfx
+        PlayRandomSFX(1, p, v);
+
+        yield return new WaitForSeconds(0.05f); //Wait for sync
+
+        // VFX Graph magic effects
         Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
-        // TODO: Change color of object material to random color
+        // Change color of object material to random color
         paintColor = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
         this.GetComponent<Renderer>().material.SetColor("_BaseColor", paintColor);
     }
