@@ -98,6 +98,8 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationCircle;
 
 
+    private Dictionary<GameObject, float> recordedAnswer = new Dictionary<GameObject, float>();
+    private GameObject currentlySolvedShape = null;
 
     private string currentShapeToSolve;
     private string chosenShape;
@@ -590,6 +592,8 @@ public class HOGameScript : MonoBehaviour
     {
         inputAnswer = ans;
 
+        recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+
         toggleDialogueBox(); //hide                  
 
         HideNewUI();
@@ -607,6 +611,7 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.shapeClickManager.EnableShapeClicking();
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
 
+        Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX);
         //Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
 
 
@@ -1087,6 +1092,28 @@ public class HOGameScript : MonoBehaviour
             isUICamera = true;*/
     }
 
+    private void ModifiedToUIAgain()
+    {
+        currentlySolvedShape = null;
+        lineSnapper.OnUndoPressed();
+        lineSnapper.OnUndoPressed();
+        lineSnapper.gameObject.SetActive(false);
+        characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+        SetVisibilityNewUI(false, true, false, true);
+
+        if (hoGameBeh.isAllAttemptedSolve())
+        {
+            string logMessage = "Shape Answers: \n";
+            foreach (KeyValuePair<GameObject, float> pair in recordedAnswer)
+            {
+                logMessage += pair.Value + "\n";
+            }
+
+            Debug.Log(logMessage);
+        }
+
+    }
+
     private void ModifiedToUI()
     {
         lineSnapper.gameObject.SetActive(false);
@@ -1098,14 +1125,15 @@ public class HOGameScript : MonoBehaviour
         isUICamera = true;
         //DisableNewUI
         SetVisibilityNewUI(false, true, false, true);
-
     }
 
     public void UIAfterShapeSelect(ShapeClickManager.ShapeClickData clickData)
     {
+        correctionPerc.text = "";
         hoGameBeh.shapeClickManager.DisableShapeClicking();
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(true);
         GlobalVariables.loSelectedShape = clickData.shapeType;
+        currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
         SetManualProblem(clickData);
         Invoke(nameof(InitFillShape), 0.2f);
         //ShowNewUI();

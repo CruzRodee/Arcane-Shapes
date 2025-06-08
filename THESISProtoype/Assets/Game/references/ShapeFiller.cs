@@ -19,39 +19,64 @@ public class ShapeFiller : MonoBehaviour
 
     public void InitializeFill(GameObject toFillShape, Color fillColor, float speed, float fillMaxValue)
     {
+        // --- START: MODIFIED SECTION ---
+
+        // 1. Check if a "FillShape" already exists as a child of the target.
+        Transform existingFill = toFillShape.transform.Find("FillShape");
+
+        // 2. If it exists, destroy it before creating a new one.
+        if (existingFill != null)
+        {
+            // Destroy the old GameObject to prevent duplicates.
+            Destroy(existingFill.gameObject);
+        }
+        // --- END: MODIFIED SECTION ---
+
+        // Now, proceed with creating the new fill shape as before.
         targetShape = toFillShape;
 
         // Create fill shape and match position/rotation
         fillShape = new GameObject("FillShape");
         fillShape.transform.position = targetShape.transform.position;
         fillShape.transform.rotation = targetShape.transform.rotation;
-        //fillShape.transform.SetParent(transform, true);
         fillShape.transform.SetParent(targetShape.transform, true);
 
         // Copy original mesh data
         MeshFilter originalMeshFilter = toFillShape.GetComponent<MeshFilter>();
-        originalVertices = originalMeshFilter.mesh.vertices.Clone() as Vector3[];
+        if (originalMeshFilter == null || originalMeshFilter.mesh == null)
+        {
+            Debug.LogError("The target shape does not have a MeshFilter or a mesh.", toFillShape);
+            Destroy(fillShape); // Clean up the empty object we just made
+            return; // Exit the function
+        }
+        Vector3[] originalVertices = originalMeshFilter.mesh.vertices;
 
         // Setup fill mesh
-        fillMeshFilter = fillShape.AddComponent<MeshFilter>();
-        fillMesh = new Mesh();
+        MeshFilter fillMeshFilter = fillShape.AddComponent<MeshFilter>();
+        Mesh fillMesh = new Mesh();
+        fillMesh.vertices = originalVertices; // You need to start with the same vertices
         fillMeshFilter.mesh = fillMesh;
 
         // Setup renderer
-        fillRenderer = fillShape.AddComponent<MeshRenderer>();
-        //Material fillMaterial = new Material(Shader.Find("Sprites/Default"));
-        //fillMaterial.color = fillColor;
+        MeshRenderer fillRenderer = fillShape.AddComponent<MeshRenderer>();
+
+        // It's better to assign a material instance than to find a shader by string.
+        // Ensure 'fillMaterial' is assigned in the Inspector or created elsewhere.
         fillRenderer.material = fillMaterial;
+        fillRenderer.material.color = fillColor;
 
         fillSpeed = speed;
-        //isFillingActive = true;
 
         // Ensure fill renders on top
-        fillRenderer.sortingOrder = toFillShape.GetComponent<MeshRenderer>().sortingOrder + 1;
+        MeshRenderer targetRenderer = toFillShape.GetComponent<MeshRenderer>();
+        if (targetRenderer != null)
+        {
+            fillRenderer.sortingOrder = targetRenderer.sortingOrder + 1;
+        }
 
         fillAmount = 0f;
         this.fillMaxValue = fillMaxValue;
-        //UpdateFillMesh();
+        //UpdateFillMesh(); // You would call this to set the initial state
     }
 
     void Update()
