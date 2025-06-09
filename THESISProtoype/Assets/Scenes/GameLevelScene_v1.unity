@@ -2237,9 +2237,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
+      propertyPath: sfxSet.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: vfxLineMinDistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
       propertyPath: vfxLinePlaneOffset
       value: -0.01
       objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: sfxSet.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 937a5e1366e678d47a7eda76f75f895b, type: 3}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: sfxSet.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 68253a3180f6ee34183c244b042c838f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

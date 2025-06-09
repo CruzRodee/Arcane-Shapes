@@ -310,3 +310,15 @@ by: SoundReality
 License: pixabay Content License - https://pixabay.com/service/license-summary/
 
 -----------------------------------------------------------------------------------------------
+
+brush: https://pixabay.com/sound-effects/brush-83215/
+by: Reitanna (Freesound)
+License: pixabay Content License - https://pixabay.com/service/license-summary/
+
+-----------------------------------------------------------------------------------------------
+
+080245_SFX Magic: https://pixabay.com/sound-effects/080245-sfx-magic-84935/
+by: Freesound Community
+License: pixabay Content License - https://pixabay.com/service/license-summary/
+
+-----------------------------------------------------------------------------------------------

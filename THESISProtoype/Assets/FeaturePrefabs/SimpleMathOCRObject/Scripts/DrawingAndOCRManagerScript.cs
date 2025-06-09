@@ -92,6 +92,26 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     public GameObject outputProcessor;
     private FormulaAnalyzer fa;
 
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    protected AudioSource sfxSource;
+    private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+
+    void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+        if (GlobalVariables.isMute) //Mute function
+            volumeFactor = 0f;
+    }
+
     private void Start()
     {
         //Initializing the colorMap array with width * height elements
@@ -161,6 +181,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
                 //Call OCR model method, this will also pass the output to wherever later
                 PerformOCR();
 
+                //Play OCR SFX
+                PlayOCRReadSFX();
+
                 if (DO_SAVE_INPUTS) //Save OCR input as screenshot if bool is true
                 {
                     //Set path to image
@@ -178,6 +201,34 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         }
     }
 
+    private void PlayDrawingSFX()
+    {
+        const int N = 8;
+
+        //Only Play sound every N points
+        if (!(line.positionCount % N == 0))
+            return; //Do not play sound if point not divisible by N
+        
+        // Null Check
+        if(sfxSource != null && sfxSet[0] != null)
+        {
+            //Set pitch first
+            sfxSource.pitch = 1;
+            sfxSource.PlayOneShot(sfxSet[0], 2f * volumeFactor);
+        } 
+    }
+
+    private void PlayOCRReadSFX()
+    {
+        // Null Check
+        if (sfxSource != null && sfxSet[1] != null)
+        {
+            //Set pitch first
+            sfxSource.pitch = 2f;
+            sfxSource.PlayOneShot(sfxSet[1], 0.5f * volumeFactor);
+        }
+    }
+
     //Function for adding vfx, to avoid clutter on Update()
     private void DrawVFX()
     {
@@ -189,6 +240,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Only add new point if distance to new position is greater than min distance
         if (Vector3.Distance(currentPosition, previousPosition) > vfxLineMinDistance)
         {
+            //Play Drawing SFX
+            PlayDrawingSFX();
+
             if (previousPosition == vfxLineGO.transform.position) //Fix to sudden jump if not starting in center
             {
                 line.SetPosition(0, currentPosition); //Set starting point to current position
