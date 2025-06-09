@@ -9,6 +9,26 @@ public class TransitionScript : MonoBehaviour
     Vector3 BASESCALE = new Vector3(25, 10, 25);
     Vector3 SHRINKSCALE = new Vector3(0.01f, 25, 0.01f);
 
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    protected AudioSource sfxSource;
+    private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+
+    void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+        if (GlobalVariables.isMute) //Mute function
+            volumeFactor = 0f;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,11 +36,33 @@ public class TransitionScript : MonoBehaviour
         StartCoroutine(DelayScale());
     }
 
+    private void PlaySFX(int sfxIndex, float pitch, float volume)
+    {
+        // Null Check
+        if (sfxSource != null && sfxSet[sfxIndex] != null)
+        {
+            //Set pitch first
+            sfxSource.pitch = pitch;
+            sfxSource.PlayOneShot(sfxSet[sfxIndex], volume * volumeFactor);
+        }
+    }
+
     private IEnumerator DelayScale()
     {
+        //Play ForceField SFX
+        PlaySFX(0, 1.0f, 1);
+        
         yield return new WaitForSeconds(DELAY);
+
         StartCoroutine(LocalScaleOverTime(this.gameObject, SHRINKTIME, SHRINKSCALE)); //Shrink
+
+        //Play ShieldOff SFX and turn off previous sfx
+        if(sfxSource != null)
+            sfxSource.Stop();
+        PlaySFX(1, 1.0f, 0.5f);
+
         yield return new WaitForSeconds(SHRINKTIME + 0.1f);
+
         this.gameObject.GetComponent<Renderer>().enabled = false; //Invisible
     }
 
