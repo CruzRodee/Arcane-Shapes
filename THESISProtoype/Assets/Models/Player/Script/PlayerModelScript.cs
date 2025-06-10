@@ -123,6 +123,11 @@ public class PlayerModelScript : MonoBehaviour
         //Add VFX in state transitions
     }
 
+    public void PauseAnimation()
+    {
+        animator.speed = 0f;
+    }
+
     // Use numbers between 1-4 for variation parameter. Should probably randomize this for variety
     public void GoodTrace(int variation)
     {

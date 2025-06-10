@@ -1402,6 +1402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSet:
   - {fileID: 8300000, guid: a191ef02f18e6654abdea071b806a8e0, type: 3}
+  - {fileID: 8300000, guid: 1c416732690f3254fa60b979bb2f0779, type: 3}
 --- !u!1 &1151082727
 GameObject:
   m_ObjectHideFlags: 0

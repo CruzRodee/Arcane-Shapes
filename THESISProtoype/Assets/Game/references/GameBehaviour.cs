@@ -824,6 +824,10 @@ public class GameBehaviour : MonoBehaviour
         float clamped = spellCastEvent.GetFillPercentage();
         shapeFiller.fillMaxValue = clamped; //Fill Shape when input
         shapeFiller.isFillingActive = true; //Start filling
+
+        //Play Fill SFX
+        soundPlayer.PlaySFX(1, 1, 1);
+
         if (clamped > 2.0f)
             clamped = 2.0f;
 
