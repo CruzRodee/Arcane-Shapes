@@ -236,6 +236,9 @@ MonoBehaviour:
   animScript: {fileID: 0}
   lineMaterial: {fileID: -876546973899608171, guid: 212f1497642bc214da878864c76b9ffd,
     type: 3}
+  sfxSet:
+  - {fileID: 8300000, guid: fa6d7cc4504e65348aa9b97e433d1c03, type: 3}
+  - {fileID: 8300000, guid: b66c2d20bbba5ab4e86b2deb9b47b36b, type: 3}
 --- !u!4 &101808943
 Transform:
   m_ObjectHideFlags: 0
