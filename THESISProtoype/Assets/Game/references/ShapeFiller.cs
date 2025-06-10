@@ -49,16 +49,16 @@ public class ShapeFiller : MonoBehaviour
             Destroy(fillShape); // Clean up the empty object we just made
             return; // Exit the function
         }
-        Vector3[] originalVertices = originalMeshFilter.mesh.vertices;
+        originalVertices = originalMeshFilter.mesh.vertices;
 
         // Setup fill mesh
-        MeshFilter fillMeshFilter = fillShape.AddComponent<MeshFilter>();
-        Mesh fillMesh = new Mesh();
+        fillMeshFilter = fillShape.AddComponent<MeshFilter>();
+        fillMesh = new Mesh();
         fillMesh.vertices = originalVertices; // You need to start with the same vertices
         fillMeshFilter.mesh = fillMesh;
 
         // Setup renderer
-        MeshRenderer fillRenderer = fillShape.AddComponent<MeshRenderer>();
+        fillRenderer = fillShape.AddComponent<MeshRenderer>();
 
         // It's better to assign a material instance than to find a shader by string.
         // Ensure 'fillMaterial' is assigned in the Inspector or created elsewhere.
