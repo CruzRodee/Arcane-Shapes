@@ -23,6 +23,9 @@ public class LineSnapper : MonoBehaviour
     private HOGameScript hoMain;
     private float result; // Added this since it's used in your calculations
 
+    //VFX and SFX
+    public Material lineMaterial;
+
     public int GetMaxLinesForShape()
     {
         if (hoMain == null)
@@ -90,12 +93,9 @@ public class LineSnapper : MonoBehaviour
         lr.startWidth = 0.1f;
         lr.endWidth = 0.1f;
 
-        lr.material = new Material(Shader.Find("Sprites/Default"));
         lr.useWorldSpace = true;
 
-        Color lineColor = Color.white;
-        lr.startColor = lineColor;
-        lr.endColor = lineColor;
+        lr.material = lineMaterial;
 
         return lr;
     }
