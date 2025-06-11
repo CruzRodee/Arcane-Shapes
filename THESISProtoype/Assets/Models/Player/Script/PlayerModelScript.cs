@@ -10,6 +10,27 @@ public class PlayerModelScript : MonoBehaviour
     public bool TEST = false;
     private int testCount = 0;
 
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    protected AudioSource sfxSource;
+    protected float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+    private int audioIndex = 0; //Determines what SFX will be played
+
+    void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+        if (GlobalVariables.isMute) //Mute function
+            volumeFactor = 0f;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,30 +81,51 @@ public class PlayerModelScript : MonoBehaviour
     }
     //-------------------------
 
+    //SFX Methods: 0 = Good, 1 = Over, 2 = Under
+    public void PlayCastSFX()
+    {
+        if(sfxSource != null && sfxSet.Length >= audioIndex)
+            sfxSource.PlayOneShot(sfxSet[audioIndex], 0.8f * volumeFactor);
+    }
+
     //Shapes Indexes: Square(0), Rectangle(1), Triangle(2), Circle(3), SemiCircle(4)
     public void GoodCast(int index)
     {
         animator.SetInteger("shapeIndex", index);
         animator.SetTrigger("goodCast");
         //Add VFX in state transitions
+
+        //SFX index set
+        audioIndex = 0;
     }
 
     public void OverCast()
     {
         animator.SetTrigger("overCast");
         //Add VFX in state transitions
+
+        //SFX index set
+        audioIndex = 1;
     }
 
     public void UnderCast()
     {
         animator.SetTrigger("underCast");
         //Add VFX in state transitions
+
+        //SFX index set
+        audioIndex = 2;
     }
 
     public void BadTrace()
     {
         animator.SetTrigger("badTrace");
         //Add VFX in state transitions
+    }
+
+    public void PauseAnimation()
+    {
+        animator.speed = 0f;
     }
 
     // Use numbers between 1-4 for variation parameter. Should probably randomize this for variety

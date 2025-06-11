@@ -7,12 +7,22 @@ public class MushroomScript : BaseLOScript
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 OFFSET = new Vector3(0, 2.0f, 0);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
     }
 
     public override void SuccessfulCast()
+    {
+        //Play SFX burst
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+    }
+
+    private void BurstVFX()
     {
         Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
 
@@ -21,5 +31,8 @@ public class MushroomScript : BaseLOScript
         {
             child.gameObject.SetActive(true);
         }
+
+        //Mushroom Gas SFX
+        PlaySFX(sfxSet[2]);
     }
 }

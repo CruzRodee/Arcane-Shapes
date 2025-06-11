@@ -298,8 +298,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 7c91a22565c032f4595930e91390805d, type: 3}
+  - {fileID: 8300000, guid: 383cac748ba70024cab920a980422d87, type: 3}
+  - {fileID: 8300000, guid: 1846f1e421bb90c469ccf822dc73bf90, type: 3}
+  spellSoundType: 0
+  cameraName: ClassroomCamera
   cube1: {fileID: 3020247027607571847}
   cube2: {fileID: 918974198404902377}
 --- !u!1 &8425505629977344374

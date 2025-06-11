@@ -8,17 +8,26 @@ public class TableAddClothScript : BaseLOScript
     private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 1.0f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
     }
     public override void SuccessfulCast()
     {
-        // TODO: Add VFX Graph magic effects here later
-        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        //Play SFX burst
+        PlayRandomSFX(1, p, v);
 
-        // TODO: Get cloth component and turn on renderer
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+
+        //Get cloth component and turn on renderer
         GameObject tempObject = this.transform.Find("Cloth").gameObject;
         tempObject.GetComponent<Renderer>().enabled = true;
+    }
+
+    private void BurstVFX()
+    {
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
     }
 }

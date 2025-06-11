@@ -47,8 +47,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: d746526df55234744884364f13998c84, type: 3}
+  spellSoundType: 0
 --- !u!1 &1020560904911878112
 GameObject:
   m_ObjectHideFlags: 0

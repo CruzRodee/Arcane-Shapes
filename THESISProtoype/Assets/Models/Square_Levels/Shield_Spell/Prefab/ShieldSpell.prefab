@@ -99,5 +99,12 @@ MonoBehaviour:
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
   - {fileID: 6547501460758658176, guid: 27fbbd5f68d72054e9750141b9ed1bfb, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: d05427e975470564ea36a2a6e1fb70fa, type: 3}
+  - {fileID: 8300000, guid: df7aa57d854815a42b5379d8bdc8e521, type: 3}
+  - {fileID: 8300000, guid: 7f68421e93346064aaebdd58ce8c3eba, type: 3}
+  spellSoundType: 0
+  cameraName: ClassroomCamera

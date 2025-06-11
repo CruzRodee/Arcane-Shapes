@@ -26,7 +26,8 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: -876546973899608171, guid: b826a165b21f49949895b2acb00388dd,
+    type: 3}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -233,6 +234,11 @@ MonoBehaviour:
   value1: ???
   value2: ???
   animScript: {fileID: 0}
+  lineMaterial: {fileID: -876546973899608171, guid: 212f1497642bc214da878864c76b9ffd,
+    type: 3}
+  sfxSet:
+  - {fileID: 8300000, guid: fa6d7cc4504e65348aa9b97e433d1c03, type: 3}
+  - {fileID: 8300000, guid: b66c2d20bbba5ab4e86b2deb9b47b36b, type: 3}
 --- !u!4 &101808943
 Transform:
   m_ObjectHideFlags: 0
@@ -482,6 +488,7 @@ MonoBehaviour:
   triVarDisp2: {fileID: 1491798896}
   cirVarDisp1: {fileID: 1491798895}
   semiVarDisp1: {fileID: 1491798894}
+  soundPlayerObj: {fileID: 1103245039}
 --- !u!224 &413693808 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3585868198676112631, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
@@ -702,7 +709,7 @@ Camera:
   m_GameObject: {fileID: 476087537}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1101,7 +1108,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1349,6 +1356,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89895417b93d0264dae182dff8788db3, type: 3}
+--- !u!1 &1103245039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1103245040}
+  - component: {fileID: 1103245041}
+  m_Layer: 0
+  m_Name: SoundPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1103245040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103245039}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.8519816, y: -0.68422395, z: 7.308698}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1103245041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103245039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9382f64baae5fdd479a059c8b374bf53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxSet:
+  - {fileID: 8300000, guid: a191ef02f18e6654abdea071b806a8e0, type: 3}
+  - {fileID: 8300000, guid: 1c416732690f3254fa60b979bb2f0779, type: 3}
 --- !u!1 &1151082727
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,7 +2262,7 @@ PrefabInstance:
     - target: {fileID: 6739646986842005187, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8351192689900581865, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
@@ -2237,9 +2291,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
         type: 3}
+      propertyPath: sfxSet.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: vfxLineMinDistance
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
       propertyPath: vfxLinePlaneOffset
       value: -0.01
       objectReference: {fileID: 0}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: sfxSet.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 937a5e1366e678d47a7eda76f75f895b, type: 3}
+    - target: {fileID: 8884674151611807599, guid: 0a5b28a9ee1c15049ad359663f957bb5,
+        type: 3}
+      propertyPath: sfxSet.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 68253a3180f6ee34183c244b042c838f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2331,7 +2405,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2078196751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3322,3 +3396,4 @@ SceneRoots:
   - {fileID: 2083741572}
   - {fileID: 862825195}
   - {fileID: 2062185996}
+  - {fileID: 1103245040}

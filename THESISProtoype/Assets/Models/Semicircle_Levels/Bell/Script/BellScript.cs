@@ -11,8 +11,9 @@ public class BellScript : BaseLOScript
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 4.0f, 0.0f);
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
         this.SPELLDURATION = 5.0f; // Set custom spell duration for longer/shorter spells
 
@@ -21,6 +22,15 @@ public class BellScript : BaseLOScript
     }
 
     public override void SuccessfulCast()
+    {
+        //Play SFX burst
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+    }
+
+    private void BurstVFX()
     {
         Instantiate(vfxSet[0], this.transform.position, this.transform.rotation).transform.localScale = SCALING;
 
@@ -40,5 +50,8 @@ public class BellScript : BaseLOScript
         //Shakycam
         cameraShakeScript.shakeDuration = 1.0f;
         cameraShakeScript.shakeAmount = 0.3f;
+
+        //Bell SFX
+        PlaySFX(sfxSet[2]);
     }
 }

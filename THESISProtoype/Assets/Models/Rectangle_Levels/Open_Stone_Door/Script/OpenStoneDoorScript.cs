@@ -14,8 +14,10 @@ public class OpenStoneDoorScript : BaseLOScript
     private Vector3 MOVEOFFSET = new Vector3(9f, 0, 0);
 
     private Vector3 SPAWNOFFSET = new Vector3(0.0f, 3.3f, 0.0f);
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+        
         this.transform.localPosition += SPAWNOFFSET;
 
         //Get Camera object
@@ -24,8 +26,11 @@ public class OpenStoneDoorScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
+        //Play SFX burst
+        PlayRandomSFX(1, p, v);
+
         // Play burst vfx
-        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
 
         // Get the two door meshes
         GameObject door1 = this.transform.Find("Door1").gameObject;
@@ -35,8 +40,24 @@ public class OpenStoneDoorScript : BaseLOScript
         StartCoroutine(MoveOverTime(door1, CAST_DURATION, this.transform.position + MOVEOFFSET));
         StartCoroutine(MoveOverTime(door2, CAST_DURATION, this.transform.position - MOVEOFFSET));
 
+        //Play SFX for shaky
+        PlaySFX(sfxSet[2]);
+
         //Shakycam
         cameraShakeScript.shakeDuration = CAST_DURATION * 1.1f;
         cameraShakeScript.shakeAmount = 0.05f;
+
+        //Stop VFX same as shaky
+        Invoke(nameof(StopSFX), CAST_DURATION * 1.1f);
+    }
+
+    private void BurstVFX()
+    {
+        Instantiate(vfxSet[0], this.transform.position + OFFSET, this.transform.rotation).transform.localScale = SCALING;
+    }
+
+    private void StopSFX()
+    {
+        sfxSource.Stop();
     }
 }

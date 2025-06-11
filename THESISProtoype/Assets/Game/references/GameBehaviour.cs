@@ -109,6 +109,10 @@ public class GameBehaviour : MonoBehaviour
     public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
     private GameObject var1Display, var2Display; //Variables for determining which ones will be modified
 
+    //Sound related stuff
+    public GameObject soundPlayerObj;
+    private GameLevelSoundPlayer soundPlayer;
+
     void Awake()
     {
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
@@ -782,6 +786,9 @@ public class GameBehaviour : MonoBehaviour
 
             //Except Hud
             hud.SetActive(true);
+
+            //Get sound player script, do on start since component init is at Awake()
+            soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
@@ -817,6 +824,10 @@ public class GameBehaviour : MonoBehaviour
         float clamped = spellCastEvent.GetFillPercentage();
         shapeFiller.fillMaxValue = clamped; //Fill Shape when input
         shapeFiller.isFillingActive = true; //Start filling
+
+        //Play Fill SFX
+        soundPlayer.PlaySFX(1, 1, 1);
+
         if (clamped > 2.0f)
             clamped = 2.0f;
 
@@ -1219,6 +1230,12 @@ public class GameBehaviour : MonoBehaviour
         Invoke(nameof(ToUI), TRANSITIONTIME);
         Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
+        Invoke(nameof(PlayMusic), TRANSITIONTIME);
+    }
+
+    private void PlayMusic()
+    {
+        soundPlayer.PlayBGM(0, 1, 0.4f);
     }
 
     private void HideNewUI()

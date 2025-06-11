@@ -5,11 +5,55 @@ public class BaseLOScript : MonoBehaviour
 {
     public GameObject[] vfxSet;
     protected Animator animator;
-    //[SerializeReference] protected List<GameObject> temp;
     public bool TEST = false;
-    private const float CLEANTIME = 15.0f;
     private const float TESTDELAY = 0.01f;
     protected float SPELLDURATION = 2.0f; // Default value for extra delay on winning, change for longer spells
+
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    protected AudioSource sfxSource;
+    public int spellSoundType = 0;
+    protected float[] p = { 1, 1 }, v = { 0.8f, 0.8f }; //Default pitch and vol value for MagicBurst SFX, just put here cuz lazy
+    protected float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+
+    protected void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+        if (GlobalVariables.isMute) //Mute function
+            volumeFactor = 0f;
+    }
+
+    protected void PlaySFX(AudioClip clip, float pitch = 1f, float volume = 1f)
+    {
+        if (sfxSource != null)
+            sfxSource.pitch = pitch;
+        
+        if (sfxSet.Length > 0 && clip != null)
+            sfxSource.PlayOneShot(clip, volume * volumeFactor);
+    }
+
+    protected void PlayRandomSFX(int clipsMaxIndex, float[] pitch, float[] volume)
+    {
+        int i = Random.Range(0, clipsMaxIndex + 1); //Add plus 1 to reach MaxIndex since exclusive
+
+        PlaySFX(sfxSet[i], pitch[i], volume[i]);
+    }
+
+    //Overload with minimum index setting instead of defaulting to 0 index as start
+    protected void PlayRandomSFX(int clipsMinIndex, int clipsMaxIndex, float[] pitch, float[] volume)
+    {
+        int i = Random.Range(clipsMinIndex, clipsMaxIndex + 1); //Add plus 1 to reach MaxIndex since exclusive
+
+        PlaySFX(sfxSet[i], pitch[i], volume[i]);
+    }
 
     public float GetSpellDuration() //Method for getting value
     {

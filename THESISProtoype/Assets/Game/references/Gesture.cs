@@ -23,6 +23,52 @@ public class LineSnapper : MonoBehaviour
     private HOGameScript hoMain;
     private float result; // Added this since it's used in your calculations
 
+    //VFX material
+    public Material lineMaterial;
+
+    //Audio/SFX Stuff
+    public AudioClip[] sfxSet;
+    private AudioSource sfxSource;
+    private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+
+    void Awake()
+    {
+        //Create and attach AudioSource
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        //Settings
+        sfxSource.playOnAwake = false;
+        if (GlobalVariables.isMute) //Mute function
+            volumeFactor = 0f;
+    }
+
+    private void PlaySFX(int clipIndex, float pitch = 1f, float volume = 1f)
+    {
+        if (sfxSource != null)
+            sfxSource.pitch = pitch;
+
+        if (sfxSet.Length > 0 && sfxSet[clipIndex] != null)
+            sfxSource.PlayOneShot(sfxSet[clipIndex], volume * volumeFactor);
+    }
+
+    private void PlaySFXOnFinish(int clipIndex, float pitch = 1f, float volume = 1f)
+    {
+        if (sfxSource != null)
+        {
+            sfxSource.pitch = pitch;
+            sfxSource.volume = volume * volumeFactor;
+            sfxSource.clip = sfxSet[clipIndex];
+        }
+
+        if (sfxSet.Length > 0 && sfxSet[clipIndex] != null)
+            if(!sfxSource.isPlaying)
+                sfxSource.Play();
+    }
+
     public int GetMaxLinesForShape()
     {
         if (hoMain == null)
@@ -90,12 +136,9 @@ public class LineSnapper : MonoBehaviour
         lr.startWidth = 0.1f;
         lr.endWidth = 0.1f;
 
-        lr.material = new Material(Shader.Find("Sprites/Default"));
         lr.useWorldSpace = true;
 
-        Color lineColor = Color.white;
-        lr.startColor = lineColor;
-        lr.endColor = lineColor;
+        lr.material = lineMaterial;
 
         return lr;
     }
@@ -261,6 +304,9 @@ public class LineSnapper : MonoBehaviour
 
         currentLine.SetPosition(0, startPos);
         currentLine.SetPosition(1, currentPos);
+
+        //Play drawing SFX when line updates
+        PlaySFXOnFinish(0, 2f, 0.3f);
     }
 
     private float CalculateLineValue(LineRenderer line)
@@ -291,8 +337,8 @@ public class LineSnapper : MonoBehaviour
                 firstLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+                string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
                 switch (problemShape)
                 {
@@ -329,12 +375,7 @@ public class LineSnapper : MonoBehaviour
                 }
 
                 // Update text in appropriate script
-                if (hoMain == null)
-                {
-
-                }
-                   // main.text.text = currentText;
-                else
+                if (hoMain != null)
                     hoMain.text.text = currentText;
             }
             else if (lineCount == 1)
@@ -344,8 +385,8 @@ public class LineSnapper : MonoBehaviour
                 secondLineText = CreateValueText(end, value);
 
                 // Get current text and problem shape from appropriate script
-                string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
                 GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
+                string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
                 switch (problemShape)
                 {
@@ -368,12 +409,7 @@ public class LineSnapper : MonoBehaviour
                 }
 
                 // Update text in appropriate script
-                if (hoMain == null)
-                {
-
-                }
-                   // main.text.text = currentText;
-                else
+                if (hoMain != null)
                     hoMain.text.text = currentText;
             }
             lineCount++;
@@ -392,8 +428,12 @@ public class LineSnapper : MonoBehaviour
         }
         isDrawing = false;
 
-        //NEW
-        animScript.playerScript.GoodTrace(UnityEngine.Random.Range(0, 4)); //Random player animation
+        //NEW Note: Discard this since this cannot be seen anyways
+        //animScript.playerScript.GoodTrace(UnityEngine.Random.Range(0, 4)); //Random player animation
+
+        //Play Finish SFX after stopping any current sfx
+        sfxSource.Stop();
+        PlaySFX(1, 1, 4);
     }
 
     public void OnUndoPressed()
@@ -415,23 +455,11 @@ public class LineSnapper : MonoBehaviour
         // Reset text to base form
         GameBehaviour.SHAPES problemShape = hoMain == null ? main.spellCastEvent.problem.problemShape : hoMain.spellCastEvent.problem.problemShape;
 
-        if (hoMain == null)
-        {
-
-        }
-            //main.text.text = GlobalVariables.ShapeFormulaText(problemShape);
-        else
+        if (hoMain != null)
             hoMain.text.text = GlobalVariables.ShapeFormulaText(problemShape);
 
         //Reset shape fill
-        if (hoMain == null)
-        {
-            main.shapeFiller.fillMaxValue = 0f;
-            main.shapeFiller.isFillingActive = true;
-            //Reset slider
-           // main.slider.value = 0f;
-        }
-        else
+        if (hoMain != null)
         {
             hoMain.shapeFiller.fillMaxValue = 0f;
             hoMain.shapeFiller.isFillingActive = true;
@@ -450,7 +478,7 @@ public class LineSnapper : MonoBehaviour
 
             float value = CalculateLineValue(firstLine);
 
-            string currentText = hoMain == null ? /*main.text.text*/"" : hoMain.text.text;
+            string currentText = hoMain == null ? GlobalVariables.ShapeFormulaText(problemShape) : hoMain.text.text;
 
             switch (problemShape)
             {
@@ -463,12 +491,7 @@ public class LineSnapper : MonoBehaviour
                     // No need for square, circle or semicircle since they only have one line
             }
 
-            if (hoMain == null)
-            {
-
-            }
-                //main.text.text = currentText;
-            else
+            if (hoMain != null)
                 hoMain.text.text = currentText;
         }
         else if (lineCount <= 0) // Nuke first line if linecount <= 0

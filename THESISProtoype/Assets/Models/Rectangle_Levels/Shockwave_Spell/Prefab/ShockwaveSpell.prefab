@@ -54,8 +54,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxSet:
   - {fileID: 2820240214482402028, guid: 61c3aab944303c64d9b3f88139fcf17c, type: 3}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: c747339fe1c1b1e4ca76e5150ee4a2b0, type: 3}
+  spellSoundType: 0
   floorRows:
   - {fileID: 8037876099026479416}
   - {fileID: 6400919994440582176}
@@ -65,6 +69,7 @@ MonoBehaviour:
   - {fileID: 1994090786082379636}
   - {fileID: 7929986686153152425}
   - {fileID: 5607647239253976710}
+  cameraName: ClassroomCamera
 --- !u!1 &1742575231434609262
 GameObject:
   m_ObjectHideFlags: 0

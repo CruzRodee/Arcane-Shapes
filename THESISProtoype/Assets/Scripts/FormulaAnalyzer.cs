@@ -271,7 +271,9 @@ public class FormulaAnalyzer : MonoBehaviour
 
                     //Else reset inputAnswer and remove all nums after = in displayAnswer to try again
                     ResetInputAns();
-                    displayString = displayString.Remove(displayString.IndexOf("=") + 1);
+                    int equIndex = displayString.IndexOf("=");
+                    if ((equIndex + 1) < displayString.Length) //Check for String length first
+                        displayString = displayString.Remove(equIndex + 1);
                     if (DEBUG)
                     {
                         DebugDisplay();
