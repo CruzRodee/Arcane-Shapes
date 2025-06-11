@@ -97,6 +97,10 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     protected AudioSource sfxSource;
     private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
 
+    //Startup stuff
+    private bool STARTUP = true;
+    public GameObject ocrPrefab; //Used to refer to self so that it can be disabled
+
     void Awake()
     {
         //Create and attach AudioSource
@@ -138,6 +142,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
         //Get FormulaAnalyzer to avoid repeated GetComponent() calls
         fa = outputProcessor.GetComponent<FormulaAnalyzer>();
+
+        //Wakeup OCR model by running OCR on sample input
+        PerformOCR();
     }
 
     private void Update()
@@ -430,7 +437,14 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         Debug.Log("imgClass: " + imgClass);
 
         //Transmit the class output, either through message or reference of target object
-        fa.InputString(imgClass);
+        if(!STARTUP) //Do not send OCR reading to FA if just doing startup
+            fa.InputString(imgClass);
+        else if (STARTUP)
+        {
+            STARTUP = false; //make sure to turn off this flag
+            doingOCR = false; //reset flag here too since this will be disabled
+            ocrPrefab.SetActive(false); //Startup done, deactivate until called
+        }
 
         doingOCR = false; //reset flag
     }

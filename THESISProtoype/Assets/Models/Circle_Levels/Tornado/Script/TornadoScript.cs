@@ -48,7 +48,7 @@ public class TornadoScript : BaseLOScript
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
 
         //Enable Tornado Sound
-        PlaySFX(sfxSet[2], 1f, 0.5f);
+        PlaySFX(sfxSet[2], 1f, 0.35f);
 
         Invoke(nameof(Shaky), 0.6f);
     }

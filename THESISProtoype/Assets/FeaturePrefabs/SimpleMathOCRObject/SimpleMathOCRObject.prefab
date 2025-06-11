@@ -393,7 +393,7 @@ MonoBehaviour:
   bottomRightCorner: {fileID: 4613219641435671886}
   point: {fileID: 2374335917146352012}
   material: {fileID: 2100000, guid: 6f67937e54566c3459f4e0d54411c04e, type: 2}
-  generatedTexture: {fileID: 0}
+  generatedTexture: {fileID: 2800000, guid: 05cb8c0745478f249ae3b2de5e72128a, type: 3}
   CLEAR_TIME: 0.75
   processing: 0
   OCRModel: {fileID: 5022602860645237092, guid: 230da1fcbae5275429083f8fab171919,
@@ -405,6 +405,8 @@ MonoBehaviour:
   vfxLineMaterial: {fileID: 2100000, guid: 220f7239da358874e9295843fc23e412, type: 2}
   DO_SAVE_INPUTS: 0
   outputProcessor: {fileID: 9120416953951716866}
+  sfxSet: []
+  ocrPrefab: {fileID: 6739646986842005187}
 --- !u!1 &4672491733582156135
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,4 +661,6 @@ MonoBehaviour:
   DEBUG: 0
   DEBUG_RESET: 0
   calcMode: 0
-  gb: {fileID: 0}
+  gbHolder: {fileID: 0}
+  formulaDispObj: {fileID: 0}
+  hgb: {fileID: 0}
