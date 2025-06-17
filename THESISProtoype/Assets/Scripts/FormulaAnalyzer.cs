@@ -496,6 +496,49 @@ public class FormulaAnalyzer : MonoBehaviour
         calcDispString = "";
     }
 
+    public void BackspaceInput() // Working on a backspace method
+    {
+        if (calcMode)
+        {
+            // Trim the last character from calcDispString
+            if (calcDispString.Length > 0)
+            {
+                calcDispString = calcDispString.Substring(0, calcDispString.Length - 1);
+                formulaDispGUI.text = calcDispString;
+            }
+            return;
+        }
+
+        if (equMode)
+        {
+            // Remove last char from inputAnswer and displayString
+            if (inputAnswer.Length > 0)
+                inputAnswer = inputAnswer.Substring(0, inputAnswer.Length - 1);
+
+            if (displayString.Length > 0)
+                displayString = displayString.Substring(0, displayString.Length - 1);
+        }
+        else
+        {
+            // Formula input mode
+            if (evalString.Length > 0)
+                evalString = evalString.Substring(0, evalString.Length - 1);
+
+            if (displayString.Length > 0)
+                displayString = displayString.Substring(0, displayString.Length - 1);
+        }
+
+        // Update GUI after edit
+        formulaDispGUI.text = displayString;
+        PrintDefaultText();
+
+        if (DEBUG)
+        {
+            Debug.Log("FA: Backspace applied.");
+            DebugDisplay();
+        }
+    }
+
     //Getters
     public float GetEvalAns() //Can be used to get output of calc mode?
     {
@@ -610,7 +653,7 @@ public class FormulaAnalyzer : MonoBehaviour
         //Checks if the formula is surrounded by () div 2 and has pi
         Regex semiCircleRegex = new(@"\(\u03C0?\u00d7?\d+\.?\d*\u00d7?\u03C0?\u00d7\d+\.?\d*\u00d7?\u03C0?\)\u00f72");
 
-        // 1.) if has 0.5 or 1/2 or ()ÅE but no pi, is triangle
+        // 1.) if has 0.5 or 1/2 or ()ÔøΩE but no pi, is triangle
         if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
             triangleRegex.IsMatch(displayString)) && !displayString.Contains("\u03C0"))
             return GameBehaviour.SHAPES.TRIANGLE;

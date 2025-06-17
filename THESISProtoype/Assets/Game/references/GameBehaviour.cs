@@ -102,6 +102,7 @@ public class GameBehaviour : MonoBehaviour
     private float inputAnswer = 0f; //Float field for entering answer via InputAnswer()
     public GameObject calcBtnObj;
     private Text calcBtnText;
+    public GameObject backspaceButton;
 
     //----------------------------------------------
 
@@ -581,6 +582,15 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
+    public void OnBackspacePressed()
+    {
+        fa.BackspaceInput();
+
+        //Reset Board
+        ocrScript.ResetColor();
+        ocrScript.ResetVFX();
+    }
+
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
@@ -684,11 +694,15 @@ public class GameBehaviour : MonoBehaviour
 
             ocrScript.processing = false; //Start accepting input
             formulaDisplay.SetActive(true); //Show OCR input Display
+
+            backspaceButton.SetActive(true);
         }
         else if (!show)
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
             toggleDialogueBox(); //Hide
+
+            backspaceButton.SetActive(false);
         }
     }
 
