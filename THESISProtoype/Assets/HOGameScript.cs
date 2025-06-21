@@ -120,6 +120,7 @@ public class HOGameScript : MonoBehaviour
     private float inputAnswer = 0f; //Float field for entering answer via InputAnswer()
     public GameObject calcBtnObj;
     private Text calcBtnText;
+    public GameObject backspaceButton;
 
     //----------------------------------------------
 
@@ -148,7 +149,7 @@ public class HOGameScript : MonoBehaviour
         //Get FA script
         fa = formulaAnalyzerObj.GetComponent<FormulaAnalyzer>();
         fa.hgb = this;
-        
+
 
         //Get notif text
         pNotifyText = notifyTextObj.GetComponent<Text>();
@@ -247,7 +248,7 @@ public class HOGameScript : MonoBehaviour
 
         //Init fill shape
         //Invoke(nameof(InitFillShape), 0.2f);
-        
+
     }
 
     private void InitFillShape()
@@ -281,7 +282,7 @@ public class HOGameScript : MonoBehaviour
     }
     private void LoadSceneDelay()
     {
-      
+
         SceneManager.LoadScene("GameLevelScene_v3"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
     }
 
@@ -588,6 +589,15 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
+    public void OnBackspacePressed()
+    {
+        fa.BackspaceInput();
+
+        //Reset Board
+        ocrScript.ResetColor();
+        ocrScript.ResetVFX();
+    }
+
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
@@ -703,11 +713,15 @@ public class HOGameScript : MonoBehaviour
 
             ocrScript.processing = false; //Start accepting input
             formulaDisplay.SetActive(true); //Show OCR input Display
+
+            backspaceButton.SetActive(true);
         }
         else if (!show)
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
             toggleDialogueBox(); //Hide
+
+            backspaceButton.SetActive(false);
         }
     }
 
@@ -1073,15 +1087,15 @@ public class HOGameScript : MonoBehaviour
     private void ToUI()
     {
         ModifiedToUI();
- /*       yesButton.gameObject.SetActive(y);
-        noButton.gameObject.SetActive(n);
-        manaMeasure.gameObject.SetActive(m);
-        slider.gameObject.SetActive(s);
-        confirmMeasurement.gameObject.SetActive(cm);
-        correctionPerc.gameObject.SetActive(cp);
-        lineSnapper.gameObject.SetActive(ls);
-        undo.gameObject.SetActive(u);
-        text.gameObject.SetActive(t);*/
+        /*       yesButton.gameObject.SetActive(y);
+               noButton.gameObject.SetActive(n);
+               manaMeasure.gameObject.SetActive(m);
+               slider.gameObject.SetActive(s);
+               confirmMeasurement.gameObject.SetActive(cm);
+               correctionPerc.gameObject.SetActive(cp);
+               lineSnapper.gameObject.SetActive(ls);
+               undo.gameObject.SetActive(u);
+               text.gameObject.SetActive(t);*/
         // dropdown.gameObject.SetActive(d);
         // restart.gameObject.SetActive(r);
         // quit.gameObject.SetActive(q);
@@ -1101,7 +1115,7 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.gameObject.SetActive(false);
         characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
         SetVisibilityNewUI(false, true, false, true);
-        
+
         if (hoGameBeh.isAllAttemptedSolve())
         {
             foreach (float answer in recordedAnswer.Values)
@@ -1335,7 +1349,7 @@ public class HOGameScript : MonoBehaviour
             problemObjectShape = shapeProblem;
             this.p_measure = x;
             this.s_measure = y;
-            
+
 
             /*if (x == -1 && y == -1)
             {
@@ -1480,7 +1494,7 @@ public class HOGameScript : MonoBehaviour
             p_measure = this.problem.p_measure;
             s_measure = this.problem.s_measure;
         }
-   
+
 
         public float GetFillPercentage()
         {
@@ -1595,44 +1609,44 @@ public class HOGameScript : MonoBehaviour
         currentShape = data.shapeType;
 
         Problem problem = new Problem(currentShape, this, data.originalShapeObject.actualShapeObj, data.originalShapeObject.x, data.originalShapeObject.y);
-  /*      System.Random random;
-        if (setSeed != -1)
-        {
-            random = new System.Random(setSeed);
-        }
-        else
-        {
-            random = new System.Random((int)DateTime.Now.Ticks);
-        }
+        /*      System.Random random;
+              if (setSeed != -1)
+              {
+                  random = new System.Random(setSeed);
+              }
+              else
+              {
+                  random = new System.Random((int)DateTime.Now.Ticks);
+              }
 
-        double result;
+              double result;
 
-        switch (problem.problemShape)
-        {
-            case GameBehaviour.SHAPES.TRIANGLE:
-                result = (0.5 * problem.p_measure * problem.s_measure);
-                break;
-            case GameBehaviour.SHAPES.CIRCLE:
-                result = (Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                break;
-            case GameBehaviour.SHAPES.RECTANGLE:
-                result = (problem.p_measure * problem.s_measure);
-                break;
-            case GameBehaviour.SHAPES.SQUARE:
-                result = Math.Pow(problem.p_measure, 2);
-                break;
-            case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                result = (0.5 * Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                break;
-            default:
-                throw new Exception("Invalid shape");
-                //throw this shit 
-        }
+              switch (problem.problemShape)
+              {
+                  case GameBehaviour.SHAPES.TRIANGLE:
+                      result = (0.5 * problem.p_measure * problem.s_measure);
+                      break;
+                  case GameBehaviour.SHAPES.CIRCLE:
+                      result = (Math.PI * Math.Pow(problem.p_measure / 2, 2));
+                      break;
+                  case GameBehaviour.SHAPES.RECTANGLE:
+                      result = (problem.p_measure * problem.s_measure);
+                      break;
+                  case GameBehaviour.SHAPES.SQUARE:
+                      result = Math.Pow(problem.p_measure, 2);
+                      break;
+                  case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                      result = (0.5 * Math.PI * Math.Pow(problem.p_measure / 2, 2));
+                      break;
+                  default:
+                      throw new Exception("Invalid shape");
+                      //throw this shit 
+              }
 
-        //DEBUG
-        Debug.Log("Result: " + Math.Round(result, 2));
+              //DEBUG
+              Debug.Log("Result: " + Math.Round(result, 2));
 
-        slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));*/
+              slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));*/
         this.spellCastEvent = new SpellCastEvent(this, problem);
 
         //Instantiate Spell Animation
