@@ -1430,47 +1430,12 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
-    private void ActivateSpell(GameBehaviour.SHAPES s, GameObject instanced = null)
+    public void InstanceSpellObject(GameObject instanced = null)
     {
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        int limit = 0;
-
-        if (instanced.IsUnityNull())
+        if (instanced.IsUnityNull() && GlobalVariables.level - 1 >= 0 && GlobalVariables.level - 1 < 6)
         {
-            switch (s)
-            {
-                case GameBehaviour.SHAPES.SQUARE:
-                    limit = animScript.square_Levels.Length;
-                    instanced = animScript.square_Levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.RECTANGLE:
-                    limit = animScript.rectangle_levels.Length;
-                    instanced = animScript.rectangle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.TRIANGLE:
-                    limit = animScript.triangle_levels.Length;
-                    instanced = animScript.triangle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.CIRCLE:
-                    limit = animScript.circle_levels.Length;
-                    instanced = animScript.circle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[rand.Next(0, limit)];
-                    break;
-                default:
-                    UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
-                    //TEMPLATE
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[4];
-                    break;
-            }
+            instanced = animScript.compound_levels[GlobalVariables.level-1];
         }
-
-        //VFX
-        if (!STARTUP)
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform);
 
         //SPELL
         Instantiate(instanced, GameObject.Find("SpellOrigin").transform);
@@ -1608,47 +1573,7 @@ public class HOGameScript : MonoBehaviour
         currentShape = data.shapeType;
 
         Problem problem = new Problem(currentShape, this, data.originalShapeObject.actualShapeObj, data.originalShapeObject.x, data.originalShapeObject.y);
-        /*      System.Random random;
-              if (setSeed != -1)
-              {
-                  random = new System.Random(setSeed);
-              }
-              else
-              {
-                  random = new System.Random((int)DateTime.Now.Ticks);
-              }
 
-              double result;
-
-              switch (problem.problemShape)
-              {
-                  case GameBehaviour.SHAPES.TRIANGLE:
-                      result = (0.5 * problem.p_measure * problem.s_measure);
-                      break;
-                  case GameBehaviour.SHAPES.CIRCLE:
-                      result = (Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                      break;
-                  case GameBehaviour.SHAPES.RECTANGLE:
-                      result = (problem.p_measure * problem.s_measure);
-                      break;
-                  case GameBehaviour.SHAPES.SQUARE:
-                      result = Math.Pow(problem.p_measure, 2);
-                      break;
-                  case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                      result = (0.5 * Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                      break;
-                  default:
-                      throw new Exception("Invalid shape");
-                      //throw this shit 
-              }
-
-              //DEBUG
-              Debug.Log("Result: " + Math.Round(result, 2));
-
-              slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));*/
         this.spellCastEvent = new SpellCastEvent(this, problem);
-
-        //Instantiate Spell Animation
-        ActivateSpell(currentShape);
     }
 }

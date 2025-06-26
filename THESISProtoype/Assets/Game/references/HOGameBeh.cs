@@ -78,6 +78,9 @@ public class HOGameBeh : MonoBehaviour
         house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new Vector3(0, 2, 0)));
 
         SetManualProblem(house);
+
+        //Instance the HO Game Spell Object
+        script.InstanceSpellObject();
     }
 
     /**Call to set the shapes to be spawned*/

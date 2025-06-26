@@ -397,6 +397,13 @@ MonoBehaviour:
   - {fileID: 732418956377838489, guid: efb3e75e1aa401643957ebf5056bcb33, type: 3}
   - {fileID: 5097711013550728816, guid: c549ddce80b7d7d4a854c37032317007, type: 3}
   - {fileID: 4880007511335109633, guid: f0647a8f6709d3c409a464ddc56daebf, type: 3}
+  compound_levels:
+  - {fileID: 3104644444685536454, guid: b0a571d8adfb1f8498ce9d890f3d127f, type: 3}
+  - {fileID: 6350420050890594513, guid: 50495eee8c7346c47bb1fcbefbe23a5c, type: 3}
+  - {fileID: 6670426937854222307, guid: 47ed147ceb4afea4cb63e21a454769c1, type: 3}
+  - {fileID: 4675980491567266007, guid: 39cc7613cd18c7b438059023d2063f9d, type: 3}
+  - {fileID: 6333733084290232409, guid: 0e17d682a165b384b87c8cb3b4f85c53, type: 3}
+  - {fileID: 1199834763281702127, guid: 191ffa12f60db4246819e0c18075b152, type: 3}
   playerScript: {fileID: 0}
   currentScript: {fileID: 0}
   currentSpell: {fileID: 0}
