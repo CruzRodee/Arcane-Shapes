@@ -253,13 +253,9 @@ public class HOGameBeh : MonoBehaviour
 
         //GlobalVariables.clickedShapeData = clickData;
 
-
         //UnityEngine.Debug.Log(clickData.originalShapeObject.x);
         //UnityEngine.Debug.Log(clickData.originalShapeObject.y);
         //UnityEngine.Debug.Log(clickData.originalShapeObject.shape);
-
-
-
 
         // Example actions:
         // - Play sound
@@ -267,6 +263,9 @@ public class HOGameBeh : MonoBehaviour
         // - Change game state
         // - Move other shapes
         // etc.
+
+        //Get the text displays for the selected shape
+        script.GetVarDisp(clickData.originalShapeObject.shape);
     }
 
     void OnDestroy()

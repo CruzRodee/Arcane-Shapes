@@ -159,9 +159,13 @@ public class HOGameScript : MonoBehaviour
 
         //Disable calcBtn
         calcBtnObj.SetActive(false);
+    }
 
+    //Function for getting the text objects for displaying the line lengths
+    public void GetVarDisp(GameBehaviour.SHAPES shape)
+    {
         //Get the text objects that will be used to display the line lengths of the shape
-        switch (GlobalVariables.loSelectedShape)
+        switch (shape)
         {
             case GameBehaviour.SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
