@@ -122,6 +122,8 @@ public class HOGameScript : MonoBehaviour
     private Text calcBtnText;
     public GameObject backspaceButton;
 
+    private bool isFinalAnswer = false;
+
     //----------------------------------------------
 
     //References to the GUI display for line Lengths
@@ -608,24 +610,36 @@ public class HOGameScript : MonoBehaviour
 
         recordedAnswer.Add(currentlySolvedShape, inputAnswer);
 
-        toggleDialogueBox(); //hide                  
+        //toggleDialogueBox(); //hide             
 
-        HideNewUI();
+        //HideNewUI();
 
         //Disable OCR board and formulaDisplay
-        StartCoroutine(SlideOCRBoard(false));
+        //StartCoroutine(SlideOCRBoard(false));
 
         CalcError();
 
         //correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
         //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
 
-        correctionPerc.gameObject.SetActive(true); //Show error
+        //correctionPerc.gameObject.SetActive(true); //Show error
 
         hoGameBeh.shapeClickManager.EnableShapeClicking();
+
+        //Make solved shape unclickable
+        Debug.Log("Fill perc:" + spellCastEvent.GetFillPercentage() + " isFilling: " + shapeFiller.isFillingActive);
+        currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
+        //Play Fill SFX
+
+        //TODO: Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
+
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
 
         ModifiedToUIAgain();
+
+        //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
+        //      Then run the animation
+
         //Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX * 2);
         //Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
 
@@ -723,7 +737,8 @@ public class HOGameScript : MonoBehaviour
         else if (!show)
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
-            toggleDialogueBox(); //Hide
+            if(isFinalAnswer)
+                toggleDialogueBox(); //Hide only if final answer
 
             backspaceButton.SetActive(false);
         }
@@ -1119,6 +1134,15 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.gameObject.SetActive(false);
         characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
         SetVisibilityNewUI(false, true, false, true);
+        pDiaButtons.SetActive(false); //Disable dialogue buttons
+
+        //Disable all formula displays
+        pEquationSquare.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationTriangle.SetActive(false);
+        pEquationCircle.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        manaReq.text = ""; //Also clear this out
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
