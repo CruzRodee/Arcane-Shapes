@@ -76,11 +76,14 @@ public class LS_EventsScript : MonoBehaviour
         {
             if (GlobalVariables.level == 0)
                 GlobalVariables.level = 1; //Set level to 1 after playing
-            if (GlobalVariables.playerWin && GlobalVariables.level < 3)
-                GlobalVariables.level++; //Level up after win until 3
+            if (GlobalVariables.playerWin && GlobalVariables.level < 6 && !GlobalVariables.isLOGame)
+                GlobalVariables.level++; //Level up after win until 6 for HO
+            else if (GlobalVariables.playerWin && GlobalVariables.level < 3)
+                GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
+            {
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -103,7 +106,16 @@ public class LS_EventsScript : MonoBehaviour
                         savedGame.scircleLvl = GlobalVariables.level;
                         savedGame.scirclePercent = GlobalVariables.percent;
                         break;
+                    default:
+                        Debug.Log("LevelSelect: Error! Invalid shape!");
+                        break;
                 }
+            }
+
+            else if(!GlobalVariables.isLOGame) //Saving for HO Game
+            {
+                savedGame.compLvl = GlobalVariables.level;
+            }
 
             //Reset trigger flags
             GlobalVariables.gameFinished = false;
@@ -266,12 +278,15 @@ public class LS_EventsScript : MonoBehaviour
                     GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0];
                     break;
                 case 1:
+                case 2:
                     GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1];
                     break;
-                case 2:
+                case 3:
+                case 4:
                     GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2];
                     break;
-                case 3:
+                case 5:
+                case 6:
                     GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3];
                     break;
             }
@@ -415,6 +430,8 @@ public class LS_EventsScript : MonoBehaviour
         UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
 
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+        //Set text as compound room
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");
 
         screenFade.SetTrigger("sceneOut");
         Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);

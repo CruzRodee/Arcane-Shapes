@@ -1231,7 +1231,6 @@ public class HOGameScript : MonoBehaviour
         if (!isQuit) // Only activate flags if not quitting
         {
             GlobalVariables.gameFinished = true; //Set flag to save data
-            GlobalVariables.isLOGame = true; //Flag game as LO game
         }
 
         //TRANSITION TO LEVEL SELECT SCREEN AGAIN
