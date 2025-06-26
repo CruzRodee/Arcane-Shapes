@@ -224,23 +224,33 @@ public class HOGameBeh : MonoBehaviour
                 if (obj != null && obj.actualShapeObj != null)
                 {
                     //obj.actualShapeObj.SetActive(value);
-                    SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value);
+                    if (obj.actualShapeObj.transform.Find("FillShape") != null)
+                        SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value,
+                            obj.actualShapeObj.transform.Find("FillShape").gameObject);
+                    else
+                        SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value);
                 }
             }
         }
 
-        private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value)
+        private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value, GameObject fillShape = null)
         {
+            Vector3 hidePos = new(30,30,30);
+            
             if (value)
             {
                 float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
                 renderer.material.color = new Color(r,g,b,0);
+                if (fillShape != null)
+                    fillShape.transform.localPosition = hidePos; //Hide fill shape
             }
 
             else
             {
                 float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
                 renderer.material.color = new Color(r, g, b, 1.0f);
+                if (fillShape != null)
+                    fillShape.transform.localPosition = Vector3.zero; //Show fill shape
             }
         }
     }

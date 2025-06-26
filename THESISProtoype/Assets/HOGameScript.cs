@@ -257,10 +257,10 @@ public class HOGameScript : MonoBehaviour
 
     }
 
-    private void InitFillShape()
-    {
-        shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
-    }
+    //private void InitFillShape()
+    //{
+    //    shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
+    //}
 
     private void InitProblem()
     {
@@ -629,8 +629,11 @@ public class HOGameScript : MonoBehaviour
         //Make solved shape unclickable
         currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
 
-        //TO REMOVE: Temporary until shapefiller is fixed
-        currentlySolvedShape.GetComponent<Renderer>().material.color = Color.blue;
+        //Attach new shapeFiller to target shape and activate it
+        ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
+        currFiller.fillMaterial = shapeFiller.fillMaterial;
+        currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+        currFiller.isFillingActive = true;
 
         //Play Fill SFX
 
@@ -1134,7 +1137,7 @@ public class HOGameScript : MonoBehaviour
         GlobalVariables.loSelectedShape = clickData.shapeType;
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
         SetManualProblem(clickData);
-        InitFillShape();
+        //InitFillShape();
         //ShowNewUI();
         SetVisibilityNewUI(false, true, true, true);
     }
