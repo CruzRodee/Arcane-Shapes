@@ -257,6 +257,11 @@ public class FormulaAnalyzer : MonoBehaviour
                         {
                             gb.NotifyInvalidFormula();
                         }
+                        //Notify hgb of invalid formula
+                        if (hgb != null)
+                        {
+                            hgb.NotifyInvalidFormula();
+                        }
                     }
                 }
                 else if (equMode)
@@ -284,6 +289,11 @@ public class FormulaAnalyzer : MonoBehaviour
                     if (gb != null)
                     {
                         gb.NotifyMismatchedAnswer();
+                    }
+                    //Notify hgb of invalid answer
+                    if (hgb != null)
+                    {
+                        hgb.NotifyMismatchedAnswer();
                     }
                 }
                 break;
@@ -511,6 +521,13 @@ public class FormulaAnalyzer : MonoBehaviour
 
         if (equMode)
         {
+            //If Last char is a '=' character, deactivate equ mode and set valid formula to false
+            if(displayString.Last() == '=')
+            {
+                isValidFormula = false;
+                equMode = false;
+            }
+            
             // Remove last char from inputAnswer and displayString
             if (inputAnswer.Length > 0)
                 inputAnswer = inputAnswer.Substring(0, inputAnswer.Length - 1);
