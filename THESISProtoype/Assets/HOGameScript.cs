@@ -627,8 +627,11 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.shapeClickManager.EnableShapeClicking();
 
         //Make solved shape unclickable
-        Debug.Log("Fill perc:" + spellCastEvent.GetFillPercentage() + " isFilling: " + shapeFiller.isFillingActive);
         currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
+
+        //TO REMOVE: Temporary until shapefiller is fixed
+        currentlySolvedShape.GetComponent<Renderer>().material.color = Color.blue;
+
         //Play Fill SFX
 
         //TODO: Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
@@ -939,48 +942,6 @@ public class HOGameScript : MonoBehaviour
             lineSnapper.OnUndoPressed();
         });
 
-        slider.onValueChanged.AddListener((value) =>
-        {
-            manaMeasure.text = value.ToString();
-            if (chosenShape == "TRIANGLE")
-            {
-                textAnsTri.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SQUARE")
-            {
-                textAnsSqr.text = manaMeasure.text;
-            }
-            else if (chosenShape == "RECTANGLE")
-            {
-                textAnsRect.text = manaMeasure.text;
-            }
-            else if (chosenShape == "CIRCLE")
-            {
-                textAnsCir.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SEMI_CIRCLE")
-            {
-                textAnsSC.text = manaMeasure.text;
-            }
-
-            // TODO: make slider rounding change based on level?
-            slider.value = Mathf.Round(value * 10f) / 10f;  // Rounds to nearest 0.1
-
-            //Change fill value
-            shapeFiller.fillMaxValue = spellCastEvent.GetFillPercentage();
-
-            //Check if area match
-            CalcError();
-            if (error == 0f)
-                shapeFiller.isPerfectMatch = true;
-            else
-                shapeFiller.isPerfectMatch = false;
-
-            shapeFiller.isFillingActive = true;
-        });
-
-
-
         //CHANGES: removed listeners
         // yesButton.onClick.AddListener(() =>
         // {
@@ -1173,7 +1134,7 @@ public class HOGameScript : MonoBehaviour
         GlobalVariables.loSelectedShape = clickData.shapeType;
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
         SetManualProblem(clickData);
-        Invoke(nameof(InitFillShape), 0.2f);
+        InitFillShape();
         //ShowNewUI();
         SetVisibilityNewUI(false, true, true, true);
     }
