@@ -26,7 +26,8 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: -876546973899608171, guid: b826a165b21f49949895b2acb00388dd,
+    type: 3}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -96,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 141e00cd2bd469a46b65c10e6315ea0f,
+  m_LightingDataAsset: {fileID: 112000000, guid: e229485b61d195f4a87f0e3a1c5ae95f,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6479d434831c1224e998fd19fd593db7,
     type: 2}
@@ -189,7 +190,8 @@ MonoBehaviour:
   value1: ???
   value2: ???
   animScript: {fileID: 0}
-  lineMaterial: {fileID: 0}
+  lineMaterial: {fileID: -876546973899608171, guid: 212f1497642bc214da878864c76b9ffd,
+    type: 3}
   sfxSet:
   - {fileID: 8300000, guid: fa6d7cc4504e65348aa9b97e433d1c03, type: 3}
   - {fileID: 8300000, guid: b66c2d20bbba5ab4e86b2deb9b47b36b, type: 3}
@@ -644,7 +646,7 @@ Camera:
   m_GameObject: {fileID: 476087537}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1105,7 +1107,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1414,6 +1416,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillMaterial: {fileID: -876546973899608171, guid: 0fe34b45e6cd49140a7f0053c5816f77,
+    type: 3}
+  voidMaterial: {fileID: -876546973899608171, guid: f57bf177ea31d154ba51ce19176bbcf6,
+    type: 3}
+  intersectMaterial: {fileID: -876546973899608171, guid: 8e978c75289c5974cbf126c0a7ddf4a7,
     type: 3}
   fillMaxValue: 0
   isFillingActive: 0

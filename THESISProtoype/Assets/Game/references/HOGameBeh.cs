@@ -105,16 +105,18 @@ public class HOGameBeh : MonoBehaviour
 
     public class ShapeObject
     {
-        public int x = UNUSED;
-        public int y = UNUSED;
+        public float x = UNUSED;
+        public float y = UNUSED;
         public GameBehaviour.SHAPES shape;
         public GameObject actualShapeObj;
         public Vector3 offset = Vector3.zero;
         public bool isToBeFilled = false;
         public float angle = 0;
         public bool isExcess = false;
+        public bool isIntersect = false;
+        public float zOffset = 0;
 
-        public ShapeObject(int x, int y, GameBehaviour.SHAPES shape)
+        public ShapeObject(float x, float y, GameBehaviour.SHAPES shape)
         {
             this.x = x;
             this.y = y;
@@ -177,22 +179,44 @@ public class HOGameBeh : MonoBehaviour
                 return null;
             }
 
+            GameObject ret = null; //Return GameObject
             switch (obj.shape)
             {
                 case GameBehaviour.SHAPES.SQUARE:
-                    return this.main.shapeGenerator.CreateSquare(obj.offset, obj.x);
+                    ret = this.main.shapeGenerator.CreateSquare(obj.offset, obj.x);
+                    break;
                 case GameBehaviour.SHAPES.TRIANGLE:
-                    return this.main.shapeGenerator.CreateTriangle(obj.offset, obj.x, obj.y);
+                    ret = this.main.shapeGenerator.CreateTriangle(obj.offset, obj.x, obj.y);
+                    break;
                 case GameBehaviour.SHAPES.CIRCLE:
-                    return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, false);
+                    ret = this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, false);
+                    break;
                 case GameBehaviour.SHAPES.RECTANGLE:
-                    return this.main.shapeGenerator.CreateRectangle(obj.offset, obj.x, obj.y);
+                    ret = this.main.shapeGenerator.CreateRectangle(obj.offset, obj.x, obj.y);
+                    break;
                 case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                    return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, true);
+                    ret = this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, true);
+                    break;
                 default:
                     UnityEngine.Debug.LogWarning($"Unsupported shape type for generation: {obj.shape}");
                     return null;
             }
+
+            //Shape that is intersect is always excess
+            if(obj.isIntersect)
+                obj.isExcess = true;
+
+            //Change color of excess
+            if (obj.isExcess)
+            {
+                ret.GetComponent<Renderer>().material.color = Color.grey;
+            }
+
+            //Apply z-axis Offset to determine which shape is above which
+            Vector3 curPos = ret.transform.localPosition;
+            ret.transform.localPosition = new Vector3(curPos.x, curPos.y, obj.zOffset);
+
+            return ret;
         }
 
         public void destroyAllShapes()

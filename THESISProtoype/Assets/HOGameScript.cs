@@ -101,6 +101,7 @@ public class HOGameScript : MonoBehaviour
 
     private Dictionary<GameObject, float> recordedAnswer = new Dictionary<GameObject, float>();
     private GameObject currentlySolvedShape = null;
+    private HOGameBeh.ShapeObject currentShapeObject = null;
 
     private string currentShapeToSolve;
     private string chosenShape;
@@ -617,9 +618,20 @@ public class HOGameScript : MonoBehaviour
     {
         //Attach new shapeFiller to target shape and activate it
         ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
-        currFiller.fillMaterial = shapeFiller.fillMaterial;
+
+        //Fill shape with mana, fill excess with void
+        if(!currentShapeObject.isExcess)
+            currFiller.fillMaterial = shapeFiller.fillMaterial;
+        else if(currentShapeObject.isIntersect)
+            currFiller.fillMaterial = shapeFiller.intersectMaterial;
+        else if (currentShapeObject.isExcess)
+            currFiller.fillMaterial = shapeFiller.voidMaterial;
+
         currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
         currFiller.isFillingActive = true;
+
+        //Hide shape
+        currentlySolvedShape.GetComponent<Renderer>().enabled = false;
     }
 
     public void InputAnswer(float ans = 0f) //Sends final answer
@@ -628,7 +640,10 @@ public class HOGameScript : MonoBehaviour
 
         if(!isFinalAnswer) //Only record if not final answer mode
         {
-            recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+            if (!currentShapeObject.isExcess) //Positive Area
+                recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+            else if (currentShapeObject.isExcess) //Negative Area
+                recordedAnswer.Add(currentlySolvedShape, -inputAnswer);
         }
 
         CalcError();
@@ -1115,6 +1130,7 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(true);
         GlobalVariables.loSelectedShape = clickData.shapeType;
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
+        currentShapeObject = clickData.originalShapeObject;
         SetManualProblem(clickData);
         //InitFillShape();
         //ShowNewUI();
@@ -1353,6 +1369,8 @@ public class HOGameScript : MonoBehaviour
             {
                 float x = main.recordedAnswer.Values.Sum();
                 float y = main.inputAnswer;
+
+                Debug.Log("Answer: " + x);
 
                 return y / x;
             }

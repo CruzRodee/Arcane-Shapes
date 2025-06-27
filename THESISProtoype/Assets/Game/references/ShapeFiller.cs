@@ -13,6 +13,8 @@ public class ShapeFiller : MonoBehaviour
     private GameObject targetShape; // Store reference to original shape
 
     public Material fillMaterial;
+    public Material voidMaterial;
+    public Material intersectMaterial;
     public float fillMaxValue = 0.0f;
     public bool isFillingActive = false;
     public bool isPerfectMatch = false;

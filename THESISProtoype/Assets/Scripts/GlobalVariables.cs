@@ -68,6 +68,25 @@ public static class GlobalVariables
                 problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)).tilt(-90)); //Left
                 problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 0, 0)).tilt(180)); //Down
                 break;
+            case 3: //Holy Halo
+                //Inner negative ring
+                problem.Add(new HOGameBeh.ShapeObject(6f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[0].isExcess = true;
+                //Outer Positive Ring
+                problem.Add(new HOGameBeh.ShapeObject(8f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected last
+                break;
+            case 4: //Cubic Barrier
+                //Intersection
+                problem.Add(new HOGameBeh.ShapeObject(5, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
+                problem[0].isIntersect = true;
+                //Square1
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(1, 1, 0)));
+                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected later
+                //Square2
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[2].zOffset = 0.1f; //offset away camera slightly to be selected later
+                break;
         }
 
         return problem; //Return the problem that is equal to the game level
