@@ -7,6 +7,7 @@ public class AnimScript : MonoBehaviour
     public GameObject transitionVFX;
     public GameObject[] square_Levels, rectangle_levels, triangle_levels,
         circle_levels, semicircle_levels, compound_levels;
+    public GameBehaviour.SHAPES[] compound_main_shapes;
 
     // Outputs
     public PlayerModelScript playerScript;

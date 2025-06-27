@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Linq;
 
 
 
@@ -107,6 +108,7 @@ public class HOGameScript : MonoBehaviour
 
     private const string castBtnText1 = "Cast Spell";
     private const string castBtnText2 = "Redo Input";
+    private const string castBtnText3 = "Finish Spell";
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
     private DrawingAndOCRManagerScript ocrScript;
@@ -122,7 +124,8 @@ public class HOGameScript : MonoBehaviour
     private Text calcBtnText;
     public GameObject backspaceButton;
 
-    private bool isFinalAnswer = false;
+    public bool isFinalAnswer = false;
+    private bool isAllSolved = false;
 
     //----------------------------------------------
 
@@ -566,6 +569,12 @@ public class HOGameScript : MonoBehaviour
 
     public void onCast()
     {
+        // Modified function if all shapes solved
+        if (isAllSolved)
+        {
+            DoneMeasure();
+        }
+        
         //added NTS
         if (!isDoneMeasuring)    //pag mag sslider plang
         {
@@ -608,56 +617,87 @@ public class HOGameScript : MonoBehaviour
     {
         inputAnswer = ans;
 
-        recordedAnswer.Add(currentlySolvedShape, inputAnswer);
-
-        //toggleDialogueBox(); //hide             
-
-        //HideNewUI();
-
-        //Disable OCR board and formulaDisplay
-        //StartCoroutine(SlideOCRBoard(false));
+        if(!isFinalAnswer) //Only record if not final answer mode
+            recordedAnswer.Add(currentlySolvedShape, inputAnswer);
 
         CalcError();
 
-        //correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
-        //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
-
-        //correctionPerc.gameObject.SetActive(true); //Show error
-
-        hoGameBeh.shapeClickManager.EnableShapeClicking();
-
-        //Make solved shape unclickable
-        currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
-
-        //Attach new shapeFiller to target shape and activate it
-        ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
-        currFiller.fillMaterial = shapeFiller.fillMaterial;
-        currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
-        currFiller.isFillingActive = true;
-
-        //Play Fill SFX
+        //Play Fill SFX if not final answer
 
         //TODO: Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
 
-        hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+        //Show error if not 0%
+        //correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
+
+        //correctionPerc.gameObject.SetActive(true);
+
+        //More stuff to only do when not in final answer
+        if (!isFinalAnswer)
+        {
+            hoGameBeh.shapeClickManager.EnableShapeClicking();
+
+            //Make solved shape unclickable
+            currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
+
+            //Attach new shapeFiller to target shape and activate it
+            ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
+            currFiller.fillMaterial = shapeFiller.fillMaterial;
+            currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+            currFiller.isFillingActive = true;
+
+            hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+        }       
 
         ModifiedToUIAgain();
 
+        //If all simple shapes have been solved, show cast button and modify it to be a "Finish Spell" button for final input
+        if (hoGameBeh.isAllAttemptedSolve())
+        {
+            // Show and Modify Cast button functions
+            pDiaButtons.SetActive(true); //Enable the buttons
+            pDiaButtons.transform.Find("btnCast").gameObject.SetActive(true); //Enable cast button
+            textFinish.text = castBtnText3; // Change cast button Text
+
+            //Disable all other buttons for now
+            pDiaButtons.transform.Find("btnBackspace").gameObject.SetActive(false);
+            calcBtnObj.SetActive(false);
+            pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
+
+            // Set flag that confirms all shapes solved
+            isAllSolved = true;
+
+            //change dialogue text to say that the final area needs to be calculated if final answer
+            characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
+            //No need to reactivate undo button since not used any longer
+        }
+
         //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
         //      Then run the animation
+        if (isFinalAnswer)
+        {
+            toggleDialogueBox(); //hide             
 
-        //Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX * 2);
-        //Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
+            HideNewUI();
 
+            //Disable OCR board and formulaDisplay
+            StartCoroutine(SlideOCRBoard(false));
 
+            //Indicate that the spell casting is done with the error text field
+            correctionPerc.text = "Spell Complete!";
+
+            correctionPerc.gameObject.SetActive(true);
+
+            //TODO: Maybe play a new spell complete SFX since the mana filling is done?
+
+            Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
+        }
     }
 
     public void DoneMeasure()
     {
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
-        if (GlobalVariables.level < 3)
-            calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
+        calcBtnObj.SetActive(true);
 
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
@@ -666,9 +706,11 @@ public class HOGameScript : MonoBehaviour
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper.value2;
 
-        //OLD SLIDER CODE
-        //toggleSlider();
-        //slider.gameObject.SetActive(true);
+        //Set flag for fa to be in final answer mode (doesn't check if it is a valid shape formula just any valid formula)
+        if (isAllSolved)
+        {
+            fa.isCompoundArea = true;
+        }
 
         //NEW OCR SHOW CODE
         StartCoroutine(SlideOCRBoard(true));
@@ -703,7 +745,8 @@ public class HOGameScript : MonoBehaviour
     {
         if (show)
         {
-            toggleDialogueBox(); //Show
+            if(!isAllSolved)
+                toggleDialogueBox(); //Show
 
             yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
 
@@ -1096,7 +1139,8 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
         lineSnapper.gameObject.SetActive(false);
-        characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+        if(!isFinalAnswer)
+            characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
         SetVisibilityNewUI(false, true, false, true);
         pDiaButtons.SetActive(false); //Disable dialogue buttons
 
@@ -1168,7 +1212,7 @@ public class HOGameScript : MonoBehaviour
 
         if (error == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(currentShape));
+            animScript.playerScript.GoodCast(SendShapeToPlayer(animScript.compound_main_shapes[GlobalVariables.level]));
             Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
             //Call function to display a level complete/retry screen
 
@@ -1424,9 +1468,9 @@ public class HOGameScript : MonoBehaviour
 
     public void InstanceSpellObject(GameObject instanced = null)
     {
-        if (instanced.IsUnityNull() && GlobalVariables.level - 1 >= 0 && GlobalVariables.level - 1 < 6)
+        if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level < 6)
         {
-            instanced = animScript.compound_levels[GlobalVariables.level-1];
+            instanced = animScript.compound_levels[GlobalVariables.level];
         }
 
         //SPELL
@@ -1455,6 +1499,14 @@ public class HOGameScript : MonoBehaviour
         public float GetFillPercentage()
         {
             double result;
+
+            if (main.isFinalAnswer) //Base answer in the sum of all values of recordedAnswer
+            {
+                float x = main.recordedAnswer.Values.Sum();
+                float y = main.inputAnswer;
+
+                return y / x;
+            }
 
             switch (this.problem.problemShape)
             {

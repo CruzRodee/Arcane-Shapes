@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public static class GlobalVariables
 {
     // LO variables
@@ -38,6 +40,29 @@ public static class GlobalVariables
             default:
                 return "ERROR: INVALID SHAPE - NO FORUMULA TEXT FOUND";
         }
+    }
+
+    //------------------
+
+    // HO variables
+
+    public static List<HOGameBeh.ShapeObject> GetHOProblem()
+    {
+        // Define the problem that matches the level
+        List<HOGameBeh.ShapeObject> problem = new List<HOGameBeh.ShapeObject>();
+        switch (level)
+        {
+            case 0: //Same problem for level 1 or 0
+            case 1:
+                // Define the "house" shape configuration
+                //House square walls
+                problem.Add(new HOGameBeh.ShapeObject(4, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -1, 0)));
+                //House roof, must be offset in y axis by house square side length plus some offset
+                problem.Add(new HOGameBeh.ShapeObject(6, 3, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 2, 0)));
+                break;
+        }
+
+        return problem; //Return the problem that is equal to the game level
     }
 
     //------------------

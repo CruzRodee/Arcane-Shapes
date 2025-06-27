@@ -70,14 +70,8 @@ public class HOGameBeh : MonoBehaviour
             Debug.LogError("HOGameBeh: ShapeClickManager GameObject not found! Cannot subscribe to OnShapeClicked.");
         }
 
-        // Define the "house" shape configuration
-        List<ShapeObject> house = new List<ShapeObject>();
-        house.Add(new ShapeObject(2, UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(1, 0, 0)).tilt(90));
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(-1, 0, 0)).tilt(-90));
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new Vector3(0, 2, 0)));
-
-        SetManualProblem(house);
+        // Set the problem based on HO level
+        SetManualProblem(GlobalVariables.GetHOProblem());
 
         //Instance the HO Game Spell Object
         script.InstanceSpellObject();
