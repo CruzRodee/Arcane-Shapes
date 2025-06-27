@@ -46,19 +46,27 @@ public static class GlobalVariables
 
     // HO variables
 
-    public static List<HOGameBeh.ShapeObject> GetHOProblem()
+    public static List<HOGameBeh.ShapeObject> HOProblem()
     {
         // Define the problem that matches the level
         List<HOGameBeh.ShapeObject> problem = new List<HOGameBeh.ShapeObject>();
         switch (level)
         {
             case 0: //Same problem for level 1 or 0
-            case 1:
-                // Define the "house" shape configuration
+            case 1: // Define the "house" shape configuration
                 //House square walls
                 problem.Add(new HOGameBeh.ShapeObject(4, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -1, 0)));
                 //House roof, must be offset in y axis by house square side length plus some offset
                 problem.Add(new HOGameBeh.ShapeObject(6, 3, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 2, 0)));
+                break;
+            case 2: //Charged Explosion Spell
+                //Cubic mana charge
+                problem.Add(new HOGameBeh.ShapeObject(2, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
+                //Outward triangle arrows
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 2, 0))); //Up
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 2, 0)).tilt(90)); //Right
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)).tilt(-90)); //Left
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 0, 0)).tilt(180)); //Down
                 break;
         }
 

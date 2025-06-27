@@ -71,7 +71,7 @@ public class HOGameBeh : MonoBehaviour
         }
 
         // Set the problem based on HO level
-        SetManualProblem(GlobalVariables.GetHOProblem());
+        SetManualProblem(GlobalVariables.HOProblem());
 
         //Instance the HO Game Spell Object
         script.InstanceSpellObject();
