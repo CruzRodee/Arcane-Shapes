@@ -54,7 +54,9 @@ public class HOGameScript : MonoBehaviour
     private bool isQuit = false;
     private const float TRANSITIONDELAY = 0.5f;
     private List<TMP_Dropdown.OptionData> defaultOptions; //Use for reset
-    private const string correctShapePropmt = "Tama na ba ang shape na pinili?";
+    public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
+                        charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
+                        charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
 
     //----------------------------------------------
     //////////Copied from old repo
@@ -87,7 +89,7 @@ public class HOGameScript : MonoBehaviour
     private Text textAnsSqr;
     private Text textAnsTri;
     private Text manaReq;
-    private Text characterSay;
+    public Text characterSay;
     private Text textFinish;
 
     public Text confirmText;
@@ -371,26 +373,24 @@ public class HOGameScript : MonoBehaviour
         rtSlider.anchoredPosition = new Vector2(-525f, rtSlider.anchoredPosition.y);
     }
 
-    public void toggleDialogueBox()
+    public void ShowDialogue()
     {
-        Vector2 RTAWAYTRANS = new(600f, -100f);
-        Vector2 PDIAAWAYTRANS = new(239, 150);
         Vector2 RTONTRANS = new(600f, 100f);
         Vector2 PDIAONTRANS = new(239, 123);
 
-        if (rtDialogue.anchoredPosition.y == 100)
-        {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
-            // pDialogue.y = -59;
-        }
-        else
-        {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
-            // pDialogue.y = 100; //tago
-        }
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
+        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
     }
+
+    public void HideDialogue()
+    {
+        Vector2 RTAWAYTRANS = new(600f, -100f);
+        Vector2 PDIAAWAYTRANS = new(239, 150);
+
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+    }
+
     private IEnumerator RectTransformOverTime(RectTransform rt, float duration, Vector2 endTransform)
     {
         var startTransform = rt.anchoredPosition;
@@ -428,8 +428,8 @@ public class HOGameScript : MonoBehaviour
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
-            toggleDialogueBox();
-            characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
+            HideDialogue();
+            characterSay.text = charDialogue2;
             manaReq.text = "Katumbas na Mana";
             manaMeasure.gameObject.SetActive(true);
             //slider.gameObject.SetActive(true);
@@ -648,10 +648,13 @@ public class HOGameScript : MonoBehaviour
 
         CalcError();
 
+        //Disable OCR board and formulaDisplay
+        StartCoroutine(SlideOCRBoard(false));
+
         //Play Fill SFX if not final answer
 
         //Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
-        if(Math.Round(Math.Abs(error), 2) != 0f)
+        if (Math.Round(Math.Abs(error), 2) != 0f)
         {
             //Show error if not 0%
             correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
@@ -662,12 +665,7 @@ public class HOGameScript : MonoBehaviour
                 ManaFilling();
 
             //End game stuff
-            toggleDialogueBox(); //hide             
-
             HideNewUI();
-
-            //Disable OCR board and formulaDisplay
-            StartCoroutine(SlideOCRBoard(false));
 
             if(!isFinalAnswer)
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
@@ -701,7 +699,7 @@ public class HOGameScript : MonoBehaviour
             textFinish.text = castBtnText3; // Change cast button Text
 
             //Disable all other buttons for now
-            pDiaButtons.transform.Find("btnBackspace").gameObject.SetActive(false);
+            backspaceButton.SetActive(false);
             calcBtnObj.SetActive(false);
             pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
 
@@ -716,13 +714,8 @@ public class HOGameScript : MonoBehaviour
         //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
         //      Then run the animation
         if (isFinalAnswer)
-        {
-            toggleDialogueBox(); //hide             
-
+        {           
             HideNewUI();
-
-            //Disable OCR board and formulaDisplay
-            StartCoroutine(SlideOCRBoard(false));
 
             //Indicate that the spell casting is done with the error text field
             correctionPerc.text = "Spell Complete!";
@@ -740,6 +733,7 @@ public class HOGameScript : MonoBehaviour
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
         calcBtnObj.SetActive(true);
+        backspaceButton.SetActive(true);
 
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
@@ -758,8 +752,11 @@ public class HOGameScript : MonoBehaviour
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper.ToggleLineText(); //Toggle off
     }
+
+    private bool undoPressed = false;
     public void UndoMeasure()
     {
+        undoPressed = true;
         //Reset line values based on linecount
         if (lineSnapper.lineCount >= 1)
             lineSnapper.value2 = "???";
@@ -788,7 +785,7 @@ public class HOGameScript : MonoBehaviour
         if (show)
         {
             if(!isAllSolved)
-                toggleDialogueBox(); //Show
+                ShowDialogue(); //Show
 
             yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
 
@@ -828,8 +825,19 @@ public class HOGameScript : MonoBehaviour
         else if (!show)
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
-            if(isFinalAnswer)
-                toggleDialogueBox(); //Hide only if final answer
+
+            if(isFinalAnswer || undoPressed)
+            {
+                HideDialogue();
+                undoPressed = false;
+            }
+            else
+            {
+                ShowDialogue();
+
+                if(!isAllSolved)
+                    pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
+            }
 
             backspaceButton.SetActive(false);
         }
@@ -1090,9 +1098,8 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
         lineSnapper.gameObject.SetActive(false);
         if(!isFinalAnswer)
-            characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+            characterSay.text = charDialogue1;
         SetVisibilityNewUI(false, true, false, true);
-        pDiaButtons.SetActive(false); //Disable dialogue buttons
 
         //Disable all formula displays
         pEquationSquare.SetActive(false);
@@ -1113,7 +1120,7 @@ public class HOGameScript : MonoBehaviour
     private void ModifiedToUI()
     {
         lineSnapper.gameObject.SetActive(false);
-        characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+        characterSay.text = charDialogue1;
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);

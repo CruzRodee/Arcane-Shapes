@@ -294,6 +294,9 @@ public class HOGameBeh : MonoBehaviour
 
         //Get the text displays for the selected shape
         script.GetVarDisp(clickData.originalShapeObject.shape);
+
+        //Change Character dialogue on click
+        script.characterSay.text = HOGameScript.charDialogue3;
     }
 
     void OnDestroy()
