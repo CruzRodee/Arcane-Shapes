@@ -81,6 +81,13 @@ public class LS_EventsScript : MonoBehaviour
             else if (GlobalVariables.playerWin && GlobalVariables.level < 3)
                 GlobalVariables.level++; //Level up after win until 3 for LO
 
+            //Prestige/Loop again through HO Levels mechanic
+            if(GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
+            {
+                GlobalVariables.level = 1;
+                savedGame.compPres++;
+            }
+
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
@@ -275,19 +282,19 @@ public class LS_EventsScript : MonoBehaviour
             switch (data.compLvl)
             {
                 case 0:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0];
+                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
                     break;
                 case 1:
                 case 2:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1];
+                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
                     break;
                 case 3:
                 case 4:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2];
+                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
                     break;
                 case 5:
                 case 6:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3];
+                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
                     break;
             }
         }
