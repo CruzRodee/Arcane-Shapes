@@ -651,7 +651,7 @@ public class HOGameScript : MonoBehaviour
         //Play Fill SFX if not final answer
 
         //Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
-        if(error != 0f)
+        if(Math.Round(Math.Abs(error), 2) != 0f)
         {
             //Show error if not 0%
             correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
@@ -1161,7 +1161,7 @@ public class HOGameScript : MonoBehaviour
         //Hide UI elems
         HideNewUI();
 
-        if (error == 0f)
+        if (Math.Round(Math.Abs(error), 2) == 0f)
         {
             animScript.playerScript.GoodCast(SendShapeToPlayer(animScript.compound_main_shapes[GlobalVariables.level]));
             Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
@@ -1201,7 +1201,7 @@ public class HOGameScript : MonoBehaviour
     private void EndGameFunctions() //Function for saving data to save maybe? Also transitioning back to level select
     {
         // Save requisite data
-        if (error == 0f)
+        if (Math.Round(Math.Abs(error), 2) == 0f)
         {
             GlobalVariables.playerWin = true;
             if (GlobalVariables.level < 3) //Reset on level up

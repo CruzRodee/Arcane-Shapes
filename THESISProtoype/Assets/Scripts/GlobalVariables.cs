@@ -68,15 +68,7 @@ public static class GlobalVariables
                 problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)).tilt(-90)); //Left
                 problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 0, 0)).tilt(180)); //Down
                 break;
-            case 3: //Holy Halo
-                //Inner negative ring
-                problem.Add(new HOGameBeh.ShapeObject(6f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
-                problem[0].isExcess = true;
-                //Outer Positive Ring
-                problem.Add(new HOGameBeh.ShapeObject(8f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
-                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected last
-                break;
-            case 4: //Cubic Barrier
+            case 3: //Cubic Barrier
                 //Intersection
                 problem.Add(new HOGameBeh.ShapeObject(5, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
                 problem[0].isIntersect = true;
@@ -86,6 +78,14 @@ public static class GlobalVariables
                 //Square2
                 problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
                 problem[2].zOffset = 0.1f; //offset away camera slightly to be selected later
+                break;
+            case 4: //Holy Halo
+                //Inner negative ring
+                problem.Add(new HOGameBeh.ShapeObject(6f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[0].isExcess = true;
+                //Outer Positive Ring
+                problem.Add(new HOGameBeh.ShapeObject(8f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected last
                 break;
             case 5: //Thor Hammer
                 //Hammer head
@@ -105,6 +105,26 @@ public static class GlobalVariables
                 //Pommel intersect
                 problem.Add(new HOGameBeh.ShapeObject(2f, 1f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
                 problem[5].isIntersect = true;
+                break;
+            case 6: //Time Stop
+                //Outer Dome Semi circle and rect Floot
+                problem.Add(new HOGameBeh.ShapeObject(16, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[0].zOffset = 0.8f;
+                problem.Add(new HOGameBeh.ShapeObject(16, 1, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -4, 0)));
+                problem[1].zOffset = 0.8f;
+                //Inner Dome void Semi circle
+                problem.Add(new HOGameBeh.ShapeObject(14, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[2].isExcess = true;
+                problem[2].zOffset = 0.6f;
+                //Outer Clock wall circle
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[3].zOffset = 0.4f;
+                //Inner clock wall void circle
+                problem.Add(new HOGameBeh.ShapeObject(5, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[4].zOffset = 0.2f;
+                problem[4].isExcess = true;
+                //Minute hand pointing at 12 rect
+                problem.Add(new HOGameBeh.ShapeObject(2f, 3.0f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
                 break;
         }
 
