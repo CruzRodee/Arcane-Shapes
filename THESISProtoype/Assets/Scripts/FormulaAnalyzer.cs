@@ -544,7 +544,12 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             // Formula input mode
             if (evalString.Length > 0)
-                evalString = evalString.Substring(0, evalString.Length - 1);
+            {
+                if(evalString.Last() == 'i') //Special Case for pi, two backspaces here instead of 1 due to being two chars
+                    evalString = evalString.Substring(0, evalString.Length - 2);
+                else
+                    evalString = evalString.Substring(0, evalString.Length - 1);
+            }  
 
             if (displayString.Length > 0)
                 displayString = displayString.Substring(0, displayString.Length - 1);

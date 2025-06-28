@@ -1333,7 +1333,7 @@ public class HOGameScript : MonoBehaviour
 
     public void InstanceSpellObject(GameObject instanced = null)
     {
-        if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level < 6)
+        if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level <= 6)
         {
             instanced = animScript.compound_levels[GlobalVariables.level];
         }
