@@ -87,6 +87,25 @@ public static class GlobalVariables
                 problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
                 problem[2].zOffset = 0.1f; //offset away camera slightly to be selected later
                 break;
+            case 5: //Thor Hammer
+                //Hammer head
+                problem.Add(new HOGameBeh.ShapeObject(6f, 4f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 3, 0)));
+                problem[0].zOffset = 0.2f;
+                //Lightning sign
+                problem.Add(new HOGameBeh.ShapeObject(1f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(-1, 3, 0)));
+                problem.Add(new HOGameBeh.ShapeObject(1f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(1, 3, 0)).tilt(180));
+                problem[1].isExcess = true;
+                problem[2].isExcess = true;
+                //Handle
+                problem.Add(new HOGameBeh.ShapeObject(2f, 4f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -1, 0)));
+                problem[3].zOffset = 0.4f;
+                //Semicircle pommel
+                problem.Add(new HOGameBeh.ShapeObject(4, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -2, 0)).tilt(180));
+                problem[4].zOffset = 0.2f;
+                //Pommel intersect
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[5].isIntersect = true;
+                break;
         }
 
         return problem; //Return the problem that is equal to the game level
