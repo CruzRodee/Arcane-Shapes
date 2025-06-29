@@ -57,6 +57,9 @@ public class HOGameScript : MonoBehaviour
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
                         charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
                         charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
+    private const string areaDisplayText1 = "Area ng mga hugis:\n";
+    public GameObject areaDisplayObj;
+    private TextMeshProUGUI areaDisplay;
 
     //----------------------------------------------
     //////////Copied from old repo
@@ -101,7 +104,7 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationCircle;
 
 
-    private Dictionary<GameObject, float> recordedAnswer = new Dictionary<GameObject, float>();
+    private Dictionary<HOGameBeh.ShapeObject, float> recordedAnswer = new Dictionary<HOGameBeh.ShapeObject, float>();
     private GameObject currentlySolvedShape = null;
     private HOGameBeh.ShapeObject currentShapeObject = null;
 
@@ -167,6 +170,10 @@ public class HOGameScript : MonoBehaviour
 
         //Disable calcBtn
         calcBtnObj.SetActive(false);
+
+        //Get area display text
+        areaDisplay = areaDisplayObj.GetComponent<TextMeshProUGUI>();
+        areaDisplayObj.SetActive(false);
     }
 
     //Function for getting the text objects for displaying the line lengths
@@ -641,9 +648,9 @@ public class HOGameScript : MonoBehaviour
         if(!isFinalAnswer) //Only record if not final answer mode
         {
             if (!currentShapeObject.isExcess) //Positive Area
-                recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+                recordedAnswer.Add(currentShapeObject, inputAnswer);
             else if (currentShapeObject.isExcess) //Negative Area
-                recordedAnswer.Add(currentlySolvedShape, -inputAnswer);
+                recordedAnswer.Add(currentShapeObject, -inputAnswer);
         }
 
         CalcError();
@@ -1111,8 +1118,27 @@ public class HOGameScript : MonoBehaviour
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
-            foreach (float answer in recordedAnswer.Values)
-                Debug.Log("Size: " + answer + "\n");
+            //Display the areas in SolvedAreaDisplay
+            areaDisplayObj.SetActive(true);
+            areaDisplay.text = areaDisplayText1;
+            string currDisplay = "";
+
+            int i = 0;
+            const int n = 1;
+            foreach (var dict in recordedAnswer)
+            {
+                i++;
+                currDisplay = areaDisplay.text; //Get current text
+                areaDisplay.text = currDisplay + $"[{dict.Key.shape}]: {dict.Value} "; //Add shape and area
+                Debug.Log("Size: " + dict.Value);
+
+                //New line every n shapes
+                if(i%n == 0)
+                {
+                    currDisplay = areaDisplay.text; //Get current text
+                    areaDisplay.text = currDisplay + '\n'; //Add line break
+                }
+            }  
         }
 
     }
@@ -1462,6 +1488,9 @@ public class HOGameScript : MonoBehaviour
         pDialogue.SetActive(false);
         panelMagicScroll.SetActive(false);
         quickMenu.SetActive(false);
+
+        //Deactivate AreaDisplay
+        areaDisplayObj.SetActive(false);
     }
     private void SetVisibilityNewUI(bool a, bool b, bool c, bool d)
     {
