@@ -297,6 +297,9 @@ public class HOGameBeh : MonoBehaviour
 
         //Change Character dialogue on click
         script.characterSay.text = HOGameScript.charDialogue3;
+
+        //Play select sound
+        script.soundPlayer.PlaySFX(2, 1, 2f);
     }
 
     void OnDestroy()

@@ -1754,6 +1754,56 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89895417b93d0264dae182dff8788db3, type: 3}
+--- !u!1 &1144530940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1144530941}
+  - component: {fileID: 1144530942}
+  m_Layer: 0
+  m_Name: SoundPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1144530941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144530940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1144530942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144530940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9382f64baae5fdd479a059c8b374bf53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxSet:
+  - {fileID: 8300000, guid: 6110f14ce379a314abb020193fbdf43f, type: 3}
+  - {fileID: 8300000, guid: 1c416732690f3254fa60b979bb2f0779, type: 3}
+  - {fileID: 8300000, guid: c0de24f242379ab4285d07a0d04f510e, type: 3}
+  - {fileID: 8300000, guid: 275328a76ce2a6a48991ff45e5591cdd, type: 3}
+  - {fileID: 8300000, guid: 1f08a0adc280fc4409980c83be4ca0f4, type: 3}
 --- !u!1 &1151082727
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,6 +2567,7 @@ MonoBehaviour:
   triVarDisp2: {fileID: 1491798896}
   cirVarDisp1: {fileID: 1491798895}
   semiVarDisp1: {fileID: 1491798894}
+  soundPlayerObj: {fileID: 1144530940}
   hoGameBeh: {fileID: 1934672893}
 --- !u!4 &1934672892
 Transform:
@@ -3905,3 +3956,4 @@ SceneRoots:
   - {fileID: 862825195}
   - {fileID: 2062185996}
   - {fileID: 213484972}
+  - {fileID: 1144530941}

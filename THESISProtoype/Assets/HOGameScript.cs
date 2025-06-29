@@ -139,7 +139,9 @@ public class HOGameScript : MonoBehaviour
     public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
     private GameObject var1Display, var2Display; //Variables for determining which ones will be modified
 
-
+    //Sound related stuff
+    public GameObject soundPlayerObj;
+    public GameLevelSoundPlayer soundPlayer;
 
     public HOGameBeh hoGameBeh;
 
@@ -658,8 +660,6 @@ public class HOGameScript : MonoBehaviour
         //Disable OCR board and formulaDisplay
         StartCoroutine(SlideOCRBoard(false));
 
-        //Play Fill SFX if not final answer
-
         //Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
         if (Math.Round(Math.Abs(error), 2) != 0f)
         {
@@ -679,12 +679,18 @@ public class HOGameScript : MonoBehaviour
             else
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
 
+            //Play Error SFX
+            soundPlayer.PlaySFX(3, 1, 2f);
+
             return; //Just in case it decides to run the code after
         }
 
         //More stuff to only do when not in final answer
         if (!isFinalAnswer)
         {
+            //Play Fill SFX if not final answer
+            soundPlayer.PlaySFX(1, 1, 0.75f);
+
             hoGameBeh.shapeClickManager.EnableShapeClicking();
 
             //Make solved shape unclickable
@@ -729,7 +735,8 @@ public class HOGameScript : MonoBehaviour
 
             correctionPerc.gameObject.SetActive(true);
 
-            //TODO: Maybe play a new spell complete SFX since the mana filling is done?
+            //Play a new spell complete SFX since the mana filling is done?
+            soundPlayer.PlaySFX(4, 1, 1.5f);
 
             Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
         }
@@ -946,6 +953,9 @@ public class HOGameScript : MonoBehaviour
 
             //Except Hud
             hud.SetActive(true);
+
+            //Get sound player script, do on start since component init is at Awake()
+            soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
         text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
@@ -1480,6 +1490,12 @@ public class HOGameScript : MonoBehaviour
         Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
         //Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
+        Invoke(nameof(PlayMusic), TRANSITIONTIME);
+    }
+
+    private void PlayMusic()
+    {
+        soundPlayer.PlayBGM(0, 1, 0.4f);
     }
 
     private void HideNewUI()
