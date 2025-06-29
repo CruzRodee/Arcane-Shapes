@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Linq;
 
 
 
@@ -53,7 +54,9 @@ public class HOGameScript : MonoBehaviour
     private bool isQuit = false;
     private const float TRANSITIONDELAY = 0.5f;
     private List<TMP_Dropdown.OptionData> defaultOptions; //Use for reset
-    private const string correctShapePropmt = "Tama na ba ang shape na pinili?";
+    public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
+                        charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
+                        charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
 
     //----------------------------------------------
     //////////Copied from old repo
@@ -86,7 +89,7 @@ public class HOGameScript : MonoBehaviour
     private Text textAnsSqr;
     private Text textAnsTri;
     private Text manaReq;
-    private Text characterSay;
+    public Text characterSay;
     private Text textFinish;
 
     public Text confirmText;
@@ -100,6 +103,7 @@ public class HOGameScript : MonoBehaviour
 
     private Dictionary<GameObject, float> recordedAnswer = new Dictionary<GameObject, float>();
     private GameObject currentlySolvedShape = null;
+    private HOGameBeh.ShapeObject currentShapeObject = null;
 
     private string currentShapeToSolve;
     private string chosenShape;
@@ -107,6 +111,7 @@ public class HOGameScript : MonoBehaviour
 
     private const string castBtnText1 = "Cast Spell";
     private const string castBtnText2 = "Redo Input";
+    private const string castBtnText3 = "Finish Spell";
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
     private DrawingAndOCRManagerScript ocrScript;
@@ -121,6 +126,9 @@ public class HOGameScript : MonoBehaviour
     public GameObject calcBtnObj;
     private Text calcBtnText;
     public GameObject backspaceButton;
+
+    public bool isFinalAnswer = false;
+    private bool isAllSolved = false;
 
     //----------------------------------------------
 
@@ -159,9 +167,13 @@ public class HOGameScript : MonoBehaviour
 
         //Disable calcBtn
         calcBtnObj.SetActive(false);
+    }
 
+    //Function for getting the text objects for displaying the line lengths
+    public void GetVarDisp(GameBehaviour.SHAPES shape)
+    {
         //Get the text objects that will be used to display the line lengths of the shape
-        switch (GlobalVariables.loSelectedShape)
+        switch (shape)
         {
             case GameBehaviour.SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
@@ -251,10 +263,10 @@ public class HOGameScript : MonoBehaviour
 
     }
 
-    private void InitFillShape()
-    {
-        shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
-    }
+    //private void InitFillShape()
+    //{
+    //    shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
+    //}
 
     private void InitProblem()
     {
@@ -361,26 +373,24 @@ public class HOGameScript : MonoBehaviour
         rtSlider.anchoredPosition = new Vector2(-525f, rtSlider.anchoredPosition.y);
     }
 
-    public void toggleDialogueBox()
+    public void ShowDialogue()
     {
-        Vector2 RTAWAYTRANS = new(600f, -100f);
-        Vector2 PDIAAWAYTRANS = new(239, 150);
         Vector2 RTONTRANS = new(600f, 100f);
         Vector2 PDIAONTRANS = new(239, 123);
 
-        if (rtDialogue.anchoredPosition.y == 100)
-        {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
-            // pDialogue.y = -59;
-        }
-        else
-        {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
-            // pDialogue.y = 100; //tago
-        }
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
+        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
     }
+
+    public void HideDialogue()
+    {
+        Vector2 RTAWAYTRANS = new(600f, -100f);
+        Vector2 PDIAAWAYTRANS = new(239, 150);
+
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+    }
+
     private IEnumerator RectTransformOverTime(RectTransform rt, float duration, Vector2 endTransform)
     {
         var startTransform = rt.anchoredPosition;
@@ -418,8 +428,8 @@ public class HOGameScript : MonoBehaviour
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
-            toggleDialogueBox();
-            characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
+            HideDialogue();
+            characterSay.text = charDialogue2;
             manaReq.text = "Katumbas na Mana";
             manaMeasure.gameObject.SetActive(true);
             //slider.gameObject.SetActive(true);
@@ -560,6 +570,12 @@ public class HOGameScript : MonoBehaviour
 
     public void onCast()
     {
+        // Modified function if all shapes solved
+        if (isAllSolved)
+        {
+            DoneMeasure();
+        }
+        
         //added NTS
         if (!isDoneMeasuring)    //pag mag sslider plang
         {
@@ -598,42 +614,126 @@ public class HOGameScript : MonoBehaviour
         ocrScript.ResetVFX();
     }
 
+    private void ManaFilling()
+    {
+        //Attach new shapeFiller to target shape and activate it
+        ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
+
+        //Fill shape with mana, fill excess with void
+        if(!currentShapeObject.isExcess)
+            currFiller.fillMaterial = shapeFiller.fillMaterial;
+        else if(currentShapeObject.isIntersect)
+            currFiller.fillMaterial = shapeFiller.intersectMaterial;
+        else if (currentShapeObject.isExcess)
+            currFiller.fillMaterial = shapeFiller.voidMaterial;
+
+        currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+        currFiller.isFillingActive = true;
+
+        //Hide shape
+        currentlySolvedShape.GetComponent<Renderer>().enabled = false;
+    }
+
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
 
-        recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+        if(!isFinalAnswer) //Only record if not final answer mode
+        {
+            if (!currentShapeObject.isExcess) //Positive Area
+                recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+            else if (currentShapeObject.isExcess) //Negative Area
+                recordedAnswer.Add(currentlySolvedShape, -inputAnswer);
+        }
 
-        toggleDialogueBox(); //hide                  
-
-        HideNewUI();
+        CalcError();
 
         //Disable OCR board and formulaDisplay
         StartCoroutine(SlideOCRBoard(false));
 
-        CalcError();
+        //Play Fill SFX if not final answer
 
-        //correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
-        //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
+        //Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
+        if (Math.Round(Math.Abs(error), 2) != 0f)
+        {
+            //Show error if not 0%
+            correctionPerc.text = "Error: " + Math.Round(Math.Abs(error), 2) + "%";
 
-        correctionPerc.gameObject.SetActive(true); //Show error
+            correctionPerc.gameObject.SetActive(true);
 
-        hoGameBeh.shapeClickManager.EnableShapeClicking();
-        hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+            if (!isFinalAnswer)
+                ManaFilling();
+
+            //End game stuff
+            HideNewUI();
+
+            if(!isFinalAnswer)
+                Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
+            else
+                Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
+
+            return; //Just in case it decides to run the code after
+        }
+
+        //More stuff to only do when not in final answer
+        if (!isFinalAnswer)
+        {
+            hoGameBeh.shapeClickManager.EnableShapeClicking();
+
+            //Make solved shape unclickable
+            currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
+
+            ManaFilling();
+
+            hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+        }       
 
         ModifiedToUIAgain();
-        //Invoke(nameof(ModifiedToUIAgain), FILLTIMEAPROX * 2);
-        //Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
 
+        //If all simple shapes have been solved, show cast button and modify it to be a "Finish Spell" button for final input
+        if (hoGameBeh.isAllAttemptedSolve())
+        {
+            // Show and Modify Cast button functions
+            pDiaButtons.SetActive(true); //Enable the buttons
+            pDiaButtons.transform.Find("btnCast").gameObject.SetActive(true); //Enable cast button
+            textFinish.text = castBtnText3; // Change cast button Text
 
+            //Disable all other buttons for now
+            backspaceButton.SetActive(false);
+            calcBtnObj.SetActive(false);
+            pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
+
+            // Set flag that confirms all shapes solved
+            isAllSolved = true;
+
+            //change dialogue text to say that the final area needs to be calculated if final answer
+            characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
+            //No need to reactivate undo button since not used any longer
+        }
+
+        //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
+        //      Then run the animation
+        if (isFinalAnswer)
+        {           
+            HideNewUI();
+
+            //Indicate that the spell casting is done with the error text field
+            correctionPerc.text = "Spell Complete!";
+
+            correctionPerc.gameObject.SetActive(true);
+
+            //TODO: Maybe play a new spell complete SFX since the mana filling is done?
+
+            Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
+        }
     }
 
     public void DoneMeasure()
     {
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
-        if (GlobalVariables.level < 3)
-            calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
+        calcBtnObj.SetActive(true);
+        backspaceButton.SetActive(true);
 
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
@@ -642,16 +742,21 @@ public class HOGameScript : MonoBehaviour
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper.value2;
 
-        //OLD SLIDER CODE
-        //toggleSlider();
-        //slider.gameObject.SetActive(true);
+        //Set flag for fa to be in final answer mode (doesn't check if it is a valid shape formula just any valid formula)
+        if (isAllSolved)
+        {
+            fa.isCompoundArea = true;
+        }
 
         //NEW OCR SHOW CODE
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper.ToggleLineText(); //Toggle off
     }
+
+    private bool undoPressed = false;
     public void UndoMeasure()
     {
+        undoPressed = true;
         //Reset line values based on linecount
         if (lineSnapper.lineCount >= 1)
             lineSnapper.value2 = "???";
@@ -679,7 +784,8 @@ public class HOGameScript : MonoBehaviour
     {
         if (show)
         {
-            toggleDialogueBox(); //Show
+            if(!isAllSolved)
+                ShowDialogue(); //Show
 
             yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
 
@@ -719,7 +825,19 @@ public class HOGameScript : MonoBehaviour
         else if (!show)
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
-            toggleDialogueBox(); //Hide
+
+            if(isFinalAnswer || undoPressed)
+            {
+                HideDialogue();
+                undoPressed = false;
+            }
+            else
+            {
+                ShowDialogue();
+
+                if(!isAllSolved)
+                    pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
+            }
 
             backspaceButton.SetActive(false);
         }
@@ -823,27 +941,6 @@ public class HOGameScript : MonoBehaviour
             hud.SetActive(true);
         }
 
-        //UnityEngine.Debug.Log(dropdown);
-
-
-        //removed listeners
-        // restart = GameObject.Find("Restart").GetComponent<Button>();
-        // restart.onClick.AddListener(() =>
-        // {
-        //     SceneManager.LoadScene("GameLevelScene_v1"); // Reload scene to avoid problems (Lazy and slightly slow but eh...)
-        // });
-        // quit.onClick.AddListener(() => {
-        //     error = 100f; //Prevent accidental saving due to 0f error
-        //     screenFadeAnimator.SetTrigger("sceneOut");
-        //     Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
-        // });
-
-        // dropdown = GameObject.Find("Dropdown").GetComponent<TMP_Dropdown>();
-        // CopyOptions(defaultOptions, dropdown.options); //Store these for reset
-        // dropdown.value = 0;
-        // dropdown.RefreshShownValue();
-        // dropdown.onValueChanged.AddListener(OnOptionSelect);
-
         text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
         text.text = "";
         manaMeasure = GameObject.Find("ManaValue").GetComponent<TMP_Text>();
@@ -873,29 +970,6 @@ public class HOGameScript : MonoBehaviour
 
         StartCoroutine(WaitForComponent());
 
-        /* //Changing grid snapping seems unusable so disaple this code
-        //Set grid sizes based on difficulty ?? Not really working
-        switch (GlobalVariables.level)
-        {
-            case 0:
-            case 1: //Needs to be changed to whole numbers later maybe
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                break;
-            case 2:
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                break;
-            case 3:
-                lineSnapper.gridSystem.majorGridSize = 2.0f;
-                lineSnapper.gridSystem.minorGridSize = 1.0f;
-                //lineSnapper.SNAP_INTERVAL = 0.5f;
-                break;
-            default:
-                Debug.Log("ERROR: Invalid level(Gamebehaviour)");
-                break;
-        }
-        */
         Debug.Log("Level: " + GlobalVariables.level);
 
         uiMaterial = Resources.Load<Material>("Materials/UI_Material");
@@ -919,96 +993,6 @@ public class HOGameScript : MonoBehaviour
         {
             lineSnapper.OnUndoPressed();
         });
-
-        slider.onValueChanged.AddListener((value) =>
-        {
-            manaMeasure.text = value.ToString();
-            if (chosenShape == "TRIANGLE")
-            {
-                textAnsTri.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SQUARE")
-            {
-                textAnsSqr.text = manaMeasure.text;
-            }
-            else if (chosenShape == "RECTANGLE")
-            {
-                textAnsRect.text = manaMeasure.text;
-            }
-            else if (chosenShape == "CIRCLE")
-            {
-                textAnsCir.text = manaMeasure.text;
-            }
-            else if (chosenShape == "SEMI_CIRCLE")
-            {
-                textAnsSC.text = manaMeasure.text;
-            }
-
-            // TODO: make slider rounding change based on level?
-            slider.value = Mathf.Round(value * 10f) / 10f;  // Rounds to nearest 0.1
-
-            //Change fill value
-            shapeFiller.fillMaxValue = spellCastEvent.GetFillPercentage();
-
-            //Check if area match
-            CalcError();
-            if (error == 0f)
-                shapeFiller.isPerfectMatch = true;
-            else
-                shapeFiller.isPerfectMatch = false;
-
-            shapeFiller.isFillingActive = true;
-        });
-
-
-
-        //CHANGES: removed listeners
-        // yesButton.onClick.AddListener(() =>
-        // {
-        //     yesButton.gameObject.SetActive(false);
-        //     noButton.gameObject.SetActive(false);
-
-        //     if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
-        //     {
-        //         text.text = GlobalVariables.ShapeFormulaText(this.spellCastEvent.problem.problemShape);
-
-        //         manaMeasure.gameObject.SetActive(true);
-        //         //slider.gameObject.SetActive(true);
-        //         //confirmMeasurement.gameObject.SetActive(true);
-        //         //correctionPerc.gameObject.SetActive(true);
-        //         // dropdown.gameObject.SetActive(false);
-        //         lineSnapper.gameObject.SetActive(true);
-        //         undo.gameObject.SetActive(true);
-        //         text.gameObject.SetActive(true); //Reactivate if not active
-        //     }
-        //     else
-        //     {
-        //         text.gameObject.SetActive(true); //Reactivate if not active
-        //         text.text = "Ang shape na pinili ay mali. Subukan ulit.";
-
-        //         //Play shake head anim
-        //         animScript.playerScript.BadTrace();
-        //     }
-        // });
-
-        // confirmMeasurement.onClick.AddListener(() =>
-        // {
-        //     CalcError();
-        //     correctionPerc.text = "Incorrectness: " +  Math.Abs(error) + "%";
-        //     //shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
-
-        //     correctionPerc.gameObject.SetActive(true); //Show error
-
-        //     Invoke(nameof(CallCastAnimation), FILLTIMEAPROX);
-        // });
-
-        // noButton.onClick.AddListener(() =>
-        // {
-        //     yesButton.gameObject.SetActive(false);
-        //     noButton.gameObject.SetActive(false);
-        // });
-
-        // //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
         changeCameraButton.onClick.AddListener(() =>
         {
@@ -1113,8 +1097,17 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
         lineSnapper.gameObject.SetActive(false);
-        characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+        if(!isFinalAnswer)
+            characterSay.text = charDialogue1;
         SetVisibilityNewUI(false, true, false, true);
+
+        //Disable all formula displays
+        pEquationSquare.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationTriangle.SetActive(false);
+        pEquationCircle.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        manaReq.text = ""; //Also clear this out
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
@@ -1127,7 +1120,7 @@ public class HOGameScript : MonoBehaviour
     private void ModifiedToUI()
     {
         lineSnapper.gameObject.SetActive(false);
-        characterSay.text = "Kailangan ko pumili ang hugis na aking sasagutin";
+        characterSay.text = charDialogue1;
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);
@@ -1144,8 +1137,9 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.spellCastEvent.setHiddenStateAllShapes(true);
         GlobalVariables.loSelectedShape = clickData.shapeType;
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
+        currentShapeObject = clickData.originalShapeObject;
         SetManualProblem(clickData);
-        Invoke(nameof(InitFillShape), 0.2f);
+        //InitFillShape();
         //ShowNewUI();
         SetVisibilityNewUI(false, true, true, true);
     }
@@ -1174,9 +1168,9 @@ public class HOGameScript : MonoBehaviour
         //Hide UI elems
         HideNewUI();
 
-        if (error == 0f)
+        if (Math.Round(Math.Abs(error), 2) == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(currentShape));
+            animScript.playerScript.GoodCast(SendShapeToPlayer(animScript.compound_main_shapes[GlobalVariables.level]));
             Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
             //Call function to display a level complete/retry screen
 
@@ -1214,7 +1208,7 @@ public class HOGameScript : MonoBehaviour
     private void EndGameFunctions() //Function for saving data to save maybe? Also transitioning back to level select
     {
         // Save requisite data
-        if (error == 0f)
+        if (Math.Round(Math.Abs(error), 2) == 0f)
         {
             GlobalVariables.playerWin = true;
             if (GlobalVariables.level < 3) //Reset on level up
@@ -1231,7 +1225,6 @@ public class HOGameScript : MonoBehaviour
         if (!isQuit) // Only activate flags if not quitting
         {
             GlobalVariables.gameFinished = true; //Set flag to save data
-            GlobalVariables.isLOGame = true; //Flag game as LO game
         }
 
         //TRANSITION TO LEVEL SELECT SCREEN AGAIN
@@ -1327,13 +1320,6 @@ public class HOGameScript : MonoBehaviour
         public GameBehaviour.SHAPES problemShape;
         public float p_measure = UNUSED;
         public float s_measure = UNUSED;
-        private float offX = 0, offY = 0;
-        private const float LVL3XOFF = 1.75f;
-        private const float LVL3YOFF = 1.75f;
-
-        int minLimitXY = 3;
-        int limitXY = 8;
-
 
         public HOGameScript main;
         public GameObject problemObjectShape;
@@ -1349,129 +1335,15 @@ public class HOGameScript : MonoBehaviour
             problemObjectShape = shapeProblem;
             this.p_measure = x;
             this.s_measure = y;
-
-
-            /*if (x == -1 && y == -1)
-            {
-                Debug.Log("Random Problem!");
-                switch (this.problemShape)
-                {
-                    case GameBehaviour.SHAPES.SQUARE:
-                        p_measure = rand.Next(minLimitXY, limitXY);
-                        problemObjectShape = this.main.shapeGenerator.CreateSquare(new Vector2(0, 0), p_measure);
-                        break;
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        p_measure = rand.Next(minLimitXY, limitXY);
-                        s_measure = rand.Next(minLimitXY, limitXY);
-                        problemObjectShape = this.main.shapeGenerator.CreateTriangle(new Vector2(0, 0), p_measure, s_measure);
-                        break;
-                    case GameBehaviour.SHAPES.CIRCLE:
-                        p_measure = rand.Next(minLimitXY, limitXY);
-                        problemObjectShape = this.main.shapeGenerator.CreateCircle(new Vector2(0, 0), p_measure, false);
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        while (p_measure == s_measure)
-                        {
-                            p_measure = rand.Next(minLimitXY, limitXY);
-                            s_measure = rand.Next(minLimitXY, limitXY);
-                        }
-                        problemObjectShape = this.main.shapeGenerator.CreateRectangle(new Vector2(0, 0), p_measure, s_measure);
-                        break;
-                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                        p_measure = rand.Next(minLimitXY, limitXY);
-                        problemObjectShape = this.main.shapeGenerator.CreateCircle(new Vector2(0, 0), p_measure, true);
-                        break;
-                    default:
-                        break;
-                        //throw this shit 
-                }
-            }
-
-            else
-            {
-                Debug.Log("Manual Problem!");
-
-                p_measure = x;
-                s_measure = y;
-
-                *//* Broken code so disable
-                if (GlobalVariables.level >= 3) // Offset for lvl3 LO
-                {
-                    offX = -(p_measure / LVL3XOFF);
-                    offY = -(s_measure / LVL3YOFF);
-                }
-                *//*
-
-                Debug.Log("p_measure: " + p_measure + " | s_measure: " + s_measure);
-
-                switch (this.problemShape)
-                {
-                    case GameBehaviour.SHAPES.SQUARE:
-                        problemObjectShape = this.main.shapeGenerator.CreateSquare(new Vector2(offX, offY), p_measure);
-                        break;
-                    case GameBehaviour.SHAPES.TRIANGLE:
-                        problemObjectShape = this.main.shapeGenerator.CreateTriangle(new Vector2(offX, offY), p_measure, s_measure);
-                        break;
-                    case GameBehaviour.SHAPES.CIRCLE:
-                        problemObjectShape = this.main.shapeGenerator.CreateCircle(new Vector2(0, 0), p_measure, false);
-                        break;
-                    case GameBehaviour.SHAPES.RECTANGLE:
-                        problemObjectShape = this.main.shapeGenerator.CreateRectangle(new Vector2(offX, offY), p_measure, s_measure);
-                        break;
-                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                        problemObjectShape = this.main.shapeGenerator.CreateCircle(new Vector2(0, 0), p_measure, true);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-*/
-
         }
     }
 
-    private void ActivateSpell(GameBehaviour.SHAPES s, GameObject instanced = null)
+    public void InstanceSpellObject(GameObject instanced = null)
     {
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        int limit = 0;
-
-        if (instanced.IsUnityNull())
+        if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level <= 6)
         {
-            switch (s)
-            {
-                case GameBehaviour.SHAPES.SQUARE:
-                    limit = animScript.square_Levels.Length;
-                    instanced = animScript.square_Levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.RECTANGLE:
-                    limit = animScript.rectangle_levels.Length;
-                    instanced = animScript.rectangle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.TRIANGLE:
-                    limit = animScript.triangle_levels.Length;
-                    instanced = animScript.triangle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.CIRCLE:
-                    limit = animScript.circle_levels.Length;
-                    instanced = animScript.circle_levels[rand.Next(0, limit)];
-                    break;
-                case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[rand.Next(0, limit)];
-                    break;
-                default:
-                    UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
-                    //TEMPLATE
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[4];
-                    break;
-            }
+            instanced = animScript.compound_levels[GlobalVariables.level];
         }
-
-        //VFX
-        if (!STARTUP)
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform);
 
         //SPELL
         Instantiate(instanced, GameObject.Find("SpellOrigin").transform);
@@ -1499,6 +1371,16 @@ public class HOGameScript : MonoBehaviour
         public float GetFillPercentage()
         {
             double result;
+
+            if (main.isFinalAnswer) //Base answer in the sum of all values of recordedAnswer
+            {
+                float x = main.recordedAnswer.Values.Sum();
+                float y = main.inputAnswer;
+
+                Debug.Log("Answer: " + x);
+
+                return y / x;
+            }
 
             switch (this.problem.problemShape)
             {
@@ -1609,47 +1491,7 @@ public class HOGameScript : MonoBehaviour
         currentShape = data.shapeType;
 
         Problem problem = new Problem(currentShape, this, data.originalShapeObject.actualShapeObj, data.originalShapeObject.x, data.originalShapeObject.y);
-        /*      System.Random random;
-              if (setSeed != -1)
-              {
-                  random = new System.Random(setSeed);
-              }
-              else
-              {
-                  random = new System.Random((int)DateTime.Now.Ticks);
-              }
 
-              double result;
-
-              switch (problem.problemShape)
-              {
-                  case GameBehaviour.SHAPES.TRIANGLE:
-                      result = (0.5 * problem.p_measure * problem.s_measure);
-                      break;
-                  case GameBehaviour.SHAPES.CIRCLE:
-                      result = (Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                      break;
-                  case GameBehaviour.SHAPES.RECTANGLE:
-                      result = (problem.p_measure * problem.s_measure);
-                      break;
-                  case GameBehaviour.SHAPES.SQUARE:
-                      result = Math.Pow(problem.p_measure, 2);
-                      break;
-                  case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                      result = (0.5 * Math.PI * Math.Pow(problem.p_measure / 2, 2));
-                      break;
-                  default:
-                      throw new Exception("Invalid shape");
-                      //throw this shit 
-              }
-
-              //DEBUG
-              Debug.Log("Result: " + Math.Round(result, 2));
-
-              slider.maxValue = (int)Math.Round(result * (1.5 + 0.5 * random.NextDouble()));*/
         this.spellCastEvent = new SpellCastEvent(this, problem);
-
-        //Instantiate Spell Animation
-        ActivateSpell(currentShape);
     }
 }

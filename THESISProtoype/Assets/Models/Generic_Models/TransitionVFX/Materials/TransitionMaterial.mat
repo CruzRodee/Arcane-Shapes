@@ -52,6 +52,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _GradientNoiseScale: 10
+    - _QueueControl: 0
+    - _QueueOffset: 0
     - _SimpleNoiseScale: 5000
     m_Colors:
     - _BaseColor: {r: 0, g: 0.47058815, b: 1, a: 1}

@@ -26,6 +26,7 @@ public class FormulaAnalyzer : MonoBehaviour
     public bool DEBUG_RESET = false; //Used for restarting everything for testing
     public bool calcMode = false; //Flag for calculator mode so that it spits out the answer
     private bool isLOGame = true; //Boolean that determins if game is LO or HO
+    public bool isCompoundArea = false; //Flag for determining if inputting an HO final answer and disables shape verification
 
     public GameObject gbHolder; //Object that holds GB
     private GameBehaviour gb; //Reference to GB script, assign this during Start()
@@ -257,6 +258,11 @@ public class FormulaAnalyzer : MonoBehaviour
                         {
                             gb.NotifyInvalidFormula();
                         }
+                        //Notify hgb of invalid formula
+                        if (hgb != null)
+                        {
+                            hgb.NotifyInvalidFormula();
+                        }
                     }
                 }
                 else if (equMode)
@@ -284,6 +290,11 @@ public class FormulaAnalyzer : MonoBehaviour
                     if (gb != null)
                     {
                         gb.NotifyMismatchedAnswer();
+                    }
+                    //Notify hgb of invalid answer
+                    if (hgb != null)
+                    {
+                        hgb.NotifyMismatchedAnswer();
                     }
                 }
                 break;
@@ -336,6 +347,9 @@ public class FormulaAnalyzer : MonoBehaviour
             {
                 if (hgb != null)
                 {
+                    if(isCompoundArea) //Flag as final answer if sending valid compound area
+                        hgb.isFinalAnswer = true;
+
                     hgb.InputAnswer(float.Parse(inputAnswer));
                     return true;
                 }
@@ -416,15 +430,16 @@ public class FormulaAnalyzer : MonoBehaviour
             isValidFormula = false; //Formula not valid if exception
             if (!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
                 ResetEvalAns();
-
-
         }
         finally
         {
-            //Final eval, check shape
-            formulaShape = EvalFormulaShape();
-            if (formulaShape == GameBehaviour.SHAPES.NONE && !calcMode) //If no shape, formula invalid if not calcMode
-                isValidFormula = false;
+            //Final eval, check shape, ignore if inputting Compound Area
+            if (!isCompoundArea)
+            {
+                formulaShape = EvalFormulaShape();
+                if (formulaShape == GameBehaviour.SHAPES.NONE && !calcMode) //If no shape, formula invalid if not calcMode
+                    isValidFormula = false;
+            }
             DebugDisplay();
         }
     }
@@ -511,6 +526,13 @@ public class FormulaAnalyzer : MonoBehaviour
 
         if (equMode)
         {
+            //If Last char is a '=' character, deactivate equ mode and set valid formula to false
+            if(displayString.Last() == '=')
+            {
+                isValidFormula = false;
+                equMode = false;
+            }
+            
             // Remove last char from inputAnswer and displayString
             if (inputAnswer.Length > 0)
                 inputAnswer = inputAnswer.Substring(0, inputAnswer.Length - 1);
@@ -522,7 +544,12 @@ public class FormulaAnalyzer : MonoBehaviour
         {
             // Formula input mode
             if (evalString.Length > 0)
-                evalString = evalString.Substring(0, evalString.Length - 1);
+            {
+                if(evalString.Last() == 'i') //Special Case for pi, two backspaces here instead of 1 due to being two chars
+                    evalString = evalString.Substring(0, evalString.Length - 2);
+                else
+                    evalString = evalString.Substring(0, evalString.Length - 1);
+            }  
 
             if (displayString.Length > 0)
                 displayString = displayString.Substring(0, displayString.Length - 1);

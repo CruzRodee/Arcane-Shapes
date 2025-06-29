@@ -26,6 +26,7 @@ public class GameData
 
     //COMPOUND
     public int compLvl;
+    public int compPres; //Number of times all levels have been looped
 }
 
 //basically saving loading from a JSON file lang lahat
@@ -38,7 +39,7 @@ public class SaveLoadController
 
     public void saveGame(string savePath, string playerName, bool isMute, float squarePercent, int squareLvl,
                         float circlePercent, int circleLvl, float scirclePercent, int scircleLvl,
-                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, string currRoom)
+                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, int compPres, string currRoom)
     {
         GameData data = new GameData()
         {
@@ -58,7 +59,8 @@ public class SaveLoadController
 
             currRoom = currRoom,
 
-            compLvl = compLvl
+            compLvl = compLvl,
+            compPres = compPres
         };
 
         string json = JsonUtility.ToJson(data);

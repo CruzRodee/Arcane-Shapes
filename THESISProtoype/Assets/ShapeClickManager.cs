@@ -25,6 +25,7 @@ public class ShapeClickManager : MonoBehaviour
         public float angle;
         public bool isToBeFilled;
         public bool isExcess;
+        public bool isIntersect;
         public GameObject shapeGameObject;
         public HOGameBeh.ShapeObject originalShapeObject;
 
@@ -41,6 +42,9 @@ public class ShapeClickManager : MonoBehaviour
                 angle = shapeObj.angle;
                 isToBeFilled = shapeObj.isToBeFilled;
                 isExcess = shapeObj.isExcess;
+                isIntersect = shapeObj.isIntersect;
+                if (isIntersect)
+                    isExcess = true;
                 shapeGameObject = shapeObj.actualShapeObj;
             }
         }
