@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: -876546973899608171, guid: b826a165b21f49949895b2acb00388dd,
+  m_SkyboxMaterial: {fileID: -876546973899608171, guid: b72cd44f4cf66bd4cb205c7c2bb426ae,
     type: 3}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -1087,7 +1087,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -200}
+  m_AnchoredPosition: {x: 150, y: -250}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &762699387
@@ -2568,6 +2568,7 @@ MonoBehaviour:
   cirVarDisp1: {fileID: 1491798895}
   semiVarDisp1: {fileID: 1491798894}
   soundPlayerObj: {fileID: 1144530940}
+  soundPlayer: {fileID: 0}
   hoGameBeh: {fileID: 1934672893}
 --- !u!4 &1934672892
 Transform:

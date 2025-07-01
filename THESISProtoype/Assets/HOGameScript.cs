@@ -638,9 +638,6 @@ public class HOGameScript : MonoBehaviour
 
         currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
         currFiller.isFillingActive = true;
-
-        //Hide shape
-        currentlySolvedShape.GetComponent<Renderer>().enabled = false;
     }
 
     public void InputAnswer(float ans = 0f) //Sends final answer
