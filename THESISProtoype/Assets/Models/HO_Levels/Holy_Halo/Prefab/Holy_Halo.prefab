@@ -167,8 +167,11 @@ MonoBehaviour:
   vfxSet:
   - {fileID: 7013896339100507649}
   - {fileID: 4029055475393655427}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: ef941ccf674734d4595563f8745571d9, type: 3}
+  - {fileID: 8300000, guid: 2e9e70cd3f77f814fa71051eda262253, type: 3}
+  spellSoundType: 0
 --- !u!1 &7013896339100507649
 GameObject:
   m_ObjectHideFlags: 0

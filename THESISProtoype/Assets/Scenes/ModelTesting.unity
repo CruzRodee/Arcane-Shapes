@@ -1021,6 +1021,21 @@ PrefabInstance:
       propertyPath: TEST
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8372780713868549510, guid: 39cc7613cd18c7b438059023d2063f9d,
+        type: 3}
+      propertyPath: sfxSet.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8372780713868549510, guid: 39cc7613cd18c7b438059023d2063f9d,
+        type: 3}
+      propertyPath: sfxSet.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2e9e70cd3f77f814fa71051eda262253, type: 3}
+    - target: {fileID: 8372780713868549510, guid: 39cc7613cd18c7b438059023d2063f9d,
+        type: 3}
+      propertyPath: sfxSet.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2e9e70cd3f77f814fa71051eda262253, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1048,7 +1063,7 @@ PrefabInstance:
     - target: {fileID: 1199834763281702127, guid: 191ffa12f60db4246819e0c18075b152,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3943037373150808073, guid: 191ffa12f60db4246819e0c18075b152,
         type: 3}
