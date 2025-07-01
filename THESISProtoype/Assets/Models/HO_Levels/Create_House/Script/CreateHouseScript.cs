@@ -4,10 +4,10 @@ using UnityEngine.VFX;
 public class CreateHouseScript : BaseLOScript
 {
     private const float SCALING_VAR = 0.1f;
-    private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
+    private readonly Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
 
-    private Vector3 ROTATEOFFSET = new Vector3(0.0f, -90.0f, 0.0f);
-    private float ANIMTIME = 2.5f;
+    private readonly Vector3 ROTATEOFFSET = new Vector3(0.0f, -90.0f, 0.0f);
+    private const float ANIMTIME = 2.5f;
     private Material obj2mat, obj3mat; //Store original materials of object
     public Material manaMateriall;
 

@@ -5,11 +5,11 @@ using UnityEngine.VFX;
 public class ChargedExplosionScript : BaseLOScript
 {
     private const float SCALING_VAR = 1f;
-    private Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
+    private readonly Vector3 SCALING = new Vector3(SCALING_VAR, SCALING_VAR, SCALING_VAR);
 
-    private Vector3 SPAWNOFFSET = new Vector3(0.0f, 4.0f, 0.0f);
-    private float SCALETIME = 3f;
-    private float SHAKETIME = 1.25f;
+    private readonly Vector3 SPAWNOFFSET = new Vector3(0.0f, 4.0f, 0.0f);
+    private const float SCALETIME = 3f;
+    private const float SHAKETIME = 1.25f;
 
     //Gameobject for camera, aquired by name and used for shaky cam
     private CameraShake cameraShakeScript;
