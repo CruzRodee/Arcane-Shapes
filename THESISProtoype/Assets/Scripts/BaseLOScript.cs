@@ -40,6 +40,19 @@ public class BaseLOScript : MonoBehaviour
             sfxSource.PlayOneShot(clip, volume * volumeFactor);
     }
 
+    protected void PlayContSFX(AudioClip clip, float pitch = 1f, float volume = 1f)
+    {
+        if (sfxSource != null)
+        {
+            sfxSource.pitch = pitch;
+            sfxSource.clip = clip;
+            sfxSource.volume = volume * volumeFactor;
+        } 
+
+        if (sfxSet.Length > 0 && clip != null)
+            sfxSource.Play();
+    }
+
     protected void PlayRandomSFX(int clipsMaxIndex, float[] pitch, float[] volume)
     {
         int i = Random.Range(0, clipsMaxIndex + 1); //Add plus 1 to reach MaxIndex since exclusive

@@ -13,8 +13,10 @@ public class CreateHouseScript : BaseLOScript
 
     private GameObject house;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         //Transforms and duration
         this.transform.localEulerAngles += ROTATEOFFSET;
         this.SPELLDURATION = 5.0f; // Set custom spell duration for longer/shorter spells
@@ -36,6 +38,9 @@ public class CreateHouseScript : BaseLOScript
         //Show House
         house.SetActive(true);
 
+        //Play ForceField mana sfx
+        PlayContSFX(sfxSet[2]);
+
         //Scale to Max size
         StartCoroutine(LocalScaleOverTime(house, ANIMTIME - 1f, SCALING));
 
@@ -49,6 +54,20 @@ public class CreateHouseScript : BaseLOScript
         house.transform.Find("Object_2").gameObject.GetComponent<Renderer>().material = obj2mat;
         house.transform.Find("Object_3").gameObject.GetComponent<Renderer>().material = obj3mat;
 
+        //Stop cont shield sound
+        sfxSource.Stop();
+
+        //Play SFX burst at max volume
+        v[0] = 1f;
+        v[1] = v[0];
+        PlayRandomSFX(1, p, v);
+
+        // Play burst vfx
+        Invoke(nameof(BurstVFX), 0.05f); //Delay to match sound
+    }
+
+    private void BurstVFX()
+    {
         //VFX
         this.transform.Find("MagicalBurst").gameObject.GetComponent<VisualEffect>().enabled = true;
     }

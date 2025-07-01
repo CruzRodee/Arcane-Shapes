@@ -255,8 +255,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vfxSet: []
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: ec8fd5189603be84fa684f0e2723e12d, type: 3}
+  spellSoundType: 0
   manaMateriall: {fileID: 2100000, guid: 4fd989cd0ee1ce54aa203356dec06445, type: 2}
 --- !u!4 &6740480161804817050 stripped
 Transform:
