@@ -5,7 +5,7 @@ public class TimeStopScript : BaseLOScript
 {
     private bool timeStopped = false; //Boolean for time stop effect
 
-    private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.0f, 0.0f);
+    private readonly Vector3 SPAWNOFFSET = new Vector3(0.0f, 0.0f, 0.0f);
 
     //Gameobject for camera, aquired by name and used for shaky cam
     private CameraShake cameraShakeScript;
@@ -17,19 +17,20 @@ public class TimeStopScript : BaseLOScript
     public GameObject[] pillarStones;
     private float[] floatSpeeds;
     private float[] rotateSpeeds;
-    private float floatHeight = 0.25f; //
+    private const float floatHeight = 0.25f; //
 
     //Rotation speeds for stones, spins 360 n times per second
-    private float innerRotationSpeed = 1f;
-    private float outerRotationSpeed = 0.1f;
+    private const float innerRotationSpeed = 1f;
+    private const float outerRotationSpeed = 0.1f;
 
     private const float GROWTIME = 0.75f;
     private readonly Vector3 STOPAREA = new Vector3(20f, 20f, 20f);
 
     public GameObject stopBubble;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
         this.SPELLDURATION = 1.5f; // Set custom spell duration for longer/shorter spells
 
@@ -79,6 +80,9 @@ public class TimeStopScript : BaseLOScript
     {
         //Rainbow burst vfx
         vfxSet[0].GetComponent<VisualEffect>().enabled = true;
+
+        //Play timestop SFX
+        PlaySFX(sfxSet[0], 1, 0.5f);
 
         //Show timestop sphere
         stopBubble.SetActive(true);

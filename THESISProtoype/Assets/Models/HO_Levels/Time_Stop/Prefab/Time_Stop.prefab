@@ -305,8 +305,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxSet:
   - {fileID: 6734052457777806417}
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 0eb40e29a368a264994485c5ebb70385, type: 3}
+  spellSoundType: 0
   cameraName: ClassroomCamera
   innerStonesCenter: {fileID: 7911577421895503949}
   outerStonesCenter: {fileID: 5569025935365329877}
