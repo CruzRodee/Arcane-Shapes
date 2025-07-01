@@ -192,11 +192,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Thor_Hammer
       objectReference: {fileID: 0}
-    - target: {fileID: 6333733084290232409, guid: 0e17d682a165b384b87c8cb3b4f85c53,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1010,6 +1005,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Holy_Halo
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675980491567266007, guid: 39cc7613cd18c7b438059023d2063f9d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8372780713868549510, guid: 39cc7613cd18c7b438059023d2063f9d,
         type: 3}

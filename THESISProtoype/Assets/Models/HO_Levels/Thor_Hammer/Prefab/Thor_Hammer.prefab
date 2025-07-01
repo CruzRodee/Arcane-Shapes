@@ -387,8 +387,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vfxSet: []
-  temp: []
   TEST: 0
+  sfxSet:
+  - {fileID: 8300000, guid: 9004cef3c4bbf754eb472b01790bbb31, type: 3}
+  - {fileID: 8300000, guid: 14b9cb679493b8943b7eef7446014c37, type: 3}
+  - {fileID: 8300000, guid: ec8fd5189603be84fa684f0e2723e12d, type: 3}
+  - {fileID: 8300000, guid: 2eb558767869478409a02508b8ccdd37, type: 3}
+  - {fileID: 8300000, guid: d746526df55234744884364f13998c84, type: 3}
+  spellSoundType: 0
   manaMateriall: {fileID: 2100000, guid: a886b1fed3e419b4d89095305dca3892, type: 2}
   cameraName: ClassroomCamera
   rainClouds:

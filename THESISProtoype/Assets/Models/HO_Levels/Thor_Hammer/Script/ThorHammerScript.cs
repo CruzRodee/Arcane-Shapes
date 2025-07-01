@@ -4,12 +4,12 @@ using UnityEngine.VFX;
 
 public class ThorHammerScript : BaseLOScript
 {
-    private Vector3 SCALING = new Vector3(0.25f, 0.1370049f, 0.25f);
+    private readonly Vector3 SCALING = new Vector3(0.25f, 0.1370049f, 0.25f);
 
-    private float SCALETIME = 0.75f;
-    private float SWINGBACKTIME = 1.0f;
-    private float SLAMTIME = 0.15f;
-    private float SHAKETIME = 1.5f;
+    private const float SCALETIME = 0.75f;
+    private const float SWINGBACKTIME = 1.0f;
+    private const float SLAMTIME = 0.15f;
+    private const float SHAKETIME = 1.5f;
 
     private Material[] hammerMaterials; //Store original materials of object
     public Material manaMateriall;
@@ -22,8 +22,9 @@ public class ThorHammerScript : BaseLOScript
 
     public GameObject[] rainClouds; //Contains references to rain vfx objects
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         //Transforms and duration
         this.SPELLDURATION = 6.0f; // Set custom spell duration for longer/shorter spells
 
@@ -46,11 +47,14 @@ public class ThorHammerScript : BaseLOScript
 
     public override void SuccessfulCast()
     {
-        //Show House
+        //Show Hammer
         hammer.SetActive(true);
 
         //Scale to Max size
         StartCoroutine(LocalScaleOverTime(hammer, SCALETIME, SCALING));
+
+        //Play humming SFX
+        PlaySFX(sfxSet[2], 1, 0.5f);
 
         //Coroutine for anims
         StartCoroutine(ThorSpellAnims());
@@ -67,7 +71,12 @@ public class ThorHammerScript : BaseLOScript
         // Wait for scaling time
         yield return new WaitForSeconds(SCALETIME + 0.1f);
 
-        //MagicBurst vfx1
+        //MagicBurst vfx1 + sfx + stop hum
+        sfxSource.Stop();
+        v[0] = 0.5f;
+        v[1] = v[0];
+        PlayRandomSFX(1, p, v);
+        yield return new WaitForSeconds(0.05f); //Delay
         transform.Find("MagicalBurst1").gameObject.GetComponent<VisualEffect>().enabled = true;
 
         //Remove Mana Material
@@ -78,6 +87,9 @@ public class ThorHammerScript : BaseLOScript
 
         //Swing back to 45
         StartCoroutine(LocalEulerOverTime(hammer, SWINGBACKTIME, new Vector3(45f, 0f, 0f)));
+
+        //Play Hammer SFX
+        PlaySFX(sfxSet[3], 1, 1);
 
         // Hold position for dramatic effect
         yield return new WaitForSeconds(0.5f + SWINGBACKTIME);
@@ -98,6 +110,9 @@ public class ThorHammerScript : BaseLOScript
             rain.transform.localPosition = RandomRainPos();
             rain.GetComponent<VisualEffect>().enabled = true;
         }
+
+        //Play Rain SFX
+        PlaySFX(sfxSet[4], 1, 0.5f);
 
         //Deactivate hammer (Hammer exploded on impact with ground)
         hammer.SetActive(false);
