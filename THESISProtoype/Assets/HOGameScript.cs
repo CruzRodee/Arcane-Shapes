@@ -57,6 +57,9 @@ public class HOGameScript : MonoBehaviour
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
                         charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
                         charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
+    private const string areaDisplayText1 = "Area ng mga hugis:\n";
+    public GameObject areaDisplayObj;
+    private TextMeshProUGUI areaDisplay;
 
     //----------------------------------------------
     //////////Copied from old repo
@@ -101,7 +104,7 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationCircle;
 
 
-    private Dictionary<GameObject, float> recordedAnswer = new Dictionary<GameObject, float>();
+    private Dictionary<HOGameBeh.ShapeObject, float> recordedAnswer = new Dictionary<HOGameBeh.ShapeObject, float>();
     private GameObject currentlySolvedShape = null;
     private HOGameBeh.ShapeObject currentShapeObject = null;
 
@@ -136,7 +139,9 @@ public class HOGameScript : MonoBehaviour
     public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
     private GameObject var1Display, var2Display; //Variables for determining which ones will be modified
 
-
+    //Sound related stuff
+    public GameObject soundPlayerObj;
+    public GameLevelSoundPlayer soundPlayer;
 
     public HOGameBeh hoGameBeh;
 
@@ -167,6 +172,10 @@ public class HOGameScript : MonoBehaviour
 
         //Disable calcBtn
         calcBtnObj.SetActive(false);
+
+        //Get area display text
+        areaDisplay = areaDisplayObj.GetComponent<TextMeshProUGUI>();
+        areaDisplayObj.SetActive(false);
     }
 
     //Function for getting the text objects for displaying the line lengths
@@ -629,9 +638,6 @@ public class HOGameScript : MonoBehaviour
 
         currFiller.InitializeFill(currentlySolvedShape, Color.green, 0.5f, spellCastEvent.GetFillPercentage());
         currFiller.isFillingActive = true;
-
-        //Hide shape
-        currentlySolvedShape.GetComponent<Renderer>().enabled = false;
     }
 
     public void InputAnswer(float ans = 0f) //Sends final answer
@@ -641,17 +647,15 @@ public class HOGameScript : MonoBehaviour
         if(!isFinalAnswer) //Only record if not final answer mode
         {
             if (!currentShapeObject.isExcess) //Positive Area
-                recordedAnswer.Add(currentlySolvedShape, inputAnswer);
+                recordedAnswer.Add(currentShapeObject, inputAnswer);
             else if (currentShapeObject.isExcess) //Negative Area
-                recordedAnswer.Add(currentlySolvedShape, -inputAnswer);
+                recordedAnswer.Add(currentShapeObject, -inputAnswer);
         }
 
         CalcError();
 
         //Disable OCR board and formulaDisplay
         StartCoroutine(SlideOCRBoard(false));
-
-        //Play Fill SFX if not final answer
 
         //Make spell explode or fizzled out and end the game if input of subshape or whole shape is wrong
         if (Math.Round(Math.Abs(error), 2) != 0f)
@@ -672,12 +676,18 @@ public class HOGameScript : MonoBehaviour
             else
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
 
+            //Play Error SFX
+            soundPlayer.PlaySFX(3, 1, 2f);
+
             return; //Just in case it decides to run the code after
         }
 
         //More stuff to only do when not in final answer
         if (!isFinalAnswer)
         {
+            //Play Fill SFX if not final answer
+            soundPlayer.PlaySFX(1, 1, 0.75f);
+
             hoGameBeh.shapeClickManager.EnableShapeClicking();
 
             //Make solved shape unclickable
@@ -722,7 +732,8 @@ public class HOGameScript : MonoBehaviour
 
             correctionPerc.gameObject.SetActive(true);
 
-            //TODO: Maybe play a new spell complete SFX since the mana filling is done?
+            //Play a new spell complete SFX since the mana filling is done?
+            soundPlayer.PlaySFX(4, 1, 1.5f);
 
             Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
         }
@@ -939,6 +950,9 @@ public class HOGameScript : MonoBehaviour
 
             //Except Hud
             hud.SetActive(true);
+
+            //Get sound player script, do on start since component init is at Awake()
+            soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
         text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
@@ -1111,8 +1125,27 @@ public class HOGameScript : MonoBehaviour
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
-            foreach (float answer in recordedAnswer.Values)
-                Debug.Log("Size: " + answer + "\n");
+            //Display the areas in SolvedAreaDisplay
+            areaDisplayObj.SetActive(true);
+            areaDisplay.text = areaDisplayText1;
+            string currDisplay = "";
+
+            int i = 0;
+            const int n = 1;
+            foreach (var dict in recordedAnswer)
+            {
+                i++;
+                currDisplay = areaDisplay.text; //Get current text
+                areaDisplay.text = currDisplay + $"[{dict.Key.shape}]: {dict.Value} "; //Add shape and area
+                Debug.Log("Size: " + dict.Value);
+
+                //New line every n shapes
+                if(i%n == 0)
+                {
+                    currDisplay = areaDisplay.text; //Get current text
+                    areaDisplay.text = currDisplay + '\n'; //Add line break
+                }
+            }  
         }
 
     }
@@ -1454,6 +1487,12 @@ public class HOGameScript : MonoBehaviour
         Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
         //Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
+        Invoke(nameof(PlayMusic), TRANSITIONTIME);
+    }
+
+    private void PlayMusic()
+    {
+        soundPlayer.PlayBGM(0, 1, 0.4f);
     }
 
     private void HideNewUI()
@@ -1462,6 +1501,9 @@ public class HOGameScript : MonoBehaviour
         pDialogue.SetActive(false);
         panelMagicScroll.SetActive(false);
         quickMenu.SetActive(false);
+
+        //Deactivate AreaDisplay
+        areaDisplayObj.SetActive(false);
     }
     private void SetVisibilityNewUI(bool a, bool b, bool c, bool d)
     {

@@ -206,10 +206,16 @@ public class HOGameBeh : MonoBehaviour
             if(obj.isIntersect)
                 obj.isExcess = true;
 
-            //Change color of excess
+            //Change color of excess and intersect
             if (obj.isExcess)
             {
-                ret.GetComponent<Renderer>().material.color = Color.grey;
+                if(obj.isIntersect)
+                    ret.GetComponent<Renderer>().material.color = new Color(0.5f, 0.0f, 0.2f, 1f);
+                else
+                {
+                    //Dark Gray color
+                    ret.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 1f);
+                } 
             }
 
             //Apply z-axis Offset to determine which shape is above which
@@ -275,7 +281,6 @@ public class HOGameBeh : MonoBehaviour
 
     private void OnAnyShapeClicked(ShapeClickManager.ShapeClickData clickData)
     {
-        script.UIAfterShapeSelect(clickData);
         // Your custom logic here - you get ALL the shape information!
         // UnityEngine.Debug.Log($"HOGameBeh.OnAnyShapeClicked: Test that please... Clicked {clickData.shapeType} at {clickData.worldPosition}");
 
@@ -291,6 +296,18 @@ public class HOGameBeh : MonoBehaviour
         // - Change game state
         // - Move other shapes
         // etc.
+
+        StartCoroutine(ShapeClickFunctions(clickData));
+
+        //Play select sound
+        script.soundPlayer.PlaySFX(2, 1, 2f);
+    }
+
+    private IEnumerator ShapeClickFunctions(ShapeClickManager.ShapeClickData clickData)
+    {
+        yield return new WaitForSeconds(0.15f); //Small delay to see shape flash
+
+        script.UIAfterShapeSelect(clickData);
 
         //Get the text displays for the selected shape
         script.GetVarDisp(clickData.originalShapeObject.shape);
