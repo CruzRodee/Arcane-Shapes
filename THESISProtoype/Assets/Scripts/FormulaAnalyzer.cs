@@ -36,6 +36,12 @@ public class FormulaAnalyzer : MonoBehaviour
     private const string formulaDefaultText = "Isulat ang formula sa Board";
     private const string calculatorDefaultText = "Calculator";
 
+    //Magic regex runes, the rest in AreaFormulaParser
+
+    private readonly Regex validFormulaRegex = new Regex(@"^\(*((\d+(?:\.\d+)?|pi|π|3\.1416)\)*([\+\-\*/\^]\(*(\d+(?:\.\d+)?|pi|π|3\.1416)\)*)+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    //---
+
     public HOGameScript hgb = null;
 
     // Start is called before the first frame update
@@ -378,45 +384,14 @@ public class FormulaAnalyzer : MonoBehaviour
     //Evualutaes the string formula with NCalc Expression.Evaluate(), stores answer in evalAnswer formula validity in isValidFormula
     private void EvaluateFormula()
     {
-        if (displayString.Length - 1 < 3) //There must be at least 2 vals and 1 operator ergo 3 chars, reduce length by 1 to remove "="
-        {
-            isValidFormula = false; //Formula not valid if exception
-            if (!equMode) //Reset the evalAnswer if formula not valid and user has not inputed "=" successfully yet
-                ResetEvalAns();
-            DebugDisplay();
-            return;
-        }
-
-        if (DEBUG) Debug.Log("FA: PASS 1");
-
-        //Check if ending char of evalString is a number, "pi" or ".", if not, invalid formula
-        bool endIsNumber = false;
-        char[] maybePi = new char[2];
-        foreach (string val in VALUES)
-        {
-            maybePi[0] = evalString[^2];
-            maybePi[1] = evalString[^1];
-            if (maybePi[0].ToString() + maybePi[1].ToString() == "pi")
-            {
-                endIsNumber = true;
-                break;
-            }
-            if (evalString[^1] == val.ToCharArray()[0])
-            {
-                endIsNumber = true;
-                break;
-            }
-        }
-
-        if (DEBUG) Debug.Log("FA: maybePi: " + maybePi[0].ToString() + maybePi[1].ToString());
-
-        if (!endIsNumber)
+        evalString = evalString.Trim(); //Input cleaning
+        
+        if (!validFormulaRegex.IsMatch(evalString)) //Block invalid inputs
         {
             isValidFormula = false;
+            if (DEBUG) Debug.Log("Invalid Formula: " + evalString);
             return;
         }
-
-        if (DEBUG) Debug.Log("FA: PASS 2");
 
         try
         {
@@ -588,124 +563,85 @@ public class FormulaAnalyzer : MonoBehaviour
     //Returns the shape of the formula
     private GameBehaviour.SHAPES EvalFormulaShape()
     {
-        //Store in duplicate string and remove all 0.5 or 1/2 or pi or unreadables from duplicate string to easily find vals
-        string duplicateString = new('a', displayString.Length);
-        duplicateString = duplicateString.Replace(duplicateString, displayString); //Copy display string
-        duplicateString = duplicateString.Replace("0.5", "");
-        duplicateString = duplicateString.Replace("1\u00f72", ""); // 1/2
-        duplicateString = duplicateString.Replace("\u00f72", ""); // /2, removed after 1/2 to not mess things up
-        duplicateString = duplicateString.Replace("\u03C0", ""); //pi
-        duplicateString = duplicateString.Replace("=", ""); // remove the "=" too
-        duplicateString = duplicateString.Replace("(", ""); // remove the "(" too
-        duplicateString = duplicateString.Replace(")", ""); // remove the ")" too
+        GameBehaviour.SHAPES evalShape = GameBehaviour.SHAPES.NONE; //Store return value of shape eval
+        float[] vals = { 0 , 0 }; //Store return of ExtractVariables()
+
+        string cleanString = evalString; //Clean all *0.5, 0.5*, *1/2, 1/2*, /2
+        bool isDivided = false; //Flag for any dividers appearing
+        string[] dividers = { "*0.5", "0.5*", "*1/2", "1/2*", "/2" };
+        foreach (string divider in dividers)
+        {
+            if (cleanString.Contains(divider))
+            {
+                cleanString = cleanString.Replace(divider, ""); //Erase divider
+                isDivided = true;
+                if (DEBUG) Debug.Log("IsDivided string: " + cleanString);
+            }
+        }
+
+        if(!isDivided && AreaFormulaParser.squareRegex.IsMatch(evalString))
+        {
+            evalShape = GameBehaviour.SHAPES.SQUARE;
+            vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
+        }
+            
+        else if (!isDivided && AreaFormulaParser.rectangleRegex.IsMatch(evalString))
+        {
+            evalShape = GameBehaviour.SHAPES.RECTANGLE;
+            vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
+        }
+            
+        else if (isDivided && (AreaFormulaParser.squareRegex.IsMatch(cleanString) || AreaFormulaParser.rectangleRegex.IsMatch(cleanString)))
+        {
+            evalShape = GameBehaviour.SHAPES.TRIANGLE;
+
+            //Use rect or square parser on cleanString, both proven to work
+            if(AreaFormulaParser.squareRegex.IsMatch(cleanString))
+                vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.SQUARE);
+            else
+                vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.RECTANGLE);
+        }
+          
+        else if (!isDivided && AreaFormulaParser.circleRegex.IsMatch(evalString))
+        {
+            evalShape = GameBehaviour.SHAPES.CIRCLE;
+            vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
+        }
+            
+        else if (isDivided && AreaFormulaParser.circleRegex.IsMatch(cleanString))
+        {
+            evalShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
+
+            //Use circle parser on cleanString
+            vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.CIRCLE);
+        }
+        
 
         if (DEBUG)
         {
-            Debug.Log("FA: duplicateString: " + duplicateString);
-        }
-
-        //Separate duplicateString into operators and values to determine if rect or square
-        List<string> vals = new();
-        vals.Add(""); //Add blank string since we only add new element when we get an operator
-        List<string> ops = new();
-        bool isOps = false; //Check for if char is an operator
-
-        for (int i = 0; i < duplicateString.Length; i++)
-        {
-            if (DEBUG)
-                Debug.Log("FA: current char is -> " + duplicateString.ToCharArray()[i]);
-
-            //Check if char in OPERATORS, add new blank vals element if i < duplicateString.Length and vals.Last() != ""
-            foreach (string s in OPERATORS)
-            {
-                if (duplicateString.ToCharArray()[i] == s.ToCharArray()[0])
-                {
-                    if (DEBUG)
-                        Debug.Log("FA: Operator found! -> " + s);
-
-                    if (i < duplicateString.Length && vals.Last() != "")
-                        vals.Add("");
-                    ops.Add(s);
-                    isOps = true; //char is an operator
-                    break; //Match found end loop early
-                }
-            }
-
-            //Else add char to vals.Last()
-            if (!isOps) //If not an operator
-            {
-                vals[^1] += duplicateString[i];
-            }
-            isOps = false; //Reset flag
-        }
-
-        if (DEBUG)
-        {
-            Debug.Log("FA: vals length is " + vals.Count());
-            foreach (string s in vals)
-            {
-                Debug.Log("FA: vals contains " + s);
-            }
-        }
-
-        //Prune All Empty strings from vals until non-empty is reached
-        while (vals.Last() == "")
-        {
-            if (DEBUG)
-                Debug.Log("FA: Removed empty string!");
-            vals.RemoveAt(vals.IndexOf(vals.Last()));
+            Debug.Log("Shape Type: " + evalShape);
+            if(evalShape == GameBehaviour.SHAPES.NONE) Debug.Log("Failed to find shape");
         }
 
         //Store vals as sideA and sideB
         try
         {
-            sideA = float.Parse(vals[0]);
-            sideB = float.Parse(vals[1]);
+            if(vals.Length >= 2)
+            {
+                sideA = vals[0];
+                sideB = vals[1];
+            }
+            else
+            {
+                sideA = vals[0];
+            }
         }
         catch (System.Exception)
         {
             return GameBehaviour.SHAPES.NONE; //Either invalid input or logic error
         }
 
-        //No shape if there are operators other than *, /, and =
-        foreach (string op in ops)
-        {
-            if (op == "-" || op == "+")
-            {
-                return GameBehaviour.SHAPES.NONE;
-            }
-        }
-
-        Regex triangleRegex = new(@"\(\d+\.?\d*\u00d7\d+\.?\d*\)\u00f72"); //Checks if the formula is surrounded by () div 2
-        //Checks if the formula is surrounded by () div 2 and has pi
-        Regex semiCircleRegex = new(@"\(\u03C0?\u00d7?\d+\.?\d*\u00d7?\u03C0?\u00d7\d+\.?\d*\u00d7?\u03C0?\)\u00f72");
-
-        // 1.) if has 0.5 or 1/2 or ()�E but no pi, is triangle
-        if ((displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
-            triangleRegex.IsMatch(displayString)) && !displayString.Contains("\u03C0"))
-            return GameBehaviour.SHAPES.TRIANGLE;
-
-        //Compare if values are equal, square if yes otherwise rect, invalid if there are more than 2 vals
-        if (vals.Count() > 1 && vals.Count() < 3)
-        {
-            if (sideA == sideB) //Compare parsed instead, should be equal if same value
-            {
-                // 2.) if pi is present and same sides, is circle if no 0.5 or 1/2 or () div 2 else semicircle
-                if (displayString.Contains("\u03C0"))
-                {
-                    if (displayString.Contains("0.5") || displayString.Contains("1\u00f72") ||
-                        semiCircleRegex.IsMatch(displayString))
-                        return GameBehaviour.SHAPES.SEMI_CIRCLE;
-                    else return GameBehaviour.SHAPES.CIRCLE;
-                }
-                else //If no pi its a square
-                    return GameBehaviour.SHAPES.SQUARE;
-            }
-            else if (!displayString.Contains("\u03C0")) //If is doesn't contain pi and not same side rectangle
-                return GameBehaviour.SHAPES.RECTANGLE;
-        }
-
-        return GameBehaviour.SHAPES.NONE; //Either invalid input or logic error
+        return evalShape; //Either invalid input or logic error
     }
     //
     //Prints debug info to Log
