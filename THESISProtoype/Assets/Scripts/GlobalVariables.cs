@@ -92,8 +92,8 @@ public static class GlobalVariables
                 problem.Add(new HOGameBeh.ShapeObject(6f, 4f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 3, 0)));
                 problem[0].zOffset = 0.2f;
                 //Lightning sign
-                problem.Add(new HOGameBeh.ShapeObject(1f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(-1, 3, 0)));
-                problem.Add(new HOGameBeh.ShapeObject(1f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(1, 3, 0)).tilt(180));
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(-1, 3, 0)));
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(3, 3, 0)).tilt(180));
                 problem[1].isExcess = true;
                 problem[2].isExcess = true;
                 //Handle
