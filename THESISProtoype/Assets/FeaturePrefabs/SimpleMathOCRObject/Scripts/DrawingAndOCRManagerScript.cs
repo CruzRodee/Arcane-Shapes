@@ -75,6 +75,8 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
     public float raycast_range = 20f; //Range of raycast, default 20f
+    public GameObject ocrPlaneObj; //GameObject of OCR plane
+    private Collider ocrPlaneColl; //Collider of OCR plane, used to detect hits
 
     //Reference to material for line renderer
     public Material vfxLineMaterial;
@@ -114,6 +116,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         sfxSource.playOnAwake = false;
         if (GlobalVariables.isMute) //Mute function
             volumeFactor = 0f;
+
+        //Get OCR MeshCollider
+        ocrPlaneColl = ocrPlaneObj.GetComponent<MeshCollider>();
     }
 
     private void Start()
@@ -165,6 +170,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         {
             //Function for drawing stuff on the OCR input
             CalculatePixel();
+
+            if(!hasHit) //If not drawing on board, do nothing
+                return;
 
             //Draw VFX stuff (line sfx whatever), needs to occur after OCR draw because raycast point needed
             DrawVFX();
@@ -300,7 +308,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         if (Physics.Raycast(ray, out hit, raycast_range))//Check if the ray hits something
         {
             //If the board was not hit by the raycast, do nothing
-            if (hit.collider == null)
+            if (hit.collider != ocrPlaneColl)
             {
                 hasHit = false;
                 return;

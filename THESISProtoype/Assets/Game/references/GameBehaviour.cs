@@ -1026,14 +1026,16 @@ public class GameBehaviour : MonoBehaviour
         shapeFiller.fillMaxValue = clamped; //Fill Shape when input
         shapeFiller.isFillingActive = true; //Start filling
 
-        //Play Fill SFX
-        soundPlayer.PlaySFX(1, 1, 1);
-
         if (clamped > 2.0f)
             clamped = 2.0f;
 
-        //TODO: Adjust error tolerance based on level?
         error = ((1 - clamped) * 100); //Get error float
+
+        //Play Fill SFX if good answer else play wrong sound
+        if(error == 0f)
+            soundPlayer.PlaySFX(2, 1, 1);
+        else
+            soundPlayer.PlaySFX(1, 1, 2f);
     }
 
     //TODO: Maybe use this to activate and deactivate cast button?, Reactivate and implement code if so

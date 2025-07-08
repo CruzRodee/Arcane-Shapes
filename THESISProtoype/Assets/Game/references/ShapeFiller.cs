@@ -11,8 +11,11 @@ public class ShapeFiller : MonoBehaviour
     private Vector3[] originalVertices;
     private Mesh fillMesh;
     private GameObject targetShape; // Store reference to original shape
+    private MeshRenderer targetRenderer;
 
     public Material fillMaterial;
+    public Material voidMaterial;
+    public Material intersectMaterial;
     public float fillMaxValue = 0.0f;
     public bool isFillingActive = false;
     public bool isPerfectMatch = false;
@@ -68,7 +71,7 @@ public class ShapeFiller : MonoBehaviour
         fillSpeed = speed;
 
         // Ensure fill renders on top
-        MeshRenderer targetRenderer = toFillShape.GetComponent<MeshRenderer>();
+        targetRenderer = toFillShape.GetComponent<MeshRenderer>();
         if (targetRenderer != null)
         {
             fillRenderer.sortingOrder = targetRenderer.sortingOrder + 1;
@@ -76,7 +79,6 @@ public class ShapeFiller : MonoBehaviour
 
         fillAmount = 0f;
         this.fillMaxValue = fillMaxValue;
-        //UpdateFillMesh(); // You would call this to set the initial state
     }
 
     void Update()
@@ -85,34 +87,18 @@ public class ShapeFiller : MonoBehaviour
         {
             isFillingActive = false;
         }
-        if (isFillingActive && (fillAmount < this.fillMaxValue))
+        if (isFillingActive && (fillAmount < this.fillMaxValue)) //Filling
         {
+            //Hide tofillshape
+            if(targetRenderer != null)
+                if(targetRenderer.enabled)
+                    targetRenderer.enabled = false;
 
             fillAmount += fillSpeed * Time.deltaTime;
             if (fillAmount > this.fillMaxValue) fillAmount = this.fillMaxValue;
             fillAmount = Mathf.Clamp01(fillAmount);
             UpdateFillMesh();
         }
-        if (isFillingActive && (fillAmount > this.fillMaxValue))
-        {
-
-            fillAmount -= fillSpeed * Time.deltaTime;
-            if (fillAmount < this.fillMaxValue) fillAmount = this.fillMaxValue;
-            fillAmount = Mathf.Clamp01(fillAmount);
-            UpdateFillMesh();
-        }
-
-        /*
-        //TODO: Add vfx and code for exact match? later
-        if(isPerfectMatch)
-        {
-            Debug.Log("DING! Perfect area, play vfx");
-        }
-        else if (!isPerfectMatch)
-        {
-            Debug.Log("NOT PERFECT AREA");
-        }
-        */
     }
 
     private void UpdateFillMesh()

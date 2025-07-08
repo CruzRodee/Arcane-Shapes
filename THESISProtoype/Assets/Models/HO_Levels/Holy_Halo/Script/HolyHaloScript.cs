@@ -4,17 +4,18 @@ using UnityEngine;
 public class HolyHaloScript : BaseLOScript
 {
     private const float SCALING_VAR = 8f;
-    private Vector3 SCALING = new Vector3(SCALING_VAR, 4f, SCALING_VAR);
+    private readonly Vector3 SCALING = new Vector3(SCALING_VAR, 4f, SCALING_VAR);
 
-    private Vector3 SPAWNOFFSET = new Vector3(0.0f, 0f, 0.0f);
-    private Vector3 HALORISEOFFSET = new Vector3(0.0f, 6.0f, 0.0f);
-    private float HALORISETIME = 1.0f;
-    private float HALOEXPANDTIME = 0.75f;
+    private readonly Vector3 SPAWNOFFSET = new Vector3(0.0f, 0f, 0.0f);
+    private readonly Vector3 HALORISEOFFSET = new Vector3(0.0f, 6.0f, 0.0f);
+    private const float HALORISETIME = 1.0f;
+    private const float HALOEXPANDTIME = 0.75f;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         this.transform.localPosition += SPAWNOFFSET;
-        this.SPELLDURATION = 5f; // Set custom spell duration for longer/shorter spells
+        this.SPELLDURATION = 6f; // Set custom spell duration for longer/shorter spells
     }
 
     public override void SuccessfulCast()
@@ -24,6 +25,9 @@ public class HolyHaloScript : BaseLOScript
         {
             o.SetActive(true);
         }
+
+        //Play Bell SFX
+        PlaySFX(sfxSet[0], 1, 0.1f);
 
         StartCoroutine(HaloAnims());
     }
@@ -37,6 +41,10 @@ public class HolyHaloScript : BaseLOScript
         {
             StartCoroutine(LocalMoveOverTime(o, HALORISETIME, HALORISEOFFSET));
         }
+
+        //Play Lower pitch and volume halo sfx for rise
+        PlaySFX(sfxSet[1], 0.75f, 0.5f);
+
         yield return new WaitForSeconds(HALORISETIME + 0.5f); //Wait for halo rise and dramatic pause
 
         //EXPAND HALO
@@ -44,5 +52,9 @@ public class HolyHaloScript : BaseLOScript
 
         //Brighten Halo overtime
         StartCoroutine(LightRangeOverTime(vfxSet[1], HALOEXPANDTIME, 200f));
+
+        //Play halo SFX after stopping previous instance
+        sfxSource.Stop();
+        PlaySFX(sfxSet[1], 1, 0.75f);
     }
 }

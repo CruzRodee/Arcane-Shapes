@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public static class GlobalVariables
 {
     // LO variables
@@ -38,6 +40,95 @@ public static class GlobalVariables
             default:
                 return "ERROR: INVALID SHAPE - NO FORUMULA TEXT FOUND";
         }
+    }
+
+    //------------------
+
+    // HO variables
+
+    public static List<HOGameBeh.ShapeObject> HOProblem()
+    {
+        // Define the problem that matches the level
+        List<HOGameBeh.ShapeObject> problem = new List<HOGameBeh.ShapeObject>();
+        switch (level)
+        {
+            case 0: //Same problem for level 1 or 0
+            case 1: // Define the "house" shape configuration
+                //House square walls
+                problem.Add(new HOGameBeh.ShapeObject(4, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -1, 0)));
+                //House roof, must be offset in y axis by house square side length plus some offset
+                problem.Add(new HOGameBeh.ShapeObject(6, 3, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 2, 0)));
+                break;
+            case 2: //Charged Explosion Spell
+                //Cubic mana charge
+                problem.Add(new HOGameBeh.ShapeObject(2, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
+                //Outward triangle arrows
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 2, 0))); //Up
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 2, 0)).tilt(90)); //Right
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)).tilt(-90)); //Left
+                problem.Add(new HOGameBeh.ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(2, 0, 0)).tilt(180)); //Down
+                break;
+            case 3: //Cubic Barrier
+                //Intersection
+                problem.Add(new HOGameBeh.ShapeObject(5, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
+                problem[0].isIntersect = true;
+                //Square1
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(1, 1, 0)));
+                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected later
+                //Square2
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[2].zOffset = 0.1f; //offset away camera slightly to be selected later
+                break;
+            case 4: //Holy Halo
+                //Inner negative ring
+                problem.Add(new HOGameBeh.ShapeObject(6f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[0].isExcess = true;
+                //Outer Positive Ring
+                problem.Add(new HOGameBeh.ShapeObject(8f, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled());
+                problem[1].zOffset = 0.1f; //offset away camera slightly to be selected last
+                break;
+            case 5: //Thor Hammer
+                //Hammer head
+                problem.Add(new HOGameBeh.ShapeObject(6f, 4f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 3, 0)));
+                problem[0].zOffset = 0.2f;
+                //Lightning sign
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(-1, 3, 0)));
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1.5f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(3, 3, 0)).tilt(180));
+                problem[1].isExcess = true;
+                problem[2].isExcess = true;
+                //Handle
+                problem.Add(new HOGameBeh.ShapeObject(2f, 4f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -1, 0)));
+                problem[3].zOffset = 0.4f;
+                //Semicircle pommel
+                problem.Add(new HOGameBeh.ShapeObject(4, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -2, 0)).tilt(180));
+                problem[4].zOffset = 0.2f;
+                //Pommel intersect
+                problem.Add(new HOGameBeh.ShapeObject(2f, 1f, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[5].isIntersect = true;
+                break;
+            case 6: //Time Stop
+                //Outer Dome Semi circle and rect Floot
+                problem.Add(new HOGameBeh.ShapeObject(16, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[0].zOffset = 0.8f;
+                problem.Add(new HOGameBeh.ShapeObject(16, 1, GameBehaviour.SHAPES.RECTANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -4, 0)));
+                problem[1].zOffset = 0.8f;
+                //Inner Dome void Semi circle
+                problem.Add(new HOGameBeh.ShapeObject(14, HOGameBeh.UNUSED, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, -3, 0)));
+                problem[2].isExcess = true;
+                problem[2].zOffset = 0.6f;
+                //Outer Clock wall circle
+                problem.Add(new HOGameBeh.ShapeObject(6, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[3].zOffset = 0.4f;
+                //Inner clock wall void circle
+                problem.Add(new HOGameBeh.ShapeObject(5, HOGameBeh.UNUSED, GameBehaviour.SHAPES.CIRCLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                problem[4].zOffset = 0.2f;
+                problem[4].isExcess = true;
+                //Minute hand pointing at 12 rect
+                problem.Add(new HOGameBeh.ShapeObject(2f, 3.0f, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new UnityEngine.Vector3(0, 0, 0)));
+                break;
+        }
+
+        return problem; //Return the problem that is equal to the game level
     }
 
     //------------------

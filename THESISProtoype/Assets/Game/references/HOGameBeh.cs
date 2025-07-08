@@ -70,14 +70,11 @@ public class HOGameBeh : MonoBehaviour
             Debug.LogError("HOGameBeh: ShapeClickManager GameObject not found! Cannot subscribe to OnShapeClicked.");
         }
 
-        // Define the "house" shape configuration
-        List<ShapeObject> house = new List<ShapeObject>();
-        house.Add(new ShapeObject(2, UNUSED, GameBehaviour.SHAPES.SQUARE).setIsToBeFilled());
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(1, 0, 0)).tilt(90));
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.SEMI_CIRCLE).setIsToBeFilled().withOffset(new Vector3(-1, 0, 0)).tilt(-90));
-        house.Add(new ShapeObject(2, 2, GameBehaviour.SHAPES.TRIANGLE).setIsToBeFilled().withOffset(new Vector3(0, 2, 0)));
+        // Set the problem based on HO level
+        SetManualProblem(GlobalVariables.HOProblem());
 
-        SetManualProblem(house);
+        //Instance the HO Game Spell Object
+        script.InstanceSpellObject();
     }
 
     /**Call to set the shapes to be spawned*/
@@ -108,16 +105,18 @@ public class HOGameBeh : MonoBehaviour
 
     public class ShapeObject
     {
-        public int x = UNUSED;
-        public int y = UNUSED;
+        public float x = UNUSED;
+        public float y = UNUSED;
         public GameBehaviour.SHAPES shape;
         public GameObject actualShapeObj;
         public Vector3 offset = Vector3.zero;
         public bool isToBeFilled = false;
         public float angle = 0;
         public bool isExcess = false;
+        public bool isIntersect = false;
+        public float zOffset = 0;
 
-        public ShapeObject(int x, int y, GameBehaviour.SHAPES shape)
+        public ShapeObject(float x, float y, GameBehaviour.SHAPES shape)
         {
             this.x = x;
             this.y = y;
@@ -180,22 +179,50 @@ public class HOGameBeh : MonoBehaviour
                 return null;
             }
 
+            GameObject ret = null; //Return GameObject
             switch (obj.shape)
             {
                 case GameBehaviour.SHAPES.SQUARE:
-                    return this.main.shapeGenerator.CreateSquare(obj.offset, obj.x);
+                    ret = this.main.shapeGenerator.CreateSquare(obj.offset, obj.x);
+                    break;
                 case GameBehaviour.SHAPES.TRIANGLE:
-                    return this.main.shapeGenerator.CreateTriangle(obj.offset, obj.x, obj.y);
+                    ret = this.main.shapeGenerator.CreateTriangle(obj.offset, obj.x, obj.y);
+                    break;
                 case GameBehaviour.SHAPES.CIRCLE:
-                    return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, false);
+                    ret = this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, false);
+                    break;
                 case GameBehaviour.SHAPES.RECTANGLE:
-                    return this.main.shapeGenerator.CreateRectangle(obj.offset, obj.x, obj.y);
+                    ret = this.main.shapeGenerator.CreateRectangle(obj.offset, obj.x, obj.y);
+                    break;
                 case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                    return this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, true);
+                    ret = this.main.shapeGenerator.CreateCircle(obj.offset, obj.x, true);
+                    break;
                 default:
                     UnityEngine.Debug.LogWarning($"Unsupported shape type for generation: {obj.shape}");
                     return null;
             }
+
+            //Shape that is intersect is always excess
+            if(obj.isIntersect)
+                obj.isExcess = true;
+
+            //Change color of excess and intersect
+            if (obj.isExcess)
+            {
+                if(obj.isIntersect)
+                    ret.GetComponent<Renderer>().material.color = new Color(0.5f, 0.0f, 0.2f, 1f);
+                else
+                {
+                    //Dark Gray color
+                    ret.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 1f);
+                } 
+            }
+
+            //Apply z-axis Offset to determine which shape is above which
+            Vector3 curPos = ret.transform.localPosition;
+            ret.transform.localPosition = new Vector3(curPos.x, curPos.y, obj.zOffset);
+
+            return ret;
         }
 
         public void destroyAllShapes()
@@ -221,42 +248,47 @@ public class HOGameBeh : MonoBehaviour
                 if (obj != null && obj.actualShapeObj != null)
                 {
                     //obj.actualShapeObj.SetActive(value);
-                    SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value);
+                    if (obj.actualShapeObj.transform.Find("FillShape") != null)
+                        SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value,
+                            obj.actualShapeObj.transform.Find("FillShape").gameObject);
+                    else
+                        SetHiddenStateAllShapes(obj.actualShapeObj.GetComponent<MeshRenderer>(), value);
                 }
             }
         }
 
-        private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value)
+        private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value, GameObject fillShape = null)
         {
+            Vector3 hidePos = new(30,30,30);
+            
             if (value)
             {
                 float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
                 renderer.material.color = new Color(r,g,b,0);
+                if (fillShape != null)
+                    fillShape.transform.localPosition = hidePos; //Hide fill shape
             }
 
             else
             {
                 float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
                 renderer.material.color = new Color(r, g, b, 1.0f);
+                if (fillShape != null)
+                    fillShape.transform.localPosition = Vector3.zero; //Show fill shape
             }
         }
     }
 
     private void OnAnyShapeClicked(ShapeClickManager.ShapeClickData clickData)
     {
-        script.UIAfterShapeSelect(clickData);
         // Your custom logic here - you get ALL the shape information!
         // UnityEngine.Debug.Log($"HOGameBeh.OnAnyShapeClicked: Test that please... Clicked {clickData.shapeType} at {clickData.worldPosition}");
 
         //GlobalVariables.clickedShapeData = clickData;
 
-
         //UnityEngine.Debug.Log(clickData.originalShapeObject.x);
         //UnityEngine.Debug.Log(clickData.originalShapeObject.y);
         //UnityEngine.Debug.Log(clickData.originalShapeObject.shape);
-
-
-
 
         // Example actions:
         // - Play sound
@@ -264,6 +296,24 @@ public class HOGameBeh : MonoBehaviour
         // - Change game state
         // - Move other shapes
         // etc.
+
+        StartCoroutine(ShapeClickFunctions(clickData));
+
+        //Play select sound
+        script.soundPlayer.PlaySFX(2, 1, 2f);
+    }
+
+    private IEnumerator ShapeClickFunctions(ShapeClickManager.ShapeClickData clickData)
+    {
+        yield return new WaitForSeconds(0.15f); //Small delay to see shape flash
+
+        script.UIAfterShapeSelect(clickData);
+
+        //Get the text displays for the selected shape
+        script.GetVarDisp(clickData.originalShapeObject.shape);
+
+        //Change Character dialogue on click
+        script.characterSay.text = HOGameScript.charDialogue3;
     }
 
     void OnDestroy()
