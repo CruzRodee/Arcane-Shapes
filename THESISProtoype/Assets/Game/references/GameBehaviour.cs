@@ -62,9 +62,11 @@ public class GameBehaviour : MonoBehaviour
     private GameObject pDialogue;
     private GameObject pDiaButtons;
     public GameObject notifyTextObj;
+    public Text textTemp;
 
     public GameObject spriteHint;
     public GameObject textHint;
+    public GameObject textHintSpell;
     public GameObject spriteHintUndo;
     public GameObject textHintUndo;
     public GameObject textHintBoard;
@@ -85,7 +87,7 @@ public class GameBehaviour : MonoBehaviour
     private Text textAnsCir;
     private Text textAnsSqr;
     private Text textAnsTri;
-    private Text manaReq;
+    // private Text manaReq;
     private Text characterSay;
     private Text textFinish;
 
@@ -98,7 +100,7 @@ public class GameBehaviour : MonoBehaviour
     public Image spriteHintImgSpell;
     public Button bYesHome;   //alternate buttons
     public Button bYes;
-
+    public Button btnConfirmSpell;
 
     private string currentShapeToSolve;
     private string chosenShape;
@@ -334,6 +336,10 @@ public class GameBehaviour : MonoBehaviour
     public void toggleConfirmScreen(string what)
     {
 
+        if (what == "shape")    //chaned some stuff lang
+        {
+            what = chosenShape;
+        }
         bool temp = !pConfirm.activeInHierarchy;
 
         if (pConfirm != null)
@@ -375,34 +381,62 @@ public class GameBehaviour : MonoBehaviour
             pLowerScroll.SetActive(!pLowerScroll.activeInHierarchy);
         }
     }
+
+    public void hideAllEquation()
+    {
+        pEquationSquare.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        pEquationCircle.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationTriangle.SetActive(false);
+
+    }
+
+
     public void chooseSquare()
     {
         chosenShape = "SQUARE";
-        toggleConfirmScreen(chosenShape);
+
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSquare.SetActive(true);
+        // textTemp.text = "SQUARE";
     }
 
     public void chooseSemiCircle()
     {
         chosenShape = "SEMI_CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSCircle.SetActive(true);
+        // textTemp.text = "SEMI_CIRCLE";
     }
 
     public void chooseCircle()
     {
         chosenShape = "CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationCircle.SetActive(true);
+        // textTemp.text = "CIRCLE";
     }
 
     public void chooseRectangle()
     {
         chosenShape = "RECTANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationRectangle.SetActive(true);
+        // textTemp.text = "RECTANGLE";
     }
 
     public void chooseTriangle()
     {
         chosenShape = "TRIANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationTriangle.SetActive(true);
+        // textTemp.text = "TRIANGLE";
     }
 
     public void btnNo()
@@ -435,16 +469,25 @@ public class GameBehaviour : MonoBehaviour
             // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
             // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
 
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
-            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -138f)));   //experiemtn positions
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));
+            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   //left mode
 
            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
             // pDialogue.y = -59;
         }
         else
         {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
-            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+            
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));    //when youy undo enough it should return here (nasa baba)
+            if(isDoneMeasuring==false)
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
+            }
+            else
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+            }
 
             //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
             // pDialogue.y = 100; //tago
@@ -475,10 +518,12 @@ public class GameBehaviour : MonoBehaviour
         textHintUndo.SetActive(false);
         textHintBoard.SetActive(false);
         spriteHintSpell.SetActive(false);
+        textHintSpell.SetActive(false);
         
         //todo switch
         if (step==0){
             spriteHintSpell.SetActive(true);
+            // textHintSpell.SetActive(true);
             StartCoroutine(BlinkSprite(step)); //blinmk
         }
         else if(step == 1)
@@ -505,6 +550,7 @@ public class GameBehaviour : MonoBehaviour
         textHintUndo.SetActive(false);
         textHintBoard.SetActive(false);
         spriteHintSpell.SetActive(false);
+        textHintSpell.SetActive(false);
     }
 
     private IEnumerator BlinkSprite(int step)
@@ -514,6 +560,7 @@ public class GameBehaviour : MonoBehaviour
         Color color0=spriteHintImgSpell.color; 
         if (step==0){
             yield return new WaitForSeconds(3f);
+            textHintSpell.SetActive(true);
         }
         float elapsed = 0f;
         while(true)
@@ -574,16 +621,14 @@ public class GameBehaviour : MonoBehaviour
         {
             hideDiaBoxWhileMeasuring(); //this is new for only measurement
             ShowHint(1); // step 1 = 1 and 2
-
+            btnConfirmSpell.gameObject.SetActive(false);
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
             // toggleDialogueBox();
 
             
-            //TODO: insert the tutorial here
-            characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
-            manaReq.text = "Katumbas na Mana";
+            
 
             // dropdown.gameObject.SetActive(false);
             lineSnapper.gameObject.SetActive(true);
@@ -594,7 +639,10 @@ public class GameBehaviour : MonoBehaviour
 
             if (chosenShape == "TRIANGLE")
             {
-                pEquationTriangle.SetActive(true);
+                pEquationTriangle.SetActive(true); //dont need this anymore
+                //TODO: insert the tutorial here
+                characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
+                // manaReq.text = "Katumbas na Mana";
 
             }
             else if (chosenShape == "SQUARE")
@@ -737,9 +785,9 @@ public class GameBehaviour : MonoBehaviour
             }
 
             //ALSO TODO: FIX LINE LENGTHS DISPLAY
-
-            DoneMeasure();
             ShowHint(3);//done measuring na so show Hint for undo button for the first time
+            DoneMeasure();
+            
         }
         else
         { //Reset the OCRInput board
@@ -786,6 +834,7 @@ public class GameBehaviour : MonoBehaviour
 
     public void DoneMeasure()
     {
+
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
         if (GlobalVariables.level < 3)
@@ -918,7 +967,7 @@ public class GameBehaviour : MonoBehaviour
         //copied from old repo
 
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
-        manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
+        // manaReq = GameObject.Find("ManaRequired").GetComponent<Text>(); 
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
@@ -953,7 +1002,7 @@ public class GameBehaviour : MonoBehaviour
 
         //hide lang muna
         pDiaButtons.SetActive(false);
-        manaReq.text = "";//clear
+        // manaReq.text = "";//clear
 
         spriteHint.SetActive(false);
         spriteHintSpell.SetActive(false);
@@ -961,6 +1010,7 @@ public class GameBehaviour : MonoBehaviour
         spriteHintUndo.SetActive(false);
         textHintUndo.SetActive(false);
         textHintBoard.SetActive(false);
+        textHintSpell.SetActive(false);
 
         pConfirmText.text = "";
 
