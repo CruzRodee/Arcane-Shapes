@@ -50,9 +50,12 @@ public class GameBehaviour : MonoBehaviour
 
     private RectTransform rtDialogue;
     private RectTransform rtDiaButtons;
+    // private RectTransform rtblackboard;
 
     private bool isDoneMeasuring;
     //panels na toggable, containers lang
+    // public GameObject blackboard;
+
     public GameObject hud;
     public GameObject quickMenu;
     public GameObject panelMagicScroll;
@@ -470,6 +473,9 @@ public class GameBehaviour : MonoBehaviour
             // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
 
             StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, 285f)));
+
+
             StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   //left mode
 
            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
@@ -480,6 +486,7 @@ public class GameBehaviour : MonoBehaviour
             
             // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
             StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));    //when youy undo enough it should return here (nasa baba)
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
             if(isDoneMeasuring==false)
             {
                 StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
@@ -561,6 +568,7 @@ public class GameBehaviour : MonoBehaviour
         if (step==0){
             yield return new WaitForSeconds(3f);
             textHintSpell.SetActive(true);
+            btnConfirmSpell.gameObject.SetActive(true); //make sure not to prematurely show up
         }
         float elapsed = 0f;
         while(true)
@@ -641,7 +649,7 @@ public class GameBehaviour : MonoBehaviour
             {
                 pEquationTriangle.SetActive(true); //dont need this anymore
                 //TODO: insert the tutorial here
-                characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
+                // characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
                 // manaReq.text = "Katumbas na Mana";
 
             }
@@ -768,6 +776,9 @@ public class GameBehaviour : MonoBehaviour
     {
         //added NTS
 
+        ShowHint(3);//done measuring na so show Hint for undo button for the first time
+        characterSay.text = "";
+
         if (!isDoneMeasuring)
         {
             // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
@@ -785,7 +796,7 @@ public class GameBehaviour : MonoBehaviour
             }
 
             //ALSO TODO: FIX LINE LENGTHS DISPLAY
-            ShowHint(3);//done measuring na so show Hint for undo button for the first time
+            
             DoneMeasure();
             
         }
@@ -890,8 +901,10 @@ public class GameBehaviour : MonoBehaviour
             //Slide and Scale Dialogue Box
             // StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
             //adjusted
-            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(227f, 100f)));
-            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.7f, 0.7f, 0.7f)));
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(308f, 100f)));
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(285f, -40f)));
+
+            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.9f, 0.9f, 0.9f)));
         }
         else if (!show)
         {
@@ -903,6 +916,8 @@ public class GameBehaviour : MonoBehaviour
 
             //Slide Dialogue Box
             StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(225f, 130f)));
+            
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
             StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(1f, 1f, 1f))); //Scale to Normal
         }
 
@@ -983,10 +998,16 @@ public class GameBehaviour : MonoBehaviour
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
         pDiaButtons = GameObject.Find("pDiaButtons");
         rtDiaButtons = pDiaButtons.GetComponent<RectTransform>();
+        // rtblackboard = blackboard.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         currentShapeToSolve = savedGame.currRoom;
         textHUD.text = savedGame.currRoom + " ROOM";
+
+
+
+        currentShapeToSolve = savedGame.currRoom;
+
 
 
         pDialogue.SetActive(true);
@@ -1011,6 +1032,8 @@ public class GameBehaviour : MonoBehaviour
         textHintUndo.SetActive(false);
         textHintBoard.SetActive(false);
         textHintSpell.SetActive(false);
+        
+        btnConfirmSpell.gameObject.SetActive(false);
 
         pConfirmText.text = "";
 

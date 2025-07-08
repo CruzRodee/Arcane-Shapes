@@ -274,30 +274,30 @@ public class LS_EventsScript : MonoBehaviour
                 break;
         }
 
-        if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button
+        // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
+        // {
+        btnCompound.GetComponent<Button>().interactable = true; // Activate button
+        GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
+        GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
+        switch (data.compLvl)
         {
-            btnCompound.GetComponent<Button>().interactable = true; // Activate button
-            GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
-            GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
-            switch (data.compLvl)
-            {
-                case 0:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
-                    break;
-                case 1:
-                case 2:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
-                    break;
-                case 3:
-                case 4:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
-                    break;
-                case 5:
-                case 6:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
-                    break;
-            }
+            case 0:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
+                break;
+            case 1:
+            case 2:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
+                break;
+            case 3:
+            case 4:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
+                break;
+            case 5:
+            case 6:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
+                break;
         }
+        // }
     }
 
 
@@ -434,7 +434,7 @@ public class LS_EventsScript : MonoBehaviour
 
     public void enterCompound()
     {
-        UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+        UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room
