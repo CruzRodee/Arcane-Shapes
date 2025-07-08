@@ -480,10 +480,8 @@ public class GameBehaviour : MonoBehaviour
         {
             spriteHint.SetActive(true);
             textHint.SetActive(true);
-            StartCoroutine(BlinkSprite(step));
-        }
-        else if (step==2)
-        {   spriteHintUndo.SetActive(true);
+            StartCoroutine(BlinkSprite(step));  //sabay nalng
+            spriteHintUndo.SetActive(true);
             textHintUndo.SetActive(true);
             StartCoroutine(BlinkSprite(step));
         }
@@ -589,7 +587,6 @@ public class GameBehaviour : MonoBehaviour
             //show correct casting equation
             //not entering correctly
 
-            ShowHint(2);
             if (chosenShape == "TRIANGLE")
             {
                 pEquationTriangle.SetActive(true);
@@ -851,7 +848,7 @@ public class GameBehaviour : MonoBehaviour
             StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightStartTransObj.transform.position));
 
             //Slide Dialogue Box
-            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(225f, 130f)));
             StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(1f, 1f, 1f))); //Scale to Normal
         }
 
