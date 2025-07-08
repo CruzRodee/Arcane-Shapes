@@ -49,6 +49,7 @@ public class GameBehaviour : MonoBehaviour
     private string savePath;
 
     private RectTransform rtDialogue;
+    private RectTransform rtDiaButtons;
 
     private bool isDoneMeasuring;
     //panels na toggable, containers lang
@@ -435,13 +436,17 @@ public class GameBehaviour : MonoBehaviour
             // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
 
             StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
+            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -138f)));   //experiemtn positions
+
+           // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
             // pDialogue.y = -59;
         }
         else
         {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
+            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+
+            //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
             // pDialogue.y = 100; //tago
         }
     }
@@ -917,10 +922,7 @@ public class GameBehaviour : MonoBehaviour
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
-        isDoneMeasuring = false;
-
-        pDiaButtons = GameObject.Find("pDiaButtons");
-
+        isDoneMeasuring = false; 
         textAnsSC = GameObject.Find("textAnsSC")?.GetComponent<Text>();
         textAnsRect = GameObject.Find("textAnsRect")?.GetComponent<Text>();
         textAnsCir = GameObject.Find("textAnsCir")?.GetComponent<Text>();
@@ -930,7 +932,8 @@ public class GameBehaviour : MonoBehaviour
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
-
+        pDiaButtons = GameObject.Find("pDiaButtons");
+        rtDiaButtons = pDiaButtons.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         currentShapeToSolve = savedGame.currRoom;
