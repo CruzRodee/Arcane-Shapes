@@ -23,6 +23,21 @@ public class MM_UIScript : MonoBehaviour
     private Animator screenFade;
     private const float TRANSITIONDELAY = 1.2f;
 
+
+    //For the credits screen dont delete
+    public GameObject panelCredits;
+
+    public void ToggleCredits()
+    {
+        if (panelCredits != null)
+        {
+            panelCredits.SetActive(false);
+        }
+        else{
+            panelCredits.SetActive(true);
+        }
+    }
+
     private void Awake()
     {
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
@@ -48,6 +63,8 @@ public class MM_UIScript : MonoBehaviour
         }
         overlayPanel.SetActive(false);
         panelNotify.SetActive(false);
+        panelCredits.SetActive(false);
+
 
     }
 
@@ -76,7 +93,16 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoCredits()
     {
-        Debug.Log("Open Credits");
+        if (panelCredits.active)
+        {
+            panelCredits.SetActive(false);
+            Debug.Log("Clsoe Credits");
+        }
+        else{
+            panelCredits.SetActive(true);
+            
+            Debug.Log("Open Credits");
+        }
     }
 
     public void LoadFirstScene()

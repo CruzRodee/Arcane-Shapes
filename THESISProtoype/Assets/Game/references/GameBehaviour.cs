@@ -60,8 +60,23 @@ public class GameBehaviour : MonoBehaviour
     public GameObject pNotify;
     private GameObject pDialogue;
     private GameObject pDiaButtons;
-
     public GameObject notifyTextObj;
+
+    public GameObject spriteHint;
+    public GameObject textHint;
+    public GameObject spriteHintUndo;
+    public GameObject textHintUndo;
+    public GameObject textHintBoard;
+    public GameObject spriteHintSpell;
+
+    public GameObject pEquationTriangle;
+    public GameObject pEquationSquare;
+    public GameObject pEquationRectangle;
+    public GameObject pEquationSCircle;
+    public GameObject pEquationCircle;
+
+
+    public Text pConfirmText;
     private Text pNotifyText;
     private Text textAns;
     private Text textAnsSC;
@@ -75,12 +90,13 @@ public class GameBehaviour : MonoBehaviour
 
     public Text confirmText;
     public Text textHUD;
-    public GameObject pEquationTriangle;
-    public GameObject pEquationSquare;
-    public GameObject pEquationRectangle;
-    public GameObject pEquationSCircle;
-    public GameObject pEquationCircle;
 
+
+    public Image spriteHintImg;
+    public Image spriteHintImgUndo;
+    public Image spriteHintImgSpell;
+    public Button bYesHome;   //alternate buttons
+    public Button bYes;
 
 
     private string currentShapeToSolve;
@@ -286,6 +302,12 @@ public class GameBehaviour : MonoBehaviour
     {
         formulaDisplay.SetActive(false); //Disable this since its visible above the screenfade for some reason
         screenFadeAnimator.SetTrigger("sceneOut");
+        
+        
+        Color color0=spriteHintImgSpell.color; 
+        color0.a = 0f;
+        spriteHintImgSpell.color = color0;
+
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
     private void LoadSceneDelay()
@@ -296,6 +318,9 @@ public class GameBehaviour : MonoBehaviour
     public void onQuit()
     {
         error = 100f; //Prevent accidental saving due to 0f error
+        //add "Do you want to return to main menu? Score won't be saved"
+        // toggleConfirmScreen("confirmHome");
+
         screenFadeAnimator.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY); //Quit to LS
     }
@@ -305,16 +330,40 @@ public class GameBehaviour : MonoBehaviour
         lineSnapper.OnUndoPressed();
     }
 
-    public void toggleConfirmScreen(string spell)
+    public void toggleConfirmScreen(string what)
     {
+
+        bool temp = !pConfirm.activeInHierarchy;
+
         if (pConfirm != null)
         {
-            pConfirm.SetActive(!pConfirm.activeInHierarchy);
+            pConfirm.SetActive(temp);    //hideshow
+            if (temp==true) //nagtoggle ng active yung notif
+            {
+                HideMeasureHint();
+            }
+            // else{
+            //     ShowHint(1); //back to measure 1 screen
+            //     ShowHint(2);
+            // }
+            
         }
 
-        if (pConfirm.activeInHierarchy)
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
+        if (what=="confirmHome"){
+            pConfirmText.text = "Nais mo bang bumalik sa labas na pagpipilian?";
+            confirmText.text = "Hindi masa-Save ang progreso.";
+            bYes.gameObject.SetActive(false);
+            bYesHome.gameObject.SetActive(true);
+        }
+        else if (pConfirm.activeInHierarchy)
         {
-            confirmText.text = "[ " + spell + " ]";
+            pConfirmText.text = "Tama ba ang napili:";
+            bYes.gameObject.SetActive(true);
+            bYesHome.gameObject.SetActive(false);
+            confirmText.text = "[ " + what + " ]?";
+
         }
     }
 
@@ -361,23 +410,38 @@ public class GameBehaviour : MonoBehaviour
         // pConfirm.SetActive(false);
     }
 
+    public void hideDiaBoxWhileMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));
+    }
+
+    public void showDiaBoxAfterMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
+    }
+
+
     public void toggleDialogueBox()
     {
-        Vector2 RTAWAYTRANS = new(600f, -100f);
-        Vector2 PDIAAWAYTRANS = new(239, 150);
-        Vector2 RTONTRANS = new(600f, 100f);
-        Vector2 PDIAONTRANS = new(239, 123);
+        // Vector2 RTAWAYTRANS = new(600f, -100f);
+        // Vector2 PDIAAWAYTRANS = new(239, 150);
+        // Vector2 RTONTRANS = new(600f, 100f);
+        // Vector2 PDIAONTRANS = new(239, 123);
+
+        // 600, -121.46 Y to hide the dialogue while measuring (since the shape cannot be moved)
+
 
         if (rtDialogue.anchoredPosition.y == 100)
         {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
+            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
             // pDialogue.y = -59;
         }
         else
         {
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
-            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));
+            StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
             // pDialogue.y = 100; //tago
         }
     }
@@ -397,6 +461,99 @@ public class GameBehaviour : MonoBehaviour
         rt.anchoredPosition = endTransform;
     }
 
+
+    private void ShowHint(int step)
+    {
+        spriteHint.SetActive(false);
+        textHint.SetActive(false);
+        spriteHintUndo.SetActive(false);
+        textHintUndo.SetActive(false);
+        textHintBoard.SetActive(false);
+        spriteHintSpell.SetActive(false);
+        
+        //todo switch
+        if (step==0){
+            spriteHintSpell.SetActive(true);
+            StartCoroutine(BlinkSprite(step)); //blinmk
+        }
+        else if(step == 1)
+        {
+            spriteHint.SetActive(true);
+            textHint.SetActive(true);
+            StartCoroutine(BlinkSprite(step));
+        }
+        else if (step==2)
+        {   spriteHintUndo.SetActive(true);
+            textHintUndo.SetActive(true);
+            StartCoroutine(BlinkSprite(step));
+        }
+        else if (step==3)
+        {
+            textHintBoard.SetActive(true);
+        }
+    }
+
+
+    private void HideMeasureHint()
+    {
+        spriteHint.SetActive(false);
+        textHint.SetActive(false);
+        spriteHintUndo.SetActive(false);
+        textHintUndo.SetActive(false);
+        textHintBoard.SetActive(false);
+        spriteHintSpell.SetActive(false);
+    }
+
+    private IEnumerator BlinkSprite(int step)
+    {
+        Color color1=spriteHintImg.color; 
+        Color color2=spriteHintImgUndo.color; 
+        Color color0=spriteHintImgSpell.color; 
+        if (step==0){
+            yield return new WaitForSeconds(3f);
+        }
+        float elapsed = 0f;
+        while(true)
+        {
+           
+            if (Input.GetMouseButtonDown(0))
+            {
+                //hide the sprite if screen s touched
+                HideMeasureHint();
+                yield break;
+            }
+            elapsed+=Time.deltaTime;
+
+            float alpha = Mathf.PingPong(elapsed, 1f); //smooth
+
+            color0.a = alpha;
+            spriteHintImgSpell.color = color0;
+            color1.a = alpha;
+            spriteHintImg.color = color1;
+            color2.a = alpha;
+            spriteHintImgUndo.color = color2;
+            // if (step == 0 )
+            // {
+            //     // Color color=spriteHintImgSpell.color;  //this is yung click the spell book kineme
+            //     color0.a = alpha;
+            //     spriteHintImgSpell.color = color;
+            // }
+            // else if (step == 1)  //measure
+            // {
+            //     // Color color=spriteHintImg.color;
+            //     color1.a = alpha;
+            //     spriteHintImg.color = color;
+            // }
+            // else{
+            //     // Color color=spriteHintImgUndo.color;
+            //     color2.a = alpha;
+            //     spriteHintImgUndo.color = color;
+            // }
+            
+            yield return null;
+        }
+    }
+
     public void btnYes()
     {
 
@@ -408,15 +565,20 @@ public class GameBehaviour : MonoBehaviour
         UnityEngine.Debug.Log("chosenshape -> " + chosenShape);
         UnityEngine.Debug.Log("savedGame.currRoom -> " + savedGame.currRoom);
 
-
         //hide the spellbook after choosing
 
         if (savedGame.currRoom == chosenShape)
         {
+            hideDiaBoxWhileMeasuring(); //this is new for only measurement
+            ShowHint(1); // step 1 = 1 and 2
+
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
-            toggleDialogueBox();
+            // toggleDialogueBox();
+
+            
+            //TODO: insert the tutorial here
             characterSay.text = "Kailangan ko naman ngayong sukatin ang hugis gamit ang aking daliri!";
             manaReq.text = "Katumbas na Mana";
 
@@ -426,6 +588,8 @@ public class GameBehaviour : MonoBehaviour
 
             //show correct casting equation
             //not entering correctly
+
+            ShowHint(2);
             if (chosenShape == "TRIANGLE")
             {
                 pEquationTriangle.SetActive(true);
@@ -554,10 +718,13 @@ public class GameBehaviour : MonoBehaviour
     {
         //added NTS
 
-        if (!isDoneMeasuring)    //pag mag sslider plang
+        if (!isDoneMeasuring)
         {
             // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
 
+
+
+            
             //Check if Lines is maxed out first
             if (lineSnapper.lineCount != lineSnapper.GetMaxLinesForShape())
             {
@@ -570,11 +737,13 @@ public class GameBehaviour : MonoBehaviour
             //ALSO TODO: FIX LINE LENGTHS DISPLAY
 
             DoneMeasure();
+            ShowHint(3);//done measuring na so show Hint for undo button for the first time
         }
         else
         { //Reset the OCRInput board
             fa.ResetCalcDisp();
             fa.ResetAnalyzer();
+            showDiaBoxAfterMeasuring(); //this is to bring up the dialogue box after measuring
 
             //Reset Board
             ocrScript.ResetColor();
@@ -623,7 +792,7 @@ public class GameBehaviour : MonoBehaviour
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
         if (var1Display != null)
-            var1Display.GetComponent<Text>().text = lineSnapper.value1;
+            var1Display.GetComponent<Text>().text = lineSnapper.value1; //IT's getting an error here
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper.value2;
 
@@ -668,7 +837,9 @@ public class GameBehaviour : MonoBehaviour
             StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightEndTransObj.transform.position));
 
             //Slide and Scale Dialogue Box
-            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
+            // StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
+            //adjusted
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(227f, 100f)));
             StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.7f, 0.7f, 0.7f)));
         }
         else if (!show)
@@ -784,11 +955,27 @@ public class GameBehaviour : MonoBehaviour
         pDiaButtons.SetActive(false);
         manaReq.text = "";//clear
 
+        spriteHint.SetActive(false);
+        spriteHintSpell.SetActive(false);
+        textHint.SetActive(false);
+        spriteHintUndo.SetActive(false);
+        textHintUndo.SetActive(false);
+        textHintBoard.SetActive(false);
 
+        pConfirmText.text = "";
+
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
+    
+        ShowHint(0); //show hint after delay
+        
+        Color color0=spriteHintImgSpell.color; 
+        color0.a = 0f;
+        spriteHintImgSpell.color = color0; //transparent default kasi baka makita lol
         // end
 
         //////////////////////////////////////
-
+        
 
         if (STARTUP)
         {
@@ -916,6 +1103,8 @@ public class GameBehaviour : MonoBehaviour
             Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
+
+            
             return; // Early return
         }
         if (error < 0f)
