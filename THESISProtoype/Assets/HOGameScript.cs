@@ -70,8 +70,11 @@ public class HOGameScript : MonoBehaviour
 
     private RectTransform rtDialogue;
     private RectTransform rtSlider;
+    private RectTransform rtDiaButtons;
 
     private bool isDoneMeasuring;
+    
+    public Text pConfirmText;
     //panels na toggable, containers lang
     public GameObject hud;
     public GameObject quickMenu;
@@ -82,8 +85,20 @@ public class HOGameScript : MonoBehaviour
     private GameObject pDialogue;
     private GameObject pDiaButtons;
     private GameObject pSlider;
+    
+    public Text textTemp;
 
     public GameObject notifyTextObj;
+
+
+    // public GameObject spriteHint;
+    // public GameObject textHint;
+    // public GameObject textHintSpell;
+    // public GameObject spriteHintUndo;
+    // public GameObject textHintUndo;
+    // public GameObject textHintBoard;
+    // public GameObject spriteHintSpell;
+
     private Text pNotifyText;
     private Text textAns;
     private Text textAnsSC;
@@ -91,7 +106,7 @@ public class HOGameScript : MonoBehaviour
     private Text textAnsCir;
     private Text textAnsSqr;
     private Text textAnsTri;
-    private Text manaReq;
+    // private Text manaReq;
     public Text characterSay;
     private Text textFinish;
 
@@ -103,6 +118,10 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationSCircle;
     public GameObject pEquationCircle;
 
+
+    public Button bYesHome;   //alternate buttons
+    public Button bYes;
+    public Button btnConfirmSpell;
 
     private Dictionary<HOGameBeh.ShapeObject, float> recordedAnswer = new Dictionary<HOGameBeh.ShapeObject, float>();
     private GameObject currentlySolvedShape = null;
@@ -319,17 +338,54 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
     }
 
-    public void toggleConfirmScreen(string spell)
+    public void toggleConfirmScreen(string what)
     {
-        if (pConfirm != null)
+
+        if (what == "shape")    //chaned some stuff lang
         {
-            pConfirm.SetActive(!pConfirm.activeInHierarchy);
+            what = chosenShape;
         }
 
-        if (pConfirm.activeInHierarchy)
+        bool temp = !pConfirm.activeInHierarchy;
+
+        if (pConfirm != null)
         {
-            confirmText.text = "[ " + spell + " ]";
+            pConfirm.SetActive(temp);    //hideshow
+            // if (temp==true) //nagtoggle ng active yung notif
+            // {
+            //     HideMeasureHint();
+            // }
+            // else{
+            //     ShowHint(1); //back to measure 1 screen
+            //     ShowHint(2);
+            // }
         }
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
+        if (what=="confirmHome"){
+            pConfirmText.text = "Nais mo bang bumalik sa labas na pagpipilian?";
+            confirmText.text = "Hindi masa-Save ang progreso.";
+            bYes.gameObject.SetActive(false);
+            bYesHome.gameObject.SetActive(true);
+        }
+        else if (pConfirm.activeInHierarchy)
+        {
+            pConfirmText.text = "Tama ba ang napili:";
+            bYes.gameObject.SetActive(true);
+            bYesHome.gameObject.SetActive(false);
+            confirmText.text = "[ " + what + " ]?";
+
+        }
+
+        // if (pConfirm != null)
+        // {
+        //     pConfirm.SetActive(!pConfirm.activeInHierarchy);
+        // }
+
+        // if (pConfirm.activeInHierarchy)
+        // {
+        //     confirmText.text = "[ " + spell + " ]";
+        // }
     }
 
     public void toggleMagicScroll()
@@ -339,40 +395,77 @@ public class HOGameScript : MonoBehaviour
             pLowerScroll.SetActive(!pLowerScroll.activeInHierarchy);
         }
     }
+
+    
+    public void hideAllEquation()
+    {
+        pEquationSquare.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        pEquationCircle.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationTriangle.SetActive(false);
+
+    }
+    
+
     public void chooseSquare()
     {
         chosenShape = "SQUARE";
-        toggleConfirmScreen(chosenShape);
+
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSquare.SetActive(true);
+        // textTemp.text = "SQUARE";
     }
 
     public void chooseSemiCircle()
     {
         chosenShape = "SEMI_CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSCircle.SetActive(true);
+        // textTemp.text = "SEMI_CIRCLE";
     }
 
     public void chooseCircle()
     {
         chosenShape = "CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationCircle.SetActive(true);
+        // textTemp.text = "CIRCLE";
     }
 
     public void chooseRectangle()
     {
         chosenShape = "RECTANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationRectangle.SetActive(true);
+        // textTemp.text = "RECTANGLE";
     }
 
     public void chooseTriangle()
     {
         chosenShape = "TRIANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationTriangle.SetActive(true);
+        // textTemp.text = "TRIANGLE";
     }
 
     public void btnNo()
     {
         toggleConfirmScreen("");
         // pConfirm.SetActive(false);
+    }
+    
+    public void hideDiaBoxWhileMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));
+    }
+
+    public void showDiaBoxAfterMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
     }
 
 
@@ -382,22 +475,67 @@ public class HOGameScript : MonoBehaviour
         rtSlider.anchoredPosition = new Vector2(-525f, rtSlider.anchoredPosition.y);
     }
 
-    public void ShowDialogue()
+    // public void ShowDialogue()
+    // {
+    //     Vector2 RTONTRANS = new(600f, 100f);
+    //     Vector2 PDIAONTRANS = new(239, 123);
+
+    //     StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
+    //     StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
+    // }
+
+    // public void HideDialogue()
+    // {
+    //     Vector2 RTAWAYTRANS = new(600f, -100f);
+    //     Vector2 PDIAAWAYTRANS = new(239, 150);
+
+    //     StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+    //     StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+    // }
+
+
+    public void toggleDialogueBox()
     {
-        Vector2 RTONTRANS = new(600f, 100f);
-        Vector2 PDIAONTRANS = new(239, 123);
+        // Vector2 RTAWAYTRANS = new(600f, -100f);
+        // Vector2 PDIAAWAYTRANS = new(239, 150);
+        // Vector2 RTONTRANS = new(600f, 100f);
+        // Vector2 PDIAONTRANS = new(239, 123);
 
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
-        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
-    }
+        // 600, -121.46 Y to hide the dialogue while measuring (since the shape cannot be moved)
 
-    public void HideDialogue()
-    {
-        Vector2 RTAWAYTRANS = new(600f, -100f);
-        Vector2 PDIAAWAYTRANS = new(239, 150);
 
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
-        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+        if (rtDialogue.anchoredPosition.y == 100)
+        {
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, 285f)));
+
+
+            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   //left mode
+
+           // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
+            // pDialogue.y = -59;
+        }
+        else
+        {
+            
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));    //when youy undo enough it should return here (nasa baba)
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
+            if(isDoneMeasuring==false)
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
+            }
+            else
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+            }
+
+            //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
+            // pDialogue.y = 100; //tago
+        }
     }
 
     private IEnumerator RectTransformOverTime(RectTransform rt, float duration, Vector2 endTransform)
@@ -434,12 +572,17 @@ public class HOGameScript : MonoBehaviour
 
         if (this.spellCastEvent.problem.problemShape.ToString() == chosenShape)
         {
+            hideDiaBoxWhileMeasuring(); //this is new for only measurement
+
+            btnConfirmSpell.gameObject.SetActive(false);
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
-            HideDialogue();
+            // HideDialogue();
+
+
             characterSay.text = charDialogue2;
-            manaReq.text = "Katumbas na Mana";
+            // manaReq.text = "Katumbas na Mana";
             manaMeasure.gameObject.SetActive(true);
             //slider.gameObject.SetActive(true);
             //confirmMeasurement.gameObject.SetActive(true);
@@ -580,6 +723,7 @@ public class HOGameScript : MonoBehaviour
     public void onCast()
     {
         // Modified function if all shapes solved
+        characterSay.text = "";
         if (isAllSolved)
         {
             DoneMeasure();
@@ -607,6 +751,9 @@ public class HOGameScript : MonoBehaviour
         { //Reset the OCRInput board
             fa.ResetCalcDisp();
             fa.ResetAnalyzer();
+
+            //added this
+            showDiaBoxAfterMeasuring();
 
             //Reset Board
             ocrScript.ResetColor();
@@ -643,7 +790,8 @@ public class HOGameScript : MonoBehaviour
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
-
+        
+        
         if(!isFinalAnswer) //Only record if not final answer mode
         {
             if (!currentShapeObject.isExcess) //Positive Area
@@ -669,6 +817,8 @@ public class HOGameScript : MonoBehaviour
                 ManaFilling();
 
             //End game stuff
+            
+            toggleDialogueBox(); //hide  
             HideNewUI();
 
             if(!isFinalAnswer)
@@ -717,7 +867,7 @@ public class HOGameScript : MonoBehaviour
             isAllSolved = true;
 
             //change dialogue text to say that the final area needs to be calculated if final answer
-            characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
+            // characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
             //No need to reactivate undo button since not used any longer
         }
 
@@ -727,6 +877,7 @@ public class HOGameScript : MonoBehaviour
         {           
             HideNewUI();
 
+            toggleDialogueBox(); //hide  
             //Indicate that the spell casting is done with the error text field
             correctionPerc.text = "Spell Complete!";
 
@@ -796,7 +947,8 @@ public class HOGameScript : MonoBehaviour
         if (show)
         {
             if(!isAllSolved)
-                ShowDialogue(); //Show
+                // ShowDialogue(); //Show
+                toggleDialogueBox();
 
             yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
 
@@ -805,7 +957,7 @@ public class HOGameScript : MonoBehaviour
 
             //Slide and Scale Dialogue Box
             StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
-            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.7f, 0.7f, 0.7f)));
+            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.9f, 0.9f, 0.9f)));
         }
         else if (!show)
         {
@@ -839,12 +991,16 @@ public class HOGameScript : MonoBehaviour
 
             if(isFinalAnswer || undoPressed)
             {
-                HideDialogue();
+                // HideDialogue();
+                toggleDialogueBox(); //Hide
+
                 undoPressed = false;
             }
             else
             {
-                ShowDialogue();
+                // ShowDialogue();
+                toggleDialogueBox(); //Hide
+
 
                 if(!isAllSolved)
                     pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
@@ -893,7 +1049,7 @@ public class HOGameScript : MonoBehaviour
         //copied from old repo
 
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
-        manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
+        // manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
@@ -911,8 +1067,9 @@ public class HOGameScript : MonoBehaviour
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
-        rtSlider = pSlider.GetComponent<RectTransform>();
-
+        pDiaButtons = GameObject.Find("pDiaButtons");
+        rtDiaButtons = pDiaButtons.GetComponent<RectTransform>();
+        // rtblackboard = blackboard.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         currentShapeToSolve = savedGame.currRoom;
@@ -932,8 +1089,13 @@ public class HOGameScript : MonoBehaviour
 
         //hide lang muna
         pDiaButtons.SetActive(false);
-        manaReq.text = "";//clear
+        // manaReq.text = "";//clear
+        btnConfirmSpell.gameObject.SetActive(false);
 
+        pConfirmText.text = "";
+
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
 
         // end
 
@@ -994,8 +1156,8 @@ public class HOGameScript : MonoBehaviour
         /* UnityEngine.Debug.Log(yesButton);
          UnityEngine.Debug.Log(noButton);*/
 
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
+        // yesButton.gameObject.SetActive(false);
+        // noButton.gameObject.SetActive(false);
         manaMeasure.gameObject.SetActive(false);
         slider.gameObject.SetActive(false);
         confirmMeasurement.gameObject.SetActive(false);
@@ -1121,7 +1283,7 @@ public class HOGameScript : MonoBehaviour
         pEquationTriangle.SetActive(false);
         pEquationCircle.SetActive(false);
         pEquationSCircle.SetActive(false);
-        manaReq.text = ""; //Also clear this out
+        // manaReq.text = ""; //Also clear this out
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
@@ -1485,7 +1647,7 @@ public class HOGameScript : MonoBehaviour
         screenFadeAnimator.SetTrigger("fade");
         Invoke(nameof(ToUI), TRANSITIONTIME);
         Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
-        //Invoke(nameof(ShowNewUI), TRANSITIONTIME);
+        // Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
         Invoke(nameof(PlayMusic), TRANSITIONTIME);
     }
@@ -1510,6 +1672,7 @@ public class HOGameScript : MonoBehaviour
         hud.SetActive(a);
         pDialogue.SetActive(b);
         panelMagicScroll.SetActive(c);
+        btnConfirmSpell.gameObject.SetActive(c);//copy magic sroll
         quickMenu.SetActive(d);
     }
 
@@ -1519,6 +1682,8 @@ public class HOGameScript : MonoBehaviour
         pDialogue.SetActive(true);
         panelMagicScroll.SetActive(true);
         quickMenu.SetActive(true);
+        btnConfirmSpell.gameObject.SetActive(true);//show the button at the side
+        showDiaBoxAfterMeasuring();//added
     }
 
     private void RemoveRoomText()
