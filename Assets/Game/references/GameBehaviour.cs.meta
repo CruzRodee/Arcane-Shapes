@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 93af7dc0f55189b45957ca62dd202e51
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - text: {instanceID: 0}
+  - shapeGenerator: {instanceID: 0}
+  - shapeFiller: {instanceID: 0}
+  - lineSnapper: {instanceID: 0}
+  - uiMaterial: {fileID: 2100000, guid: 14a3e9e127e14c4439a24829cdc45bbb, type: 2}
+  - classroomMaterial: {fileID: 2100000, guid: 2b735e0d0fc259b43a7097ac31ceb539, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

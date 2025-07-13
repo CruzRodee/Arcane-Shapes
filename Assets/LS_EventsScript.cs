@@ -1,0 +1,530 @@
+using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+
+public class LS_EventsScript : MonoBehaviour
+{
+    //SIDEBAR BUTTON
+    public Button btnMute;
+    public Button btnHome;
+    public Button btnTutorial;  //TODO: Screenshot + Edit what those mean
+    public Button btnGrimoire;
+
+    //ROOMS BUTTON
+    public Button btnTriangle;  //TODO: Screenshot + Edit what those mean
+    public Button btnSquare;
+    public Button btnSemiCircle;
+    public Button btnCircle;
+    public Button btnRectangle;
+    public Button btnCompound;
+
+    //Mute Related
+    //private bool muted = false; // Use save data instead
+    private Image btnMuteImg;
+    public Sprite btnMutedSprite;
+    public Sprite btnUnmutedSprite;
+    private AudioSource bgmSrc;
+
+    // Other
+    public Text TextHUD;
+
+
+    //UI active
+    public GameObject panelHallway;
+    public GameObject panelDialogue;
+
+
+    // Saving
+    private SaveLoadController saverLoader = new SaveLoadController();
+    private GameData savedGame;
+    private Text playerNameText;
+    private string savePath;
+
+    // Transition stuff
+    private Animator screenFade;
+    private const float TRANSITIONDELAY = 0.5f;
+
+    private void Awake()
+    {
+        //LOAD THE JSON FILE HERE AND GET ALL INFO LIKE NAME ETC
+        savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
+        savedGame = saverLoader.loadGame(savePath);
+
+        //Load Save data stuff onto GlobalVariables
+        savedGame = saverLoader.loadGame(savePath);
+        if (savedGame == null)          // prevent NREs downstream, quit to main menu
+        {
+            //SceneChange to main menu
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
+            return;
+        }
+
+        GlobalVariables.isMute = savedGame.prefMute;
+        screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+
+        btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
+    }
+    void Start()
+    {
+        screenFade.SetTrigger("sceneIn"); //Fade-in animation
+
+        //Save Data after game
+        if (GlobalVariables.gameFinished)
+        {
+            if (GlobalVariables.level == 0)
+                GlobalVariables.level = 1; //Set level to 1 after playing
+            if (GlobalVariables.playerWin && GlobalVariables.level < 6 && !GlobalVariables.isLOGame)
+                GlobalVariables.level++; //Level up after win until 6 for HO
+            else if (GlobalVariables.playerWin && GlobalVariables.level < 3)
+                GlobalVariables.level++; //Level up after win until 3 for LO
+
+            //Prestige/Loop again through HO Levels mechanic
+            if(GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
+            {
+                GlobalVariables.level = 1;
+                savedGame.compPres++;
+            }
+
+            //Save to GameData
+            if (GlobalVariables.isLOGame) //Saving for LO game
+            {
+                switch (GlobalVariables.loSelectedShape)
+                {
+                    case GameBehaviour.SHAPES.SQUARE:
+                        savedGame.squareLvl = GlobalVariables.level;
+                        savedGame.squarePercent = GlobalVariables.percent;
+                        break;
+                    case GameBehaviour.SHAPES.TRIANGLE:
+                        savedGame.triLvl = GlobalVariables.level;
+                        savedGame.triPercent = GlobalVariables.percent;
+                        break;
+                    case GameBehaviour.SHAPES.RECTANGLE:
+                        savedGame.rectLvl = GlobalVariables.level;
+                        savedGame.rectPercent = GlobalVariables.percent;
+                        break;
+                    case GameBehaviour.SHAPES.CIRCLE:
+                        savedGame.circleLvl = GlobalVariables.level;
+                        savedGame.circlePercent = GlobalVariables.percent;
+                        break;
+                    case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                        savedGame.scircleLvl = GlobalVariables.level;
+                        savedGame.scirclePercent = GlobalVariables.percent;
+                        break;
+                    default:
+                        Debug.Log("LevelSelect: Error! Invalid shape!");
+                        break;
+                }
+            }
+
+            else if(!GlobalVariables.isLOGame) //Saving for HO Game
+            {
+                savedGame.compLvl = GlobalVariables.level;
+            }
+
+            //Reset trigger flags
+            GlobalVariables.gameFinished = false;
+            GlobalVariables.playerWin = false;
+            GlobalVariables.isLOGame = false;
+
+            // Save to JSON
+            saverLoader.saveGame(savePath, savedGame);
+        }
+
+        //CHANGED: Debug.Log -> UnityEngine.Debug.Log
+        UnityEngine.Debug.Log(savedGame.playerName);
+        initLevels(savedGame);
+
+
+        playerNameText = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
+
+        //TODO: load the other levels here
+        panelHallway = GameObject.Find("PanelHall");
+        panelDialogue = GameObject.Find("PanelDialogue");
+
+        TextHUD = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
+
+
+
+
+        bgmSrc = GameObject.Find("BGMAudioSource").GetComponent<AudioSource>();
+        bgmSrc.Play();
+
+        //Update mute button state and volume based on prefs
+        if (!savedGame.prefMute)
+        {
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+        }
+        else
+        {
+            if (btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
+            bgmSrc.volume = 0f;
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void initLevels(GameData data)
+    {
+        GameObject.Find("DialogueCharNameText").GetComponent<Text>().text = data.playerName;
+
+        // tempObject = GameObject.Find("TrianglePercent").GetComponent<Text>();
+        // TriangleTitle
+        //just populating the screen with these vars
+
+        // Array of skill level texts
+        string[] skillLevels = { "Walang Datos", "Baguhan", "Bihasa", "Dalubhasa" };
+
+        GameObject.Find("TrianglePercent").GetComponent<Text>().text = "Lvl " + data.triLvl;
+        //test
+        switch (data.triLvl)
+        {
+            case 0:
+                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[0];
+                break;
+            case 1:
+                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[1];
+                break;
+            case 2:
+                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[2];
+                break;
+            case 3:
+                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[3];
+                break;
+        }
+
+        GameObject.Find("SquarePercent").GetComponent<Text>().text = "Lvl " + data.squareLvl;
+        //test
+        switch (data.squareLvl)
+        {
+            case 0:
+                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[0];
+                break;
+            case 1:
+                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[1];
+                break;
+            case 2:
+                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[2];
+                break;
+            case 3:
+                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[3];
+                break;
+        }
+
+        GameObject.Find("RectanglePercent").GetComponent<Text>().text = "Lvl " + data.rectLvl;
+        //test
+        switch (data.rectLvl)
+        {
+            case 0:
+                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[0];
+                break;
+            case 1:
+                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[1];
+                break;
+            case 2:
+                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[2];
+                break;
+            case 3:
+                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[3];
+                break;
+        }
+
+        GameObject.Find("CirclePercent").GetComponent<Text>().text = "Lvl " + data.circleLvl;
+        //test
+        switch (data.circleLvl)
+        {
+            case 0:
+                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[0];
+                break;
+            case 1:
+                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[1];
+                break;
+            case 2:
+                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[2];
+                break;
+            case 3:
+                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[3];
+                break;
+        }
+
+        GameObject.Find("SemiCirclePercent").GetComponent<Text>().text = "Lvl " + data.scircleLvl;
+        //test
+        switch (data.scircleLvl)
+        {
+            case 0:
+                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[0];
+                break;
+            case 1:
+                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[1];
+                break;
+            case 2:
+                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[2];
+                break;
+            case 3:
+                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[3];
+                break;
+        }
+
+        // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
+        // {
+        btnCompound.GetComponent<Button>().interactable = true; // Activate button
+        GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
+        GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
+        switch (data.compLvl)
+        {
+            case 0:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
+                break;
+            case 1:
+            case 2:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
+                break;
+            case 3:
+            case 4:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
+                break;
+            case 5:
+            case 6:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
+                break;
+        }
+        // }
+    }
+
+
+    //////////// SIDE BAR BUTTONS
+
+    public void toggleMute()
+     {
+         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
+        if (savedGame == null)
+        {
+            savedGame = new GameData();        // initialise a fresh save or early-out
+        }
+
+        savedGame.prefMute = !savedGame.prefMute;     // invert state
+        GlobalVariables.isMute = savedGame.prefMute;  // sync global flag
+
+        UnityEngine.Debug.Log(savedGame.prefMute);
+
+        if (!savedGame.prefMute)
+        {
+            if (btnUnmutedSprite != null)
+                btnMuteImg.sprite = btnUnmutedSprite;
+            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+        }
+        else
+        {
+            if(btnMutedSprite != null)
+                btnMuteImg.sprite = btnMutedSprite;
+            bgmSrc.volume = 0f;
+        }
+
+        saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
+    }
+    public void GoHome()
+    {
+        UnityEngine.Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
+
+        //SceneChange to main menu
+        screenFade.SetTrigger("sceneOut");
+        saverLoader.saveGame(savePath, savedGame); // Save before quit
+        Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
+    }
+
+    private void DelayedHomeLoad()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void showTutorial()
+    {
+        UnityEngine.Debug.Log("Show tutorial screenshot");
+    }
+
+    public void showGrimoire()
+    {
+        UnityEngine.Debug.Log("Show tutorial screenshot");
+    }
+
+
+
+
+    ////////////////////////////////////////
+    ///// ENTERING ROOMS ///////////////////
+    ////////////////////////////////////////
+
+    private void DelayedRoomEnter()
+    {
+        SceneManager.LoadScene("GameLevelScene_v1"); //Load Level scene
+    }
+
+    private void DelayedHORoomEnter()
+    {
+        SceneManager.LoadScene("GameLevelScene_v3"); //Load Level scene
+    }
+    //pasted from old repo
+    public void enterRectangle()
+    {
+        UnityEngine.Debug.Log("Rectangle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
+        GlobalVariables.level = savedGame.rectLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "RECTANGLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterCircle()
+    {
+        UnityEngine.Debug.Log("Circle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
+        GlobalVariables.level = savedGame.circleLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "CIRCLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterSquare()
+    {
+        UnityEngine.Debug.Log("Square Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
+        GlobalVariables.level = savedGame.squareLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "SQUARE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+    public void enterTriangle()
+    {
+        UnityEngine.Debug.Log("Triangle Room");
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
+        GlobalVariables.level = savedGame.triLvl; //LOAD LEVEL DATA
+        //SAVE THS TO JSON -> just a marker for next scene
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "TRIANGLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterSemiCircle()
+    {
+        UnityEngine.Debug.Log("Semi-Circle Room");
+
+        //Load data
+        GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
+        GlobalVariables.level = savedGame.scircleLvl; //LOAD LEVEL DATA
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "SEMI_CIRCLE");
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+    }
+
+    public void enterCompound()
+    {
+        UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
+
+        GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+        //Set text as compound room
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");
+
+        screenFade.SetTrigger("sceneOut");
+        Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
+    }
+
+    /*
+
+        public void enterRectangle(){
+            UnityEngine.Debug.Log("Rectangle Room");
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.RECTANGLE;
+            GlobalVariables.level = savedGame.rectLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterCircle(){
+            UnityEngine.Debug.Log("Circle Room");
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.CIRCLE;
+            GlobalVariables.level = savedGame.circleLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterSquare(){
+            UnityEngine.Debug.Log("Square Room");
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SQUARE;
+            GlobalVariables.level = savedGame.squareLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+        /*
+        public void enterTriangle(){
+            UnityEngine.Debug.Log("Triangle Room");
+            //example muna naten to since eto namanna den ung nakagawa na
+            //panelHallway.SetActive(false);
+            //panelDialogue.SetActive(false);
+            //panelCasting.SetActive(true);
+            //panelMagicScroll.SetActive(true);
+            //TextHUD.text = "Triangle Lv1"; //not yet loaded TODO
+            //panelTriangle.SetActive(true);
+
+            //TODO, add the animation snippet here first
+            //for testig purposes muna to complete 1 level
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.TRIANGLE;
+            GlobalVariables.level = savedGame.triLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterSemiCircle(){
+            UnityEngine.Debug.Log("Semi-Circle Room");
+
+            //Load data
+            GlobalVariables.loSelectedShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
+            GlobalVariables.level = savedGame.scircleLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedRoomEnter), TRANSITIONDELAY);
+        }
+
+        public void enterCompound(){
+            UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+
+            GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
+
+            screenFade.SetTrigger("sceneOut");
+            Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
+        }
+        */
+
+    public void calcEquation()
+    {
+        //Randomizer based on range of easiness
+
+    }
+
+}

@@ -1,0 +1,187 @@
+using System;
+using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;   //text
+//save game file
+
+public class MM_UIScript : MonoBehaviour
+{
+    private Text overlayText;
+    public GameObject overlayPanel;
+    public Button btnContinue;
+    public GameObject panelNotify;
+
+    private string savePath;
+    private bool gameExists = false;
+    // Start is called before the first frame update
+
+    private GameData savedGame;
+
+    private SaveLoadController saverLoader = new SaveLoadController();
+
+    private Animator screenFade;
+    private const float TRANSITIONDELAY = 1.2f;
+
+
+    //For the credits screen dont delete
+    public GameObject panelCredits;
+
+    public void ToggleCredits()
+    {
+        if (panelCredits != null)
+        {
+            panelCredits.SetActive(false);
+        }
+        else{
+            panelCredits.SetActive(true);
+        }
+    }
+
+    private void Awake()
+    {
+        screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
+        overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
+    }
+    void Start()
+    {
+        screenFade.SetTrigger("sceneIn"); //Fade-in animation
+
+        savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
+
+        savedGame = saverLoader.loadGame(savePath);
+        if (savedGame != null)
+        {
+            gameExists = true;
+            btnContinue.interactable = true;
+            GlobalVariables.isMute = savedGame.prefMute;
+        }
+        else
+        {
+            btnContinue.interactable = false;
+            GlobalVariables.isMute = false;
+        }
+        overlayPanel.SetActive(false);
+        panelNotify.SetActive(false);
+        panelCredits.SetActive(false);
+
+
+    }
+
+    public void DoContinue()
+    {
+        Debug.Log("CONTINUE");
+        panelNotify.SetActive(true); //nts: always set active true because if inactive ndi makikita ung children comps
+
+        overlayText.text = "Saved game Loaded!";
+        //Jump to the game immediately (load all saved data)
+        LoadHallScene(); //Data loaded at start, continue button disabled by default so fast fingers cant press accidentalt
+    }
+
+    public void DoNewGame()
+    {
+        if (gameExists)
+        {
+
+            overlayPanel.SetActive(true);
+            overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
+        }
+        else
+            LoadFirstScene();
+        // Moved the rest to to LoadFirstScene since that is where new games always go anyways
+    }
+
+    public void DoCredits()
+    {
+        if (panelCredits.active)
+        {
+            panelCredits.SetActive(false);
+            Debug.Log("Clsoe Credits");
+        }
+        else{
+            panelCredits.SetActive(true);
+            
+            Debug.Log("Open Credits");
+        }
+    }
+
+    public void LoadFirstScene()
+    {
+        Debug.Log("new game");
+        panelNotify.SetActive(true);
+
+        overlayText.text = "Handa nang magsimula ng bagong game!";
+
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+
+        Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
+        Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
+
+    }
+    public void LoadHallScene()
+    {
+        Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
+        Invoke(nameof(DelayedHall), TRANSITIONDELAY);
+    }
+
+    private void DelayedSceneOut()
+    {
+        screenFade.SetTrigger("sceneOut");
+    }
+
+    private void DelayedTut1()
+    {
+        SceneManager.LoadScene("Tutorial1");
+    }
+    private void DelayedHall()
+    {
+        SceneManager.LoadScene("LevelSelect");
+    }
+
+    public void DoQuit() // For quit button
+    {
+        Debug.Log("Quitting Game");
+        try
+        {
+            //Check what platform first to make the button work everywhere
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                QuitApplicationUtility.MoveAndroidApplicationToBack();
+            }
+            else if (Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                Application.Quit();
+            }
+            else if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+
+    public void ClosePanel()
+    {
+        overlayPanel.SetActive(false);
+        // if(overlayPanel != null) //it's on screen
+        // {
+        //     isActive  = !isActive;
+        //     overlayPanel.SetActive(isActive);
+        // }
+    }
+
+    // Copy pasted from here: https://docs.unity3d.com/2022.3/Documentation/Manual/android-quit.html
+    public class QuitApplicationUtility
+    {
+        public static void MoveAndroidApplicationToBack()
+        {
+            AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+            activity.Call<bool>("moveTaskToBack", true);
+        }
+    }
+}
