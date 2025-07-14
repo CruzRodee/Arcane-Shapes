@@ -76,21 +76,29 @@ public class MM_UIScript : MonoBehaviour
 
     }
 
-    public void openPassField(){
+    public void openPassField(){    //made it separate so I can assign the buttons to this
         panelInputPass.SetActive(true);
     }
 
     public void passwordWrong()
     {
-        
         panelInputPass.SetActive(false);
         panelNotify.SetActive(true);
         overlayText.text = "Ang Password ay mali, maaring hintayin ang Guro upang malaman ang Password...";
         // panelNotify.SetActive(false); //had to do this cuz the second usage needs to stay on screen so they dont click anything else
     }
 
+    public void notifyDeleteGame(){
+        panelInputPass.SetActive(false);
+        panelNotify.SetActive(true);
+        overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
+        saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+    }
+
     public void checkPassword(){
         // panelNotify.SetActive(false);
+        
+        panelInputPass.SetActive(false);
         if (passwordInputField.text == "ARCANEGODMODE")
         {
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
@@ -114,9 +122,7 @@ public class MM_UIScript : MonoBehaviour
         }
         else if (passwordInputField.text == "RESETADMIN123456")
         {
-            panelNotify.SetActive(true);
-            overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
-            saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+            notifyDeleteGame();
         }
         
         else{
@@ -126,6 +132,7 @@ public class MM_UIScript : MonoBehaviour
         }
 
     }
+    
     public void DoContinue()
     {
         Debug.Log("CONTINUE");
@@ -143,8 +150,8 @@ public class MM_UIScript : MonoBehaviour
             overlayPanel.SetActive(true);
             overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
         }
-        else
-            checkPassword();
+        else //no previous game yet
+            openPassField();
             // LoadFirstScene();
         // Moved the rest to to LoadFirstScene since that is where new games always go anyways
     }
