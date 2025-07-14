@@ -502,7 +502,7 @@ public class GameBehaviour : MonoBehaviour
         {
             
             // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
-            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));    //when youy undo enough it should return here (nasa baba)
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -151.46f)));    //when youy undo enough it should return here (nasa baba)
             // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
             if(!isDoneMeasuring)
             {
@@ -871,6 +871,11 @@ public class GameBehaviour : MonoBehaviour
 
         //DisableNewUI
         HideNewUI();
+
+        //hide all buttons at the end
+        pDiaButtons.SetActive(false);
+
+
 
         //Disable OCR board and formulaDisplay
         StartCoroutine(SlideOCRBoard(false));
