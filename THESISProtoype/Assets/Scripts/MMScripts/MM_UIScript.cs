@@ -92,12 +92,19 @@ public class MM_UIScript : MonoBehaviour
         panelInputPass.SetActive(false);
         panelNotify.SetActive(true);
         overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
+        //make continue not interactalble
+        btnContinue.interactable = false;
         saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
     }
 
     public void checkPassword(){
         // panelNotify.SetActive(false);
         
+
+        // PASS LOWER: PLAYARCANESHAPES123
+        // PASS HIGHER: ARCANESHAPESUNLOCKNOW
+        // PASS UNLOCK ALL: ARCANEGODMODE
+
         panelInputPass.SetActive(false);
         if (passwordInputField.text == "ARCANEGODMODE")
         {

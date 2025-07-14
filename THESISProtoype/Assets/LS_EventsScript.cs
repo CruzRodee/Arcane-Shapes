@@ -35,6 +35,8 @@ public class LS_EventsScript : MonoBehaviour
     public GameObject panelHallway;
     public GameObject panelDialogue;
 
+    //NOTIFY SCREENS
+    public GameObject pConfirmHome;
 
     // Saving
     private SaveLoadController saverLoader = new SaveLoadController();
@@ -57,7 +59,7 @@ public class LS_EventsScript : MonoBehaviour
         if (savedGame == null)          // prevent NREs downstream, quit to main menu
         {
             //SceneChange to main menu
-            screenFade.SetTrigger("sceneOut");
+            screenFade.SetTrigger("sceneOut");  //NAG EERROR HERE
             Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
             return;
         }
@@ -71,13 +73,18 @@ public class LS_EventsScript : MonoBehaviour
     {
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
-        //TODO: check mode from gamesaverloader
+        //hide notif screens
+        pConfirmHome.SetActive(false);
+
+        // 0 PASS UNLOCK ALL: ARCANEGODMODE
+        // 1 PASS LOWER: PLAYARCANESHAPES123
+        // 2 PASS HIGHER: ARCANESHAPESUNLOCKNOW
         if (savedGame.mode == 1)
         {
             btnCompound.interactable = false;
             //disable compound shapes button
         }
-        else// if (savedGame.mode == 2)
+        else if (savedGame.mode == 2)
         {
             btnSemiCircle.interactable = false;
             btnCircle.interactable = false;
@@ -85,10 +92,6 @@ public class LS_EventsScript : MonoBehaviour
             btnTriangle.interactable = false;
             btnRectangle.interactable = false;
         }
-
-
-
-
 
         //Save Data after game
         if (GlobalVariables.gameFinished)
@@ -350,6 +353,23 @@ public class LS_EventsScript : MonoBehaviour
 
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
+
+    public void closeConfirmPanelHome(){
+        pConfirmHome.SetActive(false);
+    }
+
+    //button yes is clicked go back to main menu, no need to save progress
+    public void loadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void GoMainMenu()
+    {
+        pConfirmHome.SetActive(true);
+        Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
+    }
+
     public void GoHome()
     {
         UnityEngine.Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
