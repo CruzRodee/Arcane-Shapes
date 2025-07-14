@@ -95,20 +95,30 @@ public class MM_UIScript : MonoBehaviour
         {
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
         else if (passwordInputField.text == "PLAYARCANESHAPES123")
         {
             mode = 1;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
         else if (passwordInputField.text == "ARCANESHAPESUNLOCKNOW")
         {
             mode = 2;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
+        else if (passwordInputField.text == "RESETADMIN123456")
+        {
+            panelNotify.SetActive(true);
+            overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
+            saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+        }
+        
         else{
             passwordWrong();
             
@@ -161,7 +171,7 @@ public class MM_UIScript : MonoBehaviour
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
         saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode);
-
+        Debug.Log("New Game with mode: "+mode);
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
 

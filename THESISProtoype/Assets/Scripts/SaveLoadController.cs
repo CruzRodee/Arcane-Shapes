@@ -122,6 +122,22 @@ public class SaveLoadController
         return data.mode;
     }
 
+    public void resetGame (string savePath)
+    {
+        if (File.Exists(savePath))
+        {
+            try{
+                File.Delete(savePath);
+            }
+            catch(System.Exception err)
+            {
+                Debug.Log("Error Deleting Game: "+ err);
+            }
+        }
+        else{
+            Debug.Log("No saved game found.");
+        }
+    }
     public GameData loadGame(string savePath)
     {
         if (File.Exists(savePath))

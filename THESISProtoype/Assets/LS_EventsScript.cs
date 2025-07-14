@@ -72,6 +72,23 @@ public class LS_EventsScript : MonoBehaviour
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
         //TODO: check mode from gamesaverloader
+        if (savedGame.mode == 1)
+        {
+            btnCompound.interactable = false;
+            //disable compound shapes button
+        }
+        else// if (savedGame.mode == 2)
+        {
+            btnSemiCircle.interactable = false;
+            btnCircle.interactable = false;
+            btnSquare.interactable = false;
+            btnTriangle.interactable = false;
+            btnRectangle.interactable = false;
+        }
+
+
+
+
 
         //Save Data after game
         if (GlobalVariables.gameFinished)
