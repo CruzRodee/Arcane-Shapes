@@ -12,11 +12,15 @@ public class MM_UIScript : MonoBehaviour
     public Button btnContinue;
     public GameObject panelNotify;
 
+    public GameObject panelInputPass;
+    public InputField passwordInputField;
+
     private string savePath;
     private bool gameExists = false;
     // Start is called before the first frame update
 
     private GameData savedGame;
+    private int mode;
 
     private SaveLoadController saverLoader = new SaveLoadController();
 
@@ -65,9 +69,53 @@ public class MM_UIScript : MonoBehaviour
         panelNotify.SetActive(false);
         panelCredits.SetActive(false);
 
+        //password hardcoded
+        panelInputPass.SetActive(false);
+
+        // mode = -1;
 
     }
 
+    public void openPassField(){
+        panelInputPass.SetActive(true);
+    }
+
+    public void passwordWrong()
+    {
+        
+        panelInputPass.SetActive(false);
+        panelNotify.SetActive(true);
+        overlayText.text = "Ang Password ay mali, maaring hintayin ang Guro upang malaman ang Password...";
+        // panelNotify.SetActive(false); //had to do this cuz the second usage needs to stay on screen so they dont click anything else
+    }
+
+    public void checkPassword(){
+        // panelNotify.SetActive(false);
+        if (passwordInputField.text == "ARCANEGODMODE")
+        {
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
+            mode = 0;
+            LoadFirstScene();
+        }
+        else if (passwordInputField.text == "PLAYARCANESHAPES123")
+        {
+            mode = 1;
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
+            LoadFirstScene();
+        }
+        else if (passwordInputField.text == "ARCANESHAPESUNLOCKNOW")
+        {
+            mode = 2;
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
+            LoadFirstScene();
+        }
+        else{
+            passwordWrong();
+            
+            //notify screen say PASSWORD INVALID. PLS ASK COORDINATOR FOR PASSWORD
+        }
+
+    }
     public void DoContinue()
     {
         Debug.Log("CONTINUE");
@@ -82,12 +130,12 @@ public class MM_UIScript : MonoBehaviour
     {
         if (gameExists)
         {
-
             overlayPanel.SetActive(true);
             overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
         }
         else
-            LoadFirstScene();
+            checkPassword();
+            // LoadFirstScene();
         // Moved the rest to to LoadFirstScene since that is where new games always go anyways
     }
 
@@ -112,7 +160,7 @@ public class MM_UIScript : MonoBehaviour
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode);
 
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
@@ -168,6 +216,15 @@ public class MM_UIScript : MonoBehaviour
     public void ClosePanel()
     {
         overlayPanel.SetActive(false);
+        // if(overlayPanel != null) //it's on screen
+        // {
+        //     isActive  = !isActive;
+        //     overlayPanel.SetActive(isActive);
+        // }
+    }
+    public void CloseNotifyPanel()
+    {
+        panelNotify.SetActive(false);
         // if(overlayPanel != null) //it's on screen
         // {
         //     isActive  = !isActive;

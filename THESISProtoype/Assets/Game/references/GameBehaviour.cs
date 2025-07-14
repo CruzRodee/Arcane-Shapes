@@ -104,6 +104,7 @@ public class GameBehaviour : MonoBehaviour
     public Button bYesHome;   //alternate buttons
     public Button bYes;
     public Button btnConfirmSpell;
+    public Button btnMeasure;
 
     private string currentShapeToSolve;
     private string chosenShape;
@@ -449,11 +450,11 @@ public class GameBehaviour : MonoBehaviour
     }
 
     public void hideDiaBoxWhileMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -121.46f)));
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -150f)));
     }
 
     public void showDiaBoxAfterMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130.78f)));
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));
     }
 
 
@@ -489,10 +490,11 @@ public class GameBehaviour : MonoBehaviour
             // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
             if(isDoneMeasuring==false)
             {
-                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));
             }
             else
             {
+                btnMeasure.gameObject.SetActive(true);//show uli pag bumalik sa measuring kakaundo
                 StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
             }
 
@@ -848,6 +850,9 @@ public class GameBehaviour : MonoBehaviour
 
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
+        //hide measure button
+        btnMeasure.gameObject.SetActive(false);
+
         if (GlobalVariables.level < 3)
             calcBtnObj.SetActive(true); //Activate calculator button if less than level 3 during LO
 
@@ -1034,6 +1039,7 @@ public class GameBehaviour : MonoBehaviour
         textHintSpell.SetActive(false);
         
         btnConfirmSpell.gameObject.SetActive(false);
+        btnMeasure.gameObject.SetActive(true);
 
         pConfirmText.text = "";
 

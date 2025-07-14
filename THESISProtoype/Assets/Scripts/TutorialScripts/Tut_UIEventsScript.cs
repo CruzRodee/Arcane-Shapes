@@ -132,7 +132,10 @@ public class Tut_UIEventsScript : MonoBehaviour
         //after this, reload the messages list to contain the new playerName
 
         //check if working huhu TODO OKAY IT WORKS NOW
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+        // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+
+        saverLoader.updateName(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName);
+
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         Debug.Log(savedGame.playerName);
 

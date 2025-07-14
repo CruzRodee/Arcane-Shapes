@@ -26,7 +26,11 @@ public class GameData
 
     //COMPOUND
     public int compLvl;
-    public int compPres; //Number of times all levels have been looped
+    public int compPres; //Number of times all levels have been 
+    
+    //PASSWORD
+    public int mode;        // int mode = 0: unlock all for teachers, 1: unlock only lower, 2: unlock only higher.
+
 }
 
 //basically saving loading from a JSON file lang lahat
@@ -39,8 +43,9 @@ public class SaveLoadController
 
     public void saveGame(string savePath, string playerName, bool isMute, float squarePercent, int squareLvl,
                         float circlePercent, int circleLvl, float scirclePercent, int scircleLvl,
-                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, int compPres, string currRoom)
+                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, int compPres, string currRoom, int mode)   //dont save mode
     {
+
         GameData data = new GameData()
         {
             playerName = playerName,
@@ -60,7 +65,9 @@ public class SaveLoadController
             currRoom = currRoom,
 
             compLvl = compLvl,
-            compPres = compPres
+            compPres = compPres,
+
+            mode = mode
         };
 
         string json = JsonUtility.ToJson(data);
@@ -75,7 +82,7 @@ public class SaveLoadController
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(savePath, json);
 
-        Debug.Log("SUCCESS, Player Name:  " + data.playerName);
+        Debug.Log("SAVED GAME");
 
     }
 
@@ -85,10 +92,35 @@ public class SaveLoadController
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(savePath, json);
 
-        Debug.Log("SUCCESS, Player Name:  " + data.playerName);
+        Debug.Log("Updated Curent Room:  " + data.currRoom);
+    }
+    
+    public void updateName(string savePath, string newName) // Just pass raw gamedata
+    {
+        GameData data = loadGame(savePath);
+        data.playerName = newName;
+        saveGame(savePath, data);
 
+        Debug.Log("Updated playerName:  " + data.playerName);
     }
 
+    // public void updateMode(string savePath,  string newMode) // Just pass raw gamedata
+    // {
+    //     GameData data = loadGame(savePath);//accessible only via new game, once updated thruout the game
+    //     data.mode = newMode;    //save only mode (for main menu and debugging)
+    //     saveGame(savePath, data);
+    //     // string json = JsonUtility.ToJson(data, true);
+    //     // File.WriteAllText(savePath, json);
+
+    //     Debug.Log("SUCCESS, PASSWORD:  " + data.mode);
+
+    // }
+
+    public int getMode(string savePath) // Just pass raw gamedata
+    {
+        GameData data = loadGame(savePath);
+        return data.mode;
+    }
 
     public GameData loadGame(string savePath)
     {

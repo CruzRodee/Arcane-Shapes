@@ -71,6 +71,8 @@ public class LS_EventsScript : MonoBehaviour
     {
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
+        //TODO: check mode from gamesaverloader
+
         //Save Data after game
         if (GlobalVariables.gameFinished)
         {

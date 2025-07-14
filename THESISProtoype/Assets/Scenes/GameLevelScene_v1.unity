@@ -485,6 +485,7 @@ MonoBehaviour:
   bYesHome: {fileID: 1089254893}
   bYes: {fileID: 2132351597}
   btnConfirmSpell: {fileID: 803174628}
+  btnMeasure: {fileID: 912679216145673849}
   ocrInput: {fileID: 2062185997}
   formulaDisplay: {fileID: 451637218}
   rightStartTransObj: {fileID: 2083741571}
@@ -564,7 +565,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 311.8, y: -520.6}
+  m_AnchoredPosition: {x: 311.8, y: -510}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &451637220
@@ -3467,6 +3468,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ade23839255cd04b8529cc11afde524, type: 3}
+--- !u!114 &912679216145673849 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3122525207445903752, guid: 4ade23839255cd04b8529cc11afde524,
+    type: 3}
+  m_PrefabInstance: {fileID: 912679216145673848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1179040335526096171
 PrefabInstance:
   m_ObjectHideFlags: 0
