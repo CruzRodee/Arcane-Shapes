@@ -198,9 +198,11 @@ public class GameBehaviour : MonoBehaviour
 
     // _init() _ready()
 
-    void Update(){
-        textEME.text = "STATS\nisDoneMeasuring: " + isDoneMeasuring+"\nidkna";
-    }
+
+//debugging chenez
+    // void Update(){
+    //     textEME.text = "STATS\nisDoneMeasuring: " + isDoneMeasuring+"\nidkna";
+    // }
 
 
     void Reset()
@@ -363,11 +365,6 @@ public class GameBehaviour : MonoBehaviour
             {
                 HideMeasureHint();
             }
-            // else{
-            //     ShowHint(1); //back to measure 1 screen
-            //     ShowHint(2);
-            // }
-            
         }
 
         bYesHome.gameObject.SetActive(false);
@@ -914,6 +911,7 @@ public class GameBehaviour : MonoBehaviour
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper.ToggleLineText(); //Toggle off
     }
+
     public void UndoMeasure()
     {
         //Reset line values based on linecount
