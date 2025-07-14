@@ -464,13 +464,15 @@ MonoBehaviour:
   pNotify: {fileID: 2132351603}
   notifyTextObj: {fileID: 2068019611}
   textTemp: {fileID: 621716506}
-  spriteHint: {fileID: 515560820}
+  textEME: {fileID: 1328080287}
   textHint: {fileID: 1227770533}
   textHintSpell: {fileID: 938249565}
-  spriteHintUndo: {fileID: 163950797}
   textHintUndo: {fileID: 759931215}
-  textHintBoard: {fileID: 2021126983}
+  textHintCalcu: {fileID: 2021126983}
+  spriteHint: {fileID: 515560820}
+  spriteHintUndo: {fileID: 163950797}
   spriteHintSpell: {fileID: 97330654}
+  spriteHintCalcu: {fileID: 2475052953735082995}
   pEquationTriangle: {fileID: 293095529}
   pEquationSquare: {fileID: 576673748}
   pEquationRectangle: {fileID: 430942270}
@@ -482,6 +484,7 @@ MonoBehaviour:
   spriteHintImg: {fileID: 515560822}
   spriteHintImgUndo: {fileID: 163950799}
   spriteHintImgSpell: {fileID: 97330656}
+  spriteHintImgCalcu: {fileID: 2475052953735082994}
   bYesHome: {fileID: 1089254893}
   bYes: {fileID: 2132351597}
   btnConfirmSpell: {fileID: 803174628}
@@ -1459,6 +1462,85 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2475052953735082993}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1328080285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1328080286}
+  - component: {fileID: 1328080288}
+  - component: {fileID: 1328080287}
+  m_Layer: 5
+  m_Name: eme
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1328080286
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328080285}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1464571209}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -5, y: 713}
+  m_SizeDelta: {x: 225.753, y: 178.1422}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1328080287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328080285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: dff57d5f56cd453448ff2b8f2f7833d0, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 50
+    m_Alignment: 1
+    m_AlignByGeometry: 1
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: KINESO
+--- !u!222 &1328080288
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328080285}
+  m_CullTransparentMesh: 1
 --- !u!1 &1332340468 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 527169592847709778, guid: 760b825cd35d7dc46935c80d39b0f0ce,
@@ -2556,6 +2638,21 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2528275719706923033, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 760.6782
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528275719706923033, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.00012207
+      objectReference: {fileID: 0}
+    - target: {fileID: 2528275719706923033, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 56.042
+      objectReference: {fileID: 0}
     - target: {fileID: 2653934793124752258, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3338,6 +3435,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1390878845}
     m_Modifications:
+    - target: {fileID: 1519141839051463432, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -42
+      objectReference: {fileID: 0}
     - target: {fileID: 3122525207445903752, guid: 4ade23839255cd04b8529cc11afde524,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3606,6 +3708,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1390878845}
     m_Modifications:
+    - target: {fileID: 2950469233255671034, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 326
+      objectReference: {fileID: 0}
+    - target: {fileID: 2950469233255671034, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 142
+      objectReference: {fileID: 0}
+    - target: {fileID: 5158783069980963261, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 285
+      objectReference: {fileID: 0}
+    - target: {fileID: 5158783069980963261, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 244
+      objectReference: {fileID: 0}
+    - target: {fileID: 5719854649668163494, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_Name
+      value: spriteHandHintCalcu
+      objectReference: {fileID: 0}
     - target: {fileID: 6450260823875479665, guid: 872064da3cd53bf47bca151de272a0ad,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3706,6 +3833,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6712607204436011079, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9007020286441020033, guid: 872064da3cd53bf47bca151de272a0ad,
         type: 3}
       propertyPath: m_Name
@@ -3716,6 +3848,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 872064da3cd53bf47bca151de272a0ad, type: 3}
+--- !u!114 &2475052953735082994 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6089642827388724285, guid: 872064da3cd53bf47bca151de272a0ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 2475052953735082993}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2475052953735082995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &2475052953735082995 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5719854649668163494, guid: 872064da3cd53bf47bca151de272a0ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 2475052953735082993}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4240073116605516584
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4536,7 +4686,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7096499395069753300, guid: a7b6c1c6c2dbec1419488f54ae3c160b,
+        type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1328080286}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7b6c1c6c2dbec1419488f54ae3c160b, type: 3}
 --- !u!1660057539 &9223372036854775807
