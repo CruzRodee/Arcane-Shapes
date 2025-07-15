@@ -87,6 +87,12 @@ public class HOGameScript : MonoBehaviour
     private GameObject pDialogue;
     private GameObject pDiaButtons;
     private GameObject pSlider;
+
+    
+    public GameObject prefabSpawn;
+    public Transform pSpawner;  //contaings prefab for spawning
+    //needs to be Transformm cuz if GameObject cannot convert from scene sa Instantiate kineme
+
     
     public Text textTemp;
 
@@ -111,7 +117,7 @@ public class HOGameScript : MonoBehaviour
     // private Text manaReq;
     public Text characterSay;
     private Text textFinish;
-
+    private Text txtFinalCompound; //once used lng to
     public Text confirmText;
     public Text textHUD;
     public GameObject pEquationTriangle;
@@ -452,7 +458,13 @@ public class HOGameScript : MonoBehaviour
         backspaceButton.gameObject.SetActive(false);//f4rom lower
         Debug.Log("It's here 450, button should not be visible...");
         //uhh idk bakit nawawala lahat ng buttons???
-        btnMeasure.gameObject.SetActive(true);
+        if(isAllSolved){
+            //last na, hide redo button
+            btnMeasure.gameObject.SetActive(false);
+        }
+        else{
+            btnMeasure.gameObject.SetActive(true);
+        }
     }
 
     public void showDiaBoxAfterMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
@@ -506,8 +518,8 @@ public class HOGameScript : MonoBehaviour
 
                 
                 // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
-                
             }
+            
             if(isDoneMeasuring==false)
                 {
                     StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
@@ -523,7 +535,11 @@ public class HOGameScript : MonoBehaviour
                     StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
                     Debug.Log("Line 510");
                 }
-
+            
+            if (isAllSolved) //final portion
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+            }
             //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
             // pDialogue.y = 100; //tago
         }
@@ -714,7 +730,7 @@ public class HOGameScript : MonoBehaviour
     public void onCast()
     {
         // Modified function if all shapes solved
-        // characterSay.text = "";
+        characterSay.text = "";
         justDoneSolving = false;
         if (isAllSolved)
         {
@@ -784,7 +800,6 @@ public class HOGameScript : MonoBehaviour
         inputAnswer = ans;
         
         Debug.Log("Line 777: test DO YOU REACH THIS POINT");
-
 
         if(!isFinalAnswer) //Only record if not final answer mode
         {
@@ -868,6 +883,8 @@ public class HOGameScript : MonoBehaviour
             calcBtnObj.SetActive(false);
             // pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
             btnUndo.gameObject.SetActive(false);
+            btnMeasure.gameObject.SetActive(false);
+            Debug.Log("Line 881 if it errors lam na");
 
             // Set flag that confirms all shapes solved
             isAllSolved = true;
@@ -882,8 +899,16 @@ public class HOGameScript : MonoBehaviour
         if (isFinalAnswer)
         {           
             HideNewUI();
-
+            
+            Debug.Log("-------- before this point the buttons should all be hidden!!! -----");
+            pSpawner.gameObject.SetActive(false); //hide before animation
+            
+                    //hide all buttons at the end
+            pDiaButtons.SetActive(false);
+            //hide all buttons at the end
+            pDiaButtons.SetActive(false);
             toggleDialogueBox(); //hide  
+
             //Indicate that the spell casting is done with the error text field
             correctionPerc.text = "Spell Complete!";
 
@@ -1057,6 +1082,7 @@ public class HOGameScript : MonoBehaviour
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
         // manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
+        txtFinalCompound = GameObject.Find("shapeCompoundFinal").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
         isDoneMeasuring = false;
@@ -1307,7 +1333,12 @@ public class HOGameScript : MonoBehaviour
             {
                 i++;
                 currDisplay = areaDisplay.text; //Get current text
-                Debug.Log("COMPLETED SHAPE! Add here yung new UI for it: "+ dict.Key.shape);
+                //ADD NEW OBJECTS HERE
+
+                Debug.Log(recordedAnswer.Count + "COMPLETED SHAPE! Add here yung new UI for it: "+ dict.Key.shape);
+                txtFinalCompound.text = "Mga Component na bumubuo sa Compound Shape:";
+                spawnCompoundComponents(i, dict.Key.shape , dict.Value);
+
                 areaDisplay.text = currDisplay + $"[{dict.Key.shape}]: {dict.Value} "; //Add shape and area
                 Debug.Log("Size: " + dict.Value);
 
@@ -1319,6 +1350,47 @@ public class HOGameScript : MonoBehaviour
                 }
             }  
         }
+
+    }
+
+    private void spawnCompoundComponents(int i, GameBehaviour.SHAPES shapeName, float shapeVal){
+        //just spawn the component shapes (that are already solved)
+        //n is list size
+        Vector2 newPos = new Vector2(0f,0f) + new Vector2(0f, -60f * i);  //60 is height ng box to spawn
+        GameObject newSpawn = Instantiate(prefabSpawn,pSpawner);
+        RectTransform rtSpawn = newSpawn.GetComponent<RectTransform>();
+        if (rtSpawn !=null){
+            rtSpawn.anchoredPosition = newPos;
+        }
+        else{
+            newSpawn.transform.localPosition = newPos;
+        }
+
+        Text txtShape = newSpawn.transform.Find("shapeText").GetComponent<Text>();
+        txtShape.text = shapeName.ToString() +" : " + shapeVal;  //current name change
+
+        GameObject imgShapeSqr = newSpawn.transform.Find("shapeSqr").gameObject;
+        GameObject imgShapeCir = newSpawn.transform.Find("shapeCir").gameObject;
+        GameObject imgShapeSCir = newSpawn.transform.Find("shapeSCir").gameObject;
+        GameObject imgShapeRect = newSpawn.transform.Find("shapeRect").gameObject;
+        GameObject imgShapeTri = newSpawn.transform.Find("shapeTri").gameObject;
+        imgShapeSqr.SetActive(false);
+        imgShapeCir.SetActive(false);
+        imgShapeSCir.SetActive(false);
+        imgShapeRect.SetActive(false);
+        imgShapeTri.SetActive(false);
+
+        if (shapeName == GameBehaviour.SHAPES.SQUARE){
+            imgShapeSqr.SetActive(true); //hidk whjat i am doing
+
+        }
+        else if(shapeName == GameBehaviour.SHAPES.TRIANGLE)
+        {
+            GameObject imgShape = newSpawn.transform.Find("shapeTri").gameObject;
+            imgShapeTri.SetActive(true); //hidk whjat i am doing
+        }
+
+
 
     }
 
@@ -1714,4 +1786,5 @@ public class HOGameScript : MonoBehaviour
 
         this.spellCastEvent = new SpellCastEvent(this, problem);
     }
+
 }
