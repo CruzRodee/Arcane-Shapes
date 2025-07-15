@@ -539,6 +539,8 @@ public class HOGameScript : MonoBehaviour
             if (isAllSolved) //final portion
             {
                 StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+                // btnMeasure.gameObject.SetActive(false); //hide measure//OKAY DONT DO THAT
+                // Debug.Log("line 543 naway mawala na ung HO button na nasa likod ng redo after neto pls lang");
             }
             //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
             // pDialogue.y = 100; //tago
@@ -907,7 +909,8 @@ public class HOGameScript : MonoBehaviour
             pDiaButtons.SetActive(false);
             //hide all buttons at the end
             pDiaButtons.SetActive(false);
-            toggleDialogueBox(); //hide  
+            toggleDialogueBox(); //hide 
+            txtFinalCompound.text = "";
 
             //Indicate that the spell casting is done with the error text field
             correctionPerc.text = "Spell Complete!";
