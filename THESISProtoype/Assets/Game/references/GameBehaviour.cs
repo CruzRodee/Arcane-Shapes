@@ -116,7 +116,7 @@ public class GameBehaviour : MonoBehaviour
 
 
     private const string castBtnText1 = "Cast Spell";
-    private const string castBtnText2 = "Redo Input";
+    private const string castBtnText2 = "Erase";
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
     private DrawingAndOCRManagerScript ocrScript;

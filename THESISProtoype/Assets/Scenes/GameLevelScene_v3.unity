@@ -393,6 +393,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -42
       objectReference: {fileID: 0}
+    - target: {fileID: 1742141068817815251, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2585976220713037119, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_Text
+      value: Done
+      objectReference: {fileID: 0}
     - target: {fileID: 3122525207445903752, guid: 4ade23839255cd04b8529cc11afde524,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -417,6 +427,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1934672891}
+    - target: {fileID: 4010918127124293224, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleCalcMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 4010918127124293224, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HOGameScript, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4977787913685677658, guid: 4ade23839255cd04b8529cc11afde524,
         type: 3}
@@ -788,7 +808,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3459985443222739542, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 451637219}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 760b825cd35d7dc46935c80d39b0f0ce, type: 3}
 --- !u!224 &289898861 stripped
@@ -1038,16 +1062,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451637218}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1390878845}
+  m_Father: {fileID: 1854110512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 311, y: -510}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -80, y: 10}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &451637220
@@ -2531,6 +2555,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4462630621482348166, guid: 4c9d8504f923a0f448b23c52de9d5f7e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462630621482348166, guid: 4c9d8504f923a0f448b23c52de9d5f7e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1934672891}
+    - target: {fileID: 4462630621482348166, guid: 4c9d8504f923a0f448b23c52de9d5f7e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onQuit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462630621482348166, guid: 4c9d8504f923a0f448b23c52de9d5f7e,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HOGameScript, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2961,6 +3005,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2872cc3b50f6236418a999e34504b0ac, type: 3}
+--- !u!224 &1854110512 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3459985443222739542, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1934672890
 GameObject:
   m_ObjectHideFlags: 0
@@ -4253,10 +4303,6 @@ PrefabInstance:
         type: 3}
       insertIndex: 16
       addedObject: {fileID: 1133333004}
-    - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 451637219}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       insertIndex: -1

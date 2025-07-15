@@ -140,7 +140,7 @@ public class HOGameScript : MonoBehaviour
 
 
     private const string castBtnText1 = "Cast Spell";
-    private const string castBtnText2 = "Redo Input";
+    private const string castBtnText2 = "Erase";
     private const string castBtnText3 = "Finish Spell";
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
@@ -734,36 +734,14 @@ public class HOGameScript : MonoBehaviour
         // Modified function if all shapes solved
         characterSay.text = "";
         justDoneSolving = false;
-        if (isAllSolved)
+        if (isAllSolved || !isDoneMeasuring)
         {
-            DoneMeasure();
-        }
-        
-        //added NTS
-        if (!isDoneMeasuring)    //pag mag sslider plang
-        {
-            // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
-
-            //Check if Lines is maxed out first
-            if (lineSnapper.lineCount != lineSnapper.GetMaxLinesForShape())
-            {
-                // TODO: DISPLAY POPUP OF NOT DONE MEASURING YET
-
-                //QUIT BECAUSE BUTTON DOES NOTHING
-                return;
-            }
-
-            //ALSO TODO: FIX LINE LENGTHS DISPLAY
-
             DoneMeasure();
         }
         else
         { //Reset the OCRInput board
             fa.ResetCalcDisp();
             fa.ResetAnalyzer();
-
-            //added this
-            showDiaBoxAfterMeasuring();
 
             //Reset Board
             ocrScript.ResetColor();
@@ -928,8 +906,7 @@ public class HOGameScript : MonoBehaviour
     {
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
-        // calcBtnObj.SetActive(true);
-        // backspaceButton.SetActive(true);
+        calcBtnObj.SetActive(true);
 
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
