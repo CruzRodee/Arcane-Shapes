@@ -82,8 +82,6 @@ public class HOGameScript : MonoBehaviour
     public GameObject pNotify;
     private GameObject pDialogue;
     private GameObject pDiaButtons;
-    private GameObject pSlider;
-
     
     public GameObject prefabSpawn;
     public Transform pSpawner;  //contaings prefab for spawning
@@ -94,23 +92,7 @@ public class HOGameScript : MonoBehaviour
 
     public GameObject notifyTextObj;
 
-
-    // public GameObject spriteHint;
-    // public GameObject textHint;
-    // public GameObject textHintSpell;
-    // public GameObject spriteHintUndo;
-    // public GameObject textHintUndo;
-    // public GameObject textHintBoard;
-    // public GameObject spriteHintSpell;
-
     private Text pNotifyText;
-    private Text textAns;
-    private Text textAnsSC;
-    private Text textAnsRect;
-    private Text textAnsCir;
-    private Text textAnsSqr;
-    private Text textAnsTri;
-    // private Text manaReq;
     public Text characterSay;
     private Text textFinish;
     private Text txtFinalCompound; //once used lng to
@@ -122,7 +104,6 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationSCircle;
     public GameObject pEquationCircle;
 
-
     public Button bYesHome;   //alternate buttons
     public Button bYes;
     public Button btnConfirmSpell;
@@ -131,9 +112,7 @@ public class HOGameScript : MonoBehaviour
     private GameObject currentlySolvedShape = null;
     private HOGameBeh.ShapeObject currentShapeObject = null;
 
-    private string currentShapeToSolve;
     private string chosenShape;
-
 
     private const string castBtnText1 = "Cast Spell";
     private const string castBtnText2 = "Erase";
@@ -228,15 +207,6 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
-    /*
-     * 
-     * PivotToCenter = Pivot + SizeX/2 + SizeY/2
-     * 
-     * 
-     */
-
-    // _init() _ready()
-
     void Reset()
     {
         //Cleanup possible temporary vfx and clones
@@ -275,20 +245,8 @@ public class HOGameScript : MonoBehaviour
         DeactivateChangeCamera();
         Invoke(nameof(StartLevelAnim), STARTDELAY);
 
-        // TODO: ADD SOMETHING THAT ALLOWS SWITCHING BETWEEN RANDOM PROBLEM AND MANUAL PROBLEM MAYBE
         Invoke(nameof(InitProblem), 0.1f); // Add delay to prevent object from getting nuked by cleanup
-
-        //this.SetManualProblem(SHAPES.SEMI_CIRCLE, 6, 6, 100);
-
-        //Init fill shape
-        //Invoke(nameof(InitFillShape), 0.2f);
-
     }
-
-    //private void InitFillShape()
-    //{
-    //    shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
-    //}
 
     private void InitProblem()
     {
@@ -586,17 +544,10 @@ public class HOGameScript : MonoBehaviour
             if (chosenShape == "TRIANGLE")
             {
                 pEquationTriangle.SetActive(true);
-
             }
             else if (chosenShape == "SQUARE")
             {
                 pEquationSquare.SetActive(true);
-                // textAns = GameObject.Find("textAnsTri").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsSqr").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsRect").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsCir").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsSC").GetComponent<Text>();
-
             }
             else if (chosenShape == "RECTANGLE")
             {
@@ -610,33 +561,10 @@ public class HOGameScript : MonoBehaviour
             {
                 pEquationSCircle.SetActive(true);
             }
-            //am too tired to figure out lol why not working switch
-            // switch(chosenShape){
-            //     case "TRIANGLE":
-            //         UnityEngine.Debug.Log("SHOWING TRIANGLE");
-            //         pEquationTriangle.SetActive(true);
-            //         break;
-            //     case "SQUARE":
-            //         UnityEngine.Debug.Log("SHOWING SQUARE");
-            //         pEquationSquare.SetActive(true);
-            //         break;
-            //     case "CIRCLE":
-            //         pEquationCircle.SetActive(true);
-            //         break;
-            //     case "SEMI_CIRCLE":
-            //         pEquationSCircle.SetActive(true);
-            //         break;
-            //     case "RECTANGLE":
-            //         pEquationRectangle.SetActive(true);
-            //         break;
-            // }
-            //ensure only 1 active exists
         }
         else    //IF SHAPE CHOSEN IS WRONGG:
         {
             notifyWrongShape();
-            // text.gameObject.SetActive(true); //Reactivate if not active
-            // text.text = "Ang shape na pinili ay mali. Subukan ulit.";
 
             //Play shake head anim
             animScript.playerScript.BadTrace();
@@ -1046,14 +974,6 @@ public class HOGameScript : MonoBehaviour
         isDoneMeasuring = false;
         justDoneSolving = false;
 
-        pSlider = GameObject.Find("pSlider");
-
-        textAnsSC = GameObject.Find("textAnsSC")?.GetComponent<Text>();
-        textAnsRect = GameObject.Find("textAnsRect")?.GetComponent<Text>();
-        textAnsCir = GameObject.Find("textAnsCir")?.GetComponent<Text>();
-        textAnsSqr = GameObject.Find("textAnsSqr")?.GetComponent<Text>();
-        textAnsTri = GameObject.Find("textAnsTri")?.GetComponent<Text>();
-
         //test debug
         txtDebugger = GameObject.Find("eme")?.GetComponent<Text>();        
 
@@ -1065,7 +985,6 @@ public class HOGameScript : MonoBehaviour
         // rtblackboard = blackboard.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
-        currentShapeToSolve = savedGame.currRoom;
         textHUD.text = savedGame.currRoom + " ROOM";
 
 
@@ -1112,11 +1031,8 @@ public class HOGameScript : MonoBehaviour
 
         yesButton = GameObject.Find("ConfirmYes").GetComponent<Button>();
         noButton = GameObject.Find("ConfirmNo").GetComponent<Button>();
-        // btnMeasure = GameObject.Find("btnMeasure").GetComponent<Button>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
         lineSnapper = GameObject.Find("Gesture").GetComponent<LineSnapper>();
-        // undo = GameObject.Find("Undo").GetComponent<Button>();
-        // undo = GameObject.Find("btnUndo").GetComponent<Button>();
 
         //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
