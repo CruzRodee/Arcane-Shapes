@@ -37,7 +37,8 @@ public class MM_UIScript : MonoBehaviour
         {
             panelCredits.SetActive(false);
         }
-        else{
+        else
+        {
             panelCredits.SetActive(true);
         }
     }
@@ -76,7 +77,8 @@ public class MM_UIScript : MonoBehaviour
 
     }
 
-    public void openPassField(){    //made it separate so I can assign the buttons to this
+    public void openPassField()
+    {    //made it separate so I can assign the buttons to this
         panelInputPass.SetActive(true);
     }
 
@@ -88,7 +90,8 @@ public class MM_UIScript : MonoBehaviour
         // panelNotify.SetActive(false); //had to do this cuz the second usage needs to stay on screen so they dont click anything else
     }
 
-    public void notifyDeleteGame(){
+    public void notifyDeleteGame()
+    {
         panelInputPass.SetActive(false);
         panelNotify.SetActive(true);
         overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
@@ -97,49 +100,50 @@ public class MM_UIScript : MonoBehaviour
         saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
     }
 
-    public void checkPassword(){
+    public void checkPassword()
+    {
         // panelNotify.SetActive(false);
-        
 
-        // PASS LOWER: PLAYARCANESHAPES123
-        // PASS HIGHER: ARCANESHAPESUNLOCKNOW
-        // PASS UNLOCK ALL: ARCANEGODMODE
+        // PASS UNLOCK ALL: ALL
+        // PASS LOWER: SIMPLE
+        // PASS HIGHER: COMPOUND
 
         panelInputPass.SetActive(false);
-        if (passwordInputField.text == "ARCANEGODMODE")
+        if (passwordInputField.text == "ALL")
         {
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "PLAYARCANESHAPES123")
+        else if (passwordInputField.text == "SIMPLE")
         {
             mode = 1;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "ARCANESHAPESUNLOCKNOW")
+        else if (passwordInputField.text == "COMPOUND")
         {
             mode = 2;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "RESETADMIN123456")
+        else if (passwordInputField.text == "RESET")
         {
             notifyDeleteGame();
         }
-        
-        else{
+
+        else
+        {
             passwordWrong();
-            
+
             //notify screen say PASSWORD INVALID. PLS ASK COORDINATOR FOR PASSWORD
         }
 
     }
-    
+
     public void DoContinue()
     {
         Debug.Log("CONTINUE");
@@ -159,7 +163,7 @@ public class MM_UIScript : MonoBehaviour
         }
         else //no previous game yet
             openPassField();
-            // LoadFirstScene();
+        // LoadFirstScene();
         // Moved the rest to to LoadFirstScene since that is where new games always go anyways
     }
 
@@ -170,9 +174,10 @@ public class MM_UIScript : MonoBehaviour
             panelCredits.SetActive(false);
             Debug.Log("Clsoe Credits");
         }
-        else{
+        else
+        {
             panelCredits.SetActive(true);
-            
+
             Debug.Log("Open Credits");
         }
     }
@@ -185,7 +190,7 @@ public class MM_UIScript : MonoBehaviour
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
         saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode);
-        Debug.Log("New Game with mode: "+mode);
+        Debug.Log("New Game with mode: " + mode);
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
 

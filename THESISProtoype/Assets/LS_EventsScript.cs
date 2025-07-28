@@ -76,23 +76,6 @@ public class LS_EventsScript : MonoBehaviour
         //hide notif screens
         pConfirmHome.SetActive(false);
 
-        // 0 PASS UNLOCK ALL: ARCANEGODMODE
-        // 1 PASS LOWER: PLAYARCANESHAPES123
-        // 2 PASS HIGHER: ARCANESHAPESUNLOCKNOW
-        if (savedGame.mode == 1)
-        {
-            btnCompound.interactable = false;
-            //disable compound shapes button
-        }
-        else if (savedGame.mode == 2)
-        {
-            btnSemiCircle.interactable = false;
-            btnCircle.interactable = false;
-            btnSquare.interactable = false;
-            btnTriangle.interactable = false;
-            btnRectangle.interactable = false;
-        }
-
         //Save Data after game
         if (GlobalVariables.gameFinished)
         {
@@ -104,7 +87,7 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Prestige/Loop again through HO Levels mechanic
-            if(GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
+            if (GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
             {
                 GlobalVariables.level = 1;
                 savedGame.compPres++;
@@ -141,7 +124,7 @@ public class LS_EventsScript : MonoBehaviour
                 }
             }
 
-            else if(!GlobalVariables.isLOGame) //Saving for HO Game
+            else if (!GlobalVariables.isLOGame) //Saving for HO Game
             {
                 savedGame.compLvl = GlobalVariables.level;
             }
@@ -158,6 +141,23 @@ public class LS_EventsScript : MonoBehaviour
         //CHANGED: Debug.Log -> UnityEngine.Debug.Log
         UnityEngine.Debug.Log(savedGame.playerName);
         initLevels(savedGame);
+
+        // 0 PASS UNLOCK ALL: ALL
+        // 1 PASS LOWER: SIMPLE
+        // 2 PASS HIGHER: COMPOUND
+        if (savedGame.mode == 1)
+        {
+            btnCompound.interactable = false;
+            //disable compound shapes button
+        }
+        else if (savedGame.mode == 2)
+        {
+            btnSemiCircle.interactable = false;
+            btnCircle.interactable = false;
+            btnSquare.interactable = false;
+            btnTriangle.interactable = false;
+            btnRectangle.interactable = false;
+        }
 
 
         playerNameText = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
@@ -326,8 +326,8 @@ public class LS_EventsScript : MonoBehaviour
     //////////// SIDE BAR BUTTONS
 
     public void toggleMute()
-     {
-         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
+    {
+        UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
         if (savedGame == null)
         {
             savedGame = new GameData();        // initialise a fresh save or early-out
@@ -346,7 +346,7 @@ public class LS_EventsScript : MonoBehaviour
         }
         else
         {
-            if(btnMutedSprite != null)
+            if (btnMutedSprite != null)
                 btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
@@ -354,7 +354,8 @@ public class LS_EventsScript : MonoBehaviour
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
 
-    public void closeConfirmPanelHome(){
+    public void closeConfirmPanelHome()
+    {
         pConfirmHome.SetActive(false);
     }
 
