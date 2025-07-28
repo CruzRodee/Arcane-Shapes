@@ -15,20 +15,14 @@ public class HOGameScript : MonoBehaviour
 {
     const int UNUSED = -1;
 
-
-    private Text txtDebugger;
-
     GameBehaviour.SHAPES currentShape;
     public SpellCastEvent spellCastEvent;
     TMP_Text correctionPerc;
 
-    Button yesButton;
-    Button noButton;
     public Button btnMeasure; //this is btnMeasure / confirmMeasurement
     public Button btnRestart;
     public Button btnUndo;
     public Button btnQuit;
-    int currentOptionSelected;
 
     public ShapeGenerator shapeGenerator;
     public ShapeFiller shapeFiller;
@@ -39,7 +33,6 @@ public class HOGameScript : MonoBehaviour
 
     private Button changeCameraButton;
     private bool isUICamera = true;
-    private bool y, n, m, s, cm, cp, ls, u, t, d, r, q; //Activity states of UI components
     private GameObject mainCamera, classroomCamera;
     private Material uiMaterial, classroomMaterial;
     private Animator screenFadeAnimator;
@@ -51,7 +44,6 @@ public class HOGameScript : MonoBehaviour
     public float error = 100f;
     private bool isQuit = false;
     private const float TRANSITIONDELAY = 0.5f;
-    private List<TMP_Dropdown.OptionData> defaultOptions; //Use for reset
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
                         charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
                         charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
@@ -156,8 +148,6 @@ public class HOGameScript : MonoBehaviour
         currentShape = GameBehaviour.SHAPES.NONE;
         screenFadeAnimator = GameObject.Find("ScreenFade").GetComponent<Animator>();
         animScript = GameObject.Find("AnimHolder").GetComponent<AnimScript>();
-        // quit = GameObject.Find("Quit").GetComponent<Button>();
-        defaultOptions = new List<TMP_Dropdown.OptionData>();
 
         //Get OCR script
         ocrScript = ocrInput.transform.Find("DrawingAndOCRManager").GetComponent<DrawingAndOCRManagerScript>();
@@ -216,9 +206,6 @@ public class HOGameScript : MonoBehaviour
         }
 
         currentShape = GameBehaviour.SHAPES.NONE;
-
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
 
         btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
@@ -513,13 +500,10 @@ public class HOGameScript : MonoBehaviour
             pDiaButtons.SetActive(true);
             // HideDialogue();
 
-
             characterSay.text = charDialogue2;
 
-            // dropdown.gameObject.SetActive(false);
             lineSnapper.gameObject.SetActive(true);
             btnUndo.gameObject.SetActive(true);
-
 
             //show correct casting equation
             //not entering correctly
@@ -948,16 +932,12 @@ public class HOGameScript : MonoBehaviour
         //copied from old repo
 
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
-        // manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
         txtFinalCompound = GameObject.Find("shapeCompoundFinal").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
         isDoneMeasuring = false;
-        justDoneSolving = false;
-
-        //test debug
-        txtDebugger = GameObject.Find("eme")?.GetComponent<Text>();        
+        justDoneSolving = false;     
 
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
@@ -1009,8 +989,6 @@ public class HOGameScript : MonoBehaviour
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
-        yesButton = GameObject.Find("ConfirmYes").GetComponent<Button>();
-        noButton = GameObject.Find("ConfirmNo").GetComponent<Button>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
         lineSnapper = GameObject.Find("Gesture").GetComponent<LineSnapper>();
 
@@ -1073,13 +1051,6 @@ public class HOGameScript : MonoBehaviour
 
     private void ToClass()
     {
-        y = yesButton.IsActive();
-        n = noButton.IsActive();
-        cp = correctionPerc.IsActive();
-        ls = lineSnapper.gameObject.activeSelf;
-
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
 
@@ -1111,7 +1082,6 @@ public class HOGameScript : MonoBehaviour
         pEquationTriangle.SetActive(false);
         pEquationCircle.SetActive(false);
         pEquationSCircle.SetActive(false);
-        // manaReq.text = ""; //Also clear this out
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
@@ -1322,28 +1292,6 @@ public class HOGameScript : MonoBehaviour
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        txtDebugger.text = "DEGUBBING\nIsDoneMeasuring: "+isDoneMeasuring +"\nisAllSolved: "+ 
-            isAllSolved + "\njustDoneSolving: "+justDoneSolving;
-        //UnityEngine.Debug.Log("Line Snapper Value: " + lineSnapper.getMeasuredValue());
-
-    }
-
-
-    public void OnOptionSelect(int option)
-    {
-        currentOptionSelected = option;
-        UnityEngine.Debug.Log("CurrentOption: " + currentOptionSelected);
-
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(true);
-    }
-
-
 
     public class Problem
     {
