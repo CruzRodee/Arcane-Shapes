@@ -20,8 +20,6 @@ public class HOGameScript : MonoBehaviour
 
     GameBehaviour.SHAPES currentShape;
     public SpellCastEvent spellCastEvent;
-    TMP_Dropdown dropdown;
-    public TMP_Text text;
     TMP_Text manaMeasure;
     TMP_Text correctionPerc;
     public Slider slider;
@@ -248,16 +246,7 @@ public class HOGameScript : MonoBehaviour
         {
             Destroy(go);
         }
-
-        // dropdown.gameObject.SetActive(true);
-        // dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        // CopyOptions(dropdown.options, defaultOptions); // Reset options
-        // dropdown.value = 0;
-        text.text = "";
         manaMeasure.text = "0";
-        // dropdown.RefreshShownValue();
-        // dropdown.onValueChanged.AddListener(OnOptionSelect); //Start Listening
-        // UnityEngine.Debug.Log("Dropdown Len: " + dropdown.options.Count);
 
         currentShape = GameBehaviour.SHAPES.NONE;
 
@@ -1132,8 +1121,6 @@ public class HOGameScript : MonoBehaviour
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
-        text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
-        text.text = "";
         manaMeasure = GameObject.Find("ManaValue").GetComponent<TMP_Text>();
         manaMeasure.text = "0";
 
@@ -1230,27 +1217,15 @@ public class HOGameScript : MonoBehaviour
         n = noButton.IsActive();
         m = manaMeasure.IsActive();
         s = slider.IsActive();
-        // cm = btnMeasure.IsActive();
         cp = correctionPerc.IsActive();
         ls = lineSnapper.gameObject.activeSelf;
-        // u = undo.IsActive();
-        t = text.IsActive();
-        // d = dropdown.IsActive();
-        // r = restart.IsActive();
-        // q = quit.IsActive();
 
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
         manaMeasure.gameObject.SetActive(false);
         slider.gameObject.SetActive(false);
-        // btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
-        // btnUndo.gameObject.SetActive(false);
-        text.gameObject.SetActive(false);
-        // dropdown.gameObject.SetActive(false);
-        // restart.gameObject.SetActive(false);
-        // quit.gameObject.SetActive(false);
 
         mainCamera.SetActive(false);
         classroomCamera.SetActive(true);
@@ -1535,36 +1510,8 @@ public class HOGameScript : MonoBehaviour
 
     public void OnOptionSelect(int option)
     {
-        //     if(dropdown.options.Count > 5) // When first selecting before removing default
-        //    {
-        //        dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        //        dropdown.options.RemoveAt(0); // Remove "Select Shape" Default Option
-        //        dropdown.value -= 1; // move dropdown option to correct one
-        //        option -= 1; //Reduce index by 1 to compensate for removed option
-        //        dropdown.onValueChanged.AddListener(OnOptionSelect); // Start Listening
-        //     }
-
-        text.gameObject.SetActive(true); //Reactivate if not active
-                                         // text.text = correctShapePropmt;
-
-        /* UnityEngine.Debug.Log(option);*/
         currentOptionSelected = option;
         UnityEngine.Debug.Log("CurrentOption: " + currentOptionSelected);
-        //currentShape
-        /*       switch (option)
-               {
-                   case 0:
-                      break;
-                   case 1:
-                      break;
-                   case 2:
-                       break;
-                       case 3:
-                       break;
-                       case 4:
-                       break;
-
-               }*/
 
         yesButton.gameObject.SetActive(true);
         noButton.gameObject.SetActive(true);
