@@ -72,6 +72,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private List<GameObject> vfxLineClones;
 
     //Local raycast variables turned into fields
+    public LayerMask ocrLayer;
     private Ray ray;
     private RaycastHit hit;
     public float raycast_range = 20f; //Range of raycast, default 20f
@@ -305,7 +306,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     void CalculatePixel()//This function checks if the cursor is currently over the canvas and, if it is, it calculates which pixel on the canvas it is on
     {
         ray = cam.ScreenPointToRay(Input.mousePosition);//Get a ray from the center of the camera to the mouse position
-        if (Physics.Raycast(ray, out hit, raycast_range))//Check if the ray hits something
+        if (Physics.Raycast(ray, out hit, raycast_range, ocrLayer))//Check if the ray hits something
         {
             //If the board was not hit by the raycast, do nothing
             if (hit.collider != ocrPlaneColl)
