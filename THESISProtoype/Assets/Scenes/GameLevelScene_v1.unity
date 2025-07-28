@@ -4003,6 +4003,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: quickMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 7872885263476138395, guid: b9a1b62a063df1645ac1398a52701a1e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7951667442596436139, guid: b9a1b62a063df1645ac1398a52701a1e,
         type: 3}
       propertyPath: m_Pivot.x
