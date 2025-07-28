@@ -193,6 +193,30 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
+    private void ResetVarDisp(GameBehaviour.SHAPES shape)
+    {
+        switch (shape)
+        {
+            case GameBehaviour.SHAPES.SQUARE:
+                var1Display.GetComponent<Text>().text = "S";
+                break;
+            case GameBehaviour.SHAPES.RECTANGLE:
+                var1Display.GetComponent<Text>().text = "L";
+                var2Display.GetComponent<Text>().text = "W";
+                break;
+            case GameBehaviour.SHAPES.TRIANGLE:
+                var1Display.GetComponent<Text>().text = "B";
+                var2Display.GetComponent<Text>().text = "H";
+                break;
+            case GameBehaviour.SHAPES.CIRCLE:
+                var1Display.GetComponent<Text>().text = "R";
+                break;
+            case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                var1Display.GetComponent<Text>().text = "R";
+                break;
+        }
+    }
+
     void Reset()
     {
         //Cleanup possible temporary vfx and clones
@@ -641,6 +665,7 @@ public class HOGameScript : MonoBehaviour
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
+        ResetVarDisp(currentShape);
         
         Debug.Log("Line 777: test DO YOU REACH THIS POINT");
 
