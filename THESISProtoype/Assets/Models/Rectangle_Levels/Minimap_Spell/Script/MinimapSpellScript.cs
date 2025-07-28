@@ -22,7 +22,7 @@ public class MinimapSpellScript : BaseLOScript
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
 
         //Play SFX
-        if(sfxSet.Length > 0)
+        if (sfxSet.Length > 0)
             PlaySFX(sfxSet[0], 0.8f, 0.6f);
     }
 }

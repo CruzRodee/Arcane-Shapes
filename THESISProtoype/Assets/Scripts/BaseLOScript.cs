@@ -35,7 +35,7 @@ public class BaseLOScript : MonoBehaviour
     {
         if (sfxSource != null)
             sfxSource.pitch = pitch;
-        
+
         if (sfxSet.Length > 0 && clip != null)
             sfxSource.PlayOneShot(clip, volume * volumeFactor);
     }
@@ -47,7 +47,7 @@ public class BaseLOScript : MonoBehaviour
             sfxSource.pitch = pitch;
             sfxSource.clip = clip;
             sfxSource.volume = volume * volumeFactor;
-        } 
+        }
 
         if (sfxSet.Length > 0 && clip != null)
             sfxSource.Play();

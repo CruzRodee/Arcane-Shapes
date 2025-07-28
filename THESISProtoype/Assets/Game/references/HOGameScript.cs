@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 
@@ -59,7 +59,7 @@ public class HOGameScript : MonoBehaviour
     private RectTransform rtDiaButtons;
 
     private bool isDoneMeasuring;
-    
+
     public Text pConfirmText;
     //panels na toggable, containers lang
     public GameObject hud;
@@ -70,12 +70,12 @@ public class HOGameScript : MonoBehaviour
     public GameObject pNotify;
     private GameObject pDialogue;
     private GameObject pDiaButtons;
-    
+
     public GameObject prefabSpawn;
     public Transform pSpawner;  //contaings prefab for spawning
-    //needs to be Transformm cuz if GameObject cannot convert from scene sa Instantiate kineme
+                                //needs to be Transformm cuz if GameObject cannot convert from scene sa Instantiate kineme
 
-    
+
     public Text textTemp;
 
     public GameObject notifyTextObj;
@@ -299,11 +299,12 @@ public class HOGameScript : MonoBehaviour
         if (pConfirm != null)
         {
             pConfirm.SetActive(temp);    //hideshow
-            
+
         }
         bYesHome.gameObject.SetActive(false);
         bYes.gameObject.SetActive(false);
-        if (what=="confirmHome"){
+        if (what == "confirmHome")
+        {
             pConfirmText.text = "Nais mo bang bumalik sa labas na pagpipilian?";
             confirmText.text = "Hindi masa-Save ang progreso.";
             bYes.gameObject.SetActive(false);
@@ -327,7 +328,7 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
-    
+
     public void hideAllEquation()
     {
         pEquationSquare.SetActive(false);
@@ -337,7 +338,7 @@ public class HOGameScript : MonoBehaviour
         pEquationTriangle.SetActive(false);
 
     }
-    
+
 
     public void chooseSquare()
     {
@@ -390,22 +391,26 @@ public class HOGameScript : MonoBehaviour
         toggleConfirmScreen("");
         // pConfirm.SetActive(false);
     }
-    
-    public void hideDiaBoxWhileMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+
+    public void hideDiaBoxWhileMeasuring()
+    { //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
         StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -150f)));
         backspaceButton.gameObject.SetActive(false);//f4rom lower
         Debug.Log("It's here 450, button should not be visible...");
         //uhh idk bakit nawawala lahat ng buttons???
-        if(isAllSolved){
+        if (isAllSolved)
+        {
             //last na, hide redo button
             btnMeasure.gameObject.SetActive(false);
         }
-        else{
+        else
+        {
             btnMeasure.gameObject.SetActive(true);
         }
     }
 
-    public void showDiaBoxAfterMeasuring(){ //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+    public void showDiaBoxAfterMeasuring()
+    { //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
         StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(225f, 130f)));
         Debug.Log("Line 457, should have all the buttons showing after measuring for all times");
         calcBtnObj.gameObject.SetActive(true);
@@ -414,7 +419,7 @@ public class HOGameScript : MonoBehaviour
     //cleaned this up a bit, same thing naman ung ganapings
     public void toggleDialogueBox()
     {
-     
+
         // 600, -121.46 Y to hide the dialogue while measuring (since the shape cannot be moved)
 
         if (rtDialogue.anchoredPosition.y == 100)
@@ -428,45 +433,46 @@ public class HOGameScript : MonoBehaviour
 
             StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   //left mode
 
-           // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
+            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
             // pDialogue.y = -59;
         }
         else
         {
-            
+
             // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
 
             //jusrDoneSolving is true when mana filling is triggered so we really know it got activated
             //^ false when onCasting na? todo: test if this works
-            if(justDoneSolving && !isAllSolved)
+            if (justDoneSolving && !isAllSolved)
             {
                 Debug.Log("Line 500 Im kms if this fails");
                 StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));    //when youy undo enough it should return here (nasa baba)
                 // justDoneSolving = true;  //NAH KEEP THIS ON UNTIL MEASUREMENT
             }
-            else{   //OK SO IT WORKS NOW, THE WHOLE PROB WAS THAT THE THING IS TURNING FALSE, SHOULNDT BE UNTIL AFTER CASTING IG
+            else
+            {   //OK SO IT WORKS NOW, THE WHOLE PROB WAS THAT THE THING IS TURNING FALSE, SHOULNDT BE UNTIL AFTER CASTING IG
                 StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -151f)));    //when youy undo enough it should return here (nasa baba)
 
-                
+
                 // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
             }
-            
-            if(isDoneMeasuring==false)
-                {
-                    StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   
-                    btnMeasure.gameObject.SetActive(true);
-                    backspaceButton.SetActive(false);
-                    //when you undo enough basically
-                    Debug.Log("kine 504");
-                }
-                else
-                {
-                    btnMeasure.gameObject.SetActive(false);//show uli pag bumalik sa measuring kakaundo
-                    backspaceButton.SetActive(true);
-                    StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
-                    Debug.Log("Line 510");
-                }
-            
+
+            if (isDoneMeasuring == false)
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));
+                btnMeasure.gameObject.SetActive(true);
+                backspaceButton.SetActive(false);
+                //when you undo enough basically
+                Debug.Log("kine 504");
+            }
+            else
+            {
+                btnMeasure.gameObject.SetActive(false);//show uli pag bumalik sa measuring kakaundo
+                backspaceButton.SetActive(true);
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+                Debug.Log("Line 510");
+            }
+
             if (isAllSolved) //final portion
             {
                 StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
@@ -617,7 +623,7 @@ public class HOGameScript : MonoBehaviour
     {
         inputAnswer = 0f; // Reset input answer
         btnMeasure.gameObject.SetActive(false); //Deactivate "Done" button
-        
+
         // Modified function if all shapes solved
         characterSay.text = "";
         justDoneSolving = false;
@@ -651,9 +657,9 @@ public class HOGameScript : MonoBehaviour
         ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
 
         //Fill shape with mana, fill excess with void
-        if(!currentShapeObject.isExcess)
+        if (!currentShapeObject.isExcess)
             currFiller.fillMaterial = shapeFiller.fillMaterial;
-        else if(currentShapeObject.isIntersect)
+        else if (currentShapeObject.isIntersect)
             currFiller.fillMaterial = shapeFiller.intersectMaterial;
         else if (currentShapeObject.isExcess)
             currFiller.fillMaterial = shapeFiller.voidMaterial;
@@ -666,10 +672,10 @@ public class HOGameScript : MonoBehaviour
     {
         inputAnswer = ans;
         ResetVarDisp(currentShape);
-        
+
         Debug.Log("Line 777: test DO YOU REACH THIS POINT");
 
-        if(!isFinalAnswer) //Only record if not final answer mode
+        if (!isFinalAnswer) //Only record if not final answer mode
         {
             if (!currentShapeObject.isExcess) //Positive Area
                 recordedAnswer.Add(currentShapeObject, inputAnswer);
@@ -694,11 +700,11 @@ public class HOGameScript : MonoBehaviour
                 ManaFilling();
 
             //End game stuff
-            
+
             toggleDialogueBox(); //hide  
             HideNewUI();
 
-            if(!isFinalAnswer)
+            if (!isFinalAnswer)
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
             else
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
@@ -708,6 +714,8 @@ public class HOGameScript : MonoBehaviour
 
             return; //Just in case it decides to run the code after
         }
+
+        calcBtnObj.SetActive(false);
 
         //More stuff to only do when not in final answer
         if (!isFinalAnswer)
@@ -720,8 +728,8 @@ public class HOGameScript : MonoBehaviour
             //Make solved shape unclickable
             currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
 
-            justDoneSolving=true;
-            Debug.Log("Pls work plplplplpls justDoneSolving: "+justDoneSolving);
+            justDoneSolving = true;
+            Debug.Log("Pls work plplplplpls justDoneSolving: " + justDoneSolving);
             toggleDialogueBox();//show again if not final answer
             ManaFilling();
 
@@ -730,7 +738,7 @@ public class HOGameScript : MonoBehaviour
             hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
 
             //TODO: Probably add the new UI per shape here
-        }       
+        }
 
         ModifiedToUIAgain();
 
@@ -742,7 +750,6 @@ public class HOGameScript : MonoBehaviour
 
             //Disable all other buttons for now
             backspaceButton.SetActive(false);   //whys is this not erroring lmao
-            calcBtnObj.SetActive(false);
             btnUndo.gameObject.SetActive(false);
             btnMeasure.gameObject.SetActive(false);
             Debug.Log("Line 881 if it errors lam na");
@@ -758,13 +765,13 @@ public class HOGameScript : MonoBehaviour
         //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
         //      Then run the animation
         if (isFinalAnswer)
-        {           
+        {
             HideNewUI();
-            
+
             Debug.Log("-------- before this point the buttons should all be hidden!!! -----");
             pSpawner.gameObject.SetActive(false); //hide before animation
-            
-                    //hide all buttons at the end
+
+            //hide all buttons at the end
             pDiaButtons.SetActive(false);
             //hide all buttons at the end
             pDiaButtons.SetActive(false);
@@ -838,7 +845,7 @@ public class HOGameScript : MonoBehaviour
     {
         if (show)
         {
-            if(!isAllSolved)
+            if (!isAllSolved)
                 // ShowDialogue(); //Show
                 toggleDialogueBox();
 
@@ -867,10 +874,10 @@ public class HOGameScript : MonoBehaviour
                 pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
             backspaceButton.SetActive(false);
 
-            if(inputAnswer > 0f) undoPressed = false;
+            if (inputAnswer > 0f) undoPressed = false;
             Debug.Log("undoPressed: " + undoPressed);
             if (undoPressed)
-            {   
+            {
                 pDiaButtons.SetActive(true);
                 backspaceButton.SetActive(true);
             }
@@ -893,7 +900,7 @@ public class HOGameScript : MonoBehaviour
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
 
-            if(isFinalAnswer || undoPressed)
+            if (isFinalAnswer || undoPressed)
             {
                 // HideDialogue();
                 toggleDialogueBox(); //Hide
@@ -952,7 +959,7 @@ public class HOGameScript : MonoBehaviour
         textFinish.text = castBtnText1;
 
         isDoneMeasuring = false;
-        justDoneSolving = false;     
+        justDoneSolving = false;
 
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
@@ -1064,7 +1071,7 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
         lineSnapper.gameObject.SetActive(false);
-        if(!isFinalAnswer)
+        if (!isFinalAnswer)
             characterSay.text = charDialogue1;
         SetVisibilityNewUI(false, true, false, true);
 
@@ -1090,39 +1097,42 @@ public class HOGameScript : MonoBehaviour
                 currDisplay = areaDisplay.text; //Get current text
                 //ADD NEW OBJECTS HERE
 
-                Debug.Log(recordedAnswer.Count + "COMPLETED SHAPE! Add here yung new UI for it: "+ dict.Key.shape);
+                Debug.Log(recordedAnswer.Count + "COMPLETED SHAPE! Add here yung new UI for it: " + dict.Key.shape);
                 txtFinalCompound.text = "Mga Component na bumubuo sa Compound Shape:";
-                spawnCompoundComponents(i, dict.Key.shape , dict.Value);
+                spawnCompoundComponents(i, dict.Key.shape, dict.Value);
 
                 areaDisplay.text = currDisplay + $"[{dict.Key.shape}]: {dict.Value} "; //Add shape and area
                 Debug.Log("Size: " + dict.Value);
 
                 //New line every n shapes
-                if(i%n == 0)
+                if (i % n == 0)
                 {
                     currDisplay = areaDisplay.text; //Get current text
                     areaDisplay.text = currDisplay + '\n'; //Add line break
                 }
-            }  
+            }
         }
 
     }
 
-    private void spawnCompoundComponents(int i, GameBehaviour.SHAPES shapeName, float shapeVal){
+    private void spawnCompoundComponents(int i, GameBehaviour.SHAPES shapeName, float shapeVal)
+    {
         //just spawn the component shapes (that are already solved)
         //n is list size
-        Vector2 newPos = new Vector2(0f,0f) + new Vector2(0f, -60f * i);  //60 is height ng box to spawn
-        GameObject newSpawn = Instantiate(prefabSpawn,pSpawner);
+        Vector2 newPos = new Vector2(0f, 0f) + new Vector2(0f, -60f * i);  //60 is height ng box to spawn
+        GameObject newSpawn = Instantiate(prefabSpawn, pSpawner);
         RectTransform rtSpawn = newSpawn.GetComponent<RectTransform>();
-        if (rtSpawn !=null){
+        if (rtSpawn != null)
+        {
             rtSpawn.anchoredPosition = newPos;
         }
-        else{
+        else
+        {
             newSpawn.transform.localPosition = newPos;
         }
 
         Text txtShape = newSpawn.transform.Find("shapeText").GetComponent<Text>();
-        txtShape.text = shapeName.ToString() +" : " + shapeVal;  //current name change
+        txtShape.text = shapeName.ToString() + " : " + shapeVal;  //current name change
 
         GameObject imgShapeSqr = newSpawn.transform.Find("shapeSqr").gameObject;
         GameObject imgShapeCir = newSpawn.transform.Find("shapeCir").gameObject;
@@ -1135,11 +1145,12 @@ public class HOGameScript : MonoBehaviour
         imgShapeRect.SetActive(false);
         imgShapeTri.SetActive(false);
 
-        if (shapeName == GameBehaviour.SHAPES.SQUARE){
+        if (shapeName == GameBehaviour.SHAPES.SQUARE)
+        {
             imgShapeSqr.SetActive(true); //hidk whjat i am doing
 
         }
-        else if(shapeName == GameBehaviour.SHAPES.TRIANGLE)
+        else if (shapeName == GameBehaviour.SHAPES.TRIANGLE)
         {
             GameObject imgShape = newSpawn.transform.Find("shapeTri").gameObject;
             imgShapeTri.SetActive(true); //hidk whjat i am doing
@@ -1431,7 +1442,7 @@ public class HOGameScript : MonoBehaviour
         panelMagicScroll.SetActive(c);
         btnConfirmSpell.gameObject.SetActive(c);//copy magic sroll
         quickMenu.SetActive(d);
-        Debug.Log("Line 1657 see if kita ba ung buttons sa right = " +b);
+        Debug.Log("Line 1657 see if kita ba ung buttons sa right = " + b);
     }
 
     private void RemoveRoomText()

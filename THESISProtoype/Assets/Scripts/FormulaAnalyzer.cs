@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -353,7 +352,7 @@ public class FormulaAnalyzer : MonoBehaviour
             {
                 if (hgb != null)
                 {
-                    if(isCompoundArea) //Flag as final answer if sending valid compound area
+                    if (isCompoundArea) //Flag as final answer if sending valid compound area
                         hgb.isFinalAnswer = true;
 
                     hgb.InputAnswer(float.Parse(inputAnswer));
@@ -385,7 +384,7 @@ public class FormulaAnalyzer : MonoBehaviour
     private void EvaluateFormula()
     {
         evalString = evalString.Trim(); //Input cleaning
-        
+
         if (!validFormulaRegex.IsMatch(evalString)) //Block invalid inputs
         {
             isValidFormula = false;
@@ -502,12 +501,12 @@ public class FormulaAnalyzer : MonoBehaviour
         if (equMode)
         {
             //If Last char is a '=' character, deactivate equ mode and set valid formula to false
-            if(displayString.Last() == '=')
+            if (displayString.Last() == '=')
             {
                 isValidFormula = false;
                 equMode = false;
             }
-            
+
             // Remove last char from inputAnswer and displayString
             if (inputAnswer.Length > 0)
                 inputAnswer = inputAnswer.Substring(0, inputAnswer.Length - 1);
@@ -520,11 +519,11 @@ public class FormulaAnalyzer : MonoBehaviour
             // Formula input mode
             if (evalString.Length > 0)
             {
-                if(evalString.Last() == 'i') //Special Case for pi, two backspaces here instead of 1 due to being two chars
+                if (evalString.Last() == 'i') //Special Case for pi, two backspaces here instead of 1 due to being two chars
                     evalString = evalString.Substring(0, evalString.Length - 2);
                 else
                     evalString = evalString.Substring(0, evalString.Length - 1);
-            }  
+            }
 
             if (displayString.Length > 0)
                 displayString = displayString.Substring(0, displayString.Length - 1);
@@ -564,7 +563,7 @@ public class FormulaAnalyzer : MonoBehaviour
     private GameBehaviour.SHAPES EvalFormulaShape()
     {
         GameBehaviour.SHAPES evalShape = GameBehaviour.SHAPES.NONE; //Store return value of shape eval
-        float[] vals = { 0 , 0 }; //Store return of ExtractVariables()
+        float[] vals = { 0, 0 }; //Store return of ExtractVariables()
 
         string cleanString = evalString; //Clean all *0.5, 0.5*, *1/2, 1/2*, /2
         bool isDivided = false; //Flag for any dividers appearing
@@ -579,35 +578,35 @@ public class FormulaAnalyzer : MonoBehaviour
             }
         }
 
-        if(!isDivided && AreaFormulaParser.squareRegex.IsMatch(evalString))
+        if (!isDivided && AreaFormulaParser.squareRegex.IsMatch(evalString))
         {
             evalShape = GameBehaviour.SHAPES.SQUARE;
             vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
         }
-            
+
         else if (!isDivided && AreaFormulaParser.rectangleRegex.IsMatch(evalString))
         {
             evalShape = GameBehaviour.SHAPES.RECTANGLE;
             vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
         }
-            
+
         else if (isDivided && (AreaFormulaParser.squareRegex.IsMatch(cleanString) || AreaFormulaParser.rectangleRegex.IsMatch(cleanString)))
         {
             evalShape = GameBehaviour.SHAPES.TRIANGLE;
 
             //Use rect or square parser on cleanString, both proven to work
-            if(AreaFormulaParser.squareRegex.IsMatch(cleanString))
+            if (AreaFormulaParser.squareRegex.IsMatch(cleanString))
                 vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.SQUARE);
             else
                 vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.RECTANGLE);
         }
-          
+
         else if (!isDivided && AreaFormulaParser.circleRegex.IsMatch(evalString))
         {
             evalShape = GameBehaviour.SHAPES.CIRCLE;
             vals = AreaFormulaParser.ExtractVariables(evalString, evalShape);
         }
-            
+
         else if (isDivided && AreaFormulaParser.circleRegex.IsMatch(cleanString))
         {
             evalShape = GameBehaviour.SHAPES.SEMI_CIRCLE;
@@ -615,18 +614,18 @@ public class FormulaAnalyzer : MonoBehaviour
             //Use circle parser on cleanString
             vals = AreaFormulaParser.ExtractVariables(cleanString, GameBehaviour.SHAPES.CIRCLE);
         }
-        
+
 
         if (DEBUG)
         {
             Debug.Log("Shape Type: " + evalShape);
-            if(evalShape == GameBehaviour.SHAPES.NONE) Debug.Log("Failed to find shape");
+            if (evalShape == GameBehaviour.SHAPES.NONE) Debug.Log("Failed to find shape");
         }
 
         //Store vals as sideA and sideB
         try
         {
-            if(vals.Length >= 2)
+            if (vals.Length >= 2)
             {
                 sideA = vals[0];
                 sideB = vals[1];

@@ -20,7 +20,7 @@ public class MoveSpellScript : BaseLOScript
         //Lower volume of burst
         v[0] = 0.25f;
         v[1] = v[0];
-        
+
         StartCoroutine(CastAnimAndSFX());
     }
 

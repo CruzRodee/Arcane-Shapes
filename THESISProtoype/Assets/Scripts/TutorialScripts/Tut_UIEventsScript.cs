@@ -304,7 +304,8 @@ public class Tut_UIEventsScript : MonoBehaviour
     }
 
     //button no is clicked, stau on scene
-    public void closeConfirmPanelHome(){
+    public void closeConfirmPanelHome()
+    {
         pConfirmHome.SetActive(false);
     }
 

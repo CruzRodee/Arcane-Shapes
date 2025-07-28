@@ -84,7 +84,7 @@ public class PlayerModelScript : MonoBehaviour
     //SFX Methods: 0 = Good, 1 = Over, 2 = Under
     public void PlayCastSFX()
     {
-        if(sfxSource != null && sfxSet.Length >= audioIndex)
+        if (sfxSource != null && sfxSet.Length >= audioIndex)
             sfxSource.PlayOneShot(sfxSet[audioIndex], 0.8f * volumeFactor);
     }
 

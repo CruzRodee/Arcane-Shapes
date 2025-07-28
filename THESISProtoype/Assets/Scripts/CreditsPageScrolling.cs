@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -20,7 +18,7 @@ public class CreditsPageScrolling : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
-        
+
         if (timer > PAGETIME)
         {
             ChangePage();
@@ -30,9 +28,9 @@ public class CreditsPageScrolling : MonoBehaviour
 
     private void ChangePage()
     {
-        if(numTextPages == 0)
+        if (numTextPages == 0)
             numTextPages = childText.textInfo.pageCount;
-        
+
         if (currentPage < numTextPages)
             currentPage++;
 

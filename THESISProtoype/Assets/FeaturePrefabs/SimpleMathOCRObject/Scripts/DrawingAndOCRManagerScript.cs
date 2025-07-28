@@ -172,7 +172,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             //Function for drawing stuff on the OCR input
             CalculatePixel();
 
-            if(!hasHit) //If not drawing on board, do nothing
+            if (!hasHit) //If not drawing on board, do nothing
                 return;
 
             //Draw VFX stuff (line sfx whatever), needs to occur after OCR draw because raycast point needed
@@ -224,14 +224,14 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Only Play sound every N points
         if (!(line.positionCount % N == 0))
             return; //Do not play sound if point not divisible by N
-        
+
         // Null Check
-        if(sfxSource != null && sfxSet[0] != null)
+        if (sfxSource != null && sfxSet[0] != null)
         {
             //Set pitch first
             sfxSource.pitch = 1;
             sfxSource.PlayOneShot(sfxSet[0], 2f * volumeFactor);
-        } 
+        }
     }
 
     private void PlayOCRReadSFX()
@@ -446,7 +446,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         Debug.Log("imgClass: " + imgClass);
 
         //Transmit the class output, either through message or reference of target object
-        if(!STARTUP) //Do not send OCR reading to FA if just doing startup
+        if (!STARTUP) //Do not send OCR reading to FA if just doing startup
             fa.InputString(imgClass);
         else if (STARTUP)
         {

@@ -90,8 +90,8 @@ public class ShapeFiller : MonoBehaviour
         if (isFillingActive && (fillAmount < this.fillMaxValue)) //Filling
         {
             //Hide tofillshape
-            if(targetRenderer != null)
-                if(targetRenderer.enabled)
+            if (targetRenderer != null)
+                if (targetRenderer.enabled)
                     targetRenderer.enabled = false;
 
             fillAmount += fillSpeed * Time.deltaTime;

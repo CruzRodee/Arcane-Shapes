@@ -27,7 +27,7 @@ public class GameData
     //COMPOUND
     public int compLvl;
     public int compPres; //Number of times all levels have been 
-    
+
     //PASSWORD
     public int mode;        // int mode = 0: unlock all for teachers, 1: unlock only lower, 2: unlock only higher.
 
@@ -94,7 +94,7 @@ public class SaveLoadController
 
         Debug.Log("Updated Curent Room:  " + data.currRoom);
     }
-    
+
     public void updateName(string savePath, string newName) // Just pass raw gamedata
     {
         GameData data = loadGame(savePath);
@@ -122,19 +122,21 @@ public class SaveLoadController
         return data.mode;
     }
 
-    public void resetGame (string savePath)
+    public void resetGame(string savePath)
     {
         if (File.Exists(savePath))
         {
-            try{
+            try
+            {
                 File.Delete(savePath);
             }
-            catch(System.Exception err)
+            catch (System.Exception err)
             {
-                Debug.Log("Error Deleting Game: "+ err);
+                Debug.Log("Error Deleting Game: " + err);
             }
         }
-        else{
+        else
+        {
             Debug.Log("No saved game found.");
         }
     }

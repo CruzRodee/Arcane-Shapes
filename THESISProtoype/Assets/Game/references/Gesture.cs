@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public class LineSnapper : MonoBehaviour
 {
@@ -65,7 +64,7 @@ public class LineSnapper : MonoBehaviour
         }
 
         if (sfxSet.Length > 0 && sfxSet[clipIndex] != null)
-            if(!sfxSource.isPlaying)
+            if (!sfxSource.isPlaying)
                 sfxSource.Play();
     }
 

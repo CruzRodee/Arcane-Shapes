@@ -2,12 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.SceneManagement;
-using System.IO;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ModifiedGameBehaviour : MonoBehaviour // This script will be on the gbHolder GameObject for FormulaAnalyzer
 {

@@ -18,7 +18,7 @@ public class ShieldSpellScript : BaseLOScript
     private new void Awake()
     {
         base.Awake();
-        
+
         this.transform.localPosition += SPAWNOFFSET;
 
         //Get Camera object
@@ -47,9 +47,9 @@ public class ShieldSpellScript : BaseLOScript
     public override void SuccessfulCast()
     {
         //Check if sfx is loaded, do nothing if not
-        if(sfxSet.Length < 5)
+        if (sfxSet.Length < 5)
             return;
-        
+
         // Spawn shield spell with effect
         this.GetComponent<Renderer>().enabled = true;
         StartCoroutine(LocalScaleOverTime(this.gameObject, CAST_DURATION, ENDSCALE));
