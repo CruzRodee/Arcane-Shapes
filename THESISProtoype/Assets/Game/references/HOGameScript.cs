@@ -30,11 +30,8 @@ public class HOGameScript : MonoBehaviour
     public LineSnapper lineSnapper;
 
     //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
-
-    private Button changeCameraButton;
-    private bool isUICamera = true;
     private GameObject mainCamera, classroomCamera;
-    private Material uiMaterial, classroomMaterial;
+    private Material classroomMaterial;
     private Animator screenFadeAnimator;
     private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
     private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
@@ -105,7 +102,7 @@ public class HOGameScript : MonoBehaviour
 
     private string chosenShape;
 
-    private const string castBtnText1 = "Cast Spell";
+    private const string castBtnText1 = "Done";
     private const string castBtnText2 = "Erase";
     private const string castBtnText3 = "Finish Spell";
     private const float DIALOGUESLIDETIME = 0.25f;
@@ -228,7 +225,6 @@ public class HOGameScript : MonoBehaviour
 
         //Start with watching the spawn anim again in reset
         ToClass();
-        DeactivateChangeCamera();
         Invoke(nameof(StartLevelAnim), STARTDELAY);
 
         Invoke(nameof(InitProblem), 0.1f); // Add delay to prevent object from getting nuked by cleanup
@@ -595,6 +591,7 @@ public class HOGameScript : MonoBehaviour
 
     public void onCast()
     {
+        inputAnswer = 0f; // Reset input answer
         btnMeasure.gameObject.SetActive(false); //Deactivate "Done" button
         
         // Modified function if all shapes solved
@@ -702,10 +699,6 @@ public class HOGameScript : MonoBehaviour
             Debug.Log("Pls work plplplplpls justDoneSolving: "+justDoneSolving);
             toggleDialogueBox();//show again if not final answer
             ManaFilling();
-            
-            pDiaButtons.gameObject.SetActive(true);
-            //hmmmm????????
-            //i just need to get dialogue up frfr
 
             Debug.Log("Line 825 see if this is the prob?");
             //just gonna try to do it the hardcode way :/
@@ -848,6 +841,14 @@ public class HOGameScript : MonoBehaviour
             if (!isAllSolved)
                 pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
             backspaceButton.SetActive(false);
+
+            if(inputAnswer > 0f) undoPressed = false;
+            Debug.Log("undoPressed: " + undoPressed);
+            if (undoPressed)
+            {   
+                pDiaButtons.SetActive(true);
+                backspaceButton.SetActive(true);
+            }
         }
 
         yield return new WaitForSeconds(OCRSLIDETIME); //Wait until OCR board stops moving
@@ -983,8 +984,6 @@ public class HOGameScript : MonoBehaviour
 
         //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
 
-        changeCameraButton = GameObject.Find("ChangeCamera").GetComponent<Button>();
-
         mainCamera = GameObject.Find("Main Camera");
         mainCamera.SetActive(false);
         classroomCamera = GameObject.Find("ClassroomCamera");
@@ -996,7 +995,6 @@ public class HOGameScript : MonoBehaviour
 
         Debug.Log("Level: " + GlobalVariables.level);
 
-        uiMaterial = Resources.Load<Material>("Materials/UI_Material");
         classroomMaterial = Resources.Load<Material>("Materials/ClassroomScreenMaterial");
 
         //----------------------------------------------
@@ -1004,23 +1002,6 @@ public class HOGameScript : MonoBehaviour
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
         btnUndo.gameObject.SetActive(false);
-
-        //Debug I'm guessing?
-        changeCameraButton.onClick.AddListener(() =>
-        {
-            //Deactivate all UI if in ui, store previous states first though, then switch to classroom cam
-            if (isUICamera)
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToClass), TRANSITIONTIME);
-            }
-            else if (!isUICamera) // Reactivate UI if not in UI, switch to main cam
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToUI), TRANSITIONTIME);
-            }
-        });
-
         //----------------------------------------------
 
     }
@@ -1045,9 +1026,6 @@ public class HOGameScript : MonoBehaviour
 
         mainCamera.SetActive(false);
         classroomCamera.SetActive(true);
-        changeCameraButton.GetComponent<Image>().material = uiMaterial; //Change material to UI mat
-
-        isUICamera = false;
     }
 
     private void ToUI()
@@ -1153,8 +1131,6 @@ public class HOGameScript : MonoBehaviour
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);
-        changeCameraButton.GetComponent<Image>().material = classroomMaterial; //Change material to classroom mat
-        isUICamera = true;
         //DisableNewUI
         SetVisibilityNewUI(false, true, false, true);
     }
@@ -1258,26 +1234,10 @@ public class HOGameScript : MonoBehaviour
         SceneManager.LoadScene("LevelSelect");
     }
 
-    private void DeactivateChangeCamera()
-    {
-        //Require reset dialogue or script to reactivate
-        changeCameraButton.enabled = false;
-        changeCameraButton.GetComponent<Image>().enabled = false;
-    }
-
-    private void ActivateChangeCamera()
-    {
-        changeCameraButton.enabled = true;
-        changeCameraButton.GetComponent<Image>().enabled = true;
-    }
-
-    //TODO: Maybe make a method that will be called to activate an end screen???
-
     private void CallCastAnimation()
     {
         screenFadeAnimator.SetTrigger("fade");
 
-        Invoke(nameof(DeactivateChangeCamera), TRANSITIONTIME);
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
     }
@@ -1420,8 +1380,6 @@ public class HOGameScript : MonoBehaviour
     {
         screenFadeAnimator.SetTrigger("fade");
         Invoke(nameof(ToUI), TRANSITIONTIME);
-        Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
-        // Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
         Invoke(nameof(PlayMusic), TRANSITIONTIME);
     }
