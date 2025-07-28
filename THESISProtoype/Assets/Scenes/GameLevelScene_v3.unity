@@ -3046,7 +3046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 517f0756fc87d3c408fed00840ddda4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 0}
   btnMeasure: {fileID: 237112062}
   btnRestart: {fileID: 960273001}
   btnUndo: {fileID: 237112061}
@@ -4283,30 +4282,31 @@ PrefabInstance:
     - {fileID: 2776275251218519446, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf, type: 3}
     - {fileID: 1080073061876172536, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf, type: 3}
     - {fileID: 4139985265110905610, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf, type: 3}
+    - {fileID: 7261480523584415004, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 6
+      insertIndex: 5
       addedObject: {fileID: 960272998}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 7
+      insertIndex: 6
       addedObject: {fileID: 237112058}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 11
+      insertIndex: 10
       addedObject: {fileID: 289898861}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 13
+      insertIndex: 12
       addedObject: {fileID: 509645992}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 14
+      insertIndex: 13
       addedObject: {fileID: 1271243418}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
-      insertIndex: 15
+      insertIndex: 14
       addedObject: {fileID: 1133333004}
     - targetCorrespondingSourceObject: {fileID: 4622774449081572984, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}

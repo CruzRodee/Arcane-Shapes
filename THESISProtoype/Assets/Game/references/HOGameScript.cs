@@ -20,9 +20,7 @@ public class HOGameScript : MonoBehaviour
 
     GameBehaviour.SHAPES currentShape;
     public SpellCastEvent spellCastEvent;
-    TMP_Text manaMeasure;
     TMP_Text correctionPerc;
-    public Slider slider;
 
     Button yesButton;
     Button noButton;
@@ -246,14 +244,11 @@ public class HOGameScript : MonoBehaviour
         {
             Destroy(go);
         }
-        manaMeasure.text = "0";
 
         currentShape = GameBehaviour.SHAPES.NONE;
 
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false); slider.value = 0f;
 
         btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
@@ -580,12 +575,6 @@ public class HOGameScript : MonoBehaviour
 
 
             characterSay.text = charDialogue2;
-            // manaReq.text = "Katumbas na Mana";
-            manaMeasure.gameObject.SetActive(true);
-            //slider.gameObject.SetActive(true);
-            //btnMeasure.gameObject.SetActive(true);
-            //correctionPerc.gameObject.SetActive(true);
-            slider.gameObject.SetActive(false); //test
 
             // dropdown.gameObject.SetActive(false);
             lineSnapper.gameObject.SetActive(true);
@@ -1121,11 +1110,6 @@ public class HOGameScript : MonoBehaviour
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
-        manaMeasure = GameObject.Find("ManaValue").GetComponent<TMP_Text>();
-        manaMeasure.text = "0";
-
-        slider = GameObject.Find("Slider").GetComponent<Slider>();
-
         yesButton = GameObject.Find("ConfirmYes").GetComponent<Button>();
         noButton = GameObject.Find("ConfirmNo").GetComponent<Button>();
         // btnMeasure = GameObject.Find("btnMeasure").GetComponent<Button>();
@@ -1153,25 +1137,12 @@ public class HOGameScript : MonoBehaviour
         classroomMaterial = Resources.Load<Material>("Materials/ClassroomScreenMaterial");
 
         //----------------------------------------------
-
-        /* UnityEngine.Debug.Log(yesButton);
-         UnityEngine.Debug.Log(noButton);*/
-
-        // yesButton.gameObject.SetActive(false);
-        // noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
         btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
         btnUndo.gameObject.SetActive(false);
 
-        // btnUndo.onClick.AddListener(() =>
-        // {
-        //     lineSnapper.OnUndoPressed();
-        // });
-
-    //Debug I'm guessing?
+        //Debug I'm guessing?
         changeCameraButton.onClick.AddListener(() =>
         {
             //Deactivate all UI if in ui, store previous states first though, then switch to classroom cam
@@ -1205,25 +1176,15 @@ public class HOGameScript : MonoBehaviour
         error = ((1 - clamped) * 100); //Get error float
     }
 
-    public void SetCastingState(bool state)
-    {
-        slider.gameObject.SetActive(state);
-        btnMeasure.gameObject.SetActive(state);
-    }
-
     private void ToClass()
     {
         y = yesButton.IsActive();
         n = noButton.IsActive();
-        m = manaMeasure.IsActive();
-        s = slider.IsActive();
         cp = correctionPerc.IsActive();
         ls = lineSnapper.gameObject.activeSelf;
 
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
 

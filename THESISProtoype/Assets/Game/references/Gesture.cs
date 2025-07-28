@@ -387,8 +387,6 @@ public class LineSnapper : MonoBehaviour
         {
             hoMain.shapeFiller.fillMaxValue = 0f;
             hoMain.shapeFiller.isFillingActive = true;
-            //Reset slider
-            hoMain.slider.value = 0f;
         }
 
         // Redo text replacements : Partially Copy pasted from above
