@@ -59,7 +59,6 @@ public class HOGameScript : MonoBehaviour
     private string savePath;
 
     private RectTransform rtDialogue;
-    private RectTransform rtSlider;
     private RectTransform rtDiaButtons;
 
     private bool isDoneMeasuring;
@@ -392,14 +391,7 @@ public class HOGameScript : MonoBehaviour
         calcBtnObj.gameObject.SetActive(true);
     }
 
-
-    public void toggleSlider()
-    {
-        //just move to right
-        rtSlider.anchoredPosition = new Vector2(-525f, rtSlider.anchoredPosition.y);
-    }
-
-            //cleaned this up a bit, same thing naman ung ganapings
+    //cleaned this up a bit, same thing naman ung ganapings
     public void toggleDialogueBox()
     {
      
@@ -603,6 +595,8 @@ public class HOGameScript : MonoBehaviour
 
     public void onCast()
     {
+        btnMeasure.gameObject.SetActive(false); //Deactivate "Done" button
+        
         // Modified function if all shapes solved
         characterSay.text = "";
         justDoneSolving = false;
@@ -727,13 +721,10 @@ public class HOGameScript : MonoBehaviour
         {
             // Show and Modify Cast button functions
             pDiaButtons.SetActive(true); //Enable the buttons
-            // pDiaButtons.transform.Find("btnCast").gameObject.SetActive(true); //Enable cast button
-            // textFinish.text = castBtnText3; // Change cast button Text
 
             //Disable all other buttons for now
             backspaceButton.SetActive(false);   //whys is this not erroring lmao
             calcBtnObj.SetActive(false);
-            // pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
             btnUndo.gameObject.SetActive(false);
             btnMeasure.gameObject.SetActive(false);
             Debug.Log("Line 881 if it errors lam na");
@@ -853,6 +844,10 @@ public class HOGameScript : MonoBehaviour
             //Slide Dialogue Box
             StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
             StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(1f, 1f, 1f))); //Scale to Normal
+
+            if (!isAllSolved)
+                pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
+            backspaceButton.SetActive(false);
         }
 
         yield return new WaitForSeconds(OCRSLIDETIME); //Wait until OCR board stops moving
@@ -883,13 +878,7 @@ public class HOGameScript : MonoBehaviour
             {
                 // ShowDialogue();
                 toggleDialogueBox(); //Hide
-
-
-                if(!isAllSolved)
-                    pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
             }
-
-            backspaceButton.SetActive(false);
         }
     }
 
