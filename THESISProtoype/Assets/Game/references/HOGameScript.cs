@@ -253,16 +253,6 @@ public class HOGameScript : MonoBehaviour
         hoGameBeh.Initiate();
     }
 
-    // Temp fix for options
-    private void CopyOptions(List<TMP_Dropdown.OptionData> target, List<TMP_Dropdown.OptionData> source)
-    {
-        target.Clear();
-        foreach (TMP_Dropdown.OptionData sourceOpt in source)
-        {
-            target.Add(sourceOpt);
-        }
-    }
-
     //--------------------------------------------------------
     /////////////////added from old repo
     // just button events
@@ -507,14 +497,6 @@ public class HOGameScript : MonoBehaviour
 
     public void btnYes()
     {
-
-        //IF SHAPE IS CORRECT:
-        // SHAPES.SQUARE 
-        // if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
-        // {
-        //     //TODO: just read from the JSON file to figure out the current shape needed due to the room you entered - done eme
-
-
         UnityEngine.Debug.Log("chosenshape -> " + chosenShape);
         UnityEngine.Debug.Log("current shape -> " + this.spellCastEvent.problem.problemShape.ToString());
 
@@ -982,11 +964,9 @@ public class HOGameScript : MonoBehaviour
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
         pDiaButtons = GameObject.Find("pDiaButtons");
         rtDiaButtons = pDiaButtons.GetComponent<RectTransform>();
-        // rtblackboard = blackboard.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         textHUD.text = savedGame.currRoom + " ROOM";
-
 
         pDialogue.SetActive(true);
         pConfirm.SetActive(false);  //hide first
@@ -1088,7 +1068,6 @@ public class HOGameScript : MonoBehaviour
         if (clamped > 2.0f)
             clamped = 2.0f;
 
-        //TODO: Adjust error tolerance based on level?
         error = ((1 - clamped) * 100); //Get error float
     }
 
@@ -1114,24 +1093,6 @@ public class HOGameScript : MonoBehaviour
     private void ToUI()
     {
         ModifiedToUI();
-        /*       yesButton.gameObject.SetActive(y);
-               noButton.gameObject.SetActive(n);
-               manaMeasure.gameObject.SetActive(m);
-               slider.gameObject.SetActive(s);
-               btnMeasure.gameObject.SetActive(cm);
-               correctionPerc.gameObject.SetActive(cp);
-               lineSnapper.gameObject.SetActive(ls);
-               undo.gameObject.SetActive(u);
-               text.gameObject.SetActive(t);*/
-        // dropdown.gameObject.SetActive(d);
-        // restart.gameObject.SetActive(r);
-        // quit.gameObject.SetActive(q);
-
-        /*    mainCamera.SetActive(true);
-            classroomCamera.SetActive(false);
-            changeCameraButton.GetComponent<Image>().material = classroomMaterial; //Change material to classroom mat
-
-            isUICamera = true;*/
     }
 
     private void ModifiedToUIAgain()
@@ -1248,8 +1209,6 @@ public class HOGameScript : MonoBehaviour
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
         currentShapeObject = clickData.originalShapeObject;
         SetManualProblem(clickData);
-        //InitFillShape();
-        //ShowNewUI();
         SetVisibilityNewUI(false, true, true, true);
     }
 
@@ -1363,16 +1322,6 @@ public class HOGameScript : MonoBehaviour
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
     }
-
-    //----------------------------------------------
-
-
-    // no need for a variable select to hold
-
-
-
-
-
 
     // Update is called once per frame
     void Update()
@@ -1563,16 +1512,6 @@ public class HOGameScript : MonoBehaviour
         btnConfirmSpell.gameObject.SetActive(c);//copy magic sroll
         quickMenu.SetActive(d);
         Debug.Log("Line 1657 see if kita ba ung buttons sa right = " +b);
-    }
-
-    private void ShowNewUI()
-    {
-        hud.SetActive(true);
-        pDialogue.SetActive(true);
-        panelMagicScroll.SetActive(true);
-        quickMenu.SetActive(true);
-        btnConfirmSpell.gameObject.SetActive(true);//show the button at the side
-        // showDiaBoxAfterMeasuring();//added
     }
 
     private void RemoveRoomText()
