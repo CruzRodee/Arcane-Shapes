@@ -26,7 +26,7 @@ public class MM_UIScript : MonoBehaviour
 
     private Animator screenFade;
     private const float TRANSITIONDELAY = 1.2f;
-
+    private bool canQuit = true;
 
     //For the credits screen dont delete
     public GameObject panelCredits;
@@ -146,6 +146,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoContinue()
     {
+        canQuit = false;
         Debug.Log("CONTINUE");
         panelNotify.SetActive(true); //nts: always set active true because if inactive ndi makikita ung children comps
 
@@ -156,6 +157,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoNewGame()
     {
+        canQuit = false;
         if (gameExists)
         {
             overlayPanel.SetActive(true);
@@ -169,15 +171,17 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoCredits()
     {
-        if (panelCredits.active)
+        
+        if (panelCredits.activeInHierarchy)
         {
             panelCredits.SetActive(false);
-            Debug.Log("Clsoe Credits");
+            canQuit = true;
+            Debug.Log("Close Credits");
         }
         else
         {
             panelCredits.SetActive(true);
-
+            canQuit = false;
             Debug.Log("Open Credits");
         }
     }
@@ -217,6 +221,9 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoQuit() // For quit button
     {
+        if(!canQuit)
+            return;
+        
         Debug.Log("Quitting Game");
         try
         {
@@ -244,6 +251,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void ClosePanel()
     {
+        canQuit = true;
         overlayPanel.SetActive(false);
         // if(overlayPanel != null) //it's on screen
         // {
@@ -253,6 +261,7 @@ public class MM_UIScript : MonoBehaviour
     }
     public void CloseNotifyPanel()
     {
+        canQuit = true;
         panelNotify.SetActive(false);
         // if(overlayPanel != null) //it's on screen
         // {
