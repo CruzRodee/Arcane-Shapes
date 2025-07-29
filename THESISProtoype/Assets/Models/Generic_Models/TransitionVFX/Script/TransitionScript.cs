@@ -51,13 +51,13 @@ public class TransitionScript : MonoBehaviour
     {
         //Play ForceField SFX
         PlaySFX(0, 1.0f, 1);
-        
+
         yield return new WaitForSeconds(DELAY);
 
         StartCoroutine(LocalScaleOverTime(this.gameObject, SHRINKTIME, SHRINKSCALE)); //Shrink
 
         //Play ShieldOff SFX and turn off previous sfx
-        if(sfxSource != null)
+        if (sfxSource != null)
             sfxSource.Stop();
         PlaySFX(1, 1.0f, 0.5f);
 

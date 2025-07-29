@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameLevelSoundPlayer : MonoBehaviour
@@ -45,7 +43,7 @@ public class GameLevelSoundPlayer : MonoBehaviour
             bgmSource.loop = true; //Needs to loop since bgm
             bgmSource.volume = volume * volumeFactor;
             bgmSource.clip = sfxSet[clipIndex];
-        } 
+        }
 
         bgmSource.Play();
     }

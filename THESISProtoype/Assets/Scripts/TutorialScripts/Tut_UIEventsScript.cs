@@ -23,6 +23,7 @@ public class Tut_UIEventsScript : MonoBehaviour
     private bool autoplay;
     public GameObject panelHall;
     public GameObject panelProceedYN;
+    public GameObject pConfirmHome;
 
     public GameObject panelInputName;
     private InputField nameInputField;
@@ -80,6 +81,7 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         panelHall.SetActive(false); //hude all buttons from the hall if not skipping
         panelProceedYN.SetActive(false);
+        pConfirmHome.SetActive(false);
         panelInputName.SetActive(false);
         playerName = savedGame.playerName;
         profName = "Prof. Oz";
@@ -132,7 +134,10 @@ public class Tut_UIEventsScript : MonoBehaviour
         //after this, reload the messages list to contain the new playerName
 
         //check if working huhu TODO OKAY IT WORKS NOW
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+        // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
+
+        saverLoader.updateName(Path.Combine(Application.persistentDataPath, "saveData.json"), playerName);
+
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
         Debug.Log(savedGame.playerName);
 
@@ -297,8 +302,22 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
+
+    //button no is clicked, stau on scene
+    public void closeConfirmPanelHome()
+    {
+        pConfirmHome.SetActive(false);
+    }
+
+    //button yes is clicked go back to main menu, no need to save progress
+    public void loadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void GoHome()
     {
+        pConfirmHome.SetActive(true);
         Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
     }
 

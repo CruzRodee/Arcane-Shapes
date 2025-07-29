@@ -17,7 +17,7 @@ public class OpenStoneDoorScript : BaseLOScript
     private new void Awake()
     {
         base.Awake();
-        
+
         this.transform.localPosition += SPAWNOFFSET;
 
         //Get Camera object

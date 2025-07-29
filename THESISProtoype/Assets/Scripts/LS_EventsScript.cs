@@ -35,6 +35,8 @@ public class LS_EventsScript : MonoBehaviour
     public GameObject panelHallway;
     public GameObject panelDialogue;
 
+    //NOTIFY SCREENS
+    public GameObject pConfirmHome;
 
     // Saving
     private SaveLoadController saverLoader = new SaveLoadController();
@@ -57,7 +59,7 @@ public class LS_EventsScript : MonoBehaviour
         if (savedGame == null)          // prevent NREs downstream, quit to main menu
         {
             //SceneChange to main menu
-            screenFade.SetTrigger("sceneOut");
+            screenFade.SetTrigger("sceneOut");  //NAG EERROR HERE
             Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
             return;
         }
@@ -71,6 +73,9 @@ public class LS_EventsScript : MonoBehaviour
     {
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
+        //hide notif screens
+        pConfirmHome.SetActive(false);
+
         //Save Data after game
         if (GlobalVariables.gameFinished)
         {
@@ -82,7 +87,7 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Prestige/Loop again through HO Levels mechanic
-            if(GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
+            if (GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
             {
                 GlobalVariables.level = 1;
                 savedGame.compPres++;
@@ -119,7 +124,7 @@ public class LS_EventsScript : MonoBehaviour
                 }
             }
 
-            else if(!GlobalVariables.isLOGame) //Saving for HO Game
+            else if (!GlobalVariables.isLOGame) //Saving for HO Game
             {
                 savedGame.compLvl = GlobalVariables.level;
             }
@@ -136,6 +141,23 @@ public class LS_EventsScript : MonoBehaviour
         //CHANGED: Debug.Log -> UnityEngine.Debug.Log
         UnityEngine.Debug.Log(savedGame.playerName);
         initLevels(savedGame);
+
+        // 0 PASS UNLOCK ALL: ALL
+        // 1 PASS LOWER: SIMPLE
+        // 2 PASS HIGHER: COMPOUND
+        if (savedGame.mode == 1)
+        {
+            btnCompound.interactable = false;
+            //disable compound shapes button
+        }
+        else if (savedGame.mode == 2)
+        {
+            btnSemiCircle.interactable = false;
+            btnCircle.interactable = false;
+            btnSquare.interactable = false;
+            btnTriangle.interactable = false;
+            btnRectangle.interactable = false;
+        }
 
 
         playerNameText = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
@@ -274,38 +296,38 @@ public class LS_EventsScript : MonoBehaviour
                 break;
         }
 
-        if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button
+        // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
+        // {
+        btnCompound.GetComponent<Button>().interactable = true; // Activate button
+        GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
+        GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
+        switch (data.compLvl)
         {
-            btnCompound.GetComponent<Button>().interactable = true; // Activate button
-            GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
-            GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
-            switch (data.compLvl)
-            {
-                case 0:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
-                    break;
-                case 1:
-                case 2:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
-                    break;
-                case 3:
-                case 4:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
-                    break;
-                case 5:
-                case 6:
-                    GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
-                    break;
-            }
+            case 0:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
+                break;
+            case 1:
+            case 2:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
+                break;
+            case 3:
+            case 4:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
+                break;
+            case 5:
+            case 6:
+                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
+                break;
         }
+        // }
     }
 
 
     //////////// SIDE BAR BUTTONS
 
     public void toggleMute()
-     {
-         UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
+    {
+        UnityEngine.Debug.Log("MUTE BUTTON PRESSED");
         if (savedGame == null)
         {
             savedGame = new GameData();        // initialise a fresh save or early-out
@@ -324,13 +346,31 @@ public class LS_EventsScript : MonoBehaviour
         }
         else
         {
-            if(btnMutedSprite != null)
+            if (btnMutedSprite != null)
                 btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
 
         saverLoader.saveGame(savePath, savedGame); // Save to remember mute state
     }
+
+    public void closeConfirmPanelHome()
+    {
+        pConfirmHome.SetActive(false);
+    }
+
+    //button yes is clicked go back to main menu, no need to save progress
+    public void loadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void GoMainMenu()
+    {
+        pConfirmHome.SetActive(true);
+        Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
+    }
+
     public void GoHome()
     {
         UnityEngine.Debug.Log("HOME BUTTON PRESSED, show ARE YOU SURE screen");
@@ -434,7 +474,7 @@ public class LS_EventsScript : MonoBehaviour
 
     public void enterCompound()
     {
-        UnityEngine.Debug.Log("Compound Floor, check if complete all at least once");
+        UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room

@@ -10,18 +10,25 @@ public class PlayerBaseAnimScript : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         var faceMeshObj = GameObject.FindWithTag("PlayerFaceMesh");
-        if (faceMeshObj == null) {
+        if (faceMeshObj == null)
+        {
             Debug.LogError("Failed to find GameObject with tag 'PlayerFaceMesh'");
-        } else {
+        }
+        else
+        {
             faceMeshRenderer = faceMeshObj.GetComponent<Renderer>();
-            if (faceMeshRenderer == null) {
+            if (faceMeshRenderer == null)
+            {
                 Debug.LogError("Renderer component missing on 'PlayerFaceMesh' GameObject");
             }
         }
         var playerObj = GameObject.FindWithTag("Player");
-        if (playerObj == null) {
+        if (playerObj == null)
+        {
             Debug.LogError("Failed to find GameObject with tag 'Player'");
-        } else {
+        }
+        else
+        {
             player = playerObj;
         }
     }

@@ -24,7 +24,7 @@ public class PlayerIdleScript : PlayerBaseAnimScript
 
             else if (elapsed >= BLINKTIME + BLINKDURATION)
                 faceMeshRenderer.material.SetTexture("_BaseMap", defaultFace);
-            
+
             elapsed = 0f; //Reset counter
             BLINKTIME = UnityEngine.Random.Range(2.0f, 5.0f); //Randomized blink time
             BLINKDURATION = UnityEngine.Random.Range(0.1f, 0.4f); //Randomized blink duration

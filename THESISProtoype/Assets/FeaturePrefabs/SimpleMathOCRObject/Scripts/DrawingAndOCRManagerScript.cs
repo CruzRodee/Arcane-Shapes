@@ -72,6 +72,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private List<GameObject> vfxLineClones;
 
     //Local raycast variables turned into fields
+    public LayerMask ocrLayer;
     private Ray ray;
     private RaycastHit hit;
     public float raycast_range = 20f; //Range of raycast, default 20f
@@ -171,7 +172,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             //Function for drawing stuff on the OCR input
             CalculatePixel();
 
-            if(!hasHit) //If not drawing on board, do nothing
+            if (!hasHit) //If not drawing on board, do nothing
                 return;
 
             //Draw VFX stuff (line sfx whatever), needs to occur after OCR draw because raycast point needed
@@ -223,14 +224,14 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Only Play sound every N points
         if (!(line.positionCount % N == 0))
             return; //Do not play sound if point not divisible by N
-        
+
         // Null Check
-        if(sfxSource != null && sfxSet[0] != null)
+        if (sfxSource != null && sfxSet[0] != null)
         {
             //Set pitch first
             sfxSource.pitch = 1;
             sfxSource.PlayOneShot(sfxSet[0], 2f * volumeFactor);
-        } 
+        }
     }
 
     private void PlayOCRReadSFX()
@@ -305,7 +306,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     void CalculatePixel()//This function checks if the cursor is currently over the canvas and, if it is, it calculates which pixel on the canvas it is on
     {
         ray = cam.ScreenPointToRay(Input.mousePosition);//Get a ray from the center of the camera to the mouse position
-        if (Physics.Raycast(ray, out hit, raycast_range))//Check if the ray hits something
+        if (Physics.Raycast(ray, out hit, raycast_range, ocrLayer))//Check if the ray hits something
         {
             //If the board was not hit by the raycast, do nothing
             if (hit.collider != ocrPlaneColl)
@@ -445,7 +446,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         Debug.Log("imgClass: " + imgClass);
 
         //Transmit the class output, either through message or reference of target object
-        if(!STARTUP) //Do not send OCR reading to FA if just doing startup
+        if (!STARTUP) //Do not send OCR reading to FA if just doing startup
             fa.InputString(imgClass);
         else if (STARTUP)
         {

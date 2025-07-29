@@ -286,8 +286,8 @@ License: pixabay Content License - https://pixabay.com/service/license-summary/
 -----------------------------------------------------------------------------------------------
 
 Metal Blade Slice 32: https://pixabay.com/sound-effects/metal-blade-slice-32-195321/
-Metal Blade Slice 49:: https://pixabay.com/sound-effects/metal-blade-slice-49-200596/
-Metal Blade Slice 80:: https://pixabay.com/sound-effects/metal-blade-slice-80-200898/
+Metal Blade Slice 49: https://pixabay.com/sound-effects/metal-blade-slice-49-200596/
+Metal Blade Slice 80: https://pixabay.com/sound-effects/metal-blade-slice-80-200898/
 by: floraphonic
 License: pixabay Content License - https://pixabay.com/service/license-summary/
 

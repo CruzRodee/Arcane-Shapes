@@ -11,12 +11,12 @@ public class HOGameBeh : MonoBehaviour
     public ShapeClickManager shapeClickManager;
     public HOGameScript script;
 
-   
+
 
     void Start()
     {
-        
-        
+
+
     }
 
     public void Initiate()
@@ -203,19 +203,19 @@ public class HOGameBeh : MonoBehaviour
             }
 
             //Shape that is intersect is always excess
-            if(obj.isIntersect)
+            if (obj.isIntersect)
                 obj.isExcess = true;
 
             //Change color of excess and intersect
             if (obj.isExcess)
             {
-                if(obj.isIntersect)
+                if (obj.isIntersect)
                     ret.GetComponent<Renderer>().material.color = new Color(0.5f, 0.0f, 0.2f, 1f);
                 else
                 {
                     //Dark Gray color
                     ret.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 1f);
-                } 
+                }
             }
 
             //Apply z-axis Offset to determine which shape is above which
@@ -244,7 +244,7 @@ public class HOGameBeh : MonoBehaviour
 
             foreach (ShapeObject obj in shapes)
             {
-                
+
                 if (obj != null && obj.actualShapeObj != null)
                 {
                     //obj.actualShapeObj.SetActive(value);
@@ -259,12 +259,12 @@ public class HOGameBeh : MonoBehaviour
 
         private void SetHiddenStateAllShapes(MeshRenderer renderer, bool value, GameObject fillShape = null)
         {
-            Vector3 hidePos = new(30,30,30);
-            
+            Vector3 hidePos = new(30, 30, 30);
+
             if (value)
             {
                 float r = renderer.material.color.r, g = renderer.material.color.g, b = renderer.material.color.b;
-                renderer.material.color = new Color(r,g,b,0);
+                renderer.material.color = new Color(r, g, b, 0);
                 if (fillShape != null)
                     fillShape.transform.localPosition = hidePos; //Hide fill shape
             }

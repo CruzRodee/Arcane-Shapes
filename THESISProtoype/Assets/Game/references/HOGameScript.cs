@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 
@@ -15,22 +15,14 @@ public class HOGameScript : MonoBehaviour
 {
     const int UNUSED = -1;
 
-
     GameBehaviour.SHAPES currentShape;
     public SpellCastEvent spellCastEvent;
-    TMP_Dropdown dropdown;
-    public TMP_Text text;
-    TMP_Text manaMeasure;
     TMP_Text correctionPerc;
-    public Slider slider;
 
-    Button yesButton;
-    Button noButton;
-    Button confirmMeasurement;
-    Button restart;
-    Button undo;
-    Button quit;
-    int currentOptionSelected;
+    public Button btnMeasure; //this is btnMeasure / confirmMeasurement
+    public Button btnRestart;
+    public Button btnUndo;
+    public Button btnQuit;
 
     public ShapeGenerator shapeGenerator;
     public ShapeFiller shapeFiller;
@@ -38,12 +30,8 @@ public class HOGameScript : MonoBehaviour
     public LineSnapper lineSnapper;
 
     //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
-
-    private Button changeCameraButton;
-    private bool isUICamera = true;
-    private bool y, n, m, s, cm, cp, ls, u, t, d, r, q; //Activity states of UI components
     private GameObject mainCamera, classroomCamera;
-    private Material uiMaterial, classroomMaterial;
+    private Material classroomMaterial;
     private Animator screenFadeAnimator;
     private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
     private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
@@ -53,7 +41,6 @@ public class HOGameScript : MonoBehaviour
     public float error = 100f;
     private bool isQuit = false;
     private const float TRANSITIONDELAY = 0.5f;
-    private List<TMP_Dropdown.OptionData> defaultOptions; //Use for reset
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin",
                         charDialogue2 = "Sagutin natin ang Area gamit ng mga sukat na nakuha natin!",
                         charDialogue3 = "Kailangan ko piliin ang tugmang formula para sa hugis.";
@@ -69,9 +56,11 @@ public class HOGameScript : MonoBehaviour
     private string savePath;
 
     private RectTransform rtDialogue;
-    private RectTransform rtSlider;
+    private RectTransform rtDiaButtons;
 
     private bool isDoneMeasuring;
+
+    public Text pConfirmText;
     //panels na toggable, containers lang
     public GameObject hud;
     public GameObject quickMenu;
@@ -81,20 +70,20 @@ public class HOGameScript : MonoBehaviour
     public GameObject pNotify;
     private GameObject pDialogue;
     private GameObject pDiaButtons;
-    private GameObject pSlider;
+
+    public GameObject prefabSpawn;
+    public Transform pSpawner;  //contaings prefab for spawning
+                                //needs to be Transformm cuz if GameObject cannot convert from scene sa Instantiate kineme
+
+
+    public Text textTemp;
 
     public GameObject notifyTextObj;
+
     private Text pNotifyText;
-    private Text textAns;
-    private Text textAnsSC;
-    private Text textAnsRect;
-    private Text textAnsCir;
-    private Text textAnsSqr;
-    private Text textAnsTri;
-    private Text manaReq;
     public Text characterSay;
     private Text textFinish;
-
+    private Text txtFinalCompound; //once used lng to
     public Text confirmText;
     public Text textHUD;
     public GameObject pEquationTriangle;
@@ -103,17 +92,18 @@ public class HOGameScript : MonoBehaviour
     public GameObject pEquationSCircle;
     public GameObject pEquationCircle;
 
+    public Button bYesHome;   //alternate buttons
+    public Button bYes;
+    public Button btnConfirmSpell;
 
     private Dictionary<HOGameBeh.ShapeObject, float> recordedAnswer = new Dictionary<HOGameBeh.ShapeObject, float>();
     private GameObject currentlySolvedShape = null;
     private HOGameBeh.ShapeObject currentShapeObject = null;
 
-    private string currentShapeToSolve;
     private string chosenShape;
 
-
-    private const string castBtnText1 = "Cast Spell";
-    private const string castBtnText2 = "Redo Input";
+    private const string castBtnText1 = "Done";
+    private const string castBtnText2 = "Erase";
     private const string castBtnText3 = "Finish Spell";
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
@@ -132,6 +122,7 @@ public class HOGameScript : MonoBehaviour
 
     public bool isFinalAnswer = false;
     private bool isAllSolved = false;
+    private bool justDoneSolving = false;
 
     //----------------------------------------------
 
@@ -153,8 +144,6 @@ public class HOGameScript : MonoBehaviour
         currentShape = GameBehaviour.SHAPES.NONE;
         screenFadeAnimator = GameObject.Find("ScreenFade").GetComponent<Animator>();
         animScript = GameObject.Find("AnimHolder").GetComponent<AnimScript>();
-        // quit = GameObject.Find("Quit").GetComponent<Button>();
-        defaultOptions = new List<TMP_Dropdown.OptionData>();
 
         //Get OCR script
         ocrScript = ocrInput.transform.Find("DrawingAndOCRManager").GetComponent<DrawingAndOCRManagerScript>();
@@ -204,14 +193,29 @@ public class HOGameScript : MonoBehaviour
         }
     }
 
-    /*
-     * 
-     * PivotToCenter = Pivot + SizeX/2 + SizeY/2
-     * 
-     * 
-     */
-
-    // _init() _ready()
+    private void ResetVarDisp(GameBehaviour.SHAPES shape)
+    {
+        switch (shape)
+        {
+            case GameBehaviour.SHAPES.SQUARE:
+                var1Display.GetComponent<Text>().text = "S";
+                break;
+            case GameBehaviour.SHAPES.RECTANGLE:
+                var1Display.GetComponent<Text>().text = "L";
+                var2Display.GetComponent<Text>().text = "W";
+                break;
+            case GameBehaviour.SHAPES.TRIANGLE:
+                var1Display.GetComponent<Text>().text = "B";
+                var2Display.GetComponent<Text>().text = "H";
+                break;
+            case GameBehaviour.SHAPES.CIRCLE:
+                var1Display.GetComponent<Text>().text = "R";
+                break;
+            case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                var1Display.GetComponent<Text>().text = "R";
+                break;
+        }
+    }
 
     void Reset()
     {
@@ -221,28 +225,14 @@ public class HOGameScript : MonoBehaviour
             Destroy(go);
         }
 
-        // dropdown.gameObject.SetActive(true);
-        // dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        // CopyOptions(dropdown.options, defaultOptions); // Reset options
-        // dropdown.value = 0;
-        text.text = "";
-        manaMeasure.text = "0";
-        // dropdown.RefreshShownValue();
-        // dropdown.onValueChanged.AddListener(OnOptionSelect); //Start Listening
-        // UnityEngine.Debug.Log("Dropdown Len: " + dropdown.options.Count);
-
         currentShape = GameBehaviour.SHAPES.NONE;
 
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false); slider.value = 0f;
-        confirmMeasurement.gameObject.SetActive(false);
+        btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         if (!STARTUP) // If not first run
             Destroy(this.spellCastEvent.problem.problemObjectShape);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
+        btnUndo.gameObject.SetActive(false);
 
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
@@ -259,37 +249,14 @@ public class HOGameScript : MonoBehaviour
 
         //Start with watching the spawn anim again in reset
         ToClass();
-        DeactivateChangeCamera();
         Invoke(nameof(StartLevelAnim), STARTDELAY);
 
-        // TODO: ADD SOMETHING THAT ALLOWS SWITCHING BETWEEN RANDOM PROBLEM AND MANUAL PROBLEM MAYBE
         Invoke(nameof(InitProblem), 0.1f); // Add delay to prevent object from getting nuked by cleanup
-
-        //this.SetManualProblem(SHAPES.SEMI_CIRCLE, 6, 6, 100);
-
-        //Init fill shape
-        //Invoke(nameof(InitFillShape), 0.2f);
-
     }
-
-    //private void InitFillShape()
-    //{
-    //    shapeFiller.InitializeFill(spellCastEvent.problem.problemObjectShape, Color.green, 0.5f, 0f);
-    //}
 
     private void InitProblem()
     {
         hoGameBeh.Initiate();
-    }
-
-    // Temp fix for options
-    private void CopyOptions(List<TMP_Dropdown.OptionData> target, List<TMP_Dropdown.OptionData> source)
-    {
-        target.Clear();
-        foreach (TMP_Dropdown.OptionData sourceOpt in source)
-        {
-            target.Add(sourceOpt);
-        }
     }
 
     //--------------------------------------------------------
@@ -319,16 +286,37 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
     }
 
-    public void toggleConfirmScreen(string spell)
+    public void toggleConfirmScreen(string what)
     {
-        if (pConfirm != null)
+
+        if (what == "shape")    //chaned some stuff lang
         {
-            pConfirm.SetActive(!pConfirm.activeInHierarchy);
+            what = chosenShape;
         }
 
-        if (pConfirm.activeInHierarchy)
+        bool temp = !pConfirm.activeInHierarchy;
+
+        if (pConfirm != null)
         {
-            confirmText.text = "[ " + spell + " ]";
+            pConfirm.SetActive(temp);    //hideshow
+
+        }
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
+        if (what == "confirmHome")
+        {
+            pConfirmText.text = "Nais mo bang bumalik sa labas na pagpipilian?";
+            confirmText.text = "Hindi masa-Save ang progreso.";
+            bYes.gameObject.SetActive(false);
+            bYesHome.gameObject.SetActive(true);
+        }
+        else if (pConfirm.activeInHierarchy)
+        {
+            pConfirmText.text = "Tama ba ang napili:";
+            bYes.gameObject.SetActive(true);
+            bYesHome.gameObject.SetActive(false);
+            confirmText.text = "[ " + what + " ]?";
+
         }
     }
 
@@ -339,34 +327,63 @@ public class HOGameScript : MonoBehaviour
             pLowerScroll.SetActive(!pLowerScroll.activeInHierarchy);
         }
     }
+
+
+    public void hideAllEquation()
+    {
+        pEquationSquare.SetActive(false);
+        pEquationSCircle.SetActive(false);
+        pEquationCircle.SetActive(false);
+        pEquationRectangle.SetActive(false);
+        pEquationTriangle.SetActive(false);
+
+    }
+
+
     public void chooseSquare()
     {
         chosenShape = "SQUARE";
-        toggleConfirmScreen(chosenShape);
+
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSquare.SetActive(true);
+        // textTemp.text = "SQUARE";
     }
 
     public void chooseSemiCircle()
     {
         chosenShape = "SEMI_CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationSCircle.SetActive(true);
+        // textTemp.text = "SEMI_CIRCLE";
     }
 
     public void chooseCircle()
     {
         chosenShape = "CIRCLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationCircle.SetActive(true);
+        // textTemp.text = "CIRCLE";
     }
 
     public void chooseRectangle()
     {
         chosenShape = "RECTANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationRectangle.SetActive(true);
+        // textTemp.text = "RECTANGLE";
     }
 
     public void chooseTriangle()
     {
         chosenShape = "TRIANGLE";
-        toggleConfirmScreen(chosenShape);
+        // toggleConfirmScreen(chosenShape);
+        hideAllEquation();
+        pEquationTriangle.SetActive(true);
+        // textTemp.text = "TRIANGLE";
     }
 
     public void btnNo()
@@ -375,29 +392,96 @@ public class HOGameScript : MonoBehaviour
         // pConfirm.SetActive(false);
     }
 
-
-    public void toggleSlider()
-    {
-        //just move to right
-        rtSlider.anchoredPosition = new Vector2(-525f, rtSlider.anchoredPosition.y);
+    public void hideDiaBoxWhileMeasuring()
+    { //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -150f)));
+        backspaceButton.gameObject.SetActive(false);//f4rom lower
+        Debug.Log("It's here 450, button should not be visible...");
+        //uhh idk bakit nawawala lahat ng buttons???
+        if (isAllSolved)
+        {
+            //last na, hide redo button
+            btnMeasure.gameObject.SetActive(false);
+        }
+        else
+        {
+            btnMeasure.gameObject.SetActive(true);
+        }
     }
 
-    public void ShowDialogue()
-    {
-        Vector2 RTONTRANS = new(600f, 100f);
-        Vector2 PDIAONTRANS = new(239, 123);
-
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTONTRANS));
-        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAONTRANS));
+    public void showDiaBoxAfterMeasuring()
+    { //use only pag nag mmeasure, iba to sa mahahalf yung screen ah
+        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(225f, 130f)));
+        Debug.Log("Line 457, should have all the buttons showing after measuring for all times");
+        calcBtnObj.gameObject.SetActive(true);
     }
 
-    public void HideDialogue()
+    //cleaned this up a bit, same thing naman ung ganapings
+    public void toggleDialogueBox()
     {
-        Vector2 RTAWAYTRANS = new(600f, -100f);
-        Vector2 PDIAAWAYTRANS = new(239, 150);
 
-        StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
-        StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+        // 600, -121.46 Y to hide the dialogue while measuring (since the shape cannot be moved)
+
+        if (rtDialogue.anchoredPosition.y == 100)
+        {
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, RTAWAYTRANS));
+            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, PDIAAWAYTRANS));
+
+            StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));
+            // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, 285f)));
+
+
+            StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));   //left mode
+
+            // StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(), DIALOGUESLIDETIME, new(-493f, 223f)));   //experiemtn positions
+            // pDialogue.y = -59;
+        }
+        else
+        {
+
+            // StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, origDiaRT));
+
+            //jusrDoneSolving is true when mana filling is triggered so we really know it got activated
+            //^ false when onCasting na? todo: test if this works
+            if (justDoneSolving && !isAllSolved)
+            {
+                Debug.Log("Line 500 Im kms if this fails");
+                StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, 130f)));    //when youy undo enough it should return here (nasa baba)
+                // justDoneSolving = true;  //NAH KEEP THIS ON UNTIL MEASUREMENT
+            }
+            else
+            {   //OK SO IT WORKS NOW, THE WHOLE PROB WAS THAT THE THING IS TURNING FALSE, SHOULNDT BE UNTIL AFTER CASTING IG
+                StartCoroutine(RectTransformOverTime(rtDialogue, DIALOGUESLIDETIME, new(600f, -151f)));    //when youy undo enough it should return here (nasa baba)
+
+
+                // StartCoroutine(RectTransformOverTime(rtblackboard, OCRSLIDETIME, new(940f, -40f)));
+            }
+
+            if (isDoneMeasuring == false)
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, -167f)));
+                btnMeasure.gameObject.SetActive(true);
+                backspaceButton.SetActive(false);
+                //when you undo enough basically
+                Debug.Log("kine 504");
+            }
+            else
+            {
+                btnMeasure.gameObject.SetActive(false);//show uli pag bumalik sa measuring kakaundo
+                backspaceButton.SetActive(true);
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+                Debug.Log("Line 510");
+            }
+
+            if (isAllSolved) //final portion
+            {
+                StartCoroutine(RectTransformOverTime(rtDiaButtons, DIALOGUESLIDETIME, new(-493f, 138f)));
+                // btnMeasure.gameObject.SetActive(false); //hide measure//OKAY DONT DO THAT
+                // Debug.Log("line 543 naway mawala na ung HO button na nasa likod ng redo after neto pls lang");
+            }
+            //StartCoroutine(RectTransformOverTime(pDiaButtons.GetComponent<RectTransform>(),DIALOGUESLIDETIME, new(-493f, -175f)));
+            // pDialogue.y = 100; //tago
+        }
     }
 
     private IEnumerator RectTransformOverTime(RectTransform rt, float duration, Vector2 endTransform)
@@ -418,14 +502,6 @@ public class HOGameScript : MonoBehaviour
 
     public void btnYes()
     {
-
-        //IF SHAPE IS CORRECT:
-        // SHAPES.SQUARE 
-        // if ((int)this.spellCastEvent.problem.problemShape == currentOptionSelected + 1)
-        // {
-        //     //TODO: just read from the JSON file to figure out the current shape needed due to the room you entered - done eme
-
-
         UnityEngine.Debug.Log("chosenshape -> " + chosenShape);
         UnityEngine.Debug.Log("current shape -> " + this.spellCastEvent.problem.problemShape.ToString());
 
@@ -434,39 +510,28 @@ public class HOGameScript : MonoBehaviour
 
         if (this.spellCastEvent.problem.problemShape.ToString() == chosenShape)
         {
+            hideDiaBoxWhileMeasuring(); //this is new for only measurement
+
+            btnConfirmSpell.gameObject.SetActive(false);
             panelMagicScroll.SetActive(false);
             //show na den undo and cast buttons
             pDiaButtons.SetActive(true);
-            HideDialogue();
+            // HideDialogue();
+
             characterSay.text = charDialogue2;
-            manaReq.text = "Katumbas na Mana";
-            manaMeasure.gameObject.SetActive(true);
-            //slider.gameObject.SetActive(true);
-            //confirmMeasurement.gameObject.SetActive(true);
-            //correctionPerc.gameObject.SetActive(true);
-            slider.gameObject.SetActive(false); //test
 
-            // dropdown.gameObject.SetActive(false);
             lineSnapper.gameObject.SetActive(true);
-            undo.gameObject.SetActive(true);
-
+            btnUndo.gameObject.SetActive(true);
 
             //show correct casting equation
             //not entering correctly
             if (chosenShape == "TRIANGLE")
             {
                 pEquationTriangle.SetActive(true);
-
             }
             else if (chosenShape == "SQUARE")
             {
                 pEquationSquare.SetActive(true);
-                // textAns = GameObject.Find("textAnsTri").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsSqr").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsRect").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsCir").GetComponent<Text>();
-                // textAns = GameObject.Find("textAnsSC").GetComponent<Text>();
-
             }
             else if (chosenShape == "RECTANGLE")
             {
@@ -480,33 +545,10 @@ public class HOGameScript : MonoBehaviour
             {
                 pEquationSCircle.SetActive(true);
             }
-            //am too tired to figure out lol why not working switch
-            // switch(chosenShape){
-            //     case "TRIANGLE":
-            //         UnityEngine.Debug.Log("SHOWING TRIANGLE");
-            //         pEquationTriangle.SetActive(true);
-            //         break;
-            //     case "SQUARE":
-            //         UnityEngine.Debug.Log("SHOWING SQUARE");
-            //         pEquationSquare.SetActive(true);
-            //         break;
-            //     case "CIRCLE":
-            //         pEquationCircle.SetActive(true);
-            //         break;
-            //     case "SEMI_CIRCLE":
-            //         pEquationSCircle.SetActive(true);
-            //         break;
-            //     case "RECTANGLE":
-            //         pEquationRectangle.SetActive(true);
-            //         break;
-            // }
-            //ensure only 1 active exists
         }
         else    //IF SHAPE CHOSEN IS WRONGG:
         {
             notifyWrongShape();
-            // text.gameObject.SetActive(true); //Reactivate if not active
-            // text.text = "Ang shape na pinili ay mali. Subukan ulit.";
 
             //Play shake head anim
             animScript.playerScript.BadTrace();
@@ -579,28 +621,14 @@ public class HOGameScript : MonoBehaviour
 
     public void onCast()
     {
+        inputAnswer = 0f; // Reset input answer
+        btnMeasure.gameObject.SetActive(false); //Deactivate "Done" button
+
         // Modified function if all shapes solved
-        if (isAllSolved)
+        characterSay.text = "";
+        justDoneSolving = false;
+        if (isAllSolved || !isDoneMeasuring)
         {
-            DoneMeasure();
-        }
-        
-        //added NTS
-        if (!isDoneMeasuring)    //pag mag sslider plang
-        {
-            // rTransform.anchoredPosition = new Vector2(rTransform.anchoredPosition.x, 100);  //it broke idk y
-
-            //Check if Lines is maxed out first
-            if (lineSnapper.lineCount != lineSnapper.GetMaxLinesForShape())
-            {
-                // TODO: DISPLAY POPUP OF NOT DONE MEASURING YET
-
-                //QUIT BECAUSE BUTTON DOES NOTHING
-                return;
-            }
-
-            //ALSO TODO: FIX LINE LENGTHS DISPLAY
-
             DoneMeasure();
         }
         else
@@ -629,9 +657,9 @@ public class HOGameScript : MonoBehaviour
         ShapeFiller currFiller = currentlySolvedShape.AddComponent<ShapeFiller>();
 
         //Fill shape with mana, fill excess with void
-        if(!currentShapeObject.isExcess)
+        if (!currentShapeObject.isExcess)
             currFiller.fillMaterial = shapeFiller.fillMaterial;
-        else if(currentShapeObject.isIntersect)
+        else if (currentShapeObject.isIntersect)
             currFiller.fillMaterial = shapeFiller.intersectMaterial;
         else if (currentShapeObject.isExcess)
             currFiller.fillMaterial = shapeFiller.voidMaterial;
@@ -643,8 +671,11 @@ public class HOGameScript : MonoBehaviour
     public void InputAnswer(float ans = 0f) //Sends final answer
     {
         inputAnswer = ans;
+        ResetVarDisp(currentShape);
 
-        if(!isFinalAnswer) //Only record if not final answer mode
+        Debug.Log("Line 777: test DO YOU REACH THIS POINT");
+
+        if (!isFinalAnswer) //Only record if not final answer mode
         {
             if (!currentShapeObject.isExcess) //Positive Area
                 recordedAnswer.Add(currentShapeObject, inputAnswer);
@@ -669,9 +700,11 @@ public class HOGameScript : MonoBehaviour
                 ManaFilling();
 
             //End game stuff
+
+            toggleDialogueBox(); //hide  
             HideNewUI();
 
-            if(!isFinalAnswer)
+            if (!isFinalAnswer)
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX + OCRSLIDETIME);
             else
                 Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
@@ -681,6 +714,8 @@ public class HOGameScript : MonoBehaviour
 
             return; //Just in case it decides to run the code after
         }
+
+        calcBtnObj.SetActive(false);
 
         //More stuff to only do when not in final answer
         if (!isFinalAnswer)
@@ -693,10 +728,17 @@ public class HOGameScript : MonoBehaviour
             //Make solved shape unclickable
             currentlySolvedShape.GetComponent<MeshCollider>().enabled = false;
 
+            justDoneSolving = true;
+            Debug.Log("Pls work plplplplpls justDoneSolving: " + justDoneSolving);
+            toggleDialogueBox();//show again if not final answer
             ManaFilling();
 
+            Debug.Log("Line 825 see if this is the prob?");
+            //just gonna try to do it the hardcode way :/
             hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
-        }       
+
+            //TODO: Probably add the new UI per shape here
+        }
 
         ModifiedToUIAgain();
 
@@ -705,27 +747,36 @@ public class HOGameScript : MonoBehaviour
         {
             // Show and Modify Cast button functions
             pDiaButtons.SetActive(true); //Enable the buttons
-            pDiaButtons.transform.Find("btnCast").gameObject.SetActive(true); //Enable cast button
-            textFinish.text = castBtnText3; // Change cast button Text
 
             //Disable all other buttons for now
-            backspaceButton.SetActive(false);
-            calcBtnObj.SetActive(false);
-            pDiaButtons.transform.Find("Undo").gameObject.SetActive(false);
+            backspaceButton.SetActive(false);   //whys is this not erroring lmao
+            btnUndo.gameObject.SetActive(false);
+            btnMeasure.gameObject.SetActive(false);
+            Debug.Log("Line 881 if it errors lam na");
 
             // Set flag that confirms all shapes solved
             isAllSolved = true;
 
             //change dialogue text to say that the final area needs to be calculated if final answer
-            characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
+            // characterSay.text = "Kailangan ko na ngayon mabuo ang Spell.";
             //No need to reactivate undo button since not used any longer
         }
 
         //TODO: Add checks for if the input is a final answer i.e. the input is the final area of the compound shape
         //      Then run the animation
         if (isFinalAnswer)
-        {           
+        {
             HideNewUI();
+
+            Debug.Log("-------- before this point the buttons should all be hidden!!! -----");
+            pSpawner.gameObject.SetActive(false); //hide before animation
+
+            //hide all buttons at the end
+            pDiaButtons.SetActive(false);
+            //hide all buttons at the end
+            pDiaButtons.SetActive(false);
+            toggleDialogueBox(); //hide 
+            txtFinalCompound.text = "";
 
             //Indicate that the spell casting is done with the error text field
             correctionPerc.text = "Spell Complete!";
@@ -744,7 +795,6 @@ public class HOGameScript : MonoBehaviour
         isDoneMeasuring = true;
         textFinish.text = castBtnText2;
         calcBtnObj.SetActive(true);
-        backspaceButton.SetActive(true);
 
         //Update dialogue displays for line lengths
         Debug.Log("value1: " + lineSnapper.value1 + "| value2: " + lineSnapper.value2);
@@ -795,8 +845,9 @@ public class HOGameScript : MonoBehaviour
     {
         if (show)
         {
-            if(!isAllSolved)
-                ShowDialogue(); //Show
+            if (!isAllSolved)
+                // ShowDialogue(); //Show
+                toggleDialogueBox();
 
             yield return new WaitForSeconds(DIALOGUESLIDETIME); //Wait for Dialogue Toggle
 
@@ -804,8 +855,8 @@ public class HOGameScript : MonoBehaviour
             StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightEndTransObj.transform.position));
 
             //Slide and Scale Dialogue Box
-            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(160f, 100f)));
-            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.7f, 0.7f, 0.7f)));
+            StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, new(308f, 100f)));
+            StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(0.9f, 0.9f, 0.9f)));
         }
         else if (!show)
         {
@@ -818,6 +869,18 @@ public class HOGameScript : MonoBehaviour
             //Slide Dialogue Box
             StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
             StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, new(1f, 1f, 1f))); //Scale to Normal
+
+            if (!isAllSolved)
+                pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
+            backspaceButton.SetActive(false);
+
+            if (inputAnswer > 0f) undoPressed = false;
+            Debug.Log("undoPressed: " + undoPressed);
+            if (undoPressed)
+            {
+                pDiaButtons.SetActive(true);
+                backspaceButton.SetActive(true);
+            }
         }
 
         yield return new WaitForSeconds(OCRSLIDETIME); //Wait until OCR board stops moving
@@ -837,20 +900,18 @@ public class HOGameScript : MonoBehaviour
         {
             ocrInput.SetActive(false); //Deactivate the board once off screen
 
-            if(isFinalAnswer || undoPressed)
+            if (isFinalAnswer || undoPressed)
             {
-                HideDialogue();
+                // HideDialogue();
+                toggleDialogueBox(); //Hide
+
                 undoPressed = false;
             }
             else
             {
-                ShowDialogue();
-
-                if(!isAllSolved)
-                    pDiaButtons.SetActive(false); //Disable buttons when dialogue is up until all solved
+                // ShowDialogue();
+                toggleDialogueBox(); //Hide
             }
-
-            backspaceButton.SetActive(false);
         }
     }
 
@@ -893,31 +954,21 @@ public class HOGameScript : MonoBehaviour
         //copied from old repo
 
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
-        manaReq = GameObject.Find("ManaRequired").GetComponent<Text>();
         textFinish = GameObject.Find("textFinish").GetComponent<Text>();
+        txtFinalCompound = GameObject.Find("shapeCompoundFinal").GetComponent<Text>();
         textFinish.text = castBtnText1;
 
         isDoneMeasuring = false;
-
-        pDiaButtons = GameObject.Find("pDiaButtons");
-        pSlider = GameObject.Find("pSlider");
-
-        textAnsSC = GameObject.Find("textAnsSC")?.GetComponent<Text>();
-        textAnsRect = GameObject.Find("textAnsRect")?.GetComponent<Text>();
-        textAnsCir = GameObject.Find("textAnsCir")?.GetComponent<Text>();
-        textAnsSqr = GameObject.Find("textAnsSqr")?.GetComponent<Text>();
-        textAnsTri = GameObject.Find("textAnsTri")?.GetComponent<Text>();
+        justDoneSolving = false;
 
         pDialogue = GameObject.Find("PanelCasting");
         rtDialogue = pDialogue.GetComponent<RectTransform>();
         origDiaRT = rtDialogue.anchoredPosition; //Save original pos
-        rtSlider = pSlider.GetComponent<RectTransform>();
-
+        pDiaButtons = GameObject.Find("pDiaButtons");
+        rtDiaButtons = pDiaButtons.GetComponent<RectTransform>();
 
         savedGame = saverLoader.loadGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
-        currentShapeToSolve = savedGame.currRoom;
         textHUD.text = savedGame.currRoom + " ROOM";
-
 
         pDialogue.SetActive(true);
         pConfirm.SetActive(false);  //hide first
@@ -932,8 +983,13 @@ public class HOGameScript : MonoBehaviour
 
         //hide lang muna
         pDiaButtons.SetActive(false);
-        manaReq.text = "";//clear
+        // manaReq.text = "";//clear
+        btnConfirmSpell.gameObject.SetActive(false);
 
+        pConfirmText.text = "";
+
+        bYesHome.gameObject.SetActive(false);
+        bYes.gameObject.SetActive(false);
 
         // end
 
@@ -955,25 +1011,10 @@ public class HOGameScript : MonoBehaviour
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
         }
 
-        text = GameObject.Find("DialoguePrompt").GetComponent<TMP_Text>();
-        text.text = "";
-        manaMeasure = GameObject.Find("ManaValue").GetComponent<TMP_Text>();
-        manaMeasure.text = "0";
-
-        slider = GameObject.Find("Slider").GetComponent<Slider>();
-
-        yesButton = GameObject.Find("ConfirmYes").GetComponent<Button>();
-        noButton = GameObject.Find("ConfirmNo").GetComponent<Button>();
-        confirmMeasurement = GameObject.Find("ConfirmMeasurement").GetComponent<Button>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc").GetComponent<TMP_Text>();
         lineSnapper = GameObject.Find("Gesture").GetComponent<LineSnapper>();
-        // undo = GameObject.Find("Undo").GetComponent<Button>();
-        undo = GameObject.Find("btnUndo").GetComponent<Button>();
-        //CHANGED: Undo-> btnUndo
 
         //NEW ADDITIONS: DELETE IN CASE EVERYTHING BREAKS
-
-        changeCameraButton = GameObject.Find("ChangeCamera").GetComponent<Button>();
 
         mainCamera = GameObject.Find("Main Camera");
         mainCamera.SetActive(false);
@@ -986,43 +1027,13 @@ public class HOGameScript : MonoBehaviour
 
         Debug.Log("Level: " + GlobalVariables.level);
 
-        uiMaterial = Resources.Load<Material>("Materials/UI_Material");
         classroomMaterial = Resources.Load<Material>("Materials/ClassroomScreenMaterial");
 
         //----------------------------------------------
-
-        /* UnityEngine.Debug.Log(yesButton);
-         UnityEngine.Debug.Log(noButton);*/
-
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
-        confirmMeasurement.gameObject.SetActive(false);
+        btnMeasure.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
-
-        undo.onClick.AddListener(() =>
-        {
-            lineSnapper.OnUndoPressed();
-        });
-
-        changeCameraButton.onClick.AddListener(() =>
-        {
-            //Deactivate all UI if in ui, store previous states first though, then switch to classroom cam
-            if (isUICamera)
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToClass), TRANSITIONTIME);
-            }
-            else if (!isUICamera) // Reactivate UI if not in UI, switch to main cam
-            {
-                screenFadeAnimator.SetTrigger("fade");
-                Invoke(nameof(ToUI), TRANSITIONTIME);
-            }
-        });
-
+        btnUndo.gameObject.SetActive(false);
         //----------------------------------------------
 
     }
@@ -1037,72 +1048,21 @@ public class HOGameScript : MonoBehaviour
         if (clamped > 2.0f)
             clamped = 2.0f;
 
-        //TODO: Adjust error tolerance based on level?
         error = ((1 - clamped) * 100); //Get error float
-    }
-
-    public void SetCastingState(bool state)
-    {
-        slider.gameObject.SetActive(state);
-        confirmMeasurement.gameObject.SetActive(state);
     }
 
     private void ToClass()
     {
-        y = yesButton.IsActive();
-        n = noButton.IsActive();
-        m = manaMeasure.IsActive();
-        s = slider.IsActive();
-        cm = confirmMeasurement.IsActive();
-        cp = correctionPerc.IsActive();
-        ls = lineSnapper.gameObject.activeSelf;
-        u = undo.IsActive();
-        t = text.IsActive();
-        // d = dropdown.IsActive();
-        // r = restart.IsActive();
-        // q = quit.IsActive();
-
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        manaMeasure.gameObject.SetActive(false);
-        slider.gameObject.SetActive(false);
-        confirmMeasurement.gameObject.SetActive(false);
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
-        undo.gameObject.SetActive(false);
-        text.gameObject.SetActive(false);
-        // dropdown.gameObject.SetActive(false);
-        // restart.gameObject.SetActive(false);
-        // quit.gameObject.SetActive(false);
 
         mainCamera.SetActive(false);
         classroomCamera.SetActive(true);
-        changeCameraButton.GetComponent<Image>().material = uiMaterial; //Change material to UI mat
-
-        isUICamera = false;
     }
 
     private void ToUI()
     {
         ModifiedToUI();
-        /*       yesButton.gameObject.SetActive(y);
-               noButton.gameObject.SetActive(n);
-               manaMeasure.gameObject.SetActive(m);
-               slider.gameObject.SetActive(s);
-               confirmMeasurement.gameObject.SetActive(cm);
-               correctionPerc.gameObject.SetActive(cp);
-               lineSnapper.gameObject.SetActive(ls);
-               undo.gameObject.SetActive(u);
-               text.gameObject.SetActive(t);*/
-        // dropdown.gameObject.SetActive(d);
-        // restart.gameObject.SetActive(r);
-        // quit.gameObject.SetActive(q);
-
-        /*    mainCamera.SetActive(true);
-            classroomCamera.SetActive(false);
-            changeCameraButton.GetComponent<Image>().material = classroomMaterial; //Change material to classroom mat
-
-            isUICamera = true;*/
     }
 
     private void ModifiedToUIAgain()
@@ -1111,7 +1071,7 @@ public class HOGameScript : MonoBehaviour
         lineSnapper.OnUndoPressed();
         lineSnapper.OnUndoPressed();
         lineSnapper.gameObject.SetActive(false);
-        if(!isFinalAnswer)
+        if (!isFinalAnswer)
             characterSay.text = charDialogue1;
         SetVisibilityNewUI(false, true, false, true);
 
@@ -1121,7 +1081,6 @@ public class HOGameScript : MonoBehaviour
         pEquationTriangle.SetActive(false);
         pEquationCircle.SetActive(false);
         pEquationSCircle.SetActive(false);
-        manaReq.text = ""; //Also clear this out
 
         if (hoGameBeh.isAllAttemptedSolve())
         {
@@ -1136,17 +1095,68 @@ public class HOGameScript : MonoBehaviour
             {
                 i++;
                 currDisplay = areaDisplay.text; //Get current text
+                //ADD NEW OBJECTS HERE
+
+                Debug.Log(recordedAnswer.Count + "COMPLETED SHAPE! Add here yung new UI for it: " + dict.Key.shape);
+                txtFinalCompound.text = "Mga Component na bumubuo sa Compound Shape:";
+                spawnCompoundComponents(i, dict.Key.shape, dict.Value);
+
                 areaDisplay.text = currDisplay + $"[{dict.Key.shape}]: {dict.Value} "; //Add shape and area
                 Debug.Log("Size: " + dict.Value);
 
                 //New line every n shapes
-                if(i%n == 0)
+                if (i % n == 0)
                 {
                     currDisplay = areaDisplay.text; //Get current text
                     areaDisplay.text = currDisplay + '\n'; //Add line break
                 }
-            }  
+            }
         }
+
+    }
+
+    private void spawnCompoundComponents(int i, GameBehaviour.SHAPES shapeName, float shapeVal)
+    {
+        //just spawn the component shapes (that are already solved)
+        //n is list size
+        Vector2 newPos = new Vector2(0f, 0f) + new Vector2(0f, -60f * i);  //60 is height ng box to spawn
+        GameObject newSpawn = Instantiate(prefabSpawn, pSpawner);
+        RectTransform rtSpawn = newSpawn.GetComponent<RectTransform>();
+        if (rtSpawn != null)
+        {
+            rtSpawn.anchoredPosition = newPos;
+        }
+        else
+        {
+            newSpawn.transform.localPosition = newPos;
+        }
+
+        Text txtShape = newSpawn.transform.Find("shapeText").GetComponent<Text>();
+        txtShape.text = shapeName.ToString() + " : " + shapeVal;  //current name change
+
+        GameObject imgShapeSqr = newSpawn.transform.Find("shapeSqr").gameObject;
+        GameObject imgShapeCir = newSpawn.transform.Find("shapeCir").gameObject;
+        GameObject imgShapeSCir = newSpawn.transform.Find("shapeSCir").gameObject;
+        GameObject imgShapeRect = newSpawn.transform.Find("shapeRect").gameObject;
+        GameObject imgShapeTri = newSpawn.transform.Find("shapeTri").gameObject;
+        imgShapeSqr.SetActive(false);
+        imgShapeCir.SetActive(false);
+        imgShapeSCir.SetActive(false);
+        imgShapeRect.SetActive(false);
+        imgShapeTri.SetActive(false);
+
+        if (shapeName == GameBehaviour.SHAPES.SQUARE)
+        {
+            imgShapeSqr.SetActive(true); //hidk whjat i am doing
+
+        }
+        else if (shapeName == GameBehaviour.SHAPES.TRIANGLE)
+        {
+            GameObject imgShape = newSpawn.transform.Find("shapeTri").gameObject;
+            imgShapeTri.SetActive(true); //hidk whjat i am doing
+        }
+
+
 
     }
 
@@ -1157,8 +1167,6 @@ public class HOGameScript : MonoBehaviour
 
         mainCamera.SetActive(true);
         classroomCamera.SetActive(false);
-        changeCameraButton.GetComponent<Image>().material = classroomMaterial; //Change material to classroom mat
-        isUICamera = true;
         //DisableNewUI
         SetVisibilityNewUI(false, true, false, true);
     }
@@ -1172,8 +1180,6 @@ public class HOGameScript : MonoBehaviour
         currentlySolvedShape = clickData.originalShapeObject.actualShapeObj;
         currentShapeObject = clickData.originalShapeObject;
         SetManualProblem(clickData);
-        //InitFillShape();
-        //ShowNewUI();
         SetVisibilityNewUI(false, true, true, true);
     }
 
@@ -1264,87 +1270,13 @@ public class HOGameScript : MonoBehaviour
         SceneManager.LoadScene("LevelSelect");
     }
 
-    private void DeactivateChangeCamera()
-    {
-        //Require reset dialogue or script to reactivate
-        changeCameraButton.enabled = false;
-        changeCameraButton.GetComponent<Image>().enabled = false;
-    }
-
-    private void ActivateChangeCamera()
-    {
-        changeCameraButton.enabled = true;
-        changeCameraButton.GetComponent<Image>().enabled = true;
-    }
-
-    //TODO: Maybe make a method that will be called to activate an end screen???
-
     private void CallCastAnimation()
     {
         screenFadeAnimator.SetTrigger("fade");
 
-        Invoke(nameof(DeactivateChangeCamera), TRANSITIONTIME);
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
     }
-
-    //----------------------------------------------
-
-
-    // no need for a variable select to hold
-
-
-
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        //UnityEngine.Debug.Log("Line Snapper Value: " + lineSnapper.getMeasuredValue());
-
-    }
-
-
-    public void OnOptionSelect(int option)
-    {
-        //     if(dropdown.options.Count > 5) // When first selecting before removing default
-        //    {
-        //        dropdown.onValueChanged.RemoveAllListeners(); // Stop listening
-        //        dropdown.options.RemoveAt(0); // Remove "Select Shape" Default Option
-        //        dropdown.value -= 1; // move dropdown option to correct one
-        //        option -= 1; //Reduce index by 1 to compensate for removed option
-        //        dropdown.onValueChanged.AddListener(OnOptionSelect); // Start Listening
-        //     }
-
-        text.gameObject.SetActive(true); //Reactivate if not active
-                                         // text.text = correctShapePropmt;
-
-        /* UnityEngine.Debug.Log(option);*/
-        currentOptionSelected = option;
-        UnityEngine.Debug.Log("CurrentOption: " + currentOptionSelected);
-        //currentShape
-        /*       switch (option)
-               {
-                   case 0:
-                      break;
-                   case 1:
-                      break;
-                   case 2:
-                       break;
-                       case 3:
-                       break;
-                       case 4:
-                       break;
-
-               }*/
-
-        yesButton.gameObject.SetActive(true);
-        noButton.gameObject.SetActive(true);
-    }
-
-
 
     public class Problem
     {
@@ -1484,8 +1416,6 @@ public class HOGameScript : MonoBehaviour
     {
         screenFadeAnimator.SetTrigger("fade");
         Invoke(nameof(ToUI), TRANSITIONTIME);
-        Invoke(nameof(ActivateChangeCamera), TRANSITIONTIME);
-        //Invoke(nameof(ShowNewUI), TRANSITIONTIME);
         Invoke(nameof(RemoveRoomText), TRANSITIONTIME);
         Invoke(nameof(PlayMusic), TRANSITIONTIME);
     }
@@ -1510,15 +1440,9 @@ public class HOGameScript : MonoBehaviour
         hud.SetActive(a);
         pDialogue.SetActive(b);
         panelMagicScroll.SetActive(c);
+        btnConfirmSpell.gameObject.SetActive(c);//copy magic sroll
         quickMenu.SetActive(d);
-    }
-
-    private void ShowNewUI()
-    {
-        hud.SetActive(true);
-        pDialogue.SetActive(true);
-        panelMagicScroll.SetActive(true);
-        quickMenu.SetActive(true);
+        Debug.Log("Line 1657 see if kita ba ung buttons sa right = " + b);
     }
 
     private void RemoveRoomText()
@@ -1536,4 +1460,5 @@ public class HOGameScript : MonoBehaviour
 
         this.spellCastEvent = new SpellCastEvent(this, problem);
     }
+
 }

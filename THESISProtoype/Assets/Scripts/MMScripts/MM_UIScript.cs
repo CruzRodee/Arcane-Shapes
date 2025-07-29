@@ -12,16 +12,36 @@ public class MM_UIScript : MonoBehaviour
     public Button btnContinue;
     public GameObject panelNotify;
 
+    public GameObject panelInputPass;
+    public InputField passwordInputField;
+
     private string savePath;
     private bool gameExists = false;
     // Start is called before the first frame update
 
     private GameData savedGame;
+    private int mode;
 
     private SaveLoadController saverLoader = new SaveLoadController();
 
     private Animator screenFade;
     private const float TRANSITIONDELAY = 1.2f;
+    private bool canQuit = true;
+
+    //For the credits screen dont delete
+    public GameObject panelCredits;
+
+    public void ToggleCredits()
+    {
+        if (panelCredits != null)
+        {
+            panelCredits.SetActive(false);
+        }
+        else
+        {
+            panelCredits.SetActive(true);
+        }
+    }
 
     private void Awake()
     {
@@ -48,11 +68,85 @@ public class MM_UIScript : MonoBehaviour
         }
         overlayPanel.SetActive(false);
         panelNotify.SetActive(false);
+        panelCredits.SetActive(false);
+
+        //password hardcoded
+        panelInputPass.SetActive(false);
+
+        // mode = -1;
+
+    }
+
+    public void openPassField()
+    {    //made it separate so I can assign the buttons to this
+        panelInputPass.SetActive(true);
+    }
+
+    public void passwordWrong()
+    {
+        panelInputPass.SetActive(false);
+        panelNotify.SetActive(true);
+        overlayText.text = "Ang Password ay mali, maaring hintayin ang Guro upang malaman ang Password...";
+        // panelNotify.SetActive(false); //had to do this cuz the second usage needs to stay on screen so they dont click anything else
+    }
+
+    public void notifyDeleteGame()
+    {
+        panelInputPass.SetActive(false);
+        panelNotify.SetActive(true);
+        overlayText.text = "RESET GAME COMPLETE. Binura na ang Saved Game.";
+        //make continue not interactalble
+        btnContinue.interactable = false;
+        saverLoader.resetGame(Path.Combine(Application.persistentDataPath, "saveData.json"));
+    }
+
+    public void checkPassword()
+    {
+        // panelNotify.SetActive(false);
+
+        // PASS UNLOCK ALL: ALL
+        // PASS LOWER: SIMPLE
+        // PASS HIGHER: COMPOUND
+
+        panelInputPass.SetActive(false);
+        if (passwordInputField.text == "ALL")
+        {
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
+            mode = 0;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
+            LoadFirstScene();
+        }
+        else if (passwordInputField.text == "SIMPLE")
+        {
+            mode = 1;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
+            LoadFirstScene();
+        }
+        else if (passwordInputField.text == "COMPOUND")
+        {
+            mode = 2;
+            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
+            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
+            LoadFirstScene();
+        }
+        else if (passwordInputField.text == "RESET")
+        {
+            notifyDeleteGame();
+        }
+
+        else
+        {
+            passwordWrong();
+
+            //notify screen say PASSWORD INVALID. PLS ASK COORDINATOR FOR PASSWORD
+        }
 
     }
 
     public void DoContinue()
     {
+        canQuit = false;
         Debug.Log("CONTINUE");
         panelNotify.SetActive(true); //nts: always set active true because if inactive ndi makikita ung children comps
 
@@ -63,20 +157,33 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoNewGame()
     {
+        canQuit = false;
         if (gameExists)
         {
-
             overlayPanel.SetActive(true);
             overlayText.text = "Magsimula ng bagong laro? Ang lumang Saved Game ay hindi na maaaring ituloy gawa nito.";
         }
-        else
-            LoadFirstScene();
+        else //no previous game yet
+            openPassField();
+        // LoadFirstScene();
         // Moved the rest to to LoadFirstScene since that is where new games always go anyways
     }
 
     public void DoCredits()
     {
-        Debug.Log("Open Credits");
+        
+        if (panelCredits.activeInHierarchy)
+        {
+            panelCredits.SetActive(false);
+            canQuit = true;
+            Debug.Log("Close Credits");
+        }
+        else
+        {
+            panelCredits.SetActive(true);
+            canQuit = false;
+            Debug.Log("Open Credits");
+        }
     }
 
     public void LoadFirstScene()
@@ -86,8 +193,8 @@ public class MM_UIScript : MonoBehaviour
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE");
-
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode);
+        Debug.Log("New Game with mode: " + mode);
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
 
@@ -114,6 +221,9 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoQuit() // For quit button
     {
+        if(!canQuit)
+            return;
+        
         Debug.Log("Quitting Game");
         try
         {
@@ -141,7 +251,18 @@ public class MM_UIScript : MonoBehaviour
 
     public void ClosePanel()
     {
+        canQuit = true;
         overlayPanel.SetActive(false);
+        // if(overlayPanel != null) //it's on screen
+        // {
+        //     isActive  = !isActive;
+        //     overlayPanel.SetActive(isActive);
+        // }
+    }
+    public void CloseNotifyPanel()
+    {
+        canQuit = true;
+        panelNotify.SetActive(false);
         // if(overlayPanel != null) //it's on screen
         // {
         //     isActive  = !isActive;
