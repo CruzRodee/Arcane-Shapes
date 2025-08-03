@@ -83,7 +83,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     public Material vfxLineMaterial;
 
     //Public array containing output classes
-    public readonly string[] CLASSES = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Lpar", "Rpar", "dec", "div", "equ", "min", "pi", "plu", "tim" };
+    public readonly string[] CLASSES = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "dec", "div", "equ", "min", "pi", "plu", "tim" };
 
     //Boolean for saving OCR inputs as .jpg, make sure this is false before deploying
     public bool DO_SAVE_INPUTS = false;
@@ -419,11 +419,11 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         doingOCR = true; //flag this
 
         // Load input data to tensor
-        Tensor<float> inputTensor = new Tensor<float>(new TensorShape(1, 3, 45, 45));
+        using var inputTensor = new Tensor<float>(new TensorShape(1, 1, 45, 45));
         TextureConverter.ToTensor(generatedTexture, inputTensor, new TextureTransform());
 
         //Run inference
-        worker = new Worker(runtimeModel, BackendType.GPUCompute);
+        worker = new Worker(runtimeModel, BackendType.CPU);
         worker.Schedule(inputTensor);
 
         //Store output tensor as array
