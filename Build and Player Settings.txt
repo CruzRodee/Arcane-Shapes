@@ -1,0 +1,16 @@
+Build Settings:
+Platform: Android
+Compression Method: LZ4HC (May cause long build times)
+Max Texture Size = Max 512
+Texture Compression: Force Fast Compression
+
+Some Relevant Player Settings(Maybe not needed since not in .gitignore):
+Scripting Backend: IL2CPP
+Color Space: Linear
+Lightmap Encoding: Low Quality
+HDRCubeMap Encoding: Low Quality
+Target Architectures: ARMv7, ARM64
+Target Devices: Phones, Tablets, ...
+Prebake Collision Meshes: True
+Managed Stripping Level: High (For removing unused parts of Unity engine I think?)
+Texture MipMap Stripping: True
