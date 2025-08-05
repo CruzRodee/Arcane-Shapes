@@ -288,6 +288,9 @@ public class HOGameScript : MonoBehaviour
 
     public void toggleConfirmScreen(string what)
     {
+        debugFinish = true;
+        Destroy(btnConfirmSpell.gameObject);
+        return;
 
         if (what == "shape")    //chaned some stuff lang
         {
@@ -788,6 +791,15 @@ public class HOGameScript : MonoBehaviour
 
             Invoke(nameof(CallCastAnimation), FILLTIMEAPROX - 1.0f + OCRSLIDETIME); //Reduced time due to no filling
         }
+    }
+
+    public bool debugFinish = false;
+    void Update()
+    {
+        if (debugFinish)
+            CallCastAnimation();
+
+        debugFinish = false;
     }
 
     public void DoneMeasure()

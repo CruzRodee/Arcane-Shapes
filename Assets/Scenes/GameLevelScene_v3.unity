@@ -4412,6 +4412,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Quad
       objectReference: {fileID: 0}
+    - target: {fileID: 4783799797060374049, guid: 8b51da5cdbcf5e646aea45ae62bc6b02,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
