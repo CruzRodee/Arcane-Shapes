@@ -6,7 +6,7 @@ public class GameLevelSoundPlayer : MonoBehaviour
     public AudioClip[] sfxSet;
     private AudioSource bgmSource;
     private AudioSource sfxSource;
-    private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
+    private float volumeFactor = 0.0f; //Multiplier of volume for mute / volume slider functions
 
     void Awake()
     {

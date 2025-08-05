@@ -4,6 +4,7 @@ public static class GlobalVariables
 {
     // LO variables
 
+    public static int recordIndex = -1;
     public static GameBehaviour.SHAPES loSelectedShape;
     public static float[] loMeasures1 = { 3, 4, 5, 6, 7, 8 };
     public static float[] loMeasures2 = { 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 7, 7.5f, 8 };

@@ -504,6 +504,7 @@ MonoBehaviour:
   cirVarDisp1: {fileID: 61287100}
   semiVarDisp1: {fileID: 1985195790}
   soundPlayerObj: {fileID: 1103245039}
+  debugFinish: 0
 --- !u!1 &332733892 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1866385364777917799, guid: 760b825cd35d7dc46935c80d39b0f0ce,
@@ -1690,7 +1691,7 @@ GameObject:
   - component: {fileID: 1636076560}
   m_Layer: 0
   m_Name: ClassroomCamera
-  m_TagString: Untagged
+  m_TagString: Finish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3701,6 +3702,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HintUNDO
       objectReference: {fileID: 0}
+    - target: {fileID: 7462045478312890855, guid: a27776240556e3f419a59ad1ebd0613c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3849,6 +3855,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HintCalcu
       objectReference: {fileID: 0}
+    - target: {fileID: 9007020286441020033, guid: 872064da3cd53bf47bca151de272a0ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3984,6 +3995,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HintMEASURE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4051094427683372996, guid: 7290e85563afeb84cbaf5cf9280aeffc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4376,6 +4392,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: btnConfirmSpell
       objectReference: {fileID: 0}
+    - target: {fileID: 9038436592123154222, guid: 4d084afdb7160eb4d9f21a36b062f955,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4597,6 +4618,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Quad
       objectReference: {fileID: 0}
+    - target: {fileID: 4783799797060374049, guid: 8b51da5cdbcf5e646aea45ae62bc6b02,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4614,6 +4640,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HintSpellBook
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433234660875969113, guid: a7b6c1c6c2dbec1419488f54ae3c160b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7096499395069753300, guid: a7b6c1c6c2dbec1419488f54ae3c160b,
         type: 3}

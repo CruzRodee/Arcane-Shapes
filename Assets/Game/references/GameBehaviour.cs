@@ -199,10 +199,13 @@ public class GameBehaviour : MonoBehaviour
     // _init() _ready()
 
 
-    //debugging chenez
-    // void Update(){
-    //     textEME.text = "STATS\nisDoneMeasuring: " + isDoneMeasuring+"\nidkna";
-    // }
+    public bool debugFinish = false;
+    void Update(){
+        if(debugFinish)
+            CallCastAnimation();
+
+        debugFinish = false;
+    }
 
 
     void Reset()
@@ -351,7 +354,10 @@ public class GameBehaviour : MonoBehaviour
 
     public void toggleConfirmScreen(string what)
     {
-
+        debugFinish = true;
+        return;
+        
+        
         if (what == "shape")    //chaned some stuff lang
         {
             what = chosenShape;
@@ -1302,6 +1308,7 @@ public class GameBehaviour : MonoBehaviour
     private void CallCastAnimation()
     {
         screenFadeAnimator.SetTrigger("fade");
+        Destroy(btnConfirmSpell.gameObject);
 
         Invoke(nameof(ToClass), TRANSITIONTIME);
         Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
@@ -1426,29 +1433,34 @@ public class GameBehaviour : MonoBehaviour
         System.Random rand = new System.Random((int)DateTime.Now.Ticks);
         int limit = 0;
 
+        // Changes for recording anims
+        GlobalVariables.recordIndex++;
+        if(GlobalVariables.recordIndex > 4)
+            GlobalVariables.recordIndex = 0;
+
         if (instanced.IsUnityNull())
         {
             switch (s)
             {
                 case SHAPES.SQUARE:
                     limit = animScript.square_Levels.Length;
-                    instanced = animScript.square_Levels[rand.Next(0, limit)];
+                    instanced = animScript.square_Levels[GlobalVariables.recordIndex];
                     break;
                 case SHAPES.RECTANGLE:
                     limit = animScript.rectangle_levels.Length;
-                    instanced = animScript.rectangle_levels[rand.Next(0, limit)];
+                    instanced = animScript.rectangle_levels[GlobalVariables.recordIndex];
                     break;
                 case SHAPES.TRIANGLE:
                     limit = animScript.triangle_levels.Length;
-                    instanced = animScript.triangle_levels[rand.Next(0, limit)];
+                    instanced = animScript.triangle_levels[GlobalVariables.recordIndex];
                     break;
                 case SHAPES.CIRCLE:
                     limit = animScript.circle_levels.Length;
-                    instanced = animScript.circle_levels[rand.Next(0, limit)];
+                    instanced = animScript.circle_levels[GlobalVariables.recordIndex];
                     break;
                 case SHAPES.SEMI_CIRCLE:
                     limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[rand.Next(0, limit)];
+                    instanced = animScript.semicircle_levels[GlobalVariables.recordIndex];
                     break;
                 default:
                     UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
