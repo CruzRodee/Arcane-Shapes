@@ -494,6 +494,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96734357}
   m_CullTransparentMesh: 1
+--- !u!1001 &117550069
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Name
+      value: '[Graphy]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
 --- !u!1 &130178390
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,104 +1245,103 @@ MonoBehaviour:
 
     zynfeb
 
-    
+
 
     Stylized
     Books
 
     https://skfb.ly/ozIUv
 
-    
+
 
     Stylized Potions Pack (Game Assets)
 
     Asgart
 
-    
+
 
     Stylized
     Treasure Chest
 
     Gintoki1234
 
-    
+
 
     Magic Circle
 
     RBG_illustrations
 
-    
+
 
     Chibi
     Base
 
     Carlos
 
-    
+
 
     Dinner Table
 
     3DSKETCH1550
 
-    
 
-    Stylized
-    Pine Tree Tree
+
+    Stylized Pine Tree
+    Tree
 
     Batuhan13
 
-    
+
 
     Stylized Tent
 
     csabat3D
 
-    
 
-    Wood
-    Plate FBX
+
+    Wood Plate FBX
 
     GetDeadEntertainment
 
-    
+
 
     SANDWICH
 
     Magali
 
-    
+
 
     Tornado
 
     Paxar095
 
-    
+
 
     Rainbow
     from Poly by Google
 
     IronEqual
 
-    
+
 
     Bell from Poly by Google
 
     IronEqual
 
-    
+
 
     Pot
     of Gold - Game Asset
 
     djcarson
 
-    
+
 
     Low_poly_house
 
     Anastasya.Mur
 
-    
+
 
     Battle
     hammer
@@ -1891,238 +1987,236 @@ MonoBehaviour:
 
     nekoninja (Freesound)
 
-    
+
 
     Chest Opening
 
-    spookymodem
-    (Freesound)
+    spookymodem (Freesound)
 
-    
+
 
     earth-rumble
 
     Sslc2022
 
-    
 
-    Atomic Impact
+
+    Atomic
+    Impact
 
     SoundReality
 
-    
+
 
     freeze1
 
-    asdftekno
-    (Freesound)
+    asdftekno (Freesound)
 
 
-    Explosion 3
+    Explosion
+    3
 
     kalsstockmedia
 
 
     Creepy Wind Suction
 
-    KatDhamphir
-    (Freesound)
+    KatDhamphir (Freesound)
 
-    
 
-    Sfx16 - Beam
+
+    Sfx16
+    - Beam
 
     Data_pion
 
-    
+
 
     Sci Fi portal
 
-    Bzourk
-    (Freesound)
+    Bzourk (Freesound)
 
-    
 
-    Tornado Sound (better quality)
+
+    Tornado
+    Sound (better quality)
 
     Josh74000MC (Freesound)
 
-    
 
-    Magic
-    Church Bell
+
+    Magic Church Bell
 
     u_jt9vdte8nd
 
-    
 
-    Gas Pipe Noise
+
+    Gas
+    Pipe Noise
 
     Alex_Jauk
 
-    
 
-    LIGHT
-    RAIN
+
+    LIGHT RAIN
 
     Liecio
 
-    
+
 
     Shine 11
 
     BenKirb
 
-    
 
-    Metal Blade
-    Slice 32
+
+    Metal
+    Blade Slice 32
 
     floraphonic
 
-    
+
 
     Metal Blade Slice 49
 
     floraphonic
 
-    
+
 
     Metal
     Blade Slice 80
 
     floraphonic
 
-    
+
 
     Magic charge mana 2
 
     FxProSound
 
-    
+
 
     Match
     Sizzle 02
 
     squareal (Freesound)
 
-    
+
 
     Game Explosion
 
     SoundReality
 
-    
+
 
     brush
 
     Reitanna
     (Freesound)
 
-    
+
 
     080245_SFX Magic
 
     Freesound Community
 
-    
 
-    energy
-    hum
 
-    firestorm185 (Freesound)
+    energy hum
 
-    
+    firestorm185
+    (Freesound)
+
+
 
     Power Down
 
     noirenex (Freesound)
 
-    
 
-    Lofi
-    Sample, If i cant have you
+
+    Lofi Sample, If
+    i cant have you
 
     ChronoPopOfficial
 
-    
 
-    MELODY | ambient
-    handpan lofi
 
-    loop | Dmin 120bpm
+    MELODY | ambient handpan lofi
+
+    loop
+    | Dmin 120bpm
 
     attic13
 
-    
 
-    Tick Sound Effect
-    (1)
+
+    Tick Sound Effect (1)
 
     u_a4gfvwagf1
 
-    
+
 
     cartoon_wink_magic_sparkle
 
     MattLeschuck
     (Freesound)
 
-    
+
 
     Wind Up Tone Effect
 
     Author Unknown
 
-    
 
-    Relaxing
-    Guitar Loop V5
+
+    Relaxing Guitar
+    Loop V5
 
     IdoBerg
 
-    
+
 
     Achive Sound
 
     Liecio
 
-    
 
-    Error
-    04
 
-    Universfield
-
-    
-
-    Click Button App
+    Error 04
 
     Universfield
 
-    
+
+
+    Click
+    Button App
+
+    Universfield
+
+
 
     explode3
 
-    rendensh
-    (Freesound)
+    rendensh (Freesound)
 
-    
 
-    Metal Design Explosion
+
+    Metal
+    Design Explosion
 
     Muzaproduction
 
-    
 
-    mystic
-    1
+
+    mystic 1
 
     Zixem (Freesound)
 
-    
 
-    FX time freeze
+
+    FX
+    time freeze
 
     v0idation (Freesound)'
   m_isRightToLeft: 0
@@ -3584,6 +3678,7 @@ MonoBehaviour:
   overlayPanel: {fileID: 1985640665}
   btnContinue: {fileID: 507020990}
   panelNotify: {fileID: 1510817445}
+  graphy: {fileID: 1793873832}
   panelInputPass: {fileID: 1898721911}
   passwordInputField: {fileID: 954665550}
   panelCredits: {fileID: 1775267598}
@@ -3671,9 +3766,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1454012793}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MM_UIScript, Assembly-CSharp
-        m_MethodName: DoQuit
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3682,7 +3777,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
 --- !u!114 &1471049823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4393,6 +4488,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6428116198654639081}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1793873832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3,
+    type: 3}
+  m_PrefabInstance: {fileID: 117550069}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1799155576
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,7 +4803,8 @@ MonoBehaviour:
     of Minimap spell made using:\r\nhttps://dungeonmapdoodler.com/\r\n\r\nGround
     Textures and Materials\r\nNobiax / Yughues\r\nhttps://assetstore.unity.com\n\nHandwritten
     math symbols dataset\r\nXai Nano\r\nhttps://www.kaggle.com\r\n\r\nHandwritten
-    math symbol and digit dataset\r\nclarence zhao\r\nhttps://www.kaggle.com"
+    math symbol and digit dataset\r\nclarence zhao\r\nhttps://www.kaggle.com\n\n[Graphy]
+    - Ultimate FPS Counter - Stats Monitor & Debugger\r\nTayx\nhttps://assetstore.unity.com"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d0ee6e93669b35d40b0d2cc825fb0b16, type: 2}
   m_sharedMaterial: {fileID: -8659432324645155994, guid: d0ee6e93669b35d40b0d2cc825fb0b16,
@@ -5432,3 +5534,4 @@ SceneRoots:
   - {fileID: 157749291}
   - {fileID: 1454012792}
   - {fileID: 23015563}
+  - {fileID: 117550069}
