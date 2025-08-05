@@ -179,7 +179,7 @@ public class LS_EventsScript : MonoBehaviour
         {
             if (btnUnmutedSprite != null)
                 btnMuteImg.sprite = btnUnmutedSprite;
-            bgmSrc.volume = GlobalVariables.defaultBGMVolume;
+            bgmSrc.volume = 0;
         }
         else
         {
