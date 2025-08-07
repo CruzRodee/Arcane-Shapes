@@ -288,8 +288,25 @@ public class HOGameScript : MonoBehaviour
 
     public void toggleConfirmScreen(string what)
     {
+        error = GlobalVariables.debugError;
+
         debugFinish = true;
         Destroy(btnConfirmSpell.gameObject);
+
+        //Set error to cycle
+        switch (GlobalVariables.debugError)
+        {
+            case 100f:
+                GlobalVariables.debugError = -100f; //Set to OverCast
+                break;
+            case -100f:
+                GlobalVariables.debugError = 0f; //Set to GoodCast
+                break;
+            case 0f:
+                GlobalVariables.debugError = 100f; //Cycle back to UnderCast
+                break;
+        }
+
         return;
 
         if (what == "shape")    //chaned some stuff lang

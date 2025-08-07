@@ -455,7 +455,7 @@ MonoBehaviour:
   shapeGenerator: {fileID: 0}
   shapeFiller: {fileID: 0}
   lineSnapper: {fileID: 0}
-  error: 100
+  error: 0
   hud: {fileID: 1409844455}
   quickMenu: {fileID: 4275913396142103999}
   panelMagicScroll: {fileID: 2132351606}

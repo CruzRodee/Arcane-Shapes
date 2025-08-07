@@ -47,6 +47,7 @@ public static class GlobalVariables
 
     // HO variables
 
+    public static float debugError = 100f;
     public static List<HOGameBeh.ShapeObject> HOProblem()
     {
         // Define the problem that matches the level
