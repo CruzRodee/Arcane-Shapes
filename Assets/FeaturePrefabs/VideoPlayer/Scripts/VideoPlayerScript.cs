@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
@@ -127,7 +128,7 @@ public class VideoPlayerScript : MonoBehaviour
         string path = GetSpellPath(shape);
         path = Path.Combine(streamingAssetsPath, path);
         path = Path.Combine(path, "intro.mp4");
-        PlayVideo(path);
+        StartCoroutine(PlayVideo(path));
     }
 
     // 0 = Under, 1 = Over, 2 = Good
@@ -148,26 +149,13 @@ public class VideoPlayerScript : MonoBehaviour
                 path = Path.Combine(path, "good.mp4");
                 break;
         }
-        
-        PlayVideo(path);
+
+        StartCoroutine(PlayVideo(path));
     }
 
     public void Stop()
     {
         videoPlayer.Stop();
-    }
-
-    public void PlayVideo(string path)
-    {
-        videoPlayer.Stop();
-        
-        videoPlayer.url = path;
-
-        //Set audio source output
-        videoPlayer.SetTargetAudioSource(0, soundSource);
-
-        if(!videoPlayer.isPlaying)
-            videoPlayer.Play();
     }
 
     public void PlayBGAnim()
@@ -193,9 +181,28 @@ public class VideoPlayerScript : MonoBehaviour
             }
         }
 
-        PlayVideo(path);
+        StartCoroutine(PlayVideo(path));
     }
 
+    public IEnumerator PlayVideo(string path)
+    {
+        videoPlayer.Stop();
+
+        using (UnityWebRequest www = UnityWebRequest.Get(path))
+        {
+            yield return www.SendWebRequest();
+
+            if(www.result == UnityWebRequest.Result.Success)
+            {
+                videoPlayer.url = path;
+                videoPlayer.Prepare();
+
+                if (!videoPlayer.isPlaying)
+                    videoPlayer.Play();
+            }
+        }
+    }
+    
     // Update is called once per frame
     void Update()
     {

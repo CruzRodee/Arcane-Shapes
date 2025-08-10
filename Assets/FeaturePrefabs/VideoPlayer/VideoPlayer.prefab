@@ -57,7 +57,7 @@ VideoPlayer:
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 1
   m_TargetAudioSources:
-  - {fileID: 0}
+  - {fileID: 3879294725958816430}
   m_DirectAudioVolumes:
   - 1
   m_Url: 
@@ -178,5 +178,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8825d686d1931e4188c1baed24196b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBGAnim: 0
-  isVFX: 0
