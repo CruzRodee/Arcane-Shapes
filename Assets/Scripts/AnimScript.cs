@@ -7,20 +7,14 @@ public class AnimScript : MonoBehaviour
         circle_levels, semicircle_levels, compound_levels;
     public GameBehaviour.SHAPES[] compound_main_shapes;
 
-    //Defaults
-    public float spellDuration = 3f;
+    //References
+    public VideoPlayerScript VideoPlayerScript;
 
     private void Awake()
     {
         //TODO: Set spellduration here to equal half the mp4 length
-    }
 
-    public void AcquireSpell()
-    {
-        
-    }
-
-    public void CastSpell()
-    {
+        //Get video player
+        VideoPlayerScript = GameObject.Find("VideoPlayer").GetComponent<VideoPlayerScript>();
     }
 }

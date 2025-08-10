@@ -32,7 +32,7 @@ public class GameBehaviour : MonoBehaviour
     private Material uiMaterial, classroomMaterial;
     private Animator screenFadeAnimator;
     private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
-    private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
+    private float ENDDELAY = 5.0f;
 
     private AnimScript animScript;
     private bool STARTUP = true;
@@ -1180,6 +1180,8 @@ public class GameBehaviour : MonoBehaviour
 
     private void ToClass()
     {
+        animScript.VideoPlayerScript.Stop();
+        
         cp = correctionPerc.IsActive();
         ls = lineSnapper.gameObject.activeSelf;
 
@@ -1194,6 +1196,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void ToUI()
     {
+        animScript.VideoPlayerScript.Stop();
+        animScript.VideoPlayerScript.PlayBGAnim();
+        
         correctionPerc.gameObject.SetActive(cp);
         lineSnapper.gameObject.SetActive(ls);
 
@@ -1229,13 +1234,17 @@ public class GameBehaviour : MonoBehaviour
 
         if (error == 0f)
         {
-            Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
-            //Call function to display a level complete/retry screen
+            int state = 2;
+            if (error > 0)
+                state = 0;
+            else if (error < 0)
+                state = 1;
+            animScript.VideoPlayerScript.PlaySpellAnim(currentShape, state);
 
             //TODO: ADD END SCREENN, Base delay from sd + ENDDELAY - 3.5f maybe?
             UnityEngine.Debug.Log("LEVEL COMPLETE!!!");
-            float sd = animScript.spellDuration;
-            Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
+            float sd = animScript.VideoPlayerScript.GetVideoLength();
+            Invoke(nameof(FadeDelay), sd + ENDDELAY - 1f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
 
@@ -1258,11 +1267,6 @@ public class GameBehaviour : MonoBehaviour
     private void FadeDelay()
     {
         screenFadeAnimator.SetTrigger("fadeOut");
-    }
-
-    private void DelayedSpellAnimation()
-    {
-        animScript.CastSpell();
     }
 
     private void EndGameFunctions() //Function for saving data to save maybe? Also transitioning back to level select
@@ -1418,37 +1422,7 @@ public class GameBehaviour : MonoBehaviour
 
     private void ActivateSpell(SHAPES s)
     {
-        return;
-        
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        int limit = 0;
-
-            switch (s)
-            {
-                case SHAPES.SQUARE:
-                    limit = animScript.square_Levels.Length;
-                    break;
-                case SHAPES.RECTANGLE:
-                    limit = animScript.rectangle_levels.Length;
-                    break;
-                case SHAPES.TRIANGLE:
-                    limit = animScript.triangle_levels.Length;
-                    break;
-                case SHAPES.CIRCLE:
-                    limit = animScript.circle_levels.Length;
-                    break;
-                case SHAPES.SEMI_CIRCLE:
-                    limit = animScript.semicircle_levels.Length;
-                    break;
-                default:
-                    UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
-                    //TEMPLATE
-                    limit = animScript.semicircle_levels.Length;
-                    break;
-            }
-
-        //SPELL
-        animScript.AcquireSpell(); // To prevent nullreference error
+        animScript.VideoPlayerScript.PlaySpellIntro(s);
     }
 
     public class SpellCastEvent
