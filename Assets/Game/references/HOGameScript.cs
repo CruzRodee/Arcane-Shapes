@@ -549,9 +549,6 @@ public class HOGameScript : MonoBehaviour
         else    //IF SHAPE CHOSEN IS WRONGG:
         {
             notifyWrongShape();
-
-            //Play shake head anim
-            animScript.playerScript.BadTrace();
         }
         toggleConfirmScreen("");
     }
@@ -998,14 +995,13 @@ public class HOGameScript : MonoBehaviour
 
         if (STARTUP)
         {
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
             screenFadeAnimator.SetTrigger("fadeIn");
 
             //Hide new UI at start
             HideNewUI();
 
             //Except Hud
-            hud.SetActive(true);
+            //hud.SetActive(true);
 
             //Get sound player script, do on start since component init is at Awake()
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
@@ -1209,22 +1205,21 @@ public class HOGameScript : MonoBehaviour
 
         if (Math.Round(Math.Abs(error), 2) == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(animScript.compound_main_shapes[GlobalVariables.level]));
             Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
             //Call function to display a level complete/retry screen
 
             //TODO: ADD END SCREENN, Base delay from sd + ENDDELAY - 3.5f maybe?
             UnityEngine.Debug.Log("LEVEL COMPLETE!!!");
-            float sd = animScript.currentScript.GetSpellDuration();
+            float sd = animScript.spellDuration;
             Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
             return; // Early return
         }
-        if (error < 0f)
-            animScript.playerScript.OverCast();
-        if (error > 0f)
-            animScript.playerScript.UnderCast();
+        //if (error < 0f)
+        //    ;
+        //if (error > 0f)
+        //    ;
 
         //TODO: ADD END SCREEN, Base delay from ENDDELAY - 2.5f maybe?
         UnityEngine.Debug.Log("LEVEL FAILED!!!");
@@ -1305,6 +1300,8 @@ public class HOGameScript : MonoBehaviour
 
     public void InstanceSpellObject(GameObject instanced = null)
     {
+        return;
+        
         if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level <= 6)
         {
             instanced = animScript.compound_levels[GlobalVariables.level];

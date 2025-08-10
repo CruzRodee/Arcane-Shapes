@@ -167,8 +167,6 @@ public class ModifiedGameBehaviour : MonoBehaviour // This script will be on the
 
         if (isStartupSequence)
         {
-            if (gameAnimScript?.transitionVFX != null && GameObject.Find("SpellOrigin") != null)
-                Instantiate(gameAnimScript.transitionVFX, GameObject.Find("SpellOrigin").transform);
             if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("fadeIn");
             if (hudPanel != null) hudPanel.SetActive(true);
         }
@@ -627,12 +625,6 @@ public class ModifiedGameBehaviour : MonoBehaviour // This script will be on the
 
     float GetCurrentAnimationDurationSafe()
     { // Renamed
-        if (gameAnimScript != null && gameAnimScript.playerScript != null)
-        {
-            // Assuming playerScript has a way to get current anim duration, e.g.
-            // return gameAnimScript.playerScript.GetCurrentAnimLength();
-            // If not, return a default
-        }
         return SPELLDELAY; // Fallback
     }
 
@@ -731,18 +723,12 @@ public class ModifiedGameBehaviour : MonoBehaviour // This script will be on the
     void TriggerSuccessAnimsAndSound(SHAPES shapeType)
     {
         Debug.Log($"Success anim/sound for {shapeType}");
-        if (gameAnimScript?.playerScript != null) gameAnimScript.playerScript.GoodCast(SendShapeToPlayerAnim(shapeType)); // Using existing call
         // Add sound play calls here
         InvokeDelayedSpellVisual();
     }
     void TriggerFailureAnimsAndSound()
     {
         Debug.Log("Failure anim/sound");
-        if (gameAnimScript?.playerScript != null)
-        {
-            if (this.currentLOError < 0f) gameAnimScript.playerScript.OverCast();
-            else gameAnimScript.playerScript.UnderCast();
-        }
         // Add sound play calls here
     }
     void InvokeDelayedSpellVisual() { Invoke(nameof(TriggerSpellVisualEffect), SPELLDELAY); } // Renamed

@@ -740,9 +740,6 @@ public class GameBehaviour : MonoBehaviour
             notifyWrongShape();
             // text.gameObject.SetActive(true); //Reactivate if not active
             // text.text = "Ang shape na pinili ay mali. Subukan ulit.";
-
-            //Play shake head anim
-            animScript.playerScript.BadTrace();
         }
         toggleConfirmScreen("");
     }
@@ -1117,14 +1114,13 @@ public class GameBehaviour : MonoBehaviour
 
         if (STARTUP)
         {
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
             screenFadeAnimator.SetTrigger("fadeIn");
 
             //Hide new UI at start
             HideNewUI();
 
             //Except Hud
-            hud.SetActive(true);
+            //hud.SetActive(true);
 
             //Get sound player script, do on start since component init is at Awake()
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
@@ -1233,13 +1229,12 @@ public class GameBehaviour : MonoBehaviour
 
         if (error == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(currentShape));
             Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
             //Call function to display a level complete/retry screen
 
             //TODO: ADD END SCREENN, Base delay from sd + ENDDELAY - 3.5f maybe?
             UnityEngine.Debug.Log("LEVEL COMPLETE!!!");
-            float sd = animScript.currentScript.GetSpellDuration();
+            float sd = animScript.spellDuration;
             Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
@@ -1247,10 +1242,10 @@ public class GameBehaviour : MonoBehaviour
 
             return; // Early return
         }
-        if (error < 0f)
-            animScript.playerScript.OverCast();
-        if (error > 0f)
-            animScript.playerScript.UnderCast();
+        //if (error < 0f)
+        //    ;
+        //if (error > 0f)
+        //    ;
 
         //TODO: ADD END SCREEN, Base delay from ENDDELAY - 2.5f maybe?
         UnityEngine.Debug.Log("LEVEL FAILED!!!");
@@ -1421,50 +1416,38 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
-    private void ActivateSpell(SHAPES s, GameObject instanced = null)
+    private void ActivateSpell(SHAPES s)
     {
+        return;
+        
         System.Random rand = new System.Random((int)DateTime.Now.Ticks);
         int limit = 0;
 
-        if (instanced.IsUnityNull())
-        {
             switch (s)
             {
                 case SHAPES.SQUARE:
                     limit = animScript.square_Levels.Length;
-                    instanced = animScript.square_Levels[rand.Next(0, limit)];
                     break;
                 case SHAPES.RECTANGLE:
                     limit = animScript.rectangle_levels.Length;
-                    instanced = animScript.rectangle_levels[rand.Next(0, limit)];
                     break;
                 case SHAPES.TRIANGLE:
                     limit = animScript.triangle_levels.Length;
-                    instanced = animScript.triangle_levels[rand.Next(0, limit)];
                     break;
                 case SHAPES.CIRCLE:
                     limit = animScript.circle_levels.Length;
-                    instanced = animScript.circle_levels[rand.Next(0, limit)];
                     break;
                 case SHAPES.SEMI_CIRCLE:
                     limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[rand.Next(0, limit)];
                     break;
                 default:
                     UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
                     //TEMPLATE
                     limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[4];
                     break;
             }
-        }
-
-        //VFX
-        if (!STARTUP)
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform);
 
         //SPELL
-        Instantiate(instanced, GameObject.Find("SpellOrigin").transform);
         animScript.AcquireSpell(); // To prevent nullreference error
     }
 
