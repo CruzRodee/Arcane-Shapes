@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,8 +12,11 @@ public class VideoPlayerScript : MonoBehaviour
     
     //Video Stuff
     private VideoPlayer videoPlayer;
-    private const string loBGPath1 = "Videos/Shaders/Lo-Bg-Shader_Comp.mp4";
-    private const string hoBGPath1 = "Videos/Shaders/Ho-Bg-Shader_Comp.mp4";
+    private readonly int level = GlobalVariables.level - 1 >= 0 ? GlobalVariables.level - 1 : 0; //Level variable
+    private string cachePath = string.Empty;
+
+    private const string loBGPath1 = "Lo-Bg-Shader_Comp.mp4";
+    private const string hoBGPath1 = "Ho-Bg-Shader_Comp.mp4";
 
     private readonly string[] squareSpells = {
         "Square/Treasure", "Square/StoneCube", "Square/Shield"
@@ -36,12 +38,11 @@ public class VideoPlayerScript : MonoBehaviour
         "Compound/HolyHalo", "Compound/ThorHammer", "Compound/TimeStop"
     };
 
-    private string streamingAssetsPath = "";
+    private string streamingAssetsPath = string.Empty;
     private Camera classroomCamera;
     private Camera mainCamera;
 
     //Audio/SFX Stuff
-    private AudioSource soundSource;
     private float volumeFactor = 1.0f; //Multiplier of volume for mute / volume slider functions
 
     void Awake()
@@ -54,18 +55,12 @@ public class VideoPlayerScript : MonoBehaviour
         //Get scene name
         sceneName = SceneManager.GetActiveScene().name;
 
-        //Create and attach AudioSource for BGM
-        soundSource = GetComponent<AudioSource>();
-        if (soundSource == null)
-        {
-            soundSource = gameObject.AddComponent<AudioSource>();
-        }
-
         //Settings
         if (GlobalVariables.isMute)
         {
             volumeFactor = 0f;
-            soundSource.volume = 1 * volumeFactor;
+
+            videoPlayer.SetDirectAudioVolume(0, 1 * volumeFactor);
         }
 
         //VideoPlayer
@@ -93,30 +88,35 @@ public class VideoPlayerScript : MonoBehaviour
         return (float)videoPlayer.length + 2;
     }
 
+    //Method for replaceing Path.Combine(), spits out an android compatible Path
+    private string AndroidPathCombine(string first, string second)
+    {
+        return first + "/" + second;
+    }
+
     string GetSpellPath(GameBehaviour.SHAPES shape)
     {
-        string path = "Videos/Spells/";
-        int level = GlobalVariables.level - 1 >= 0 ? GlobalVariables.level - 1 : 0;
+        string path = "Videos/Spells";
 
         switch (shape)
         {
             case GameBehaviour.SHAPES.SQUARE:
-                path = Path.Combine(path, squareSpells[level]);
+                path = AndroidPathCombine(path, squareSpells[level]);
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
-                path = Path.Combine(path, rectangleSpells[level]);
+                path = AndroidPathCombine(path, rectangleSpells[level]);
                 break;
             case GameBehaviour.SHAPES.TRIANGLE:
-                path = Path.Combine(path, triangleSpells[level]);
+                path = AndroidPathCombine(path, triangleSpells[level]);
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
-                path = Path.Combine(path, circleSpells[level]);
+                path = AndroidPathCombine(path, circleSpells[level]);
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
-                path = Path.Combine(path, semiCircleSpells[level]);
+                path = AndroidPathCombine(path, semiCircleSpells[level]);
                 break;
             case GameBehaviour.SHAPES.NONE: //This is HO
-                path = Path.Combine(path, compoundSpells[level]);
+                path = AndroidPathCombine(path, compoundSpells[level]);
                 break;
         }
 
@@ -125,30 +125,41 @@ public class VideoPlayerScript : MonoBehaviour
 
     public void PlaySpellIntro(GameBehaviour.SHAPES shape)
     {
+        string filename = "Intro.mp4";
+
         string path = GetSpellPath(shape);
-        path = Path.Combine(streamingAssetsPath, path);
-        path = Path.Combine(path, "intro.mp4");
+        cachePath = AndroidPathCombine(Application.persistentDataPath, path);
+        cachePath = AndroidPathCombine(cachePath, filename);
+
+        path = AndroidPathCombine(streamingAssetsPath, path);
+        path = AndroidPathCombine(path, filename);
         StartCoroutine(PlayVideo(path));
     }
 
     // 0 = Under, 1 = Over, 2 = Good
     public void PlaySpellAnim(GameBehaviour.SHAPES shape, int state)
     {
+        string filename = string.Empty;
         string path = GetSpellPath(shape);
+        cachePath = AndroidPathCombine(Application.persistentDataPath, path);
 
-        path = Path.Combine(streamingAssetsPath, path);
+        path = AndroidPathCombine(streamingAssetsPath, path);
         switch (state)
         {
             case 0:
-                path = Path.Combine(path, "under.mp4");
+                filename = "Under.mp4";
                 break;
             case 1:
-                path = Path.Combine(path, "over.mp4");
+                filename = "Over.mp4";
                 break;
             case 2:
-                path = Path.Combine(path, "good.mp4");
+                filename = "Good.mp4";
                 break;
         }
+
+        //Finish up paths
+        path = AndroidPathCombine(path, filename);
+        cachePath = AndroidPathCombine(cachePath, filename);
 
         StartCoroutine(PlayVideo(path));
     }
@@ -160,14 +171,14 @@ public class VideoPlayerScript : MonoBehaviour
 
     public void PlayBGAnim()
     {
-        string path;
+        string path = "Videos/Shaders";
 
         if (sceneName == "GameLevelScene_v1")
         {
             switch (GlobalVariables.level)
             {
                 default:
-                    path = Path.Combine(streamingAssetsPath, loBGPath1);
+                    path = AndroidPathCombine(path, loBGPath1);
                     break;
             }
         }
@@ -176,31 +187,65 @@ public class VideoPlayerScript : MonoBehaviour
             switch (GlobalVariables.level)
             {
                 default:
-                    path = Path.Combine(streamingAssetsPath, hoBGPath1);
+                    path = AndroidPathCombine(path, hoBGPath1);
                     break;
             }
         }
 
-        StartCoroutine(PlayVideo(path));
+        string streamPath = AndroidPathCombine(streamingAssetsPath, path);
+        cachePath = AndroidPathCombine(Application.persistentDataPath, path);
+
+        StartCoroutine(PlayVideo(streamPath));
     }
 
     public IEnumerator PlayVideo(string path)
     {
         videoPlayer.Stop();
 
-        using (UnityWebRequest www = UnityWebRequest.Get(path))
+        if (!File.Exists(cachePath)) //Load and cache if file not yet loaded
         {
+            using UnityWebRequest www = UnityWebRequest.Get(path);
             yield return www.SendWebRequest();
 
-            if(www.result == UnityWebRequest.Result.Success)
+            if (www.result == UnityWebRequest.Result.Success)
             {
-                videoPlayer.url = path;
-                videoPlayer.Prepare();
-
-                if (!videoPlayer.isPlaying)
-                    videoPlayer.Play();
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(cachePath)); // ensure folder exists
+                    File.WriteAllBytes(cachePath, www.downloadHandler.data);
+                    Debug.Log($"[VideoLoader] Video copied to: {cachePath}");
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[VideoLoader] Failed to write video file: {e}");
+                    yield break;
+                }
+            }
+            else
+            {
+                Debug.LogError($"[VideoLoader] Failed to load video from StreamingAssets: {www.error}");
+                yield break;
             }
         }
+        else 
+        {
+            Debug.Log($"[VideoLoader] Using cached video: {cachePath}");
+        }
+
+        //Load video
+#if UNITY_ANDROID
+        videoPlayer.url = "jar:file://" + cachePath;
+#endif
+#if UNITY_EDITOR //Editor No like jar jar
+        videoPlayer.url = "file://" + cachePath;
+#endif
+
+        //Prepare video
+        videoPlayer.Prepare();
+        yield return new WaitUntil(() => videoPlayer.isPrepared);
+
+        if (!videoPlayer.isPlaying)
+            videoPlayer.Play();
     }
     
     // Update is called once per frame

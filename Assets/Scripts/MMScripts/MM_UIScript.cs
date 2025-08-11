@@ -49,10 +49,16 @@ public class MM_UIScript : MonoBehaviour
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
         overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
 
-        if(!Debug.isDebugBuild && graphy != null) //Disable and Remove Graphy when not debug
+        if(!Debug.isDebugBuild) //Disable all debug stuff
         {
-            graphy.SetActive(false);
-            Destroy(graphy);
+            //Disable and Remove Graphy when not debug
+            if( graphy != null)
+            {
+                graphy.SetActive(false);
+                Destroy(graphy);
+            }
+            
+            Debug.unityLogger.logEnabled = false;
         }   
     }
     void Start()
