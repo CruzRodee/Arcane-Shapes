@@ -87,7 +87,7 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Prestige/Loop again through HO Levels mechanic
-            if (GlobalVariables.playerWin && GlobalVariables.level >= 6 && !GlobalVariables.isLOGame)
+            if (GlobalVariables.playerWin && GlobalVariables.level > 6 && !GlobalVariables.isLOGame)
             {
                 GlobalVariables.level = 1;
                 savedGame.compPres++;

@@ -32,7 +32,7 @@ public class GameBehaviour : MonoBehaviour
     private Material uiMaterial, classroomMaterial;
     private Animator screenFadeAnimator;
     private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
-    private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
+    private float ENDDELAY = 5.0f;
 
     private AnimScript animScript;
     private bool STARTUP = true;
@@ -740,9 +740,6 @@ public class GameBehaviour : MonoBehaviour
             notifyWrongShape();
             // text.gameObject.SetActive(true); //Reactivate if not active
             // text.text = "Ang shape na pinili ay mali. Subukan ulit.";
-
-            //Play shake head anim
-            animScript.playerScript.BadTrace();
         }
         toggleConfirmScreen("");
     }
@@ -1117,14 +1114,13 @@ public class GameBehaviour : MonoBehaviour
 
         if (STARTUP)
         {
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
             screenFadeAnimator.SetTrigger("fadeIn");
 
             //Hide new UI at start
             HideNewUI();
 
             //Except Hud
-            hud.SetActive(true);
+            //hud.SetActive(true);
 
             //Get sound player script, do on start since component init is at Awake()
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
@@ -1184,6 +1180,8 @@ public class GameBehaviour : MonoBehaviour
 
     private void ToClass()
     {
+        animScript.VideoPlayerScript.Stop();
+        
         cp = correctionPerc.IsActive();
         ls = lineSnapper.gameObject.activeSelf;
 
@@ -1198,6 +1196,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void ToUI()
     {
+        animScript.VideoPlayerScript.Stop();
+        animScript.VideoPlayerScript.PlayBGAnim();
+        
         correctionPerc.gameObject.SetActive(cp);
         lineSnapper.gameObject.SetActive(ls);
 
@@ -1233,24 +1234,27 @@ public class GameBehaviour : MonoBehaviour
 
         if (error == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(currentShape));
-            Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
-            //Call function to display a level complete/retry screen
+            int state = 2;
+            if (error > 0)
+                state = 0;
+            else if (error < 0)
+                state = 1;
+            animScript.VideoPlayerScript.PlaySpellAnim(currentShape, state);
 
             //TODO: ADD END SCREENN, Base delay from sd + ENDDELAY - 3.5f maybe?
             UnityEngine.Debug.Log("LEVEL COMPLETE!!!");
-            float sd = animScript.currentScript.GetSpellDuration();
-            Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
+            float sd = animScript.VideoPlayerScript.GetVideoLength();
+            Invoke(nameof(FadeDelay), sd + ENDDELAY - 1f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
 
 
             return; // Early return
         }
-        if (error < 0f)
-            animScript.playerScript.OverCast();
-        if (error > 0f)
-            animScript.playerScript.UnderCast();
+        //if (error < 0f)
+        //    ;
+        //if (error > 0f)
+        //    ;
 
         //TODO: ADD END SCREEN, Base delay from ENDDELAY - 2.5f maybe?
         UnityEngine.Debug.Log("LEVEL FAILED!!!");
@@ -1263,11 +1267,6 @@ public class GameBehaviour : MonoBehaviour
     private void FadeDelay()
     {
         screenFadeAnimator.SetTrigger("fadeOut");
-    }
-
-    private void DelayedSpellAnimation()
-    {
-        animScript.CastSpell();
     }
 
     private void EndGameFunctions() //Function for saving data to save maybe? Also transitioning back to level select
@@ -1421,51 +1420,9 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
-    private void ActivateSpell(SHAPES s, GameObject instanced = null)
+    private void ActivateSpell(SHAPES s)
     {
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        int limit = 0;
-
-        if (instanced.IsUnityNull())
-        {
-            switch (s)
-            {
-                case SHAPES.SQUARE:
-                    limit = animScript.square_Levels.Length;
-                    instanced = animScript.square_Levels[rand.Next(0, limit)];
-                    break;
-                case SHAPES.RECTANGLE:
-                    limit = animScript.rectangle_levels.Length;
-                    instanced = animScript.rectangle_levels[rand.Next(0, limit)];
-                    break;
-                case SHAPES.TRIANGLE:
-                    limit = animScript.triangle_levels.Length;
-                    instanced = animScript.triangle_levels[rand.Next(0, limit)];
-                    break;
-                case SHAPES.CIRCLE:
-                    limit = animScript.circle_levels.Length;
-                    instanced = animScript.circle_levels[rand.Next(0, limit)];
-                    break;
-                case SHAPES.SEMI_CIRCLE:
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[rand.Next(0, limit)];
-                    break;
-                default:
-                    UnityEngine.Debug.Log("Whoa, you're not supposed to be here (Spell Instance error: Invalid shape)");
-                    //TEMPLATE
-                    limit = animScript.semicircle_levels.Length;
-                    instanced = animScript.semicircle_levels[4];
-                    break;
-            }
-        }
-
-        //VFX
-        if (!STARTUP)
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform);
-
-        //SPELL
-        Instantiate(instanced, GameObject.Find("SpellOrigin").transform);
-        animScript.AcquireSpell(); // To prevent nullreference error
+        animScript.VideoPlayerScript.PlaySpellIntro(s);
     }
 
     public class SpellCastEvent

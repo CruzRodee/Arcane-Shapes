@@ -34,7 +34,7 @@ public class HOGameScript : MonoBehaviour
     private Material classroomMaterial;
     private Animator screenFadeAnimator;
     private const float TRANSITIONTIME = 0.4f, FILLTIMEAPROX = 1.5f, STARTDELAY = 3.0f;
-    private float ENDDELAY = 5.0f, SPELLDELAY = 2.0f;
+    private float ENDDELAY = 5.0f;
 
     private AnimScript animScript;
     private bool STARTUP = true;
@@ -549,9 +549,6 @@ public class HOGameScript : MonoBehaviour
         else    //IF SHAPE CHOSEN IS WRONGG:
         {
             notifyWrongShape();
-
-            //Play shake head anim
-            animScript.playerScript.BadTrace();
         }
         toggleConfirmScreen("");
     }
@@ -998,14 +995,13 @@ public class HOGameScript : MonoBehaviour
 
         if (STARTUP)
         {
-            Instantiate(animScript.transitionVFX, GameObject.Find("SpellOrigin").transform); //Spawn early for smoothness on start
             screenFadeAnimator.SetTrigger("fadeIn");
 
             //Hide new UI at start
             HideNewUI();
 
             //Except Hud
-            hud.SetActive(true);
+            //hud.SetActive(true);
 
             //Get sound player script, do on start since component init is at Awake()
             soundPlayer = soundPlayerObj.GetComponent<GameLevelSoundPlayer>();
@@ -1053,6 +1049,8 @@ public class HOGameScript : MonoBehaviour
 
     private void ToClass()
     {
+        animScript.VideoPlayerScript.Stop();
+
         correctionPerc.gameObject.SetActive(false);
         lineSnapper.gameObject.SetActive(false);
 
@@ -1062,6 +1060,8 @@ public class HOGameScript : MonoBehaviour
 
     private void ToUI()
     {
+        animScript.VideoPlayerScript.Stop();
+        animScript.VideoPlayerScript.PlayBGAnim();
         ModifiedToUI();
     }
 
@@ -1209,22 +1209,25 @@ public class HOGameScript : MonoBehaviour
 
         if (Math.Round(Math.Abs(error), 2) == 0f)
         {
-            animScript.playerScript.GoodCast(SendShapeToPlayer(animScript.compound_main_shapes[GlobalVariables.level]));
-            Invoke(nameof(DelayedSpellAnimation), SPELLDELAY);
-            //Call function to display a level complete/retry screen
+            int state = 2;
+            if (error > 0)
+                state = 0;
+            else if (error < 0)
+                state = 1;
+            animScript.VideoPlayerScript.PlaySpellAnim(GameBehaviour.SHAPES.NONE, state);
 
             //TODO: ADD END SCREENN, Base delay from sd + ENDDELAY - 3.5f maybe?
             UnityEngine.Debug.Log("LEVEL COMPLETE!!!");
-            float sd = animScript.currentScript.GetSpellDuration();
-            Invoke(nameof(FadeDelay), sd + ENDDELAY - 2f);
+            float sd = animScript.VideoPlayerScript.GetVideoLength();
+            Invoke(nameof(FadeDelay), sd + ENDDELAY - 1f);
 
             Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
             return; // Early return
         }
-        if (error < 0f)
-            animScript.playerScript.OverCast();
-        if (error > 0f)
-            animScript.playerScript.UnderCast();
+        //if (error < 0f)
+        //    ;
+        //if (error > 0f)
+        //    ;
 
         //TODO: ADD END SCREEN, Base delay from ENDDELAY - 2.5f maybe?
         UnityEngine.Debug.Log("LEVEL FAILED!!!");
@@ -1237,11 +1240,6 @@ public class HOGameScript : MonoBehaviour
     private void FadeDelay()
     {
         screenFadeAnimator.SetTrigger("fadeOut");
-    }
-
-    private void DelayedSpellAnimation()
-    {
-        animScript.CastSpell();
     }
 
     private void EndGameFunctions() //Function for saving data to save maybe? Also transitioning back to level select
@@ -1305,14 +1303,7 @@ public class HOGameScript : MonoBehaviour
 
     public void InstanceSpellObject(GameObject instanced = null)
     {
-        if (instanced.IsUnityNull() && GlobalVariables.level >= 0 && GlobalVariables.level <= 6)
-        {
-            instanced = animScript.compound_levels[GlobalVariables.level];
-        }
-
-        //SPELL
-        Instantiate(instanced, GameObject.Find("SpellOrigin").transform);
-        animScript.AcquireSpell(); // To prevent nullreference error
+        animScript.VideoPlayerScript.PlaySpellIntro(GameBehaviour.SHAPES.NONE);
     }
 
     public class SpellCastEvent

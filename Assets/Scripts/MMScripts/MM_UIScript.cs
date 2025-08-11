@@ -11,6 +11,7 @@ public class MM_UIScript : MonoBehaviour
     public GameObject overlayPanel;
     public Button btnContinue;
     public GameObject panelNotify;
+    public GameObject graphy;
 
     public GameObject panelInputPass;
     public InputField passwordInputField;
@@ -47,6 +48,18 @@ public class MM_UIScript : MonoBehaviour
     {
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
         overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
+
+        if(!Debug.isDebugBuild) //Disable all debug stuff
+        {
+            //Disable and Remove Graphy when not debug
+            if( graphy != null)
+            {
+                graphy.SetActive(false);
+                Destroy(graphy);
+            }
+            
+            Debug.unityLogger.logEnabled = false;
+        }   
     }
     void Start()
     {
