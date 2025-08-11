@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Unity.Sentis;
 using UnityEngine;
 
@@ -62,6 +61,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     public ModelAsset OCRModel;
     private Model runtimeModel;
     private Worker worker;
+    private Tensor<float> inputTensor;
 
     //Variables for dealing with the VFX drawing layer
     public GameObject vfxLineGO;
@@ -104,6 +104,15 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     private bool STARTUP = true;
     public GameObject ocrPrefab; //Used to refer to self so that it can be disabled
 
+    // OPTIMIZATION: Cache frequently accessed components and calculations
+    private int brushSizeSquared; // Precalculated brush size squared
+    private int colorMapLength; // Cache array length
+    private bool isAndroidDevice; // Cache platform check
+
+    // OPTIMIZATION: Pre-allocated buffers for texture rotation (Android memory management)
+    private Color32[] rotationCopyBuffer;
+    private bool rotationBufferInitialized = false;
+
     void Awake()
     {
         //Create and attach AudioSource
@@ -120,12 +129,17 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
         //Get OCR MeshCollider
         ocrPlaneColl = ocrPlaneObj.GetComponent<MeshCollider>();
+
+        // OPTIMIZATION: Cache platform check for Android-specific optimizations
+        isAndroidDevice = Application.platform == RuntimePlatform.Android;
     }
 
     private void Start()
     {
         //Initializing the colorMap array with width * height elements
         colorMap = new Color[totalXPixels * totalYPixels];
+        colorMapLength = colorMap.Length; // Cache length for performance
+
         generatedTexture = new Texture2D(totalYPixels, totalXPixels, TextureFormat.RGBA32, false); //Generating a new texture with width and height
         generatedTexture.filterMode = FilterMode.Point;
         material.SetTexture("_BaseMap", generatedTexture); //Giving our material the new texture
@@ -135,6 +149,9 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         xMult = totalXPixels / (bottomRightCorner.localPosition.x - topLeftCorner.localPosition.x);//Precalculating constants
         yMult = totalYPixels / (bottomRightCorner.localPosition.y - topLeftCorner.localPosition.y);
 
+        // OPTIMIZATION: Precalculate brush size squared for faster circle drawing
+        brushSizeSquared = brushSize * brushSize;
+
         //Init VFXLine variables
         vfxLineGO.GetComponent<LineRenderer>().material = vfxLineMaterial; //Set material here
         vfxLineClones = new List<GameObject>();
@@ -143,8 +160,17 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         //Init timer
         timer = CLEAR_TIME;
 
-        //Init OCR model
+        //Init OCR model and reuseables
         runtimeModel = ModelLoader.Load(OCRModel);
+        worker = new Worker(runtimeModel, BackendType.GPUCompute);
+        inputTensor = new Tensor<float>(new TensorShape(1, 1, 45, 45));
+
+        // OPTIMIZATION: Pre-allocate rotation buffer for Android memory efficiency
+        if (isAndroidDevice)
+        {
+            rotationCopyBuffer = new Color32[totalXPixels * totalYPixels];
+            rotationBufferInitialized = true;
+        }
 
         //Get FormulaAnalyzer to avoid repeated GetComponent() calls
         fa = outputProcessor.GetComponent<FormulaAnalyzer>();
@@ -226,7 +252,7 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             return; //Do not play sound if point not divisible by N
 
         // Null Check
-        if (sfxSource != null && sfxSet[0] != null)
+        if (sfxSource != null && sfxSet.Length > 0 && sfxSet[0] != null)
         {
             //Set pitch first
             sfxSource.pitch = 1;
@@ -236,8 +262,8 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
     private void PlayOCRReadSFX()
     {
-        // Null Check
-        if (sfxSource != null && sfxSet[1] != null)
+        // Null Check - FIXED: Check array bounds
+        if (sfxSource != null && sfxSet.Length > 1 && sfxSet[1] != null)
         {
             //Set pitch first
             sfxSource.pitch = 2f;
@@ -273,14 +299,19 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         }
     }
 
+    // OPTIMIZATION: Removed generic method for better performance, kept same functionality
     //Anti clutter
     private void MakeNewLine()
     {
         //Clone linerenderer and set as current line if current linepositions > 1, Done to allow multiple lines
         if (line.positionCount > 1)
         {
-            vfxLineClones.Add(Instantiate(vfxLineGO));
-            line = vfxLineClones.Last().GetComponent<LineRenderer>();
+            var newClone = Instantiate(vfxLineGO);
+            vfxLineClones.Add(newClone);
+
+            // OPTIMIZATION: Direct access instead of generic method for better Android performance
+            if (vfxLineClones.Count > 0)
+                line = vfxLineClones[vfxLineClones.Count - 1].GetComponent<LineRenderer>();
 
             //Reset new line stuff to defaults
             previousPosition = vfxLineGO.transform.position;
@@ -293,11 +324,13 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     {
         line = vfxLineGO.GetComponent<LineRenderer>(); //Go back to default
 
-        //Delete all clones
-        foreach (GameObject go in vfxLineClones)
+        //Delete all clones - OPTIMIZATION: More efficient cleanup for Android
+        for (int i = vfxLineClones.Count - 1; i >= 0; i--)
         {
-            Destroy(go);
+            if (vfxLineClones[i] != null)
+                Destroy(vfxLineClones[i]);
         }
+        vfxLineClones.Clear();
 
         previousPosition = vfxLineGO.transform.position;
         line.positionCount = 1; //Allow line to start with 1 dot
@@ -343,20 +376,20 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
     void DrawBrush(int xPix, int yPix) //This function takes a point on the canvas as a parameter and draws a circle with radius brushSize around it
     {
-        int i = xPix - brushSize + 1, j = yPix - brushSize + 1, maxi = xPix + brushSize - 1, maxj = yPix + brushSize - 1; //Declaring the limits of the circle
-        if (i < 0) //If either lower boundary is less than zero, set it to be zero
-            i = 0;
-        if (j < 0)
-            j = 0;
-        if (maxi >= totalXPixels) //If either upper boundary is more than the maximum amount of pixels, set it to be under
-            maxi = totalXPixels - 1;
-        if (maxj >= totalYPixels)
-            maxj = totalYPixels - 1;
+        // OPTIMIZATION: Use Mathf.Max/Min for cleaner bounds checking
+        int i = Mathf.Max(0, xPix - brushSize + 1);
+        int j = Mathf.Max(0, yPix - brushSize + 1);
+        int maxi = Mathf.Min(totalXPixels - 1, xPix + brushSize - 1);
+        int maxj = Mathf.Min(totalYPixels - 1, yPix + brushSize - 1);
+
         for (int x = i; x <= maxi; x++)//Loop through all of the points on the square that frames the circle of radius brushSize
         {
             for (int y = j; y <= maxj; y++)
             {
-                if ((x - xPix) * (x - xPix) + (y - yPix) * (y - yPix) <= brushSize * brushSize) //Using the circle's formula(x^2+y^2<=r^2) we check if the current point is inside the circle
+                // OPTIMIZATION: Use cached brushSizeSquared and avoid repeated multiplication
+                int dx = x - xPix;
+                int dy = y - yPix;
+                if (dx * dx + dy * dy <= brushSizeSquared) //Using the circle's formula(x^2+y^2<=r^2) we check if the current point is inside the circle
                     colorMap[x * totalYPixels + y] = brushColor;
             }
         }
@@ -370,11 +403,13 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
 
     public void ResetColor() //This function resets the color to white
     {
-        for (int i = 0; i < colorMap.Length; i++)
+        // OPTIMIZATION: Use cached length for better performance
+        for (int i = 0; i < colorMapLength; i++)
             colorMap[i] = Color.white;
         SetTexture();
     }
 
+    // OPTIMIZATION: Improved texture rotation with pre-allocated buffer for Android
     // Source: https://gamedev.stackexchange.com/questions/203539/rotating-a-unity-texture2d-90-180-degrees-without-using-getpixels32-or-setpixels
     private void RotateImage(Texture2D tex, float angleDegrees)
     {
@@ -384,7 +419,18 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         float halfWidth = width * 0.5f;
 
         var texels = tex.GetRawTextureData<Color32>();
-        var copy = System.Buffers.ArrayPool<Color32>.Shared.Rent(texels.Length);
+
+        // OPTIMIZATION: Use pre-allocated buffer on Android, ArrayPool on other platforms
+        Color32[] copy;
+        if (isAndroidDevice && rotationBufferInitialized)
+        {
+            copy = rotationCopyBuffer;
+        }
+        else
+        {
+            copy = System.Buffers.ArrayPool<Color32>.Shared.Rent(texels.Length);
+        }
+
         Unity.Collections.NativeArray<Color32>.Copy(texels, copy, texels.Length);
 
         float phi = Mathf.Deg2Rad * angleDegrees;
@@ -410,7 +456,11 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         // No need to reinitialize or SetPixels - data is already in-place.
         tex.Apply(true);
 
-        System.Buffers.ArrayPool<Color32>.Shared.Return(copy);
+        // Only return to pool if not using pre-allocated buffer
+        if (!isAndroidDevice || !rotationBufferInitialized)
+        {
+            System.Buffers.ArrayPool<Color32>.Shared.Return(copy);
+        }
     }
 
     //To avoid clutter on update()
@@ -418,12 +468,10 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
     {
         doingOCR = true; //flag this
 
-        // Load input data to tensor
-        using var inputTensor = new Tensor<float>(new TensorShape(1, 1, 45, 45));
+        // Load input data to tensor - OPTIMIZATION: Reuse existing tensor, don't dispose!
         TextureConverter.ToTensor(generatedTexture, inputTensor, new TextureTransform());
 
         //Run inference
-        worker = new Worker(runtimeModel, BackendType.CPU);
         worker.Schedule(inputTensor);
 
         //Store output tensor as array
@@ -431,16 +479,25 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
         var cpuTensor = outputTensor.ReadbackAndClone();
         float[] outputs = cpuTensor.DownloadToArray();
 
-        //Cleanup
-        inputTensor.Dispose();
-        worker.Dispose();
+        //Cleanup - CRITICAL FIX: Don't dispose the reusable inputTensor!
         outputTensor.Dispose();
         cpuTensor.Dispose();
 
-        //Get Output Class
-        float max = outputs.Max();
-        int index = System.Array.IndexOf(outputs, max);
-        string imgClass = CLASSES[index];
+        //Get Output Class - OPTIMIZATION: Improved max finding
+        int maxIndex = 0;
+        float maxValue = outputs[0];
+        int length = outputs.Length; // Hoist length check
+        for (int i = 1; i < length; i++)
+        {
+            float current = outputs[i]; // Reduce array access
+            if (current > maxValue)
+            {
+                maxValue = current;
+                maxIndex = i;
+            }
+        }
+
+        string imgClass = CLASSES[maxIndex];
 
         //Debug Only
         Debug.Log("imgClass: " + imgClass);
@@ -455,6 +512,27 @@ public class DrawingAndOCRManagerScript : MonoBehaviour
             ocrPrefab.SetActive(false); //Startup done, deactivate until called
         }
 
+        // OPTIMIZATION: Remove unnecessary null assignment
+        // outputs = null; // Not needed, array will be GC'd automatically
+
         doingOCR = false; //reset flag
+    }
+
+    // CRITICAL FIX: Proper resource cleanup for Android
+    void OnDestroy()
+    {
+        inputTensor?.Dispose(); // ADDED: Dispose the reusable tensor
+        worker?.Dispose();
+
+        // OPTIMIZATION: Clean up VFX objects to prevent memory leaks
+        if (vfxLineClones != null)
+        {
+            for (int i = 0; i < vfxLineClones.Count; i++)
+            {
+                if (vfxLineClones[i] != null)
+                    Destroy(vfxLineClones[i]);
+            }
+            vfxLineClones.Clear();
+        }
     }
 }
