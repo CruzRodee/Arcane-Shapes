@@ -8,18 +8,7 @@ Development Built: True (Change this to false when playtesting or something)
 Removed HOGame Scene from build settings(Unsused right?)
 
 Some Relevant Player Settings(Maybe not needed since not in .gitignore):
-Texture Compression Format: ETC2
-Minimum API: Android 11
-Scripting Backend: IL2CPP
-Color Space: Linear
-Lightmap Encoding: Low Quality
-HDRCubeMap Encoding: Low Quality
-Target Architectures: ARM64
-Target Devices: Phones, Tablets, ...
-Prebake Collision Meshes: True
-Managed Stripping Level: High (For removing unused parts of Unity engine I think?)
-Texture MipMap Stripping: True
+- Just Use the ones in Github
 
 Quality:
-Global Mipmap Limit: Eight Resolution
-Texture Streaming: True
+- Just Use the ones in Github
