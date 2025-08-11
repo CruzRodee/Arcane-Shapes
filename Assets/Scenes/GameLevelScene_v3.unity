@@ -96,8 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: e229485b61d195f4a87f0e3a1c5ae95f,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6479d434831c1224e998fd19fd593db7,
     type: 2}
 --- !u!196 &4
@@ -946,7 +945,6 @@ MonoBehaviour:
   - {fileID: 6333733084290232409, guid: 0e17d682a165b384b87c8cb3b4f85c53, type: 3}
   - {fileID: 1199834763281702127, guid: 191ffa12f60db4246819e0c18075b152, type: 3}
   compound_main_shapes: 01000000010000000200000002000000040000000300000005000000
-  spellDuration: 3
   VideoPlayerScript: {fileID: 0}
 --- !u!4 &325154124
 Transform:
