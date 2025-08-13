@@ -448,7 +448,6 @@ MonoBehaviour:
   shapeGenerator: {fileID: 0}
   shapeFiller: {fileID: 0}
   lineSnapper: {fileID: 0}
-  error: 100
   hud: {fileID: 1409844455}
   quickMenu: {fileID: 4275913396142103999}
   panelMagicScroll: {fileID: 2132351606}
@@ -458,6 +457,10 @@ MonoBehaviour:
   notifyTextObj: {fileID: 2068019611}
   textTemp: {fileID: 621716506}
   textEME: {fileID: 1328080287}
+  pConfirmText: {fileID: 2132351598}
+  textFinish: {fileID: 912679216145673850}
+  confirmText: {fileID: 2132351602}
+  textHUD: {fileID: 2132351601}
   textHint: {fileID: 1227770533}
   textHintSpell: {fileID: 938249565}
   textHintUndo: {fileID: 759931215}
@@ -466,18 +469,15 @@ MonoBehaviour:
   spriteHintUndo: {fileID: 163950797}
   spriteHintSpell: {fileID: 97330654}
   spriteHintCalcu: {fileID: 2475052953735082995}
+  spriteHintImg: {fileID: 515560822}
+  spriteHintImgUndo: {fileID: 163950799}
+  spriteHintImgSpell: {fileID: 97330656}
+  spriteHintImgCalcu: {fileID: 2475052953735082994}
   pEquationTriangle: {fileID: 293095529}
   pEquationSquare: {fileID: 576673748}
   pEquationRectangle: {fileID: 430942270}
   pEquationSCircle: {fileID: 797610086}
   pEquationCircle: {fileID: 1332340468}
-  pConfirmText: {fileID: 2132351598}
-  confirmText: {fileID: 2132351602}
-  textHUD: {fileID: 2132351601}
-  spriteHintImg: {fileID: 515560822}
-  spriteHintImgUndo: {fileID: 163950799}
-  spriteHintImgSpell: {fileID: 97330656}
-  spriteHintImgCalcu: {fileID: 2475052953735082994}
   bYesHome: {fileID: 1089254893}
   bYes: {fileID: 2132351597}
   btnConfirmSpell: {fileID: 803174628}
@@ -497,6 +497,7 @@ MonoBehaviour:
   cirVarDisp1: {fileID: 61287100}
   semiVarDisp1: {fileID: 1985195790}
   soundPlayerObj: {fileID: 1103245039}
+  error: 100
 --- !u!1 &332733892 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1866385364777917799, guid: 760b825cd35d7dc46935c80d39b0f0ce,
@@ -3153,6 +3154,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: pDiaButtons
       objectReference: {fileID: 0}
+    - target: {fileID: 6594721655990474370, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_Text
+      value: Erase
+      objectReference: {fileID: 0}
+    - target: {fileID: 8134662014732497410, guid: 4ade23839255cd04b8529cc11afde524,
+        type: 3}
+      propertyPath: m_Text
+      value: Undo
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3168,6 +3179,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &912679216145673850 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2585976220713037119, guid: 4ade23839255cd04b8529cc11afde524,
+    type: 3}
+  m_PrefabInstance: {fileID: 912679216145673848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1179040335526096171
@@ -4025,6 +4048,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: btnConfirmSpell
+      objectReference: {fileID: 0}
+    - target: {fileID: 9038436592123154222, guid: 4d084afdb7160eb4d9f21a36b062f955,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

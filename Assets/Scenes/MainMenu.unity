@@ -506,6 +506,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[Graphy]'
       objectReference: {fileID: 0}
+    - target: {fileID: 177638, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 22451668, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1902,6 +1906,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d878677fbaf5bf44e88c080b05db3151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableLogging: 1
+  includeStackTraceForWarnings: 0
+  logSceneChanges: 1
+  maxLogFileSize: 5000000
+  maxLogFiles: 10
 --- !u!4 &701697594
 Transform:
   m_ObjectHideFlags: 0
