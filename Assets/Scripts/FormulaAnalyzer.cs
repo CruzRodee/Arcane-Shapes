@@ -12,7 +12,6 @@ public class FormulaAnalyzer : MonoBehaviour
     private bool isValidFormula = false, tempValid = false; //Contains result of eval
     private bool equMode = false, tempEqu = false; //If true, user has inputed "=" and formula eval + checking correct answer begins
     private GameBehaviour.SHAPES formulaShape = GameBehaviour.SHAPES.NONE, tempShape = GameBehaviour.SHAPES.NONE;
-    public bool isFinalAnswer = false, tempFinal = false; //Boolean trigger for comparing inputAnswer and evalAnswer to determine if player formula input is good
 
     private float sideA = 0, sideB = 0, tempA = 0, tempB = 0; //Floats for side legths of shape
 
@@ -125,7 +124,6 @@ public class FormulaAnalyzer : MonoBehaviour
         tempValid = isValidFormula;
         tempEqu = equMode;
         tempShape = formulaShape;
-        tempFinal = isFinalAnswer;
         tempA = sideA;
         tempB = sideB;
 
@@ -147,7 +145,6 @@ public class FormulaAnalyzer : MonoBehaviour
         isValidFormula = tempValid;
         equMode = tempEqu;
         formulaShape = tempShape;
-        isFinalAnswer = tempFinal;
         sideA = tempA;
         sideB = tempB;
 
@@ -436,7 +433,6 @@ public class FormulaAnalyzer : MonoBehaviour
         ResetSides();
         ResetValidForm();
         ResetEquMode();
-        ResetFinalAns();
         ResetFormulaShape();
         ResetGUI();
         PrintDefaultText();
@@ -466,10 +462,6 @@ public class FormulaAnalyzer : MonoBehaviour
     private void ResetEquMode()
     {
         equMode = false;
-    }
-    private void ResetFinalAns()
-    {
-        isFinalAnswer = false;
     }
     private void ResetFormulaShape()
     {
@@ -557,7 +549,10 @@ public class FormulaAnalyzer : MonoBehaviour
     {
         return formulaShape;
     }
-
+    public bool GetIsEquMode()
+    {
+        return equMode;
+    }
 
     //Returns the shape of the formula
     private GameBehaviour.SHAPES EvalFormulaShape()

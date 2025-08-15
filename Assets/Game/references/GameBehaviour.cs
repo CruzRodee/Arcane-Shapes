@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,13 +14,15 @@ public class GameBehaviour : MonoBehaviour
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
     private const float STARTDELAY = 3.4f;
-    private float ENDDELAY = 5.0f;
+    private float ENDDELAY = 4.0f;
     private const float TRANSITIONDELAY = 0.5f;
 
     // OPTIMIZATION: Cached strings to avoid allocations
     private const string correctShapePropmt = "Tama na ba ang shape na pinili?";
     private const string castBtnText1 = "Done";
     private const string castBtnText2 = "Erase";
+    private const string undoBtnText1 = "Undo";
+    private const string undoBtnText2 = "Cast";
     private const string wrongShapeMsg = "Ang shape na pinili ay mali. Subukan ulit.";
     private const string invalidFormulaMsg = "Hindi wasto ang ibinigay na formula.";
     private const string mismatchedAnswerMsg = "Hindi tugma sa formula ang ibinigay na sagot.";
@@ -73,6 +73,7 @@ public class GameBehaviour : MonoBehaviour
     public Text textFinish;
     public Text confirmText;
     public Text textHUD;
+    public Text undoText;
 
     [Header("Hint System")]
     public GameObject textHint;
@@ -115,6 +116,12 @@ public class GameBehaviour : MonoBehaviour
 
     [Header("Sound")]
     public GameObject soundPlayerObj;
+
+    [Header("Image")]
+    public Image undoBtnImg;
+    public Image undoBtnLogo;
+    public Sprite undoLogoDefault;
+    public Sprite undoLogoCast;
     #endregion
 
     #region Private / Cached Fields
@@ -182,7 +189,7 @@ public class GameBehaviour : MonoBehaviour
     private string chosenShape;
     #endregion
 
-    #region Awake/Start
+    #region Awake/Start/Update
     void Awake()
     {
         // Pre-calculate save path once
@@ -257,6 +264,21 @@ public class GameBehaviour : MonoBehaviour
 
         correctionPerc?.gameObject.SetActive(false);
         if (lineSnapper != null) lineSnapper.gameObject.SetActive(false);
+    }
+    void Update()
+    {
+        if(fa.GetIsEquMode() && undoBtnImg.color != Color.cyan) //Change to cyan on final answer
+        {
+            undoText.text = undoBtnText2;
+            undoBtnImg.color = Color.cyan;
+            undoBtnLogo.sprite = undoLogoCast;
+        }
+        else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
+        {
+            undoText.text = undoBtnText1;
+            undoBtnImg.color = Color.red;
+            undoBtnLogo.sprite = undoLogoDefault;
+        }
     }
     #endregion
 
@@ -425,6 +447,12 @@ public class GameBehaviour : MonoBehaviour
 
     public void onUndo()
     {
+        if (fa.GetIsEquMode())
+        {
+            fa.InputString("equ");
+            return;
+        }
+        
         if (isDoneMeasuring) textFinish.text = castBtnText1;
         
         lineSnapper?.OnUndoPressed();
@@ -852,26 +880,27 @@ public class GameBehaviour : MonoBehaviour
         classroomCamera?.SetActive(false);
     }
 
-    private void DelayedCastAnimation()
+    private IEnumerator DelayedCastAnimation()
     {
+        yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
+        
         HideNewUI();
 
-        if (error == 0f)
-        {
-            int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
-            animScript?.VideoPlayerScript?.PlaySpellAnim(currentShape, state);
+        int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
+        animScript.VideoPlayerScript.PlaySpellAnim(currentShape, state);
 
-            float sd = animScript?.VideoPlayerScript?.GetVideoLength() ?? 0f;
-            Invoke(nameof(FadeDelay), sd + ENDDELAY - 1f);
-            Invoke(nameof(EndGameFunctions), sd + ENDDELAY);
+        yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-            Debug.Log("LEVEL COMPLETE!!!");
-            return;
-        }
+        float len = animScript.VideoPlayerScript.GetVideoLength();
+        float sd = state == 2 ? len : 0f;
 
-        Debug.Log("LEVEL FAILED!!!");
-        Invoke(nameof(FadeDelay), ENDDELAY - 1f);
-        Invoke(nameof(EndGameFunctions), ENDDELAY);
+        yield return new WaitForSeconds(sd + ENDDELAY);
+
+        FadeDelay();
+
+        yield return new WaitForSeconds(1f);
+
+        EndGameFunctions();
     }
 
     private void FadeDelay()
@@ -906,7 +935,7 @@ public class GameBehaviour : MonoBehaviour
     {
         screenFadeAnimator?.SetTrigger("fade");
         Invoke(nameof(ToClass), TRANSITIONTIME);
-        Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
+        StartCoroutine(DelayedCastAnimation());
     }
     #endregion
 

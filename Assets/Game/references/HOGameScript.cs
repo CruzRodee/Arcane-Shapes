@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -28,7 +27,8 @@ public class HOGameScript : MonoBehaviour
     // UI Animation constants
     private const string castBtnText1 = "Done";
     private const string castBtnText2 = "Erase";
-    private const string castBtnText3 = "Finish Spell";
+    private const string undoBtnText1 = "Undo";
+    private const string undoBtnText2 = "Cast";
 
     // Dialogue constants - cached to avoid GC
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin";
@@ -79,6 +79,12 @@ public class HOGameScript : MonoBehaviour
     public GameObject soundPlayerObj;
     public GameLevelSoundPlayer soundPlayer;
 
+    [Header("Image")]
+    public Image undoBtnImg;
+    public Image undoBtnLogo;
+    public Sprite undoLogoDefault;
+    public Sprite undoLogoCast;
+
     // Cached component references for performance
     private Transform myTransform;
     private AnimScript animScript;
@@ -120,8 +126,8 @@ public class HOGameScript : MonoBehaviour
     public Text characterSay;
     public Text confirmText;
     public Text textHUD;
-    public Text textTemp;
     public Text textFinish;
+    public Text undoText;
 
     [Header("UI Components - OCR & Formula")]
     public GameObject ocrInput;
@@ -167,7 +173,7 @@ public class HOGameScript : MonoBehaviour
     private GameBehaviour.SHAPES currentShape;
     private string chosenShape;
     private float inputAnswer = 0f;
-    private float ENDDELAY = 5.0f;
+    private float ENDDELAY = 4.0f;
 
     // State flags
     private bool STARTUP = true;
@@ -288,6 +294,25 @@ public class HOGameScript : MonoBehaviour
         InitiateNewLevel();
 
         STARTUP = false;
+    }
+    void Update()
+    {
+        if (fa.GetIsEquMode() && undoBtnImg.color != Color.cyan) //Change to cyan on final answer
+        {
+            undoText.text = undoBtnText2;
+            undoBtnImg.color = Color.cyan;
+            undoBtnLogo.sprite = undoLogoCast;
+            if(isAllSolved)
+                undoBtnLogo.gameObject.transform.parent.gameObject.SetActive(true);
+        }
+        else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
+        {
+            undoText.text = undoBtnText1;
+            undoBtnImg.color = Color.red;
+            undoBtnLogo.sprite = undoLogoDefault;
+            if (isAllSolved)
+                undoBtnLogo.gameObject.transform.parent.gameObject.SetActive(false);
+        }
     }
 
     private void CacheUIComponents()
@@ -562,6 +587,12 @@ public class HOGameScript : MonoBehaviour
 
     public void onUndo()
     {
+        if (fa.GetIsEquMode())
+        {
+            fa.InputString("equ");
+            return;
+        }
+
         if (lineSnapper != null)
             lineSnapper.OnUndoPressed();
     }
@@ -1505,32 +1536,30 @@ public class HOGameScript : MonoBehaviour
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("fade");
 
         Invoke(nameof(ToClass), TRANSITIONTIME);
-        Invoke(nameof(DelayedCastAnimation), TRANSITIONTIME + 0.1f);
+        StartCoroutine(DelayedCastAnimation());
     }
 
-    private void DelayedCastAnimation()
+    private IEnumerator DelayedCastAnimation()
     {
+        yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
+
         HideNewUI();
 
-        float roundedError = Mathf.Round(Mathf.Abs(error) * 100f) / 100f;
+        int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
+        animScript.VideoPlayerScript.PlaySpellAnim(GameBehaviour.SHAPES.NONE, state);
 
-        if (roundedError == 0f)
-        {
-            int state = error > 0 ? 0 : (error < 0 ? 1 : 2);
+        yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-            if (animScript?.VideoPlayerScript != null)
-                animScript.VideoPlayerScript.PlaySpellAnim(GameBehaviour.SHAPES.NONE, state);
+        float len = animScript.VideoPlayerScript.GetVideoLength();
+        float sd = state == 2 ? len : 0f;
 
-            float sd = animScript?.VideoPlayerScript?.GetVideoLength() ?? 0f;
-            float totalDelay = sd + ENDDELAY;
+        yield return new WaitForSeconds(sd + ENDDELAY);
 
-            Invoke(nameof(FadeDelay), totalDelay - 1f);
-            Invoke(nameof(EndGameFunctions), totalDelay);
-            return;
-        }
+        FadeDelay();
 
-        Invoke(nameof(FadeDelay), ENDDELAY - 1f);
-        Invoke(nameof(EndGameFunctions), ENDDELAY);
+        yield return new WaitForSeconds(1f);
+
+        EndGameFunctions();
     }
 
     private void FadeDelay()

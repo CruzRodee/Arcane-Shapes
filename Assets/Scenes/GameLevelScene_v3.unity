@@ -1274,6 +1274,30 @@ MonoBehaviour:
   pitch: 2
   volume: 0.5
   buttonSoundType: 1
+--- !u!114 &695602562 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3934344795089748604, guid: 4ade23839255cd04b8529cc11afde524,
+    type: 3}
+  m_PrefabInstance: {fileID: 237112057}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &695602563 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 999400908632444850, guid: 4ade23839255cd04b8529cc11afde524,
+    type: 3}
+  m_PrefabInstance: {fileID: 237112057}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &762699385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,6 +2478,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1553123734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8134662014732497410, guid: 4ade23839255cd04b8529cc11afde524,
+    type: 3}
+  m_PrefabInstance: {fileID: 237112057}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1636076555
 GameObject:
   m_ObjectHideFlags: 0
@@ -2867,6 +2903,10 @@ MonoBehaviour:
   hoGameBeh: {fileID: 1934672893}
   soundPlayerObj: {fileID: 1144530940}
   soundPlayer: {fileID: 0}
+  undoBtnImg: {fileID: 695602563}
+  undoBtnLogo: {fileID: 695602562}
+  undoLogoDefault: {fileID: 21300000, guid: 8cb7735bdd1a7bb44b2b5ae1d3690d3c, type: 3}
+  undoLogoCast: {fileID: 21300000, guid: 111e92dfbdf17844a805a8b1c014a28b, type: 3}
   btnMeasure: {fileID: 237112062}
   btnRestart: {fileID: 960273001}
   btnUndo: {fileID: 237112061}
@@ -2890,8 +2930,8 @@ MonoBehaviour:
   characterSay: {fileID: 289898868}
   confirmText: {fileID: 2132351602}
   textHUD: {fileID: 2132351601}
-  textTemp: {fileID: 0}
   textFinish: {fileID: 1734012087}
+  undoText: {fileID: 1553123734}
   ocrInput: {fileID: 2062185997}
   formulaDisplay: {fileID: 451637218}
   rightStartTransObj: {fileID: 2083741571}
@@ -3469,6 +3509,11 @@ PrefabInstance:
     - target: {fileID: 2289174232993055153, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
         type: 3}
       propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2875265172199425604, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3107051323927355599, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
