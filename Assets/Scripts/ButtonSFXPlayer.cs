@@ -12,18 +12,25 @@ public class ButtonSFXPlayer : MonoBehaviour, IPointerDownHandler
     //Field that makes selecting the same type of button by code easier (0: Long sound, 1: short sound, more to come ???) 
     public int buttonSoundType = 0;
 
+    private GameObject btnSFXObj; //Object that plays button sfx to prevent them from cutting out
+
     void Awake()
     {
-        // Get existing AudioSource or add new one if it doesn't exist
-        buttonAudio = GetComponent<AudioSource>();
+        // Get existing AudioSource and object or add new one if it doesn't exist
+        btnSFXObj = GameObject.Find("ButtonSFXPlayer");
+        if(btnSFXObj == null)
+        {
+            btnSFXObj = new GameObject("ButtonSFXPlayer");
+            DontDestroyOnLoad(btnSFXObj); //Keep this in memory to avoid recreating
+        }
+
+        buttonAudio = btnSFXObj.GetComponent<AudioSource>();
         if (buttonAudio == null)
         {
-            buttonAudio = gameObject.AddComponent<AudioSource>();
+            buttonAudio = btnSFXObj.AddComponent<AudioSource>();
         }
 
         buttonAudio.playOnAwake = false;
-        buttonAudio.pitch = pitch;
-        buttonAudio.volume = volume;
 
         if (btnSFX == null)
             Debug.LogWarning($"ButtonSFXPlayer on {gameObject.name}: No audio clip assigned!");
@@ -33,6 +40,10 @@ public class ButtonSFXPlayer : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!GlobalVariables.isMute && btnSFX != null)
+        {
+            buttonAudio.pitch = pitch;
+            buttonAudio.volume = volume;
             buttonAudio.PlayOneShot(btnSFX);
+        }   
     }
 }

@@ -11,10 +11,11 @@ public class VideoPlayerScript : MonoBehaviour
     private string sceneName; //For determining LO or HO
     
     //Video Stuff
-    private VideoPlayer videoPlayer;
+    public VideoPlayer videoPlayer;
     private readonly int level = GlobalVariables.level - 1 >= 0 ? GlobalVariables.level - 1 : 0; //Level variable
-    private string cachePath = string.Empty;
+    private bool doLoop = true;
 
+    private string cachePath = string.Empty;
     private const string loBGPath1 = "Lo-Bg-Shader_Comp.mp4";
     private const string hoBGPath1 = "Ho-Bg-Shader_Comp.mp4";
 
@@ -80,12 +81,14 @@ public class VideoPlayerScript : MonoBehaviour
 
     void EndReached(VideoPlayer vp)
     {
-        PlayBGAnim();
+        if(doLoop)
+            PlayBGAnim();
     }
 
     public float GetVideoLength()
     {
-        return (float)videoPlayer.length + 2;
+        Debug.Log("VideoLength: " + videoPlayer.length);
+        return (float)videoPlayer.length * 0.4f;
     }
 
     //Method for replaceing Path.Combine(), spits out an android compatible Path
@@ -139,6 +142,8 @@ public class VideoPlayerScript : MonoBehaviour
     // 0 = Under, 1 = Over, 2 = Good
     public void PlaySpellAnim(GameBehaviour.SHAPES shape, int state)
     {
+        doLoop = false;
+        
         string filename = string.Empty;
         string path = GetSpellPath(shape);
         cachePath = AndroidPathCombine(Application.persistentDataPath, path);
