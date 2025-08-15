@@ -121,6 +121,7 @@ public class HOGameScript : MonoBehaviour
     public Text confirmText;
     public Text textHUD;
     public Text textTemp;
+    public Text textFinish;
 
     [Header("UI Components - OCR & Formula")]
     public GameObject ocrInput;
@@ -143,7 +144,6 @@ public class HOGameScript : MonoBehaviour
     private RectTransform rtDiaButtons;
     private Text pNotifyText;
     private Text calcBtnText;
-    private Text textFinish;
     private Text txtFinalCompound;
     private Vector2 origDiaRT;
     #endregion
@@ -279,17 +279,23 @@ public class HOGameScript : MonoBehaviour
         LoadSavedData();
         SetupCameras();
         SetupInitialUI();
-        StartCoroutine(WaitForComponent());
+
+        //Former Reset Function
+        CleanupTempObjects();
+        ResetGameState();
+        ResetUI();
+        ResetComponents();
+        InitiateNewLevel();
+
+        STARTUP = false;
     }
 
     private void CacheUIComponents()
     {
         // Cache frequently accessed UI components
         characterSay = GameObject.Find("characterSay")?.GetComponent<Text>();
-        textFinish = GameObject.Find("textFinish")?.GetComponent<Text>();
         txtFinalCompound = GameObject.Find("shapeCompoundFinal")?.GetComponent<Text>();
         correctionPerc = GameObject.Find("ManaFillCorrectPerc")?.GetComponent<TMP_Text>();
-        lineSnapper = GameObject.Find("Gesture")?.GetComponent<LineSnapper>();
 
         // Cache dialogue panel references
         pDialogue = GameObject.Find("PanelCasting");
@@ -486,14 +492,6 @@ public class HOGameScript : MonoBehaviour
     #endregion
 
     #region Game Reset & Initialization
-    void Reset()
-    {
-        CleanupTempObjects();
-        ResetGameState();
-        ResetUI();
-        ResetComponents();
-        InitiateNewLevel();
-    }
 
     private void ResetGameState()
     {
@@ -1566,22 +1564,6 @@ public class HOGameScript : MonoBehaviour
     {
         if (animScript?.VideoPlayerScript != null)
             animScript.VideoPlayerScript.PlaySpellIntro(GameBehaviour.SHAPES.NONE);
-    }
-    #endregion
-
-    #region Component Initialization Coroutine
-    private IEnumerator WaitForComponent()
-    {
-        while (shapeGenerator == null)
-        {
-            shapeGenerator = GameObject.Find("ShapeGenerator")?.GetComponent<ShapeGenerator>();
-            yield return waitForEndOfFrame;
-        }
-
-        shapeFiller = GameObject.Find("ShapeGenerator")?.GetComponent<ShapeFiller>();
-
-        Reset();
-        STARTUP = false;
     }
     #endregion
 
