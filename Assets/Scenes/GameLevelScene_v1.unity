@@ -445,9 +445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93af7dc0f55189b45957ca62dd202e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeGenerator: {fileID: 0}
-  shapeFiller: {fileID: 0}
-  lineSnapper: {fileID: 0}
+  shapeGenerator: {fileID: 1151082728}
+  shapeFiller: {fileID: 1151082730}
+  lineSnapper: {fileID: 101808942}
   hud: {fileID: 1409844455}
   quickMenu: {fileID: 4275913396142103999}
   panelMagicScroll: {fileID: 2132351606}

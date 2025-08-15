@@ -216,7 +216,6 @@ public class GameBehaviour : MonoBehaviour
         }
 
         correctionPerc = GameObject.Find("ManaFillCorrectPerc")?.GetComponent<TMP_Text>();
-        lineSnapper = GameObject.Find("Gesture")?.GetComponent<LineSnapper>();
 
         mainCamera = GameObject.Find("Main Camera");
         mainCamera?.SetActive(false);
@@ -225,17 +224,8 @@ public class GameBehaviour : MonoBehaviour
 
         if (lineSnapper != null) lineSnapper.animScript = this.animScript;
 
-        // ---- merged WaitForComponent + Reset logic ----
-        // wait for ShapeGenerator to exist in scene
-        while (shapeGenerator == null)
-        {
-            var go = GameObject.Find("ShapeGenerator");
-            if (go != null) shapeGenerator = go.GetComponent<ShapeGenerator>();
-        }
+        // ---- Former Reset logic ----
 
-        shapeFiller = shapeGenerator.GetComponent<ShapeFiller>();
-
-        // merged Reset() contents:
         currentShape = SHAPES.NONE;
         correctionPerc?.gameObject.SetActive(false);
 
@@ -996,7 +986,7 @@ public class GameBehaviour : MonoBehaviour
             if (formulaDisplay != null) formulaDisplay.SetActive(false);
 
             if (rightStartTransObj != null) StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightStartTransObj.transform.position));
-            if (rtDialogue != null) StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, hiddenDialoguePos));
+            if (rtDialogue != null) StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
             if (pDialogue != null) StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, normalScale));
         }
 
