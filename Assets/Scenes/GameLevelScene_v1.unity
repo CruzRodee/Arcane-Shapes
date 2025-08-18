@@ -455,6 +455,7 @@ MonoBehaviour:
   pLowerScroll: {fileID: 2132351604}
   pNotify: {fileID: 2132351603}
   notifyTextObj: {fileID: 2068019611}
+  canvasScript: {fileID: 2132351599}
   textTemp: {fileID: 621716506}
   textEME: {fileID: 1328080287}
   pConfirmText: {fileID: 2132351598}
@@ -485,8 +486,10 @@ MonoBehaviour:
   btnMeasure: {fileID: 912679216145673849}
   ocrInput: {fileID: 2062185997}
   formulaDisplay: {fileID: 451637218}
-  rightStartTransObj: {fileID: 2083741571}
-  rightEndTransObj: {fileID: 862825194}
+  rightStartTransform: {fileID: 2083741572}
+  rightEndTransform: {fileID: 862825195}
+  leftStartTransform: {fileID: 65147481}
+  leftEndTransform: {fileID: 1732195969}
   formulaAnalyzerObj: {fileID: 2062185998}
   calcBtnObj: {fileID: 362505965}
   backspaceButton: {fileID: 421292810}
@@ -2945,6 +2948,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2132351599 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2925020029720017818, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 2132351595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 550e1410dbd94764399e5bd86456141b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2132351601 stripped

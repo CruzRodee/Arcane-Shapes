@@ -403,23 +403,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93af7dc0f55189b45957ca62dd202e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
-  slider: {fileID: 0}
   shapeGenerator: {fileID: 0}
   shapeFiller: {fileID: 0}
   lineSnapper: {fileID: 0}
-  error: 100
+  hud: {fileID: 0}
+  quickMenu: {fileID: 0}
   panelMagicScroll: {fileID: 846582163129744784}
   pConfirm: {fileID: 9155534399877389765}
   pLowerScroll: {fileID: 8711573594082724342}
   pNotify: {fileID: 3956547559331612514}
+  notifyTextObj: {fileID: 0}
+  textTemp: {fileID: 0}
+  textEME: {fileID: 0}
+  pConfirmText: {fileID: 0}
+  textFinish: {fileID: 0}
   confirmText: {fileID: 1930611448594563257}
   textHUD: {fileID: 8215035514663976283}
+  undoText: {fileID: 0}
+  textHint: {fileID: 0}
+  textHintSpell: {fileID: 0}
+  textHintUndo: {fileID: 0}
+  textHintCalcu: {fileID: 0}
+  spriteHint: {fileID: 0}
+  spriteHintUndo: {fileID: 0}
+  spriteHintSpell: {fileID: 0}
+  spriteHintCalcu: {fileID: 0}
+  spriteHintImg: {fileID: 0}
+  spriteHintImgUndo: {fileID: 0}
+  spriteHintImgSpell: {fileID: 0}
+  spriteHintImgCalcu: {fileID: 0}
   pEquationTriangle: {fileID: 5831513373549854875}
   pEquationSquare: {fileID: 1050999471303117611}
   pEquationRectangle: {fileID: 2606294339106865824}
   pEquationSCircle: {fileID: 3945344342631062796}
   pEquationCircle: {fileID: 4119262803341291591}
+  bYesHome: {fileID: 0}
+  bYes: {fileID: 0}
+  btnConfirmSpell: {fileID: 0}
+  btnMeasure: {fileID: 0}
+  ocrInput: {fileID: 0}
+  formulaDisplay: {fileID: 0}
+  rightStartTransObj: {fileID: 0}
+  rightEndTransObj: {fileID: 0}
+  formulaAnalyzerObj: {fileID: 0}
+  calcBtnObj: {fileID: 0}
+  backspaceButton: {fileID: 0}
+  sqVarDisp1: {fileID: 0}
+  rectVarDisp1: {fileID: 0}
+  rectVarDisp2: {fileID: 0}
+  triVarDisp1: {fileID: 0}
+  triVarDisp2: {fileID: 0}
+  cirVarDisp1: {fileID: 0}
+  semiVarDisp1: {fileID: 0}
+  soundPlayerObj: {fileID: 0}
+  undoBtnImg: {fileID: 0}
+  undoBtnLogo: {fileID: 0}
+  undoLogoDefault: {fileID: 0}
+  undoLogoCast: {fileID: 0}
+  error: 100
 --- !u!114 &8784133788773335334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,6 +1217,7 @@ GameObject:
   - component: {fileID: 2945808334568096687}
   - component: {fileID: 7326095655850124924}
   - component: {fileID: 2402567924206113074}
+  - component: {fileID: 2925020029720017818}
   m_Layer: 5
   m_Name: GameLevelSceneCanvas
   m_TagString: Untagged
@@ -1281,6 +1323,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2925020029720017818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646492372259798332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 550e1410dbd94764399e5bd86456141b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvas: {fileID: 2945808334568096687}
 --- !u!1 &1936046111641673765
 GameObject:
   m_ObjectHideFlags: 0

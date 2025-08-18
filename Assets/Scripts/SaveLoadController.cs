@@ -9,6 +9,7 @@ public class GameData
 {
     public string playerName;
     public bool prefMute;   //settings stuff
+    public bool isLeftHanded = false;
     public string currRoom; //just room marker for the level selecvt thingy
 
 
@@ -43,13 +44,14 @@ public class SaveLoadController
 
     public void saveGame(string savePath, string playerName, bool isMute, float squarePercent, int squareLvl,
                         float circlePercent, int circleLvl, float scirclePercent, int scircleLvl,
-                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, int compPres, string currRoom, int mode)   //dont save mode
+                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, int compPres, string currRoom, int mode, bool leftHand)   //dont save mode
     {
 
         GameData data = new GameData()
         {
             playerName = playerName,
             prefMute = isMute,
+            isLeftHanded = leftHand,
 
             squarePercent = squarePercent,
             squareLvl = squareLvl,
