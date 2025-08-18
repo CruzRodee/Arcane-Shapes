@@ -229,6 +229,7 @@ public class HOGameScript : MonoBehaviour
             //OFfsets to correct positions
             formulaDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(90, 10); //Offset to correct text pos
             ocrEndTransform.position -= new Vector3(3f, 0f, 0f); //Offset to correct board position
+            pSpawner.localScale = new Vector3(-1f, pSpawner.localScale.y, pSpawner.localScale.z);
         }
         else //Default right positions
         {
