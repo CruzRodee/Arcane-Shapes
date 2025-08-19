@@ -17,6 +17,8 @@ public static class GlobalVariables
     private static readonly int thresholdHO = 2;
     public static bool IsHOUnlocked(GameData save)
     {
+        if(save.loPres > 0) //If already completed 1 loop, HO unlocked
+            return true;
         if (save.squareLvl >= thresholdHO && save.rectLvl >= thresholdHO &&
             save.triLvl >= thresholdHO && save.circleLvl >= thresholdHO && save.scircleLvl >= thresholdHO)
             return true; // If all levels have been played at least once
