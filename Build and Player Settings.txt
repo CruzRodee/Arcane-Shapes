@@ -4,6 +4,7 @@ Compression Method: LZ4HC (May cause long build times)
 Max Texture Size = Max 512
 Texture Compression: Force Fast Compression
 Development Built: True (Change this to false when playtesting or something)
+- Added LoadingScreen to scenes in build
 
 Removed HOGame Scene from build settings(Unsused right?)
 

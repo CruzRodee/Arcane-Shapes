@@ -63,6 +63,7 @@ public class GameBehaviour : MonoBehaviour
     private GameObject pDialogue;
     private GameObject pDiaButtons;
     public GameObject notifyTextObj;
+    public LeftHandedMode canvasScript;
 
     // Text refs
     public Text textTemp;
@@ -106,7 +107,8 @@ public class GameBehaviour : MonoBehaviour
     [Header("OCR & Formula")]
     public GameObject ocrInput;
     public GameObject formulaDisplay;
-    public GameObject rightStartTransObj, rightEndTransObj;
+    public Transform rightStartTransform, rightEndTransform, leftStartTransform, leftEndTransform;
+    private Transform ocrStartTransform, ocrEndTransform;
     public GameObject formulaAnalyzerObj;
     public GameObject calcBtnObj;
     public GameObject backspaceButton;
@@ -206,6 +208,28 @@ public class GameBehaviour : MonoBehaviour
 
         // Initialize variable displays based on selected shape
         InitializeVariableDisplays();
+
+        // Activate Left handed mode based on save data
+        if (savedGame.isLeftHanded)
+        {
+            canvasScript.ToggleLeftHandedMode();
+
+            //Set OCR transforms
+            ocrStartTransform = leftStartTransform;
+            ocrEndTransform = leftEndTransform;
+
+            //Move OCR board to new start pos
+            ocrInput.transform.position = ocrStartTransform.position;
+
+            //OFfsets to correct positions
+            formulaDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(90, 10); //Offset to correct text pos
+            ocrEndTransform.position -= new Vector3(3f, 0f, 0f); //Offset to correct board position
+        }
+        else //Default right positions
+        {
+            ocrStartTransform = rightStartTransform;
+            ocrEndTransform = rightEndTransform;
+        }
     }
 
     void Start()
@@ -1005,7 +1029,7 @@ public class GameBehaviour : MonoBehaviour
             yield return dialogueWait;
 
             ocrInput?.SetActive(true);
-            if (rightEndTransObj != null) StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightEndTransObj.transform.position));
+            if (ocrEndTransform != null) StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, ocrEndTransform.position));
             if (rtDialogue != null) StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, ocrDialoguePos));
             if (pDialogue != null) StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, smallScale));
         }
@@ -1014,7 +1038,7 @@ public class GameBehaviour : MonoBehaviour
             if (ocrScript != null) ocrScript.processing = true;
             if (formulaDisplay != null) formulaDisplay.SetActive(false);
 
-            if (rightStartTransObj != null) StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightStartTransObj.transform.position));
+            if (ocrStartTransform != null) StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, ocrStartTransform.position));
             if (rtDialogue != null) StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
             if (pDialogue != null) StartCoroutine(LocalScaleOverTime(pDialogue, OCRSLIDETIME, normalScale));
         }

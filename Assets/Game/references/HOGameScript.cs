@@ -132,8 +132,8 @@ public class HOGameScript : MonoBehaviour
     [Header("UI Components - OCR & Formula")]
     public GameObject ocrInput;
     public GameObject formulaDisplay;
-    public GameObject rightStartTransObj;
-    public GameObject rightEndTransObj;
+    public Transform rightStartTransform, rightEndTransform, leftStartTransform, leftEndTransform;
+    private Transform ocrStartTransform, ocrEndTransform;
     public GameObject formulaAnalyzerObj;
     public GameObject calcBtnObj;
     public GameObject backspaceButton;
@@ -142,6 +142,9 @@ public class HOGameScript : MonoBehaviour
     public GameObject prefabSpawn;
     public Transform pSpawner;
     public GameObject notifyTextObj;
+
+    //Reference to script for lefthand mode
+    public LeftHandedMode canvasScript;
 
     // Cached UI references
     private GameObject pDialogue;
@@ -210,6 +213,29 @@ public class HOGameScript : MonoBehaviour
         InitializeSaveSystem();
         InitializeComponents();
         SetupInitialState();
+
+        // Activate Left handed mode based on save data
+        if (savedGame.isLeftHanded)
+        {
+            canvasScript.ToggleLeftHandedMode();
+
+            //Set OCR transforms
+            ocrStartTransform = leftStartTransform;
+            ocrEndTransform = leftEndTransform;
+
+            //Move OCR board to new start pos
+            ocrInput.transform.position = ocrStartTransform.position;
+
+            //OFfsets to correct positions
+            formulaDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(90, 10); //Offset to correct text pos
+            ocrEndTransform.position -= new Vector3(3f, 0f, 0f); //Offset to correct board position
+            pSpawner.localScale = new Vector3(-1f, pSpawner.localScale.y, pSpawner.localScale.z);
+        }
+        else //Default right positions
+        {
+            ocrStartTransform = rightStartTransform;
+            ocrEndTransform = rightEndTransform;
+        }
     }
 
     private void InitializeCachedReferences()
@@ -1078,8 +1104,8 @@ public class HOGameScript : MonoBehaviour
         if (ocrInput != null)
         {
             ocrInput.SetActive(true);
-            if (rightEndTransObj != null)
-                StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightEndTransObj.transform.position));
+            if (ocrEndTransform != null)
+                StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, ocrEndTransform.position));
         }
 
         if (rtDialogue != null)
@@ -1106,8 +1132,8 @@ public class HOGameScript : MonoBehaviour
         if (ocrScript != null) ocrScript.processing = true;
         if (formulaDisplay != null) formulaDisplay.SetActive(false);
 
-        if (ocrInput != null && rightStartTransObj != null)
-            StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, rightStartTransObj.transform.position));
+        if (ocrInput != null && ocrStartTransform != null)
+            StartCoroutine(MoveOverTime(ocrInput, OCRSLIDETIME, ocrStartTransform.position));
 
         if (rtDialogue != null)
             StartCoroutine(RectTransformOverTime(rtDialogue, OCRSLIDETIME, origDiaRT));
