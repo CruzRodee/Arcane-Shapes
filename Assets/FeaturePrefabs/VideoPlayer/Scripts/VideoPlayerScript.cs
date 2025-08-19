@@ -18,6 +18,8 @@ public class VideoPlayerScript : MonoBehaviour
     private const string LO_BG_PATH = "Lo-Bg-Shader_Comp.mp4";
     private const string HO_BG_PATH = "Ho-Bg-Shader_Comp.mp4";
     private const string LO_SCENE_NAME = "GameLevelScene_v1";
+    private const string SPELLS_FOLDERS = "Videos/Spells";
+    private const string SHADERS_FOLDERS = "Videos/Shaders";
 
     #endregion
 
@@ -159,7 +161,7 @@ public class VideoPlayerScript : MonoBehaviour
     /// </summary>
     public void PlaySpellIntro(GameBehaviour.SHAPES shape)
     {
-        PlaySpellVideo(shape, "Intro.mp4");
+        PlaySpellVideo(shape, videoStates[0]);
     }
 
     /// <summary>
@@ -173,10 +175,10 @@ public class VideoPlayerScript : MonoBehaviour
 
         string filename = state switch
         {
-            0 => "Under.mp4",
-            1 => "Over.mp4",
-            2 => "Good.mp4",
-            _ => "Good.mp4"
+            0 => videoStates[1],
+            1 => videoStates[2],
+            2 => videoStates[3],
+            _ => videoStates[1]
         };
 
         PlaySpellVideo(shape, filename);
@@ -188,7 +190,7 @@ public class VideoPlayerScript : MonoBehaviour
     public void PlayBGAnim()
     {
         doLoop = true;
-        string path = "Videos/Shaders";
+        string path = SHADERS_FOLDERS;
 
         if (IsLowOrderScene())
         {
@@ -253,42 +255,6 @@ public class VideoPlayerScript : MonoBehaviour
         OnCachingError = onError;
 
         StartCoroutine(CacheAllVideosCoroutine());
-    }
-
-    /// <summary>
-    /// Gets the total number of ALL videos in the game (all levels, all scenes)
-    /// </summary>
-    /// <returns>Total video count across entire game</returns>
-    public int GetTotalVideosToCache()
-    {
-        int total = 0;
-        total += squareSpells.Length * 5 * 4; //All LO videos(3 levels, 5 shapes, 3 states + 1 intro)
-        total += compoundSpells.Length * 4; //All HO videos(6 levels, 3 states + 1 intro)
-        total += 2; //2 Background anims
-
-        return total;
-    }
-
-    /// <summary>
-    /// Checks if ALL videos in the game are cached
-    /// </summary>
-    /// <returns>True if all videos are cached</returns>
-    public bool AreAllVideosCached()
-    {
-        var videosToCheck = new List<string>();
-        AddAllBackgroundVideosToCacheList(videosToCheck);
-        AddAllSpellVideosToCacheList(videosToCheck);
-
-        foreach (string relativePath in videosToCheck)
-        {
-            string localCachePath = AndroidPathCombine(Application.persistentDataPath, relativePath);
-            if (!File.Exists(localCachePath))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     #endregion
@@ -359,7 +325,7 @@ public class VideoPlayerScript : MonoBehaviour
     private void SetVideoPlayerUrl()
     {
 #if UNITY_ANDROID
-        videoPlayer.url = "jar:file://" + cachePath;
+        videoPlayer.url = ToAndroidFilePath(cachePath);
 #endif
 #if UNITY_EDITOR //Editor No like jar jar 
         videoPlayer.url = "file://" + cachePath;
@@ -447,7 +413,7 @@ public class VideoPlayerScript : MonoBehaviour
 
     private void AddAllBackgroundVideosToCacheList(List<string> videosToCache)
     {
-        string bgPath = "Videos/Shaders/";
+        string bgPath = SHADERS_FOLDERS;
 
         // Add both LO and HO background videos
         videosToCache.Add(AndroidPathCombine(bgPath, LO_BG_PATH));
@@ -466,7 +432,7 @@ public class VideoPlayerScript : MonoBehaviour
         {
             foreach (var spellPath in spellArray)
             {
-                string baseSpellPath = AndroidPathCombine("Videos/Spells", spellPath);
+                string baseSpellPath = AndroidPathCombine(SPELLS_FOLDERS, spellPath);
 
                 foreach (string videoState in videoStates)
                 {
@@ -483,7 +449,7 @@ public class VideoPlayerScript : MonoBehaviour
 
     private string GetSpellPath(GameBehaviour.SHAPES shape)
     {
-        string path = "Videos/Spells";
+        string path = SPELLS_FOLDERS;
 
         switch (shape)
         {
@@ -516,6 +482,11 @@ public class VideoPlayerScript : MonoBehaviour
     private string AndroidPathCombine(string first, string second)
     {
         return first + "/" + second;
+    }
+
+    private string ToAndroidFilePath(string path)
+    {
+        return "jar:file://" + path;
     }
 
     private bool IsLowOrderScene()
