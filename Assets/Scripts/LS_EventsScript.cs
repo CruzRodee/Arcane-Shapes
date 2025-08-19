@@ -13,11 +13,7 @@ public class LS_EventsScript : MonoBehaviour
     public Button btnGrimoire;
 
     //ROOMS BUTTON
-    public Button btnTriangle;  //TODO: Screenshot + Edit what those mean
-    public Button btnSquare;
-    public Button btnSemiCircle;
-    public Button btnCircle;
-    public Button btnRectangle;
+    public Button btnLO;  //TODO: Screenshot + Edit what those mean
     public Button btnCompound;
 
     //Mute Related
@@ -29,7 +25,7 @@ public class LS_EventsScript : MonoBehaviour
 
     // Other
     public Text TextHUD;
-
+    public Text loLevel, loTitle, loShapeTxt, hoLevel, hoTitle;
 
     //UI active
     public GameObject panelHallway;
@@ -96,6 +92,23 @@ public class LS_EventsScript : MonoBehaviour
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
+                savedGame.totalLOLevel++;
+                int maxLOLevel = 3 * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
+                if(savedGame.totalLOLevel >= maxLOLevel)
+                {
+                    //Reset Levels
+                    GlobalVariables.level = 0;
+                    GlobalVariables.percent = 0f;
+                    savedGame.totalLOLevel = 0;
+                    savedGame.squareLvl = 0;
+                    savedGame.rectLvl = 0;
+                    savedGame.triLvl = 0;
+                    savedGame.circleLvl = 0;
+                    savedGame.scircleLvl = 0;
+
+                    savedGame.loPres++; //Increase pres level
+                }
+                
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -152,11 +165,13 @@ public class LS_EventsScript : MonoBehaviour
         }
         else if (savedGame.mode == 2)
         {
+            /*
             btnSemiCircle.interactable = false;
             btnCircle.interactable = false;
             btnSquare.interactable = false;
             btnTriangle.interactable = false;
             btnRectangle.interactable = false;
+            */
         }
 
 
@@ -206,117 +221,73 @@ public class LS_EventsScript : MonoBehaviour
         // Array of skill level texts
         string[] skillLevels = { "Walang Datos", "Baguhan", "Bihasa", "Dalubhasa" };
 
-        GameObject.Find("TrianglePercent").GetComponent<Text>().text = "Lvl " + data.triLvl;
-        //test
-        switch (data.triLvl)
+        //Determine what shape of LO right now
+        int level = 0;
+        if(savedGame.totalLOLevel < 4) //Square
         {
-            case 0:
-                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[0];
-                break;
-            case 1:
-                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[1];
-                break;
-            case 2:
-                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[2];
-                break;
-            case 3:
-                GameObject.Find("TriangleTitle").GetComponent<Text>().text = skillLevels[3];
-                break;
+            level = savedGame.squareLvl;
+            loShapeTxt.text = "Square";
+        }
+        else if (savedGame.totalLOLevel < 7) //Rect
+        {
+            level = savedGame.rectLvl;
+            loShapeTxt.text = "Rectangle";
+        }
+        else if (savedGame.totalLOLevel < 10) //Tri
+        {
+            level = savedGame.triLvl;
+            loShapeTxt.text = "Triangle";
+        }
+        else if (savedGame.totalLOLevel < 13) //Circ
+        {
+            level = savedGame.circleLvl;
+            loShapeTxt.text = "Circle";
+        }
+        else if (savedGame.totalLOLevel < 16) //Semicirc
+        {
+            level = savedGame.scircleLvl;
+            loShapeTxt.text = "Semicircle";
         }
 
-        GameObject.Find("SquarePercent").GetComponent<Text>().text = "Lvl " + data.squareLvl;
+        loLevel.text = "Lvl " + level;
         //test
-        switch (data.squareLvl)
+        switch (level)
         {
             case 0:
-                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[0];
+                loTitle.text = skillLevels[0] + $" - {savedGame.loPres}";
                 break;
             case 1:
-                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[1];
+                loTitle.text = skillLevels[1] + $" - {savedGame.loPres}";
                 break;
             case 2:
-                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[2];
+                loTitle.text = skillLevels[2] + $" - {savedGame.loPres}";
                 break;
             case 3:
-                GameObject.Find("SquareTitle").GetComponent<Text>().text = skillLevels[3];
-                break;
-        }
-
-        GameObject.Find("RectanglePercent").GetComponent<Text>().text = "Lvl " + data.rectLvl;
-        //test
-        switch (data.rectLvl)
-        {
-            case 0:
-                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[0];
-                break;
-            case 1:
-                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[1];
-                break;
-            case 2:
-                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[2];
-                break;
-            case 3:
-                GameObject.Find("RectangleTitle").GetComponent<Text>().text = skillLevels[3];
-                break;
-        }
-
-        GameObject.Find("CirclePercent").GetComponent<Text>().text = "Lvl " + data.circleLvl;
-        //test
-        switch (data.circleLvl)
-        {
-            case 0:
-                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[0];
-                break;
-            case 1:
-                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[1];
-                break;
-            case 2:
-                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[2];
-                break;
-            case 3:
-                GameObject.Find("CircleTitle").GetComponent<Text>().text = skillLevels[3];
-                break;
-        }
-
-        GameObject.Find("SemiCirclePercent").GetComponent<Text>().text = "Lvl " + data.scircleLvl;
-        //test
-        switch (data.scircleLvl)
-        {
-            case 0:
-                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[0];
-                break;
-            case 1:
-                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[1];
-                break;
-            case 2:
-                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[2];
-                break;
-            case 3:
-                GameObject.Find("SemiCircleTitle").GetComponent<Text>().text = skillLevels[3];
+                loTitle.text = skillLevels[3] + $" - {savedGame.loPres}";
                 break;
         }
 
         // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
         // {
         btnCompound.GetComponent<Button>().interactable = true; // Activate button
-        GameObject.Find("CompoundLvl").GetComponent<Text>().text = "Lvl " + data.compLvl;
+        hoLevel.text = "Lvl " + data.compLvl;
         GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
         switch (data.compLvl)
         {
             case 0:
-                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[0] + $" - {savedGame.compPres}";
+                hoTitle.text = skillLevels[0] + $" - {savedGame.compPres}";
                 break;
             case 1:
             case 2:
-                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[1] + $" - {savedGame.compPres}";
+                hoTitle.text = skillLevels[1] + $" - {savedGame.compPres}";
                 break;
             case 3:
             case 4:
-                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[2] + $" - {savedGame.compPres}";
+                hoTitle.text = skillLevels[2] + $" - {savedGame.compPres}";
                 break;
             case 5:
             case 6:
-                GameObject.Find("CompoundTitle").GetComponent<Text>().text = skillLevels[3] + $" - {savedGame.compPres}";
+                hoTitle.text = skillLevels[3] + $" - {savedGame.compPres}";
                 break;
         }
         // }
@@ -412,7 +383,31 @@ public class LS_EventsScript : MonoBehaviour
     {
         SceneManager.LoadScene("GameLevelScene_v3"); //Load Level scene
     }
-    //pasted from old repo
+    
+    public void enterLowOrder()
+    {
+        if (savedGame.totalLOLevel < 4) //Square
+        {
+            enterSquare();
+        }
+        else if (savedGame.totalLOLevel < 7) //Rect
+        {
+            enterRectangle();
+        }
+        else if (savedGame.totalLOLevel < 10) //Tri
+        {
+            enterTriangle();
+        }
+        else if (savedGame.totalLOLevel < 13) //Circ
+        {
+            enterCircle();
+        }
+        else if (savedGame.totalLOLevel < 16) //Semicirc
+        {
+            enterSemiCircle();
+        }
+    }
+
     public void enterRectangle()
     {
         UnityEngine.Debug.Log("Rectangle Room");

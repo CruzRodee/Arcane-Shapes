@@ -206,7 +206,7 @@ public class MM_UIScript : MonoBehaviour
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false);
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 0, 0);
         Debug.Log("New Game with mode: " + mode);
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
