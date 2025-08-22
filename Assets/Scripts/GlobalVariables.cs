@@ -15,6 +15,8 @@ public static class GlobalVariables
     public static float[] loCircleMeasures3 = { 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 7, 7.5f, 8 };
 
     private static readonly int thresholdHO = 2;
+    public static readonly int NUM_LO_LEVELS = 3;
+
     public static bool IsHOUnlocked(GameData save)
     {
         if(save.loPres > 0) //If already completed 1 loop, HO unlocked
@@ -144,6 +146,8 @@ public static class GlobalVariables
     public static bool isLOGame = false;
     public static bool isMute = false;
     public static float defaultBGMVolume = 0.5f;
+    public static bool isStartUp = true;
+    public static string nextLevel = ""; //Use this to send the next level name to loading
 
     //------------------
 
