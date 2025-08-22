@@ -180,7 +180,6 @@ public class HOGameScript : MonoBehaviour
 
     // State flags
     private bool STARTUP = true;
-    private bool isQuit = false;
     private bool isDoneMeasuring;
     private bool isAllSolved = false;
     private bool justDoneSolving = false;
@@ -600,13 +599,12 @@ public class HOGameScript : MonoBehaviour
 
     private void LoadSceneDelay()
     {
-        SceneManager.LoadScene("GameLevelScene_v3");
+        SceneManager.LoadScene("LoadingScreen");
     }
 
     public void onQuit()
     {
         error = 100f;
-        isQuit = true;
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY);
     }
@@ -1609,8 +1607,7 @@ public class HOGameScript : MonoBehaviour
             GlobalVariables.percent = 1 - error;
         }
 
-        if (!isQuit)
-            GlobalVariables.gameFinished = true;
+        GlobalVariables.gameFinished = true;
 
         SceneManager.LoadScene("LevelSelect");
     }

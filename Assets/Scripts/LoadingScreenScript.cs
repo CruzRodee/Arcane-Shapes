@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,23 +17,16 @@ public class LoadingScreenScript : MonoBehaviour
         {
             Debug.unityLogger.logEnabled = false;
         }
+
+        videoPlayer = GetComponent<VideoPlayerScript>();
     }
 
     void Start()
     {
-        videoPlayer = GetComponent<VideoPlayerScript>();
-
-        videoPlayer.CacheAllVideos(
-            onComplete: () => {
-                Debug.Log("All videos cached! Game ready.");
-                percentageText.text = "100%";
-                SceneManager.LoadScene("MainMenu");
-            },
-            onError: (error) => {
-                Debug.LogError($"Caching failed: {error}");
-                SceneManager.LoadScene("MainMenu");
-            }
-        );
+        if (!GlobalVariables.isStartUp)
+            StartCoroutine(SceneLoading());
+        else
+            StartUpCaching();
     }
 
     void Update()
@@ -40,11 +34,37 @@ public class LoadingScreenScript : MonoBehaviour
         if(videoPlayer == null) //Wait for component to load
             return;
         
-        float cacheProg = (float)Math.Round(videoPlayer.CacheProgress * 100f, 2);
-        if(progress != cacheProg)
+        if (GlobalVariables.isStartUp)
+            progress = (float)Math.Round(videoPlayer.CacheProgress * 100f, 2);
+
+        percentageText.text = progress + "%";
+    }
+
+    private void StartUpCaching()
+    {
+        videoPlayer.CacheAllVideos(
+            onComplete: () => {
+                Debug.Log("All videos cached! Game ready.");
+                percentageText.text = "100%";
+                GlobalVariables.isStartUp = false; //Next loading screen not startup anymore
+                SceneManager.LoadScene("MainMenu");
+            },
+            onError: (error) => {
+                Debug.LogError($"Caching failed: {error}");
+                GlobalVariables.isStartUp = false; //Next loading screen not startup anymore
+                SceneManager.LoadScene("MainMenu");
+            }
+        );
+    }
+
+    private IEnumerator SceneLoading()
+    {
+        AsyncOperation loadLevel = SceneManager.LoadSceneAsync(GlobalVariables.nextLevel);
+
+        while (!loadLevel.isDone)
         {
-            progress = cacheProg;
-            percentageText.text = progress + "%";
+            progress = (float)Math.Round((loadLevel.progress + 0.1f) * 100f, 2); //Need extra 10% since it only goes to 90%
+            yield return null;
         }
     }
 }

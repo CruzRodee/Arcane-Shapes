@@ -93,7 +93,7 @@ public class LS_EventsScript : MonoBehaviour
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
                 savedGame.totalLOLevel++;
-                int maxLOLevel = 3 * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
+                int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
                 if(savedGame.totalLOLevel >= maxLOLevel)
                 {
                     //Reset Levels
@@ -223,27 +223,27 @@ public class LS_EventsScript : MonoBehaviour
 
         //Determine what shape of LO right now
         int level = 0;
-        if(savedGame.totalLOLevel < 4) //Square
+        if(savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             level = savedGame.squareLvl;
             loShapeTxt.text = "Square";
         }
-        else if (savedGame.totalLOLevel < 7) //Rect
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 2 + 1) //Rect
         {
             level = savedGame.rectLvl;
             loShapeTxt.text = "Rectangle";
         }
-        else if (savedGame.totalLOLevel < 10) //Tri
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 3 + 1) //Tri
         {
             level = savedGame.triLvl;
             loShapeTxt.text = "Triangle";
         }
-        else if (savedGame.totalLOLevel < 13) //Circ
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 4 + 1) //Circ
         {
             level = savedGame.circleLvl;
             loShapeTxt.text = "Circle";
         }
-        else if (savedGame.totalLOLevel < 16) //Semicirc
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 5 + 1) //Semicirc
         {
             level = savedGame.scircleLvl;
             loShapeTxt.text = "Semicircle";
@@ -376,33 +376,35 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedRoomEnter()
     {
-        SceneManager.LoadScene("GameLevelScene_v1"); //Load Level scene
+        GlobalVariables.nextLevel = "GameLevelScene_v1";
+        SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
 
     private void DelayedHORoomEnter()
     {
-        SceneManager.LoadScene("GameLevelScene_v3"); //Load Level scene
+        GlobalVariables.nextLevel = "GameLevelScene_v3";
+        SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
     
     public void enterLowOrder()
     {
-        if (savedGame.totalLOLevel < 4) //Square
+        if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             enterSquare();
         }
-        else if (savedGame.totalLOLevel < 7) //Rect
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 2 + 1) //Rect
         {
             enterRectangle();
         }
-        else if (savedGame.totalLOLevel < 10) //Tri
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 3 + 1) //Tri
         {
             enterTriangle();
         }
-        else if (savedGame.totalLOLevel < 13) //Circ
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 4 + 1) //Circ
         {
             enterCircle();
         }
-        else if (savedGame.totalLOLevel < 16) //Semicirc
+        else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 5 + 1) //Semicirc
         {
             enterSemiCircle();
         }

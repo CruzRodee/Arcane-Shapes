@@ -137,7 +137,6 @@ public class GameBehaviour : MonoBehaviour
     private AnimScript animScript;
     private bool STARTUP = true;
     public float error = 100f;
-    private bool isQuit = false;
 
     // Save/load
     private GameData savedGame;
@@ -459,7 +458,7 @@ public class GameBehaviour : MonoBehaviour
 
     private void LoadSceneDelay()
     {
-        SceneManager.LoadScene("GameLevelScene_v1");
+        SceneManager.LoadScene("LoadingScreen");
     }
 
     public void onQuit()
@@ -946,11 +945,8 @@ public class GameBehaviour : MonoBehaviour
             GlobalVariables.percent = Mathf.Clamp01(1f - Mathf.Abs(error) * 0.01f);
         }
 
-        if (!isQuit)
-        {
-            GlobalVariables.gameFinished = true;
-            GlobalVariables.isLOGame = true;
-        }
+        GlobalVariables.gameFinished = true;
+        GlobalVariables.isLOGame = true;
 
         SceneManager.LoadScene("LevelSelect");
     }
