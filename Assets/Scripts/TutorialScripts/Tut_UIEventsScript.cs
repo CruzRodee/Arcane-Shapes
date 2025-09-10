@@ -14,6 +14,12 @@ public class SayModel
 };
 public class Tut_UIEventsScript : MonoBehaviour
 {
+    //Dialogue Thing
+    [SerializeField] private DialogueSystem Msger;
+
+
+
+
     // Start is called before the first frame update
     public Text textWho;
     public Text textWhat;
@@ -91,6 +97,10 @@ public class Tut_UIEventsScript : MonoBehaviour
         textWho.text = messages[0].charName;
         textWhat.text = messages[0].msg;
 
+
+        //NEW Dialogue Thingy
+        Msger.StartDialogue(2);    //is how its called, 1 is for number of chapter
+        Msger.StartDialogue(1);
         // initDialogue();//initialize msgs first once
     }
     private List<SayModel> initDialogue()

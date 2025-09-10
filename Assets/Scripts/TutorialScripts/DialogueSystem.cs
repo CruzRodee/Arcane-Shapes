@@ -34,7 +34,7 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private GameObject dialogueBG;
     [SerializeField] private GameObject dialogueContainer;
 
-    [SerializeField] private GameObject pParent;
+    // [SerializeField] private GameObject pParent;
     [SerializeField] private TMP_Text textWho; //gameobject for the name of the character speaking
     [SerializeField] private TMP_Text textWhat; //game obvjec for what the char is saying
 
@@ -256,6 +256,7 @@ public class DialogueSystem : MonoBehaviour
         msgIndex = 0;
         talking = true;
         SHOW_DIALOGUE();
+        Debug.Log("Line 259: Show_DIALOGUE");
         Say(msgIndex, messages); //start saying! Pass the index pointer and the list of msges
     }
 
