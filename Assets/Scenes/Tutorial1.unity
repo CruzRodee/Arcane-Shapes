@@ -1802,11 +1802,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af29a5e4a0d2cf4ea11f7f81759071d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabChoice: {fileID: 1568848426023988746, guid: c8c57c56c6abd274c941d768f2f8b866,
+  isRunning: 0
+  prefabChoice: {fileID: 5197167863346064003, guid: a7e25852106c2b44cb8cec54088bc451,
     type: 3}
   pParentChoiceBTNS: {fileID: 123836341}
   dialogueBG: {fileID: 1959568485}
   dialogueContainer: {fileID: 1959568484}
+  panelInputName: {fileID: 0}
   textWho: {fileID: 1959568483}
   textWhat: {fileID: 1959568482}
 --- !u!1 &2006713720

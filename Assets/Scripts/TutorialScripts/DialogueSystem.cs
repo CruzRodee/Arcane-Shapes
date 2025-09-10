@@ -10,10 +10,15 @@ public class DialogueSystem : MonoBehaviour
 {
     // //remove sa thesis game
     // [SerializeField] private MonoBehaviour cameraController;
+    private Queue<SayModel> diaQueue = new Queue<SayModel>();
+    private Coroutine diaCoroutine; //this is now the single coroutine thread
 
+    [SerializeField] private bool isRunning = false;
     private float WAITSECONDS;
     private List<SayModel> messages;
     private List<ChoiceModel> choices;
+
+
 
     //NOTE_DIA: When you're using the sys don;t forget to drop the prefabs with the style inside the inspector window
     //NOTE_DIA: ALSO SEMI-IMPORTANT; use TMP_Text for the text inside the prefab kek
@@ -33,8 +38,8 @@ public class DialogueSystem : MonoBehaviour
 //   unlesss? May gagawing animations lol
     [SerializeField] private GameObject dialogueBG;
     [SerializeField] private GameObject dialogueContainer;
-
-    // [SerializeField] private GameObject pParent;
+    
+    [SerializeField] private GameObject panelInputName;
     [SerializeField] private TMP_Text textWho; //gameobject for the name of the character speaking
     [SerializeField] private TMP_Text textWhat; //game obvjec for what the char is saying
 
@@ -161,27 +166,22 @@ public class DialogueSystem : MonoBehaviour
         // }
     }
 
-    private void Say(int index, List<SayModel> messages){      
-        Debug.Log("Line 100 in Say() "+index+" ---------- CODE:"+ messages[index].code);
-        string code = messages[index].code;
+
+    private void Say(int index, SayModel message){     //from list  
+        Debug.Log("Line 167 in Say() "+index+" ---------- CODE:"+ message.code);
+        string code = message.code;
 
         if (code == "say")
         {
-            textWho.text = messages[index].charName;
-            textWhat.text = messages[index].msg;
+            textWho.text = message.charName;
+            textWhat.text = message.msg;
 
-        //todo edit the chat sprite to change exps to exp+.png
-            Debug.Log("Who: "+textWho.text+" : \""+textWhat .text+"\"");
-
-            // btnSkip.interactable = true;     //can skip through
-            StartCoroutine(WaitForNextLine(index, messages, WAITSECONDS));
+            //todo edit the chat sprite to change exps to exp+.png
         }
         else if(code == "input")
         {
             // btnSkip.interactable = false;    //cannot skip through
-
-            //ask for player input
-            // panelInputName.SetActive(true);
+            panelInputName.SetActive(true);
             talking=false;
         }
         else if(code=="choice")
@@ -189,7 +189,7 @@ public class DialogueSystem : MonoBehaviour
             //ok so here is how the branching works:
             //choices A lead to A,B,C,D. If user picks A,
             // it leads to choice branch AA or dialogue branch of this name.
-            switch(messages[index].msg){
+            switch(message.msg){
                 case("A"):
                     SHOW_CHOICE(POPULATE_CHOICES_A());
                     break;
@@ -197,36 +197,77 @@ public class DialogueSystem : MonoBehaviour
             
         }
     }
+//OLD CODE
+    // private void Say(int index, List<SayModel> messages){      
+    //     Debug.Log("Line 100 in Say() "+index+" ---------- CODE:"+ messages[index].code);
+    //     string code = messages[index].code;
 
+    //     if (code == "say")
+    //     {
+    //         textWho.text = messages[index].charName;
+    //         textWhat.text = messages[index].msg;
+
+    //     //todo edit the chat sprite to change exps to exp+.png
+    //         Debug.Log("Who: "+textWho.text+" : \""+textWhat .text+"\"");
+
+    //         // btnSkip.interactable = true;     //can skip through
+    //         StartCoroutine(WaitForNextLine(index, messages, WAITSECONDS));
+    //     }
+    //     else if(code == "input")
+    //     {
+    //         // btnSkip.interactable = false;    //cannot skip through
+
+    //         //ask for player input
+    //         // panelInputName.SetActive(true);
+    //         talking=false;
+    //     }
+    //     else if(code=="choice")
+    //     {
+    //         //ok so here is how the branching works:
+    //         //choices A lead to A,B,C,D. If user picks A,
+    //         // it leads to choice branch AA or dialogue branch of this name.
+    //         switch(messages[index].msg){
+    //             case("A"):
+    //                 SHOW_CHOICE(POPULATE_CHOICES_A());
+    //                 break;
+    //         }
+            
+    //     }
+    // }
+
+
+ 
+    
+    //WONT BE USED IN THE NEW QUEUE IMPLEMENTATION
     //TODO AUTOMATE NEXT LINE AFTER WAITING CERTAIN SECONDS
     //error CS0305: Using the generic type 'IEnumerator<T>' requires 1 type arguments
-    private IEnumerator WaitForNextLine(int currentIndex, List<SayModel> msgs, float delay){
-        yield return new WaitForSeconds(delay);
-        nextLine(currentIndex, msgs);
-    }
+    // private IEnumerator WaitForNextLine(int currentIndex, List<SayModel> msgs, float delay){
+    //     yield return new WaitForSeconds(delay);
+    //     nextLine(currentIndex, msgs);
+    // }
 
-    //basically +1 sa msgs index, to magaganap if naclick ung dialogue box
-    public void nextLine(int msgIndex, List<SayModel> messages){
-        if(talking)
-        {
-            Debug.Log("Line 138 in NEXT LINE!!");
+    // //basically +1 sa msgs index, to magaganap if naclick ung dialogue box
+    // public void nextLine(int msgIndex, SayModel message){
+    //     if(talking)
+    //     {
+    //         Debug.Log("Line 138 in NEXT LINE!!");
 
-            if(msgIndex<messages.Count-1){
-                msgIndex+=1;
-                Say(msgIndex, messages);
-            }
-            else{
-                //end of lines
-                talking = false;
-                HIDE_DIALOGUE();
-            }
-        }
-        // else{
-            // btnSkip.interactable = false;
-        // }
+    //         if(msgIndex<message.Count-1){
+    //             msgIndex+=1;
+    //             Say(msgIndex, message);
+    //         }
+    //         else{
+    //             //end of lines
+    //             talking = false;
+    //             HIDE_DIALOGUE();
+    //         }
+    //     }
+    //     // else{
+    //         // btnSkip.interactable = false;
+    //     // }
 
         
-    }
+    // }
 
 
 
@@ -240,6 +281,7 @@ public class DialogueSystem : MonoBehaviour
     //This is to access the private TALKS_X
     public void StartDialogue(int dialogueChapter)
     {
+        //Numerical para di nakakalito yung calling
         switch(dialogueChapter){
             case 1:
             {
@@ -253,13 +295,54 @@ public class DialogueSystem : MonoBehaviour
                 break;
             }
         }
-        msgIndex = 0;
-        talking = true;
-        SHOW_DIALOGUE();
-        Debug.Log("Line 259: Show_DIALOGUE");
-        Say(msgIndex, messages); //start saying! Pass the index pointer and the list of msges
+
+        if (messages != null){
+            foreach (var msg in messages)
+            {
+                diaQueue.Enqueue(msg); //addto current queue of msgs
+            }
+        }
+        if(!isRunning){
+            SHOW_DIALOGUE();
+            diaCoroutine = StartCoroutine(RunDialogue());
+        }
+
+        //old stuff
+        // msgIndex = 0;
+        // talking = true;
+        // SHOW_DIALOGUE();
+        // Debug.Log("Line 259: Show_DIALOGUE");
+        // Say(msgIndex, messages); //start saying! Pass the index pointer and the list of msges
     }
 
+    private IEnumerator RunDialogue()
+    {
+        isRunning = true;
+        int index = 0;
+        while(diaQueue.Count>0)
+        {
+            SayModel currMsgs = diaQueue.Dequeue();//remove
+            Say(index, currMsgs);
+            if( currMsgs.code == "say")
+            {
+                //pause at say/choice dialogue
+                yield return new WaitForSeconds(WAITSECONDS);
+            }
+            else // current.code == "choice"
+            {
+                yield return null; //break
+            }
+            index++;
+        }
+
+        isRunning=false;
+        HIDE_DIALOGUE();
+    }
+
+
+    /////////////////////////////////////////
+    /// DIALOGUES, INPUT HERE
+    /////////////////////////////////////////
 
     private List<SayModel> TALK_DAY1_START(){
         List<SayModel> messages = new List<SayModel>();
