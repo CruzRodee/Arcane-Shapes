@@ -46,7 +46,7 @@ public class SaveLoadController
 
     public void saveGame(string savePath, string playerName, bool isMute, float squarePercent, int squareLvl,
                         float circlePercent, int circleLvl, float scirclePercent, int scircleLvl,
-                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl, 
+                        float rectPercent, int rectLvl, float triPercent, int triLvl, int compLvl,
                         int compPres, string currRoom, int mode, bool leftHand, int totalLevel, int loPrestige)   //dont save mode
     {
 
@@ -77,7 +77,7 @@ public class SaveLoadController
             mode = mode
         };
 
-        string json = JsonUtility.ToJson(data);
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
 
         Debug.Log("SUCCESS, Player Name:  " + data.playerName);
@@ -86,7 +86,7 @@ public class SaveLoadController
 
     public void saveGame(string savePath, GameData data) // Just pass raw gamedata
     {
-        string json = JsonUtility.ToJson(data);
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
 
         Debug.Log("SAVED GAME");
@@ -96,7 +96,7 @@ public class SaveLoadController
     public void updateRoom(string savePath, GameData data, string newRoom) // Just pass raw gamedata
     {
         data.currRoom = newRoom;    //save only room
-        string json = JsonUtility.ToJson(data);
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
 
         Debug.Log("Updated Curent Room:  " + data.currRoom);
