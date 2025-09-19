@@ -2055,6 +2055,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: btnSettings
       objectReference: {fileID: 0}
+    - target: {fileID: 4671867787050154348, guid: 3af7d2d8aa826144a84e6137ed8367f5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4849813484602157959, guid: 3af7d2d8aa826144a84e6137ed8367f5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2074,6 +2079,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: confirmName
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866773516545701922, guid: 3af7d2d8aa826144a84e6137ed8367f5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5993261771595803778, guid: 3af7d2d8aa826144a84e6137ed8367f5,
         type: 3}
@@ -2115,6 +2125,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: toggleMute
       objectReference: {fileID: 0}
+    - target: {fileID: 7451059030331729544, guid: 3af7d2d8aa826144a84e6137ed8367f5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7812753359777704416, guid: 3af7d2d8aa826144a84e6137ed8367f5,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -2144,6 +2159,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -318
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999001913074585653, guid: 3af7d2d8aa826144a84e6137ed8367f5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -2526,6 +2546,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4057894241246091261, guid: 1a37a4f2e75bc3c4b91080c660766689,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4212569518808720014, guid: 1a37a4f2e75bc3c4b91080c660766689,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2540,6 +2565,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PanelGoHome
+      objectReference: {fileID: 0}
+    - target: {fileID: 8140985128907568956, guid: 1a37a4f2e75bc3c4b91080c660766689,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
