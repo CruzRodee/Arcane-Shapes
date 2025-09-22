@@ -195,6 +195,15 @@ public class Tut_UIEventsScript : MonoBehaviour
         Debug.Log("Show tutorial screenshot");
     }
 
+    public void UpdatePlayerNameInSave(string newName)
+    {
+        if (savedGame == null)
+            savedGame = new GameData();
+
+        savedGame.playerName = newName;
+        saverLoader.saveGame(savePath, savedGame);
+    }
+
 
     // Update is called once per frame
     void Update()

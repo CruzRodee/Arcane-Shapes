@@ -313,6 +313,11 @@ public class DialogueSystem : MonoBehaviour
             {
                 whoPlayer = DataCollectionSystem.GetPlayerName();
                 UpdateWhoPlayerInMessages(whoPlayer);
+                // Save to main save data as well
+                var uiEvents = FindObjectOfType<Tut_UIEventsScript>();
+                if (uiEvents != null)
+                    uiEvents.UpdatePlayerNameInSave(whoPlayer);
+
             }
 
             // Validate numeric answers if needed
