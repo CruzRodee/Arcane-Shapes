@@ -114,30 +114,6 @@ public class DialogueSystem : MonoBehaviour
     {
         dialogueBG.SetActive(true);
         dialogueContainer.SetActive(true);
-        //instatiate the dialogue box here.
-        //there should also be destroy one, called HIDE_)DIALOGUE
-        //NAH no need cuz theres only 1 bg so I used a random black fade up pic (i made it in firealpaca)
-        // GameObject containerDialogue = new GameObject("Dynamic Image");
-        // RectTransform containerDialogue_RT = containerDialogue.GetComponent<RectTransform>();
-        // containerDialogue_RT = new Vector2(0,0); //to fix later
-
-
-        /*
-            SAY SCREEN:
-                        "CharName:"
-            "Text abab bab xcvsx gs gdgsababah
-            sdbamsb asbdjah bajbda sba sadb d."
-
-            CHOICE SCREEN:
-            > I don't know
-            > Ok, goodbye...
-            > Cool!
-
-            INPUT SCREEN:
-            > |
-        */
-
-
     }
     //Is how I called it:
     // SHOW_CHOICE(POPULATE_CHOICES_A());
