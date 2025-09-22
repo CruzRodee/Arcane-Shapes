@@ -336,7 +336,7 @@ public class DialogueSystem : MonoBehaviour
         if (messages == null) return;
         foreach (var msg in messages)
         {
-            if (msg.charName == whoPlayer || msg.charName == "Player Name")
+            if (msg.charName == whoPlayer || msg.charName == "Estudyante")
             {
                 msg.charName = newName;
             }
