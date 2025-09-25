@@ -29,6 +29,8 @@ public class Tut_UIEventsScript : MonoBehaviour
     public GameObject panelInputName;
 
     public GameObject btnMute;  //have to be gameobj
+    public GameObject panelInputError;
+    public Text textInputError;
     private Image btnMuteImg;
     public Sprite btnMutedSprite;
     public Sprite btnUnmutedSprite;
@@ -77,6 +79,7 @@ public class Tut_UIEventsScript : MonoBehaviour
         panelProceedYN.SetActive(false);
         pConfirmHome.SetActive(false);
         panelInputName.SetActive(false);
+        panelInputError.SetActive(false);
         playerName = savedGame.playerName;
 
         //NEW Dialogue Thingy
@@ -202,6 +205,21 @@ public class Tut_UIEventsScript : MonoBehaviour
 
         savedGame.playerName = newName;
         saverLoader.saveGame(savePath, savedGame);
+    }
+
+    public void ShowInputError(string message)
+    {
+        if (panelInputError != null && textInputError != null)
+        {
+            textInputError.text = message;
+            panelInputError.SetActive(true);
+        }
+    }
+
+    public void HideInputError()
+    {
+        if (panelInputError != null)
+            panelInputError.SetActive(false);
     }
 
 

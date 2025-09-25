@@ -7,6 +7,7 @@ using UnityEngine.UI;   //Text
 
 
 //NOTE_DIA: Don't forget to drop the prefab called "DialogueSystem" inside the game
+
 public class DialogueSystem : MonoBehaviour
 {
     #region Fields and Properties
@@ -19,6 +20,7 @@ public class DialogueSystem : MonoBehaviour
     private float WAITSECONDS;
     private List<SayModel> messages;
     private List<ChoiceModel> choices;
+    private Tut_UIEventsScript uiEvents;
 
 
 
@@ -99,6 +101,7 @@ public class DialogueSystem : MonoBehaviour
         whoPlayer = "Estudyante"; //default name
         whoCaller = "Professor Oz";
         //describe the textbox to be instatiated here
+        uiEvents = FindObjectOfType<Tut_UIEventsScript>();
     }
 
     void Update()
@@ -277,26 +280,20 @@ public class DialogueSystem : MonoBehaviour
         if (string.IsNullOrEmpty(inputValue))
             return;
 
-        // Record input for data collection
         if (enableDataCollection)
         {
-            // Determine input type from current question context
             string inputType = GetInputTypeFromQuestionKey(currentQuestionKey);
-            DataCollectionSystem.RecordInput(inputType, inputValue, currentQuestionKey);
-
-            // If this is the player name input, update whoPlayer
-            if (currentQuestionKey == "player_name")
-            {
-                whoPlayer = DataCollectionSystem.GetPlayerName();
-                UpdateWhoPlayerInMessages(whoPlayer);
-                // Save to main save data as well
-                var uiEvents = FindObjectOfType<Tut_UIEventsScript>();
-                if (uiEvents != null)
-                    uiEvents.UpdatePlayerNameInSave(whoPlayer);
-
-            }
 
             // Validate numeric answers if needed
+            if (inputType == "age" || inputType == "grade")
+            {
+                if (!int.TryParse(inputValue, out _))
+                {
+                    if (uiEvents != null)
+                        uiEvents.ShowInputError("Numero lang ang dapat mong ilagay. (Ex. 5, 10, 15)");
+                    return;
+                }
+            }
             if (inputType == "square_area" || inputType == "rectangle_area")
             {
                 if (int.TryParse(inputValue, out int numericAnswer))
@@ -306,26 +303,33 @@ public class DialogueSystem : MonoBehaviour
 
                     if (!isCorrect)
                     {
-                        // Show error message and don't proceed
                         textWhat.text = "Mali ang iyong sagot. Pakinggan mo ulit ako ah!";
                         return;
                     }
                 }
                 else
                 {
-                    // Invalid numeric input
-                    textWhat.text = "Numero lang ang dapat mong ilagay.";
+                    if (uiEvents != null)
+                        uiEvents.ShowInputError("Numero lang ang dapat mong ilagay.");
                     return;
                 }
             }
+
+            DataCollectionSystem.RecordInput(inputType, inputValue, currentQuestionKey);
+
+            if (currentQuestionKey == "player_name")
+            {
+                whoPlayer = DataCollectionSystem.GetPlayerName();
+                UpdateWhoPlayerInMessages(whoPlayer);
+                if (uiEvents != null)
+                    uiEvents.UpdatePlayerNameInSave(whoPlayer);
+            }
         }
 
-        // Hide input panel and continue dialogue
         panelInputName.SetActive(false);
         inputField.text = ""; //clear the input field for next use
         talking = false; // This should trigger dialogue continuation
 
-        // Continue with next dialogue
         if (diaCoroutine == null)
         {
             diaCoroutine = StartCoroutine(RunDialogue());
