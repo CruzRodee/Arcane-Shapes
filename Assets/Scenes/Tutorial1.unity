@@ -442,7 +442,7 @@ PrefabInstance:
     - target: {fileID: 8140985128907568956, guid: 1a37a4f2e75bc3c4b91080c660766689,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8344171027885822734, guid: 1a37a4f2e75bc3c4b91080c660766689,
         type: 3}
@@ -3641,8 +3641,8 @@ RectTransform:
   - {fileID: 4393881775398344813}
   - {fileID: 123836341}
   - {fileID: 5623425385700658975}
-  - {fileID: 416962038}
   - {fileID: 1107880767366764520}
+  - {fileID: 416962038}
   - {fileID: 1373432545}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6078,6 +6078,6 @@ SceneRoots:
   - {fileID: 1424514035}
   - {fileID: 1938298899}
   - {fileID: 2006713722}
+  - {fileID: 2048647137}
   - {fileID: 1564829136}
   - {fileID: 4281102861393487587}
-  - {fileID: 2048647137}
