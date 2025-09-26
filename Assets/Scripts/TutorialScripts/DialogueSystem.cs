@@ -28,7 +28,7 @@ public class DialogueSystem : MonoBehaviour
     //NOTE_DIA: ALSO SEMI-IMPORTANT; use TMP_Text for the text inside the prefab kek
     [SerializeField] private GameObject prefabChoice;
     [SerializeField] private Transform pParentChoiceBTNS;
-    private string tempChoice;
+    private string lastChoice = ""; //to track last choice made
 
     private bool talking = true;
     private bool muted = false; //no voiceover
@@ -139,7 +139,7 @@ public class DialogueSystem : MonoBehaviour
     {
         //TODO: instruct the thing to branch out to this specific branch
         Debug.Log("Test line 122, should return the actual code of this specific choice. -> " + choiceCode + " AND FULL IS: " + branchName + choiceCode);
-        tempChoice = choiceCode;
+        lastChoice = choiceCode; // <-- Store the last choice
 
         // Data Collection part
         if (enableDataCollection)
@@ -422,6 +422,17 @@ public class DialogueSystem : MonoBehaviour
         while (diaQueue.Count > 0)
         {
             SayModel currMsgs = diaQueue.Dequeue();
+
+            // Branching logic for ready_check and area_known
+            if (currMsgs.questionKey == "ready_yes" && lastChoice != "Opo")
+                continue;
+            if (currMsgs.questionKey == "ready_no" && lastChoice != "Hindi")
+                continue;
+            if (currMsgs.questionKey == "area_yes" && lastChoice != "Opo")
+                continue;
+            if (currMsgs.questionKey == "area_no" && lastChoice != "Hindi")
+                continue;
+
             Say(index, currMsgs);
 
             if (currMsgs.code == "say")
@@ -430,12 +441,10 @@ public class DialogueSystem : MonoBehaviour
             }
             else // "input" or "choice"
             {
-                // Wait until player responds (talking becomes false)
                 while (talking)
                 {
                     yield return null;
                 }
-                // After player input/choice, reset talking for next message
                 talking = true;
             }
             index++;
