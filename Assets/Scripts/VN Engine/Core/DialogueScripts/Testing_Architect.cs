@@ -55,13 +55,52 @@ namespace TESTING
             // Desktop: Press spacebar to display a random line
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                architect.Build(lines[Random.Range(0, lines.Length)]);
+                Debug.Log("[Desktop] Spacebar pressed");
+                if (architect.isBuilding)
+                {
+                    Debug.Log("Text is currently building");
+                    if (!architect.hurryUp)
+                    {
+                        architect.hurryUp = true;
+                        Debug.Log("Hurry up enabled (speed up text)");
+                    }
+                    else
+                    {
+                        architect.ForceComplete();
+                        Debug.Log("Force complete: text instantly finished");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Building new line: " + lines[Random.Range(0, lines.Length)]);
+                    architect.Build(lines[Random.Range(0, lines.Length)]);
+                }
             }
 
             // Mobile: Tap the screen to display a random line
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                architect.Build(lines[Random.Range(0, lines.Length)]);
+                Debug.Log("[Mobile] Screen tapped");
+                if (architect.isBuilding)
+                {
+                    Debug.Log("Text is currently building");
+                    if (!architect.hurryUp)
+                    {
+                        architect.hurryUp = true;
+                        Debug.Log("Hurry up enabled (speed up text)");
+                    }
+                    else
+                    {
+                        architect.ForceComplete();
+                        Debug.Log("Force complete: text instantly finished");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Building new line: " + lines[Random.Range(0, lines.Length)]);
+                    architect.Build(lines[Random.Range(0, lines.Length)]);
+                }
+
             }
         }
     }

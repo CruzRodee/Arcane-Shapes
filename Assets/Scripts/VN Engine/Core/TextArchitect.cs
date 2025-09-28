@@ -213,7 +213,31 @@ public class TextArchitect
     private void OnComplete()
     {
         buildProcess = null;
+        hurryUp = false;
     }
+
+    /// <summary>
+    /// Instantly completes the text reveal effect, showing all characters immediately.
+    /// For typewriter mode, sets maxVisibleCharacters to the full text length.
+    /// Stops the build process and triggers completion logic.
+    /// </summary>
+    public void ForceComplete()
+    {
+        switch (buildMethod)
+        {
+            case BuildMethod.instant:
+                break;
+            case BuildMethod.typewriter:
+                tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount;
+                break;
+            case BuildMethod.fade:
+                break;
+        }
+
+        Stop();
+        OnComplete();
+    }
+
     /// <summary>
     /// Prepares the text and TMP component for the selected build method.
     /// </summary>
@@ -261,6 +285,7 @@ public class TextArchitect
         tmpro.text += targetText;
         tmpro.ForceMeshUpdate();
     }
+
     /// <summary>
     /// Prepares the TMP component for fade-in text display.
     /// </summary>
