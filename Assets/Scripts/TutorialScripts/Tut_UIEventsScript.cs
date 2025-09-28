@@ -46,7 +46,7 @@ public class Tut_UIEventsScript : MonoBehaviour
     private SaveLoadController saverLoader = new SaveLoadController();
     private GameData savedGame;
 
-    private int msgIndex = 0;
+    // private int msgIndex = 0;
 
     private Animator screenFade;
     private float TRANSITIONDELAY = 3.0f;
