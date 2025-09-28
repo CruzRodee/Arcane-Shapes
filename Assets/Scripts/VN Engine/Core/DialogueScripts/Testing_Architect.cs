@@ -42,7 +42,7 @@ namespace TESTING
             Debug.Log("Testing TextArchitect");
             ds = VNDialogueSystem.instance;
             architect = new TextArchitect(ds.dialogueContainer.dialogueText);
-            architect.buildMethod = TextArchitect.BuildMethod.instant;
+            architect.buildMethod = TextArchitect.BuildMethod.typewriter;
         }
 
         /// <summary>

@@ -248,7 +248,18 @@ public class TextArchitect
     /// </summary>
     private void Prepare_Typewriter()
     {
+        tmpro.color = tmpro.color;
+        tmpro.maxVisibleCharacters = 0;
+        tmpro.text = preText;
 
+        if (preText != "")
+        {
+            tmpro.ForceMeshUpdate();
+            tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount;
+        }
+
+        tmpro.text += targetText;
+        tmpro.ForceMeshUpdate();
     }
     /// <summary>
     /// Prepares the TMP component for fade-in text display.
@@ -263,7 +274,11 @@ public class TextArchitect
     /// </summary>
     private IEnumerator Build_Typewriter()
     {
-        yield return null;
+        while (tmpro.maxVisibleCharacters < tmpro.textInfo.characterCount)
+        {
+            tmpro.maxVisibleCharacters += hurryUp ? charactersPerCycle * 5 : charactersPerCycle;
+            yield return new WaitForSeconds(0.015f / speed);
+        }
     }
 
     /// <summary>
