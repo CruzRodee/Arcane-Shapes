@@ -197,6 +197,10 @@ public class TextArchitect
         Prepare();
         switch (buildMethod)
         {
+            case BuildMethod.instant:
+                yield return null; // Instant build, no coroutine needed
+                OnComplete();
+                break;
             case BuildMethod.typewriter:
                 yield return Build_Typewriter();
                 break;
@@ -214,6 +218,7 @@ public class TextArchitect
     {
         buildProcess = null;
         hurryUp = false;
+        Debug.Log("Text build complete: " + tmpro.text);
     }
 
     /// <summary>
@@ -231,6 +236,7 @@ public class TextArchitect
                 tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount;
                 break;
             case BuildMethod.fade:
+                tmpro.ForceMeshUpdate();
                 break;
         }
 
@@ -291,7 +297,45 @@ public class TextArchitect
     /// </summary>
     private void Prepare_Fade()
     {
+        tmpro.text = preText;
+        if (preText != "")
+        {
+            tmpro.ForceMeshUpdate();
+            preTextLength = tmpro.textInfo.characterCount;
+        }
+        else
+            preTextLength = 0;
 
+        tmpro.text += targetText;
+        tmpro.maxVisibleCharacters = int.MaxValue;
+        tmpro.ForceMeshUpdate();
+
+        TMP_TextInfo textInfo = tmpro.textInfo;
+
+        Color colorVisible = new Color(textColor.r, textColor.g, textColor.b, 1);
+        Color colorInvisible = new Color(textColor.r, textColor.g, textColor.b, 0);
+
+        Color32[] vertexColors = textInfo.meshInfo[textInfo.characterInfo[0].materialReferenceIndex].colors32;
+
+        for (int i = 0; i < textInfo.characterCount; i++)
+        {
+            TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
+
+            if (!charInfo.isVisible)
+                continue;
+            if (i < preTextLength)
+            {
+                for (int v = 0; v < 4; v++)
+                    vertexColors[charInfo.vertexIndex + v] = colorVisible;
+            }
+            else
+            {
+                for (int v = 0; v < 4; v++)
+                    vertexColors[charInfo.vertexIndex + v] = colorInvisible;
+            }
+        }
+
+        tmpro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
     }
 
     /// <summary>
@@ -304,6 +348,8 @@ public class TextArchitect
             tmpro.maxVisibleCharacters += hurryUp ? charactersPerCycle * 5 : charactersPerCycle;
             yield return new WaitForSeconds(0.015f / speed);
         }
+
+        OnComplete();
     }
 
     /// <summary>
@@ -311,6 +357,48 @@ public class TextArchitect
     /// </summary>
     private IEnumerator Build_Fade()
     {
-        yield return null;
+        int minRange = preTextLength;
+        int maxRange = minRange + 1;
+
+        byte alphaThreshold = 15;
+
+        TMP_TextInfo textInfo = tmpro.textInfo;
+
+        Color32[] vertexColors = textInfo.meshInfo[textInfo.characterInfo[0].materialReferenceIndex].colors32;
+        float[] alphas = new float[textInfo.characterCount];
+
+        while (true)
+        {
+            float fadeSpeed = (hurryUp ? charactersPerCycle * 5 : charactersPerCycle) * 4f;
+            for (int i = minRange; i < maxRange; i++)
+            {
+                TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
+
+                if (!charInfo.isVisible)
+                    continue;
+
+                int vertexIndex = textInfo.characterInfo[i].vertexIndex;
+                alphas[i] = Mathf.MoveTowards(alphas[i], 255, fadeSpeed);
+
+                for (int v = 0; v < 4; v++)
+                    vertexColors[charInfo.vertexIndex + v].a = (byte)alphas[i];
+
+                if (alphas[i] >= 255)
+                    minRange++;
+            }
+
+            tmpro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+
+            bool lastCharacterIsInvisible = !textInfo.characterInfo[maxRange - 1].isVisible;
+            if (alphas[maxRange - 1] > alphaThreshold || lastCharacterIsInvisible)
+            {
+                if (maxRange < textInfo.characterCount)
+                    maxRange++;
+                else if (alphas[maxRange - 1] >= 255 || lastCharacterIsInvisible)
+                    break;
+            }
+            yield return new WaitForEndOfFrame();
+        }
+        OnComplete();
     }
 }

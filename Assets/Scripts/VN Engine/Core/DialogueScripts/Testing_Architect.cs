@@ -33,6 +33,7 @@ namespace TESTING
         /// Reference to the TextArchitect instance for building dialogue text.
         /// </summary>
         TextArchitect architect;
+        public TextArchitect.BuildMethod buildMethod = TextArchitect.BuildMethod.instant;
 
         /// <summary>
         /// Initializes the dialogue system and TextArchitect on start.
@@ -42,7 +43,7 @@ namespace TESTING
             Debug.Log("Testing TextArchitect");
             ds = VNDialogueSystem.instance;
             architect = new TextArchitect(ds.dialogueContainer.dialogueText);
-            architect.buildMethod = TextArchitect.BuildMethod.typewriter;
+            architect.buildMethod = TextArchitect.BuildMethod.fade;
         }
 
         /// <summary>
@@ -52,6 +53,13 @@ namespace TESTING
         /// </summary>
         void Update()
         {
+            if (buildMethod != architect.buildMethod)
+            {
+                architect.buildMethod = buildMethod;
+                Debug.Log("Build method changed to: " + buildMethod);
+                architect.Stop();
+            }
+
             // Desktop: Press spacebar to display a random line
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -94,6 +102,7 @@ namespace TESTING
                         architect.ForceComplete();
                         Debug.Log("Force complete: text instantly finished");
                     }
+                    // architect.Append(lines[Random.Range(0, lines.Length)]);
                 }
                 else
                 {
