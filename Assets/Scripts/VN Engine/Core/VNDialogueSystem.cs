@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DIALOGUE;
 
 /// <summary>
 /// VNDialogueSystem manages the core visual novel dialogue logic and acts as a singleton for global access.
