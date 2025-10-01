@@ -20,7 +20,7 @@ namespace DIALOGUE
         /// <summary>
         /// The TextMeshProUGUI component for displaying the speaker's name.
         /// </summary>
-        public TextMeshProUGUI nameText;
+        public NameContainer nameContainer;
 
         /// <summary>
         /// The TextMeshProUGUI component for displaying the dialogue text.
