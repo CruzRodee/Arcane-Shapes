@@ -18,7 +18,7 @@ public class VNDialogueSystem : MonoBehaviour
     private TextArchitect architect;
     public bool isRunningConversation => conversationManager.isRunning;
 
-    public static VNDialogueSystem instance;
+    public static VNDialogueSystem instance { get; private set; }
 
     public delegate void DialogueSystemEvent();
     public event DialogueSystemEvent onUserPrompt_Next;
