@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DIALOGUE;
+using UnityEditor;
 
 public class TestDialogueFiles : MonoBehaviour
 {
@@ -16,18 +17,22 @@ public class TestDialogueFiles : MonoBehaviour
     {
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
-        // foreach (string line in lines)
+        // for (int i = 0; i < lines.Count; i++)
         // {
-        //     if (string.IsNullOrEmpty(line))
+        //     string line = lines[i];
+
+        //     if (string.IsNullOrWhiteSpace(line))
         //         continue;
 
-        //     Debug.Log($"Segmenting line '{line}'");
-        //     DIALOGUE_LINE dialogueLine = DialogueParser.Parse(line);
+        //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
 
-        //     int i = 0;
-        //     foreach (DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment in dialogueLine.dialogue.segments)
+        //     Debug.Log($"{dl.speaker.name} as [{(dl.speaker.castName != string.Empty ? dl.speaker.castName : dl.speaker.name)}]at {dl.speaker.castPosition}");
+
+        //     List<(int l, string ex)> expr = dl.speaker.CastExpressions;
+        //     Debug.Log($"CastExpressions count: {expr.Count}");
+        //     for (int c = 0; c < expr.Count; c++)
         //     {
-        //         Debug.Log($"Segment [{i++}] = '{segment.dialogue}'  [signal={segment.startSignal.ToString()}{(segment.signalDelay > 0 ? $" {segment.signalDelay}" : "")}]");
+        //         Debug.Log($"[Layer[{expr[c].l}] = '{expr[c].ex}']");
         //     }
         // }
 
