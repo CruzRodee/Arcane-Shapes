@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DIALOGUE;
 using UnityEditor;
+using System.Runtime.InteropServices;
 
 public class TestDialogueFiles : MonoBehaviour
 {
@@ -17,25 +18,20 @@ public class TestDialogueFiles : MonoBehaviour
     {
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
-        // for (int i = 0; i < lines.Count; i++)
-        // {
-        //     string line = lines[i];
+        foreach (string line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
 
-        //     if (string.IsNullOrWhiteSpace(line))
-        //         continue;
+            DIALOGUE_LINE dl = DialogueParser.Parse(line);
 
-        //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
+            for (int i = 0; i < dl.commandData.commands.Count; i++)
+            {
+                DL_COMMAND_DATA.Command command = dl.commandData.commands[i];
+                Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
+            }
+        }
 
-        //     Debug.Log($"{dl.speaker.name} as [{(dl.speaker.castName != string.Empty ? dl.speaker.castName : dl.speaker.name)}]at {dl.speaker.castPosition}");
-
-        //     List<(int l, string ex)> expr = dl.speaker.CastExpressions;
-        //     Debug.Log($"CastExpressions count: {expr.Count}");
-        //     for (int c = 0; c < expr.Count; c++)
-        //     {
-        //         Debug.Log($"[Layer[{expr[c].l}] = '{expr[c].ex}']");
-        //     }
-        // }
-
-        VNDialogueSystem.instance.Say(lines);
+        //VNDialogueSystem.instance.Say(lines);
     }
 }

@@ -66,11 +66,11 @@ namespace DIALOGUE
         {
             //Show or hide the speaker if there's one present
             if (line.hasSpeaker)
-                dialogueSystem.ShowSpeakerName(line.speaker.displayname);
+                dialogueSystem.ShowSpeakerName(line.speakerData.displayname);
 
 
             // Build the dialogue text
-            yield return BuildLineSegments(line.dialogue);
+            yield return BuildLineSegments(line.dialogueData);
 
             // Wait for user input
             yield return WaitForUserInput();
@@ -78,7 +78,7 @@ namespace DIALOGUE
 
         IEnumerator Line_RunCommands(DIALOGUE_LINE line)
         {
-            Debug.Log(line.commands);
+            Debug.Log(line.commandData);
             // Placeholder for command execution logic
             yield return null;
         }
