@@ -6,8 +6,7 @@ using UnityEngine;
 public class DL_SPEAKER_DATA
 {
     public string name, castName;
-
-    public string displayname => (castName != string.Empty ? castName : name);
+    public string displayname => string.IsNullOrEmpty(castName) ? name : castName;
     public Vector2 castPosition;
     public List<(int layer, string expression)> CastExpressions { get; set; }
 

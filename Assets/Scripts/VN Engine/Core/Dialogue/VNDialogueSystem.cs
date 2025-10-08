@@ -11,7 +11,7 @@ public class VNDialogueSystem : MonoBehaviour
     /// <summary>
     /// The main container holding dialogue UI references and data.
     /// </summary>
-    public DialogueContainer dialogueContainer = new DialogueContainer();
+    public DialogueContainer dialogueContainer;// = new DialogueContainer();
     private ConversationManager conversationManager;
     private TextArchitect architect;
     public bool isRunningConversation => conversationManager.isRunning;
