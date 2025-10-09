@@ -8,4 +8,4 @@ Elen "You have odd taste in music." playVoice("e_d1_v2" -v 1.5), setBackground(R
 
 setAccomplishment("A Legendary Boombox" true), setCLI(Elen 0:Angle1 1:Intrigued -s 2.3 -l true)
 
-showScene(false), StopMusic(all -s 1.5)
+showScene(false), StopMusic(all -s 1.5) 
