@@ -8,6 +8,8 @@ using DIALOGUE;
 /// </summary>
 public class VNDialogueSystem : MonoBehaviour
 {
+    [SerializeField] private DialogueSystemConfigurationSO _config;
+    public DialogueSystemConfigurationSO config => _config;
     /// <summary>
     /// The main container holding dialogue UI references and data.
     /// </summary>
