@@ -15,14 +15,14 @@ MonoBehaviour:
   characters:
   - name: Professor Oz
     alias: Oz
-    characterType: 0
+    characterType: 1
     nameColor: {r: 1, g: 1, b: 1, a: 0}
     dialogueColor: {r: 1, g: 1, b: 1, a: 0}
     nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
   - name: Student
     alias: S
-    characterType: 0
+    characterType: 1
     nameColor: {r: 0.9811321, g: 0.1804913, b: 0.81955296, a: 0}
     dialogueColor: {r: 0.7830189, g: 0.6037465, b: 0.2696244, a: 0}
     nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}

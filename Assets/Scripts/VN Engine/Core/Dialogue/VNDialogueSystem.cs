@@ -66,14 +66,14 @@ public class VNDialogueSystem : MonoBehaviour
 
     public void HideSpeakerName() => dialogueContainer.nameContainer.Hide();
 
-    public void Say(string speaker, string dialogue)
+    public Coroutine Say(string speaker, string dialogue)
     {
         List<string> conversation = new List<string>() { $"{speaker} \"{dialogue}\"" };
-        Say(conversation);
+        return Say(conversation);
     }
 
-    public void Say(List<string> conversation)
+    public Coroutine Say(List<string> conversation)
     {
-        conversationManager.StartConversation(conversation);
+        return conversationManager.StartConversation(conversation);
     }
 }
