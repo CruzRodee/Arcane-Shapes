@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DIALOGUE;
+using CHARACTERS;
 
 /// <summary>
 /// VNDialogueSystem manages the core visual novel dialogue logic and acts as a singleton for global access.
@@ -55,6 +56,20 @@ public class VNDialogueSystem : MonoBehaviour
     {
         onUserPrompt_Next?.Invoke();
     }
+
+
+    // Looks up the character by name and applies their config data to the dialogue container.
+    // This is for if we don't have a config for them yet (e.g. loading from dialogue file).
+    public void ApplySpeakerDataToDialogueContainer(string speakerName)
+    {
+        Character character = CharacterManager.instance.GetCharacter(speakerName);
+        CharacterConfigData config = character != null ? character.config : CharacterManager.instance.GetCharacterConfig(speakerName);
+
+        ApplySpeakerDataToDialogueContainer(config);
+    }
+
+    // Applies the given CharacterConfigData to the dialogue container. Skips the whole search process.
+    public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config) => dialogueContainer.SetConfig(config);
 
     public void ShowSpeakerName(string speakerName = "")
     {

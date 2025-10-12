@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using CHARACTERS;
 
 namespace DIALOGUE
 {
@@ -22,6 +23,15 @@ namespace DIALOGUE
         public void Hide()
         {
             nameBox.SetActive(false);
+        }
+
+        public void SetNameColor(Color color) => nameText.color = color;
+        public void SetNameFont(TMP_FontAsset font) => nameText.font = font;
+
+        public void SetConfig(CharacterConfigData config)
+        {
+            SetNameColor(config.nameColor);
+            SetNameFont(config.nameFont);
         }
     }
 }

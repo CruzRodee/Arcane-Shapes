@@ -1,3 +1,4 @@
+using CHARACTERS;
 using TMPro;
 using UnityEngine;
 
@@ -24,5 +25,17 @@ namespace DIALOGUE
         /// The TextMeshProUGUI component for displaying the dialogue text.
         /// </summary>
         public TextMeshProUGUI dialogueText;
+
+
+        public void SetDialogueColor(Color color) => dialogueText.color = color;
+        public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
+
+        public void SetConfig(CharacterConfigData config)
+        {
+            SetDialogueColor(config.dialogueColor);
+            SetDialogueFont(config.dialogueFont);
+            nameContainer.SetNameColor(config.nameColor);
+            nameContainer.SetNameFont(config.nameFont);
+        }
     }
 }

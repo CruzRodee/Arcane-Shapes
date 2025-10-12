@@ -10,12 +10,15 @@ namespace CHARACTERS
         public string name = "";
         public string displayName = "";
         public RectTransform root = null;
+        public CharacterConfigData config;
+
         public VNDialogueSystem dialogueSystem => VNDialogueSystem.instance;
 
-        public Character(string name)
+        public Character(string name, CharacterConfigData config)
         {
             this.name = name;
             displayName = name;
+            this.config = config;
         }
 
         // External functionality if you don't want to use the dialogue text files to make characters speak
@@ -24,6 +27,7 @@ namespace CHARACTERS
         public Coroutine Say(List<string> dialogue)
         {
             dialogueSystem.ShowSpeakerName(displayName);
+            dialogueSystem.ApplySpeakerDataToDialogueContainer(name);
             return dialogueSystem.Say(dialogue);
         }
 
