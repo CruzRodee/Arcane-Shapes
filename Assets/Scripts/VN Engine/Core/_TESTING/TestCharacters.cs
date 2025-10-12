@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CHARACTERS;
+using TMPro;
 
 namespace TESTING
 {
+
     public class TestCharacters : MonoBehaviour
     {
+        public TMP_FontAsset tempFont;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -43,6 +47,20 @@ namespace TESTING
             };
 
             yield return Oz.Say(ozLines);
+
+            // Test changing text customizations at runtime
+            Oz.SetNameColor(Color.cyan);
+            Oz.SetNameFont(tempFont);
+            Oz.SetDialogueColor(Color.yellow);
+            Oz.SetDialogueFont(tempFont);
+            Oz.UpdateTextCustomizationsOnScreen();
+
+            yield return Oz.Say("Now my name is cyan, my dialogue is yellow, and my font has changed!");
+
+            Oz.ResetConfigurationData();
+            Oz.UpdateTextCustomizationsOnScreen();
+
+            yield return Oz.Say("Now I've reset my configuration data back to the original.");
 
             List<string> studentLines = new List<string>()
             {
