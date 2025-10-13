@@ -12,8 +12,9 @@ namespace CHARACTERS
 
         private const string CHARACTER_CASTING_ID = " as ";
         private const string CHARACTERNAME_ID = "<charname>";
-        private string characterRootPath => $"Characters/{CHARACTERNAME_ID}";
-        private string characterPrefabPath => $"{characterRootPath}/Character - [{CHARACTERNAME_ID}]";
+        public string characterRootPathFormat => $"Characters/{CHARACTERNAME_ID}";
+        public string characterPrefabNameFormat => $"Character - [{CHARACTERNAME_ID}]";
+        public string characterPrefabPathFormat => $"{characterRootPathFormat}/{characterPrefabNameFormat}";
 
         [SerializeField] private RectTransform _characterPanel = null;
         public RectTransform characterPanel => _characterPanel;
@@ -80,11 +81,11 @@ namespace CHARACTERS
 
         private GameObject GetPrefabForCharacter(string characterName)
         {
-            string prefabPath = FormatCharacterPath(characterPrefabPath, characterName);
+            string prefabPath = FormatCharacterPath(characterPrefabPathFormat, characterName);
             return Resources.Load<GameObject>(prefabPath);
         }
 
-        private string FormatCharacterPath(string path, string characterName) => path.Replace(CHARACTERNAME_ID, characterName);
+        public string FormatCharacterPath(string path, string characterName) => path.Replace(CHARACTERNAME_ID, characterName);
 
         private Character CreateCharacterFromInfo(CHARACTER_INFO info)
         {
