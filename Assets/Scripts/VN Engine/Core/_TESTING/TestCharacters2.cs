@@ -10,6 +10,7 @@ namespace TESTING
     public class TestCharacters2 : MonoBehaviour
     {
         public TMP_FontAsset tempFont;
+        private Character CreateCharacter(string name) => CharacterManager.instance.CreateCharacter(name);
 
         // Start is called before the first frame update
         void Start()
@@ -25,20 +26,38 @@ namespace TESTING
 
         IEnumerator Test()
         {
-            Character Raelin = CharacterManager.instance.CreateCharacter("Raelin");
+            // Character Raelin = CharacterManager.instance.CreateCharacter("Raelin");
 
-            yield return new WaitForSeconds(1f);
+            // yield return new WaitForSeconds(1f);
 
-            yield return Raelin.Hide();
+            // yield return Raelin.Hide();
 
-            yield return new WaitForSeconds(1f);
+            // yield return new WaitForSeconds(1f);
 
-            yield return Raelin.Show();
+            // yield return Raelin.Show();
 
-            yield return Raelin.Say("Hello there!");
+            // yield return Raelin.Say("Hello there!");
 
-            Debug.Log("Finished");
+            Character guard1 = CreateCharacter("Guard1 as Generic");
+            Character guard2 = CreateCharacter("Guard2 as Generic");
+            Character guard3 = CreateCharacter("Guard3 as Generic");
 
+            guard1.Show();
+            guard2.Show();
+            guard3.Show();
+
+            guard1.SetDialogueFont(tempFont);
+            guard1.SetNameFont(tempFont);
+            guard2.SetDialogueColor(Color.cyan);
+            guard3.SetNameColor(Color.red);
+
+            yield return guard1.Say("Halt! Who goes there?");
+            yield return guard2.Say("State your business!");
+            yield return guard3.Say("You shall not pass!");
+
+            Debug.Log("Finished Testing Characters 2");
+
+            yield return null;
         }
 
         // Update is called once per frame

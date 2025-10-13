@@ -11,6 +11,7 @@ namespace CHARACTERS
 
         private CharacterConfigSO config => VNDialogueSystem.instance.config.characterConfigurationAsset;
 
+        private const string CHARACTER_CASTING_ID = " as ";
         private const string CHARACTERNAME_ID = "<charname>";
         private string characterRootPath => $"Characters/{CHARACTERNAME_ID}";
         private string characterPrefabPath => $"{characterRootPath}/Character - [{CHARACTERNAME_ID}]";
@@ -66,11 +67,14 @@ namespace CHARACTERS
         private CHARACTER_INFO GetCharacterInfo(string characterName)
         {
             CHARACTER_INFO result = new CHARACTER_INFO();
-            result.name = characterName;
 
-            result.config = config.GetConfig(characterName);
+            string[] nameData = characterName.Split(CHARACTER_CASTING_ID, System.StringSplitOptions.RemoveEmptyEntries);
+            result.name = nameData[0].Trim();
+            result.castingName = nameData.Length > 1 ? nameData[1].Trim() : result.name;
 
-            result.prefab = GetPrefabForCharacter(characterName);
+            result.config = config.GetConfig(result.castingName);
+
+            result.prefab = GetPrefabForCharacter(result.castingName);
 
             return result;
         }
@@ -106,6 +110,7 @@ namespace CHARACTERS
         private class CHARACTER_INFO
         {
             public string name = "";
+            public string castingName = "";
             public CharacterConfigData config = null;
             public GameObject prefab = null;
         }
