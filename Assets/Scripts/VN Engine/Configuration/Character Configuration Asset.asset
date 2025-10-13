@@ -34,3 +34,24 @@ MonoBehaviour:
     dialogueColor: {r: 0.20799215, g: 0.7683667, b: 0.7735849, a: 1}
     nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+  - name: Female Student 2
+    alias: fs2
+    characterType: 1
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+  - name: Raelin
+    alias: rae
+    characterType: 2
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+  - name: Generic
+    alias: gen
+    characterType: 2
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
