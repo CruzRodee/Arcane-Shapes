@@ -5,8 +5,10 @@ using TMPro;
 
 namespace CHARACTERS
 {
-    public class Character
+    public abstract class Character
     {
+        public const bool ENABLE_ON_START = true;
+
         public string name = "";
         public string displayName = "";
         public RectTransform root = null;
@@ -22,7 +24,7 @@ namespace CHARACTERS
         public bool isRevealing => co_revealing != null;
         public bool isHiding => co_hiding != null;
         public bool isMoving => co_moving != null;
-        public virtual bool isVisible => false;
+        public virtual bool isVisible { get; set; }
 
         public Character(string name, CharacterConfigData config, GameObject prefab)
         {

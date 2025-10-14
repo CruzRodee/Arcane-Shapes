@@ -61,30 +61,58 @@ namespace TESTING
             // yield return guard2.Say("State your business!");
             // yield return guard3.Say("You shall not pass!");
 
-            Character Guard = CreateCharacter("Guard1 as Generic");
-            Character Raelin = CreateCharacter("Raelin");
-            Character Student = CreateCharacter("Female Student 2");
+            Character_Sprite Guard = CreateCharacter("Guard1 as Generic") as Character_Sprite;
+            Character_Sprite Raelin = CreateCharacter("Raelin") as Character_Sprite;
+            Character_Sprite Student = CreateCharacter("Female Student 2") as Character_Sprite;
+            Student.isVisible = false;
 
             Guard.SetPosition(Vector2.zero);
             Raelin.SetPosition(new Vector2(0.5f, 0.5f));
             Student.SetPosition(Vector2.one);
 
-            Raelin.Show();
+            // Guard.Show();
+            // Raelin.Show();
+            // Student.Show();
+
+            yield return new WaitForSeconds(1);
+
+            Sprite s1 = Guard.GetSprite("Characters-Monk");
+            Guard.TransitionSprite(s1);
+
+            Sprite body = Raelin.GetSprite("B2");
+            Sprite face = Raelin.GetSprite("B_Laugh");
+            yield return Raelin.TransitionSprite(face, 1, 0.3f);
+            Raelin.TransitionSprite(body);
+
+
             Student.Show();
 
-            yield return Guard.Show();
-            yield return Guard.MoveToPosition(Vector2.one, smooth: true);
-            yield return Guard.MoveToPosition(Vector2.zero, smooth: true);
+            yield return new WaitForSeconds(1);
 
-            Guard.SetDialogueFont(tempFont);
-            Guard.SetNameFont(tempFont);
-            Raelin.SetDialogueColor(Color.cyan);
-            Student.SetNameColor(Color.red);
+            Raelin.TransitionSprite(Raelin.GetSprite("B_Scold"), 1);
 
-            yield return Guard.Say("Halt! Who goes there?");
-            yield return Raelin.Say("State your business!");
-            yield return Student.Say("You shall not pass!");
+            body = Student.GetSprite("Female student 2 - upset");
 
+            Student.TransitionSprite(body);
+
+            // This isn't going to work on Raelin who is a Sprite sheet. This is for single image sprites only.
+            // Sprite bodySprite = Raelin.GetSprite("Raelin_1");
+            // Sprite faceSprite = Raelin.GetSprite("Raelin_5");
+            // Raelin.SetSprite(bodySprite, 0);
+            // Raelin.SetSprite(faceSprite, 1);
+
+            // yield return Guard.Show();
+            // yield return Guard.MoveToPosition(Vector2.one, smooth: true);
+            // yield return Guard.MoveToPosition(Vector2.zero, smooth: true);
+
+            // Guard.SetDialogueFont(tempFont);
+            // Guard.SetNameFont(tempFont);
+            // Raelin.SetDialogueColor(Color.cyan);
+            // Student.SetNameColor(Color.red);
+
+            // yield return Guard.Say("Halt! Who goes there?");
+            // yield return Raelin.Say("State your business!");
+            // yield return Student.Say("You shall not pass!");
 
             Debug.Log("Finished Testing Characters 2");
 
