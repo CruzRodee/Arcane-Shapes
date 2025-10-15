@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace CHARACTERS
 {
@@ -13,7 +14,7 @@ namespace CHARACTERS
         private const char SPRITESHEET_TEX_SPRITE_DELIMITER = '-';
         private CanvasGroup rootCG => root.GetComponent<CanvasGroup>();
 
-        public List<CharacterSpriteLayer> spriteLayers = new List<CharacterSpriteLayer>();
+        public List<CharacterSpriteLayer> layers = new List<CharacterSpriteLayer>();
 
         private string artAssetsDirectory = "";
 
@@ -53,7 +54,7 @@ namespace CHARACTERS
                 if (rendererImage != null)
                 {
                     CharacterSpriteLayer layer = new CharacterSpriteLayer(rendererImage, i);
-                    spriteLayers.Add(layer);
+                    layers.Add(layer);
                     child.name = $"Layer {i}";
                 }
             }
@@ -61,7 +62,7 @@ namespace CHARACTERS
 
         public void SetSprite(Sprite sprite, int layer = 0)
         {
-            spriteLayers[layer].SetSprite(sprite);
+            layers[layer].SetSprite(sprite);
         }
 
         public Sprite GetSprite(string spriteName)
@@ -95,13 +96,13 @@ namespace CHARACTERS
 
         public Coroutine TransitionSprite(Sprite sprite, int layer = 0, float speed = 1)
         {
-            if (layer < 0 || layer >= spriteLayers.Count)
+            if (layer < 0 || layer >= layers.Count)
             {
-                Debug.LogWarning($"Character_Sprite {name}: requested layer {layer} is out of range (0..{spriteLayers.Count - 1}).");
+                Debug.LogWarning($"Character_Sprite {name}: requested layer {layer} is out of range (0..{layers.Count - 1}).");
                 return null;
             }
 
-            CharacterSpriteLayer spriteLayer = spriteLayers[layer];
+            CharacterSpriteLayer spriteLayer = layers[layer];
             return spriteLayer.TransitionSprite(sprite, speed);
         }
 
@@ -118,6 +119,30 @@ namespace CHARACTERS
 
             co_revealing = null;
             co_hiding = null;
+        }
+
+        public override void SetColor(Color color)
+        {
+            base.SetColor(color);
+            foreach (CharacterSpriteLayer layer in layers)
+            {
+                layer.SetColor(color);
+            }
+        }
+
+        public override IEnumerator ChangingColor(Color color, float speed)
+        {
+            foreach (CharacterSpriteLayer layer in layers)
+                layer.TransitionColor(color, speed);
+
+            yield return null;
+
+            while (layers.Any(l => l.isChangingColor))
+            {
+                yield return null;
+            }
+
+            co_changingColor = null;
         }
     }
 }
