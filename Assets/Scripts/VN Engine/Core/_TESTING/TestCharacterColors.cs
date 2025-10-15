@@ -23,7 +23,7 @@ namespace TESTING
             Character_Sprite Student = CreateCharacter("Female Student 2") as Character_Sprite;
             Character_Sprite Raelin = CreateCharacter("Raelin") as Character_Sprite;
 
-            yield return new WaitForSeconds(1f);
+            // yield return new WaitForSeconds(1f);
 
             // Set whole model to red
             //Raelin.SetColor(Color.red);
@@ -54,6 +54,12 @@ namespace TESTING
 
             Raelin.SetPosition(Vector2.zero);
             Student.SetPosition(new Vector2(1, 0));
+
+            yield return new WaitForSeconds(1f);
+
+            yield return Raelin.Flip(0.3f);
+            yield return Student.FaceRight(immediate: true);
+            yield return Raelin.FaceLeft(immediate: true);
 
             Student.UnHighlight();
             yield return Raelin.Say("I want to say something.");
