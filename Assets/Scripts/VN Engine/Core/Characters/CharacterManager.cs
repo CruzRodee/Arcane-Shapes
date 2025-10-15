@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CHARACTERS
@@ -106,6 +107,26 @@ namespace CHARACTERS
                     return new Character_Model3D(info.name, info.config, info.prefab, info.rootCharacterFolder);
                 default:
                     return null;
+            }
+        }
+
+        public void SortCharacters()
+        {
+            List<Character> activeCharacters = characters.Values.Where(c => c.root.gameObject.activeInHierarchy && c.isVisible).ToList();
+            List<Character> inactiveCharacters = characters.Values.Except(activeCharacters).ToList();
+
+            activeCharacters.Sort((a, b) => a.priority.CompareTo(b.priority));
+            activeCharacters.Concat(inactiveCharacters);
+
+            SortCharacter(activeCharacters);
+        }
+
+        private void SortCharacter(List<Character> charactersSortingOrder)
+        {
+            int i = 0;
+            foreach (Character character in charactersSortingOrder)
+            {
+                character.root.SetSiblingIndex(i++);
             }
         }
 

@@ -10,6 +10,7 @@ namespace CHARACTERS
         public const bool ENABLE_ON_START = true;
         private const float UNHIGHLIGHTED_DARKEN_STRENGTH = 0.65f;
         public const bool DEFAULT_ORIENTATION_IS_FACING_LEFT = true;
+        public const string ANIMATION_REFRESH_TRIGGER = "Refresh";
 
         public string name = "";
         public string displayName = "";
@@ -22,6 +23,7 @@ namespace CHARACTERS
         protected Color unhighlightedColor => new Color(color.r * UNHIGHLIGHTED_DARKEN_STRENGTH, color.g * UNHIGHLIGHTED_DARKEN_STRENGTH, color.b * UNHIGHLIGHTED_DARKEN_STRENGTH, color.a);
         public bool highlighted { get; protected set; } = true;
         protected bool facingLeft = DEFAULT_ORIENTATION_IS_FACING_LEFT;
+        public int priority { get; protected set; }
 
         protected CharacterManager characterManager => CharacterManager.instance;
         public VNDialogueSystem dialogueSystem => VNDialogueSystem.instance;
@@ -264,6 +266,25 @@ namespace CHARACTERS
         {
             Debug.LogWarning("Character.FaceDirection() called, but not implemented in derived class. It cannot be called from a base character type.");
             yield return null;
+        }
+
+        public void SetPriority(int priority, bool autoSortCharactersOnUI = true)
+        {
+            this.priority = priority;
+
+            if (autoSortCharactersOnUI)
+                characterManager.SortCharacters();
+        }
+
+        public void Animate(string animation)
+        {
+            animator.SetTrigger(animation);
+        }
+
+        public void Animate(string animation, bool state)
+        {
+            animator.SetBool(animation, state);
+            animator.SetTrigger(ANIMATION_REFRESH_TRIGGER);
         }
 
         public enum CharacterType
