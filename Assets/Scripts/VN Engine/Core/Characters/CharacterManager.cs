@@ -40,7 +40,7 @@ namespace CHARACTERS
             return null;
         }
 
-        public Character CreateCharacter(string characterName)
+        public Character CreateCharacter(string characterName, bool revealAfterCreation = false)
         {
             if (characters.ContainsKey(characterName.ToLower()))
             {
@@ -60,6 +60,9 @@ namespace CHARACTERS
 
             characters.Add(characterName.ToLower(), character);
             Debug.Log($"Character {characterName} created and added to CharacterManager.");
+
+            if (revealAfterCreation)
+                character.Show();
 
             return character;
         }
