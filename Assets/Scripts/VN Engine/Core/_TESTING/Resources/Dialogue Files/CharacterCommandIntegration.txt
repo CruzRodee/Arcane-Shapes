@@ -1,0 +1,11 @@
+CreateCharacter(Raelin), CreateCharacter(Guard1 -enabled true)
+
+Show(Raelin Guard1 -immediate false)
+
+Narrator "Showing characters."
+
+enter Raelin as ??? at 1 [1:A_Smile] "How is everyone doing today?"
+
+enter Female Student 2 at -0.1 "Fine.{wa 0.5} Couldn't be better."
+
+Female Student 2 [female student 2 - happy] "How about you?"

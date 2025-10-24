@@ -1,0 +1,17 @@
+wait(2), CreateCharacter("Female Student 2"), CreateCharacter(Raelin -e true), CreateCharacter("Guard1 as Generic" -enabled true -i true)
+
+MoveCharacter(Raelin 1 -2.5 0.75 -i false)
+
+wait(1000)
+
+MoveCharacter(Raelin -x 0 -spd 0.75 -sm false -immediate true)
+
+Show("Female Student 2" Raelin Guard1 -immediate false)
+
+Narrator "Showing characters."
+
+enter Raelin as ??? at 1 [1:A_Smile] "How is everyone doing today?"
+
+enter Female Student 2 at -0.1 "Fine.{wa 0.5} Couldn't be better."
+
+Female Student 2 [female student 2 - happy] "How about you?"

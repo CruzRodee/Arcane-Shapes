@@ -96,6 +96,7 @@ namespace DIALOGUE
                     .Select(x =>
                     {
                         var parts = x.Trim().Split(EXPRESSIONLAYER_DELIMITER);
+
                         if (parts.Length == 2)
                             return (int.Parse(parts[0]), parts[1]);
                         else
