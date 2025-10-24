@@ -2,17 +2,18 @@ using UnityEngine;
 using System.Reflection;
 using System.Linq;
 using System;
-using Unity.VisualScripting;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace COMMANDS
 {
     public class CommandManager : MonoBehaviour
     {
         public static CommandManager instance { get; private set; }
-        private static Coroutine process = null;
-        public static bool isRunningProcess => process != null;
         private CommandDatabase database;
+        private List<CommandProcess> activeProcesses = new List<CommandProcess>();
+        private CommandProcess topProcess => activeProcesses.Last();
         private void Awake()
         {
             if (instance == null)
@@ -36,7 +37,7 @@ namespace COMMANDS
 
         }
 
-        public Coroutine Execute(string commandName, params string[] args)
+        public CoroutineWrapper Execute(string commandName, params string[] args)
         {
             Delegate command = database.GetCommand(commandName);
 
@@ -46,28 +47,55 @@ namespace COMMANDS
             return StartProcess(commandName, command, args);
         }
 
-        private Coroutine StartProcess(string commmandName, Delegate command, string[] args)
+        private CoroutineWrapper StartProcess(string commmandName, Delegate command, string[] args)
         {
-            StopCurrentProcess();
+            System.Guid processID = System.Guid.NewGuid();
+            CommandProcess cmd = new CommandProcess(processID, commmandName, command, null, args, null);
+            activeProcesses.Add(cmd);
 
-            process = StartCoroutine(RunningProcess(command, args));
+            Coroutine co = StartCoroutine(RunningProcess(cmd));
 
-            return process;
+            cmd.runningProcess = new CoroutineWrapper(this, co);
+
+            return cmd.runningProcess;
         }
 
-        private void StopCurrentProcess()
+        public void StopCurrentProcess()
         {
-            if (process != null)
-                StopCoroutine(process);
-            process = null;
+            if (topProcess != null)
+                KillProcess(topProcess);
+
         }
 
-        private IEnumerator RunningProcess(Delegate command, string[] args)
+        public void StopAllProcess()
+        {
+            foreach (var c in activeProcesses)
+            {
+                if (c.runningProcess != null && !c.runningProcess.isDone)
+                    c.runningProcess.Stop();
+
+                c.onTerminateAction?.Invoke();
+            }
+
+            activeProcesses.Clear();
+        }
+
+        private IEnumerator RunningProcess(CommandProcess process)
         {
 
-            yield return WaitingForProcessToComplete(command, args);
+            yield return WaitingForProcessToComplete(process.command, process.args);
 
-            process = null;
+            KillProcess(process);
+        }
+
+        public void KillProcess(CommandProcess cmd)
+        {
+            activeProcesses.Remove(cmd);
+
+            if (cmd.runningProcess != null && !cmd.runningProcess.isDone)
+                cmd.runningProcess.Stop();
+
+            cmd.onTerminateAction?.Invoke();
         }
 
         private IEnumerator WaitingForProcessToComplete(Delegate command, string[] args)
@@ -90,6 +118,16 @@ namespace COMMANDS
                 Debug.LogWarning($"Command '{command.Method.Name}' has an unsupported signature.");
         }
 
+        public void AddTerminationActionToCurrentProcess(UnityAction action)
+        {
+            CommandProcess process = topProcess;
+
+            if (process == null)
+                return;
+
+            process.onTerminateAction = new UnityEvent();
+            process.onTerminateAction.AddListener(action);
+        }
     }
 }
 

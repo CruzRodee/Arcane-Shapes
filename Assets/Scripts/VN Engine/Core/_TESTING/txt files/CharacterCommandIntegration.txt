@@ -1,8 +1,15 @@
-wait(2), CreateCharacter("Female Student 2"), CreateCharacter(Raelin -e true), CreateCharacter("Guard1 as Generic" -enabled true -i true)
+wait(5), CreateCharacter("Female Student 2"), CreateCharacter(Raelin -e true), CreateCharacter("Guard1 as Generic" -enabled true -i true)
 
-MoveCharacter(Raelin 1 -2.5 0.75 -i false)
+[wait]MoveCharacter(Raelin 1 -2.5 -spd 0.1)
+
+Hide(Raelin Guard1 -spd 0.1)
+Raelin "Now we are invisible."
+
+Show(Raelin Guard1 -spd 0.1)
 
 wait(1000)
+
+MoveCharacter(Raelin 1 -2.5 0.75 -i false)
 
 MoveCharacter(Raelin -x 0 -spd 0.75 -sm false -immediate true)
 

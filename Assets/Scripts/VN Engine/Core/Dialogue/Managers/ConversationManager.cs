@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CHARACTERS;
 using COMMANDS;
+using Unity.Sentis;
 using UnityEngine;
 
 namespace DIALOGUE
@@ -68,6 +69,8 @@ namespace DIALOGUE
                     // The code below autoplays the next line after 1 second
                     // Remove it if you want to force user input for every line
                     // yield return new WaitForSeconds(1);
+
+                    CommandManager.instance.StopAllProcess();
                 }
             }
         }
@@ -116,12 +119,29 @@ namespace DIALOGUE
 
         IEnumerator Line_RunCommands(DIALOGUE_LINE line)
         {
+            userPrompt = false; // clear stale clicks at line start
+
             List<DL_COMMAND_DATA.Command> commands = line.commandData.commands;
 
             foreach (DL_COMMAND_DATA.Command command in commands)
             {
                 if (command.waitForCompletion || command.name == "wait")
-                    yield return CommandManager.instance.Execute(command.name, command.arguments);
+                {
+                    CoroutineWrapper cw = CommandManager.instance.Execute(command.name, command.arguments);
+
+                    while (!cw.isDone)
+                    {
+                        if (userPrompt)
+                        {
+                            CommandManager.instance.StopCurrentProcess();
+                            userPrompt = false;
+
+                            //Consume this click so it doesn't immediately cancel the next command
+                            yield return null; // one frame
+                        }
+                        yield return null;
+                    }
+                }
                 else
                     CommandManager.instance.Execute(command.name, command.arguments);
             }

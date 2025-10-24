@@ -85,6 +85,11 @@ namespace COMMANDS
             }
             else
             {
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    Debug.Log($"CMD_DatabaseExtension_Characters.MoveCharacter: Completed moving character '{characterName}' to position {position}.");
+                    character.SetPosition(position);
+                });
                 Debug.Log($"CMD_DatabaseExtension_Characters.MoveCharacter: Moving character '{characterName}' to position {position} with speed {speed} and smoothing {smoothing}.");
                 yield return character.MoveToPosition(position, speed, smoothing);
             }
