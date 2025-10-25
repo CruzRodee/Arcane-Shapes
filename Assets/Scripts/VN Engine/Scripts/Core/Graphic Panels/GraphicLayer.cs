@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class GraphicLayer
 {
@@ -10,7 +11,7 @@ public class GraphicLayer
 
     public GraphicObject currentGraphic { get; private set; } = null;
 
-    public void SetTexture(string filePath, float transitionSpeed = 1, Texture blendingTexture = null)
+    public void SetTexture(string filePath, float transitionSpeed = 1f, Texture blendingTexture = null)
     {
         Texture tex = Resources.Load<Texture>(filePath);
 
@@ -23,9 +24,27 @@ public class GraphicLayer
         SetTexture(tex, transitionSpeed, blendingTexture, filePath);
     }
 
-    public void SetTexture(Texture tex, float transitionSpeed = 1, Texture blendingTexture = null, string filePath = "")
+    public void SetTexture(Texture tex, float transitionSpeed = 1f, Texture blendingTexture = null, string filePath = "")
     {
         CreateGraphic(tex, transitionSpeed, filePath, blendingTexture: blendingTexture);
+    }
+
+    public void SetVideo(string filePath, float transitionSpeed = 1f, bool useAudio = true, Texture blendingTexture = null)
+    {
+        VideoClip clip = Resources.Load<VideoClip>(filePath);
+
+        if (clip == null)
+        {
+            Debug.LogWarning($"GraphicLayer: SetVideo: VideoClip not found at path: {filePath}. Please make sure the video is located in a Resources folder.");
+            return;
+        }
+
+        SetVideo(clip, transitionSpeed, useAudio, blendingTexture, filePath);
+    }
+
+    public void SetVideo(VideoClip video, float transitionSpeed = 1f, bool useAudio = true, Texture blendingTexture = null, string filePath = "")
+    {
+        CreateGraphic(video, transitionSpeed, filePath, useAudioForVideo: useAudio, blendingTexture);
     }
 
     private void CreateGraphic<T>(T graphicData, float transitionSpeed, string filePath, bool useAudioForVideo = true, Texture blendingTexture = null)
@@ -34,6 +53,8 @@ public class GraphicLayer
 
         if (graphicData is Texture)
             newGraphic = new GraphicObject(this, filePath, graphicData as Texture);
+        else if (graphicData is VideoClip)
+            newGraphic = new GraphicObject(this, filePath, graphicData as VideoClip, useAudioForVideo);
 
         currentGraphic = newGraphic;
 
