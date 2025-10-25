@@ -50,7 +50,6 @@ public class LoadingScreenScript : MonoBehaviour
                 SceneManager.LoadScene("MainMenu");
             },
             onError: (error) => {
-                Debug.LogError($"Caching failed: {error}");
                 GlobalVariables.isStartUp = false; //Next loading screen not startup anymore
                 SceneManager.LoadScene("MainMenu");
             }

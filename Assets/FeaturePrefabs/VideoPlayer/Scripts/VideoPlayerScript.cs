@@ -164,6 +164,9 @@ public class VideoPlayerScript : MonoBehaviour
         PlaySpellVideo(shape, videoStates[0]);
     }
 
+    //Variable for Letting player know which error vid to play
+    private string endState = "Under";
+
     /// <summary>
     /// Plays spell animation based on performance state
     /// </summary>
@@ -180,6 +183,19 @@ public class VideoPlayerScript : MonoBehaviour
             2 => videoStates[3],
             _ => videoStates[1]
         };
+
+        switch (state)
+        {
+            case 0:
+                endState = "Under";
+                break;
+            case 1:
+                endState = "Over";
+                break;
+            case 2:
+                endState = "Good";
+                break;
+        }
 
         PlaySpellVideo(shape, filename);
     }
@@ -300,8 +316,25 @@ public class VideoPlayerScript : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"[VideoLoader] Failed to load video from StreamingAssets: {www.error}");
-                yield break;
+                if (endState == "Good")
+                {
+                    Debug.LogError($"[VideoLoader] Failed to load video from StreamingAssets: {www.error}");
+                    yield break;
+                }
+                else 
+                {
+                    Debug.Log("[VideoLoader] No Unique fail animation detected, playing defaults");
+                    if(endState == "Under")
+                    {
+                        cachePath = "Videos/Spells/Generic/Under1.mp4";
+                    }
+                    else if(endState == "Over")
+                    {
+                        cachePath = "Videos/Spells/Generic/Over1.mp4";
+                    }
+
+                    cachePath = AndroidPathCombine(Application.persistentDataPath, cachePath);
+                }
             }
         }
         else
@@ -405,9 +438,9 @@ public class VideoPlayerScript : MonoBehaviour
         }
         else
         {
-            string errorMsg = $"Failed to load video {relativePath} from StreamingAssets: {www.error}";
-            Debug.LogError($"[VideoCache] {errorMsg}");
-            OnCachingError?.Invoke(errorMsg);
+            string errorMsg = $"Failed to load video {relativePath}, assuming default video desired.";
+            Debug.LogWarning($"[VideoCache] {errorMsg}");
+            // Do not invoke Cache error as failing to load is assumed to mean no custom video
         }
     }
 
@@ -441,6 +474,10 @@ public class VideoPlayerScript : MonoBehaviour
                 }
             }
         }
+
+        //Manually Add the Generic videos
+        videosToCache.Add("Videos/Spells/Generic/Under1.mp4");
+        videosToCache.Add("Videos/Spells/Generic/Over1.mp4");
     }
 
     #endregion
