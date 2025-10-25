@@ -1,0 +1,17 @@
+wait(1)
+
+SetLayerMedia(background "Fantasy Landscape" -aud true -spd 0.7 -blend hurricane -i true)
+
+CreateCharacter(Raelin -e true -i true)
+
+Raelin.SetPosition(1)
+
+Raelin "Welcome to the Barracks!"
+
+SetLayerMedia(cinematic -m "village festival")
+
+Raelin "Look at this cinematic layer!"
+
+SetLayerMedia(cinematic -m "~/Graphics/Gallery/flower)
+
+SetLayerMedia(background -layer 1 SpaceshipInterior)
