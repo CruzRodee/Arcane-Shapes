@@ -7,6 +7,7 @@ namespace CHARACTERS
     public class CharacterManager : MonoBehaviour
     {
         public static CharacterManager instance { get; private set; }
+        public Character[] allCharacters => characters.Values.ToArray();
         private Dictionary<string, Character> characters = new Dictionary<string, Character>();
 
         private CharacterConfigSO config => VNDialogueSystem.instance.config.characterConfigurationAsset;
@@ -40,11 +41,13 @@ namespace CHARACTERS
             return null;
         }
 
+        public bool HasCharacter(string characterName) => characters.ContainsKey(characterName.ToLower());
+
         public Character CreateCharacter(string characterName, bool revealAfterCreation = false)
         {
             if (characters.ContainsKey(characterName.ToLower()))
             {
-                Debug.LogWarning($"Character with name {characterName} already exists. Did not create the character.");
+                Debug.LogWarning($"[CharacterManager] Character with name {characterName} already exists. Did not create the character.");
                 return null;
             }
 
@@ -54,12 +57,12 @@ namespace CHARACTERS
 
             if (character == null)
             {
-                Debug.LogError($"Failed to create character with name {characterName}.");
+                Debug.LogError($"[CharacterManager] Failed to create character with name {characterName}.");
                 return null;
             }
 
             characters.Add(characterName.ToLower(), character);
-            Debug.Log($"Character {characterName} created and added to CharacterManager.");
+            Debug.Log($"[CharacterManager] Character {characterName} created and added to CharacterManager.");
 
             if (revealAfterCreation)
                 character.Show();
@@ -126,9 +129,12 @@ namespace CHARACTERS
 
         private void SortCharacter(List<Character> charactersSortingOrder)
         {
+            // Debug.Log("[CharacterManager] SortCharacters: Sorting characters based on priority.");
+            // Debug.Log($"[CharacterManager] SortCharacters: Characters sorting order: {string.Join(", ", charactersSortingOrder.Select(c => c.name + "(Priority:" + c.priority + ")"))}");
             int i = 0;
             foreach (Character character in charactersSortingOrder)
             {
+                // Debug.Log($"[CharacterManager] SortCharacters: Setting sibling index of character '{character.name}' to {i}.");
                 character.root.SetSiblingIndex(i++);
             }
         }

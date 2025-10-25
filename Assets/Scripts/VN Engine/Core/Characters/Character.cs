@@ -197,7 +197,7 @@ namespace CHARACTERS
             yield return null;
         }
 
-        public Coroutine Highlight(float speed = 1f)
+        public Coroutine Highlight(float speed = 1f, bool immediate = false)
         {
             if (isHighlighting)
                 return co_highlighting;
@@ -206,12 +206,12 @@ namespace CHARACTERS
                 characterManager.StopCoroutine(co_highlighting);
 
             highlighted = true;
-            co_highlighting = characterManager.StartCoroutine(Highlighting(highlighted, speed));
+            co_highlighting = characterManager.StartCoroutine(Highlighting(speed, immediate));
 
             return co_highlighting;
         }
 
-        public Coroutine UnHighlight(float speed = 1f)
+        public Coroutine UnHighlight(float speed = 1f, bool immediate = false)
         {
             if (isUnHighlighting)
                 return co_highlighting;
@@ -220,12 +220,12 @@ namespace CHARACTERS
                 characterManager.StopCoroutine(co_highlighting);
 
             highlighted = false;
-            co_highlighting = characterManager.StartCoroutine(Highlighting(highlighted, speed));
+            co_highlighting = characterManager.StartCoroutine(Highlighting(speed, immediate));
 
             return co_highlighting;
         }
 
-        public virtual IEnumerator Highlighting(bool highlight, float speedMultiplier)
+        public virtual IEnumerator Highlighting(float speedMultiplier, bool immediate = false)
         {
             Debug.LogWarning("Character.Highlighting() called, but not implemented in derived class. It cannot be called from a base character type.");
 

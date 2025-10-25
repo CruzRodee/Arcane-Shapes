@@ -1,13 +1,35 @@
 wait(5), CreateCharacter("Female Student 2"), CreateCharacter(Raelin -e true), CreateCharacter("Guard1 as Generic" -enabled true -i true)
 
+[wait]Sort(Raelin Guard1), wait(1), Raelin.SetColor(red), wait(1)
+
+[wait]MoveCharacter(Raelin 1 -2.5 -spd 0.5)
+
+Raelin.SetPosition(1)
+
+Raelin.SetSprite(A2 -layer 0 -spd 0.75), Raelin.SetSprite(A_Scared -layer 1 -spd 0.75)
+
+[wait]UnHighlight(Raelin Guard1), wait(1), [wait]Highlight(Raelin Guard1), wait(1)
+
+[wait]Raelin.UnHighlight(),
+[wait]Raelin.Highlight()
+
+[wait]Raelin.UnHighlight(-i true)
+[wait]Raelin.Highlight(-i true)
+
+[wait]Raelin.Hide(), [wait]Raelin.Show()
+
+Raelin.SetPriority(5)
+
+[wait]Raelin.Move(0 1 -spd 0.5)
+
+wait(1000)
+
 [wait]MoveCharacter(Raelin 1 -2.5 -spd 0.1)
 
 Hide(Raelin Guard1 -spd 0.1)
 Raelin "Now we are invisible."
 
 Show(Raelin Guard1 -spd 0.1)
-
-wait(1000)
 
 MoveCharacter(Raelin 1 -2.5 0.75 -i false)
 
