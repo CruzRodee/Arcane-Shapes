@@ -13,8 +13,7 @@ public class GameBehaviour : MonoBehaviour
 
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
-    private float ENDDELAY = 4.0f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
 
     // OPTIMIZATION: Cached strings to avoid allocations
@@ -174,7 +173,7 @@ public class GameBehaviour : MonoBehaviour
     private static readonly Vector3 normalScale = new Vector3(1f, 1f, 1f);
     private static readonly Vector3 smallScale = new Vector3(0.9f, 0.9f, 0.9f);
 
-    private static readonly WaitForSeconds blinkDelay = new WaitForSeconds(STARTDELAY + 0.4f);
+    private static  WaitForSeconds blinkDelay = new WaitForSeconds(GlobalVariables.introLen + 0.4f);
     private static readonly WaitForSeconds dialogueWait = new WaitForSeconds(DIALOGUESLIDETIME);
     private static readonly WaitForSeconds ocrWait = new WaitForSeconds(OCRSLIDETIME);
 
@@ -914,10 +913,10 @@ public class GameBehaviour : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 

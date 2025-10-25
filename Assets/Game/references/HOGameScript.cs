@@ -19,7 +19,7 @@ public class HOGameScript : MonoBehaviour
     private const int INITIAL_POOL_SIZE = 10;
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
@@ -176,7 +176,6 @@ public class HOGameScript : MonoBehaviour
     private GameBehaviour.SHAPES currentShape;
     private string chosenShape;
     private float inputAnswer = 0f;
-    private float ENDDELAY = 4.0f;
 
     // State flags
     private bool STARTUP = true;
@@ -1574,10 +1573,10 @@ public class HOGameScript : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 

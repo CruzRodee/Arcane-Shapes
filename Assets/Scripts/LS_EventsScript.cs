@@ -376,18 +376,22 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedRoomEnter()
     {
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v1";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
 
     private void DelayedHORoomEnter()
     {
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v3";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
     
     public void enterLowOrder()
     {
+        GlobalVariables.enteringLO = true; //Mark as LO room
+        
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             enterSquare();
@@ -473,6 +477,7 @@ public class LS_EventsScript : MonoBehaviour
     {
         UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
+        GlobalVariables.enteringLO = false; // Mark as HO room
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room
         saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");

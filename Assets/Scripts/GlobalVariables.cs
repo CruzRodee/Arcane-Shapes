@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public static class GlobalVariables
@@ -148,6 +149,34 @@ public static class GlobalVariables
     public static float defaultBGMVolume = 0.5f;
     public static bool isStartUp = true;
     public static string nextLevel = ""; //Use this to send the next level name to loading
+
+    public static float introLen = 5f, outroLen = 5f;
+    public static bool enteringLO = true;
+    public static void GetVideoLens(GameData save)
+    {
+        if (enteringLO)
+        {
+            switch (save.totalLOLevel)
+            {
+                //Case 0 and 1 is default
+                default:
+                    introLen = 5f;
+                    outroLen = 5f;
+                    break;
+            }
+        }
+        else 
+        {
+            switch (level)
+            {
+                //NO levels yet
+                default:
+                    introLen = 5f;
+                    outroLen = 5f;
+                    break;
+            }
+        }
+    }
 
     //------------------
 
