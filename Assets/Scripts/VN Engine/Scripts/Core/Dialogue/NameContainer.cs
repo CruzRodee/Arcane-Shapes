@@ -27,11 +27,6 @@ namespace DIALOGUE
 
         public void SetNameColor(Color color) => nameText.color = color;
         public void SetNameFont(TMP_FontAsset font) => nameText.font = font;
-
-        public void SetConfig(CharacterConfigData config)
-        {
-            SetNameColor(config.nameColor);
-            SetNameFont(config.nameFont);
-        }
+        public void SetNameFontSize(float size) => nameText.fontSize = size;
     }
 }

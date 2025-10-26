@@ -26,16 +26,8 @@ namespace DIALOGUE
         /// </summary>
         public TextMeshProUGUI dialogueText;
 
-
         public void SetDialogueColor(Color color) => dialogueText.color = color;
         public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
-
-        public void SetConfig(CharacterConfigData config)
-        {
-            SetDialogueColor(config.dialogueColor);
-            SetDialogueFont(config.dialogueFont);
-            nameContainer.SetNameColor(config.nameColor);
-            nameContainer.SetNameFont(config.nameFont);
-        }
+        public void SetDialogueFontSize(float size) => dialogueText.fontSize = size;
     }
 }

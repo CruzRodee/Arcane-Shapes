@@ -70,8 +70,20 @@ public class VNDialogueSystem : MonoBehaviour
     }
 
     // Applies the given CharacterConfigData to the dialogue container. Skips the whole search process.
-    public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config) => dialogueContainer.SetConfig(config);
+    public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config)
+    {
+        // Set Dialogue Details
+        dialogueContainer.SetDialogueColor(config.dialogueColor);
+        dialogueContainer.SetDialogueFont(config.dialogueFont);
+        float fontSize = this.config.defaultDialogueFontSize * this.config.dialogueFontScale * config.dialogueFontScale;
+        dialogueContainer.SetDialogueFontSize(fontSize);
 
+        // Set Name Details
+        dialogueContainer.nameContainer.SetNameColor(config.nameColor);
+        dialogueContainer.nameContainer.SetNameFont(config.nameFont);
+        fontSize = this.config.defaultNameFontSize * config.nameFontScale;
+        dialogueContainer.nameContainer.SetNameFontSize(fontSize);
+    }
     public void ShowSpeakerName(string speakerName = "")
     {
         if (speakerName.ToLower() != "narrator")

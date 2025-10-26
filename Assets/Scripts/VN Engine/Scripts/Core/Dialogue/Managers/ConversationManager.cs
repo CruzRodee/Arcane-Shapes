@@ -212,7 +212,6 @@ namespace DIALOGUE
 
             dialogueSystem.prompt.Hide();
 
-
             userPrompt = false;
         }
     }
