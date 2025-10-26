@@ -17,13 +17,15 @@ public class VNDialogueSystem : MonoBehaviour
     public DialogueContainer dialogueContainer;// = new DialogueContainer();
     private ConversationManager conversationManager;
     private TextArchitect architect;
-    public bool isRunningConversation => conversationManager.isRunning;
-    public DialogueContinuePrompt prompt;
-
+    [SerializeField] private CanvasGroup mainCanvas;
     public static VNDialogueSystem instance { get; private set; }
-
     public delegate void DialogueSystemEvent();
     public event DialogueSystemEvent onUserPrompt_Next;
+
+    public bool isRunningConversation => conversationManager.isRunning;
+
+    public DialogueContinuePrompt prompt;
+    private CanvasGroupController cgController;
 
     /// <summary>
     /// Ensures only one instance of VNDialogueSystem exists (singleton pattern).
@@ -51,6 +53,9 @@ public class VNDialogueSystem : MonoBehaviour
         architect = new TextArchitect(dialogueContainer.dialogueText);
         conversationManager = new ConversationManager(architect);
         _initialized = true;
+
+        cgController = new CanvasGroupController(this, mainCanvas);
+        dialogueContainer.Initialize();
     }
 
     public void OnUserPrompt_Next()
@@ -104,4 +109,8 @@ public class VNDialogueSystem : MonoBehaviour
     {
         return conversationManager.StartConversation(conversation);
     }
+
+    public bool isVisible => cgController.isVisible;
+    public Coroutine Show(float speed = 1f, bool immediate = false) => cgController.Show(speed, immediate);
+    public Coroutine Hide(float speed = 1f, bool immediate = false) => cgController.Hide(speed, immediate);
 }

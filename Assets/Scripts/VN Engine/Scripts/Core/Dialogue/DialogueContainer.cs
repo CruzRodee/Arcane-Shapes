@@ -18,63 +18,26 @@ namespace DIALOGUE
         public NameContainer nameContainer;
         public TextMeshProUGUI dialogueText;
 
-        private CanvasGroup dialogueBoxCG => dialogueBox.GetComponent<CanvasGroup>();
-
-        private Coroutine co_showing = null;
-        private Coroutine co_hiding = null;
-
-        public bool isShowing => co_showing != null;
-        public bool isHiding => co_hiding != null;
-        public bool isFading => isShowing || isHiding;
-
-        public bool isVisible => co_showing != null || dialogueBoxCG.alpha >= 1f;
+        private CanvasGroupController cgController;
 
         public void SetDialogueColor(Color color) => dialogueText.color = color;
         public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
         public void SetDialogueFontSize(float size) => dialogueText.fontSize = size;
 
-        public Coroutine Show()
+        private bool initialized = false;
+
+        public void Initialize()
         {
-            if (isShowing)
-                return co_showing;
-            else if (isHiding)
-            {
-                VNDialogueSystem.instance.StopCoroutine(co_hiding);
-                co_hiding = null;
-            }
+            if (initialized)
+                return;
 
-            co_showing = VNDialogueSystem.instance.StartCoroutine(Fading(1f));
-
-            return co_showing;
+            cgController = new CanvasGroupController(VNDialogueSystem.instance, dialogueBox.GetComponent<CanvasGroup>());
+            initialized = true;
         }
 
-        public Coroutine Hide()
-        {
-            if (isHiding)
-                return co_hiding;
-            else if (isShowing)
-            {
-                VNDialogueSystem.instance.StopCoroutine(co_showing);
-                co_showing = null;
-            }
+        public bool isVisible => cgController.isVisible;
+        public Coroutine Show(float speed = 1f, bool immediate = false) => cgController.Show(speed, immediate);
+        public Coroutine Hide(float speed = 1f, bool immediate = false) => cgController.Hide(speed, immediate);
 
-            co_hiding = VNDialogueSystem.instance.StartCoroutine(Fading(0f));
-
-            return co_hiding;
-        }
-
-        private IEnumerator Fading(float alpha)
-        {
-            CanvasGroup cg = dialogueBoxCG;
-
-            while (cg.alpha != alpha)
-            {
-                cg.alpha = Mathf.MoveTowards(cg.alpha, alpha, Time.deltaTime * DEFAULT_FADE_SPEED);
-                yield return null;
-            }
-
-            co_showing = null;
-            co_hiding = null;
-        }
     }
 }
