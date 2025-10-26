@@ -10,7 +10,7 @@ namespace TESTING
         // Start is called before the first frame update
         void Start()
         {
-            StartCoroutine(Running3());
+            StartCoroutine(Running4());
         }
 
         Character CreateCharacter(string name) => CharacterManager.instance.CreateCharacter(name);
@@ -58,6 +58,22 @@ namespace TESTING
             AudioManager.instance.PlayVoice("Audio/Voices/exclamation");
 
             yield return Raelin.Say("That's better.");
+        }
+
+        IEnumerator Running4() //audio channel test
+        {
+            yield return new WaitForSeconds(1);
+
+            Character_Sprite Raelin = CreateCharacter("Raelin") as Character_Sprite;
+            Raelin.Show();
+
+            yield return VNDialogueSystem.instance.Say("Narrator", "Can we see your ship?");
+
+            GraphicPanelManager.instance.GetPanel("Background").GetLayer(0, true).SetTexture("Graphics/BG Images/5");
+            AudioManager.instance.PlayTrack("Audio/Music/Upbeat", startingVolume: 0.7f);
+            yield return VNDialogueSystem.instance.Say("Raelin", "Sure thing!");
+
+            yield return null;
         }
 
     }
