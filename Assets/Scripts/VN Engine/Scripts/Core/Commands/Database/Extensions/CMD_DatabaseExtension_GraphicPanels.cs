@@ -20,6 +20,7 @@ namespace COMMANDS
         new public static void Extend(CommandDatabase database)
         {
             database.AddCommand("setlayermedia", new Func<string[], IEnumerator>(SetLayerMedia));
+            database.AddCommand("clearlayermedia", new Func<string[], IEnumerator>(ClearLayerMedia));
         }
 
         private static IEnumerator SetLayerMedia(string[] data)
@@ -100,6 +101,61 @@ namespace COMMANDS
                 yield return graphicLayer.SetVideo(graphic as VideoClip, transitionSpeed, useAudio, blendTex, pathToGraphic, immediate);
             }
 
+        }
+
+        private static IEnumerator ClearLayerMedia(string[] data)
+        {
+            //Parameters available to function
+            string panelName = "";
+            int layer = 0;
+            float transitionSpeed = 0;
+            bool immediate = false;
+            string blendTexName = "";
+
+            Texture blendTex = null;
+
+            //Now get the parameters
+            var parameters = ConvertDataToParameters(data);
+
+            // Try to get the panel that this media is applied to
+            parameters.TryGetValue(PARAM_PANEL, out panelName);
+            GraphicPanel panel = GraphicPanelManager.instance.GetPanel(panelName);
+            if (panel == null)
+            {
+                Debug.LogError($"[CMD_DatabaseExtension_GraphicPanels] ClearLayerMedia: GraphicPanel '{panelName}' not found. Check panel name.");
+                yield break;
+            }
+
+            // Get the layer to apply the media to
+            parameters.TryGetValue(PARAM_LAYER, out layer, defaultValue: -1);
+
+            //Try to get if this is an immediate effect or not
+            parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
+
+            //Try to get the transition speed if not immediate
+            if (!immediate)
+                parameters.TryGetValue(PARAM_SPEED, out transitionSpeed, defaultValue: GraphicPanelManager.DEFAULT_TRANSITION_SPEED);
+
+            //Try to get the blending texture if any
+            parameters.TryGetValue(PARAM_BLENDTEX, out blendTexName);
+
+            if (!immediate && blendTexName != string.Empty)
+                blendTex = Resources.Load<Texture>(FilePaths.resources_blendTextures + blendTexName);
+
+
+            if (layer == -1)
+                panel.Clear(transitionSpeed, blendTex, immediate);
+            else
+            {
+                GraphicLayer graphiclayer = panel.GetLayer(layer);
+                if (graphiclayer == null)
+                {
+                    Debug.LogError($"[CMD_DatabaseExtension_GraphicPanels] ClearLayerMedia: GraphicLayer '{layer}' not found in panel '{panelName}'. Check layer number.");
+                    yield break;
+                }
+
+                graphiclayer.Clear(transitionSpeed, blendTex, immediate);
+            }
         }
         private static string GetPathToGraphic(string defaultPath, string graphicName)
         {
