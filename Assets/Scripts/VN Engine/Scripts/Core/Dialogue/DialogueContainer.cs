@@ -1,4 +1,6 @@
+using System.Collections;
 using CHARACTERS;
+using GLTFast.Schema;
 using TMPro;
 using UnityEngine;
 
@@ -11,23 +13,68 @@ namespace DIALOGUE
     [System.Serializable]
     public class DialogueContainer
     {
-        /// <summary>
-        /// The main dialogue box GameObject. It should be the root of the dialogue UI elements.
-        /// </summary>
+        private const float DEFAULT_FADE_SPEED = 3f;
         public GameObject dialogueBox;
-
-        /// <summary>
-        /// The TextMeshProUGUI component for displaying the speaker's name.
-        /// </summary>
         public NameContainer nameContainer;
-
-        /// <summary>
-        /// The TextMeshProUGUI component for displaying the dialogue text.
-        /// </summary>
         public TextMeshProUGUI dialogueText;
+
+        private CanvasGroup dialogueBoxCG => dialogueBox.GetComponent<CanvasGroup>();
+
+        private Coroutine co_showing = null;
+        private Coroutine co_hiding = null;
+
+        public bool isShowing => co_showing != null;
+        public bool isHiding => co_hiding != null;
+        public bool isFading => isShowing || isHiding;
+
+        public bool isVisible => co_showing != null || dialogueBoxCG.alpha >= 1f;
 
         public void SetDialogueColor(Color color) => dialogueText.color = color;
         public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
         public void SetDialogueFontSize(float size) => dialogueText.fontSize = size;
+
+        public Coroutine Show()
+        {
+            if (isShowing)
+                return co_showing;
+            else if (isHiding)
+            {
+                VNDialogueSystem.instance.StopCoroutine(co_hiding);
+                co_hiding = null;
+            }
+
+            co_showing = VNDialogueSystem.instance.StartCoroutine(Fading(1f));
+
+            return co_showing;
+        }
+
+        public Coroutine Hide()
+        {
+            if (isHiding)
+                return co_hiding;
+            else if (isShowing)
+            {
+                VNDialogueSystem.instance.StopCoroutine(co_showing);
+                co_showing = null;
+            }
+
+            co_hiding = VNDialogueSystem.instance.StartCoroutine(Fading(0f));
+
+            return co_hiding;
+        }
+
+        private IEnumerator Fading(float alpha)
+        {
+            CanvasGroup cg = dialogueBoxCG;
+
+            while (cg.alpha != alpha)
+            {
+                cg.alpha = Mathf.MoveTowards(cg.alpha, alpha, Time.deltaTime * DEFAULT_FADE_SPEED);
+                yield return null;
+            }
+
+            co_showing = null;
+            co_hiding = null;
+        }
     }
 }

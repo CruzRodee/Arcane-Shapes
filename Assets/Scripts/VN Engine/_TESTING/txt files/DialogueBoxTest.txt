@@ -1,0 +1,11 @@
+enter Raelin "Let's test out the Dialogue close button!"
+
+HideDB()
+
+SetLayerMedia(background "Fantasy Landscape" -aud true -spd 0.7 -blend hurricane -i true)
+
+"Did it work?"
+
+wait(5)
+
+ShowDB()

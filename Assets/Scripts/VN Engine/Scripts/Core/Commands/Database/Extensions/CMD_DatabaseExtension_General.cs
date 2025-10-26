@@ -12,6 +12,10 @@ namespace Commands
         new public static void Extend(CommandDatabase database)
         {
             database.AddCommand("wait", new Func<string, IEnumerator>(Wait));
+
+            // Dialogue Controls
+            database.AddCommand("showdb", new Func<IEnumerator>(ShowDialogueBox));
+            database.AddCommand("hidedb", new Func<IEnumerator>(HideDialogueBox));
         }
 
         public static IEnumerator Wait(string data)
@@ -24,6 +28,18 @@ namespace Commands
             {
                 Debug.LogWarning($"CMD_DatabaseExtension_General.Wait: Invalid wait time '{data}'.");
             }
+        }
+
+        private static IEnumerator ShowDialogueBox()
+        {
+            VNDialogueSystem.instance.dialogueContainer.Show();
+            yield return null;
+        }
+
+        private static IEnumerator HideDialogueBox()
+        {
+            VNDialogueSystem.instance.dialogueContainer.Hide();
+            yield return null;
         }
     }
 }
