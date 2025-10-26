@@ -10,7 +10,7 @@ namespace TESTING
         // Start is called before the first frame update
         void Start()
         {
-            StartCoroutine(Running2());
+            StartCoroutine(Running3());
         }
 
         Character CreateCharacter(string name) => CharacterManager.instance.CreateCharacter(name);
@@ -40,6 +40,22 @@ namespace TESTING
             yield return Raelin.Say("I'm going to turn off the radio.");
 
             AudioManager.instance.StopSoundEffect("RadioStatic");
+
+            yield return Raelin.Say("That's better.");
+        }
+
+        IEnumerator Running3() //voice effect tests
+        {
+            Character_Sprite Raelin = CreateCharacter("Raelin") as Character_Sprite;
+            Character Me = CreateCharacter("Me");
+            Raelin.Show();
+
+            AudioManager.instance.PlaySoundEffect("Audio/SFX/RadioStatic", loop: true);
+
+            yield return Me.Say("Please turn off the radio.");
+
+            AudioManager.instance.StopSoundEffect("RadioStatic");
+            AudioManager.instance.PlayVoice("Audio/Voices/exclamation");
 
             yield return Raelin.Say("That's better.");
         }
