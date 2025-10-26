@@ -159,6 +159,11 @@ public static class GlobalVariables
             switch (save.totalLOLevel)
             {
                 //Case 0 and 1 is default
+                //Case 2-5 is default
+                case 6:
+                    introLen = 5f;
+                    outroLen = 5.5f;
+                    break;
                 default:
                     introLen = 5f;
                     outroLen = 5f;

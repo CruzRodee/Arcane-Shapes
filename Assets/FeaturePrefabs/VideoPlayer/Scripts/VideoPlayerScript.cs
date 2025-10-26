@@ -30,7 +30,7 @@ public class VideoPlayerScript : MonoBehaviour
     };
 
     private readonly string[] rectangleSpells = {
-        "Rectangle/Minimap", "Rectangle/Door", "Rectangle/Move"
+        "Rectangle/Door", "Rectangle/Minimap", "Rectangle/Move"
     };
 
     private readonly string[] triangleSpells = {
