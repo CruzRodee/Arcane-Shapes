@@ -8,6 +8,8 @@ public class AudioTrack
     private const string TRACK_NAME_FORMAT = "Audio Track - [{0}]";
     public string name { get; private set; }
 
+    public GameObject root => source.gameObject;
+
     private AudioChannel channel;
     private AudioSource source;
     public bool loop => source.loop;
@@ -15,7 +17,9 @@ public class AudioTrack
 
     public bool isPlaying => source.isPlaying;
 
-    public AudioTrack(AudioClip clip, bool loop, float startingVolume, float volumeCap, AudioChannel channel, AudioMixerGroup mixer)
+    public float volume { get { return source.volume; } set { source.volume = value; } }
+
+    public AudioTrack(AudioClip clip, bool loop, float startingVolume, float volumeCap, float pitch, AudioChannel channel, AudioMixerGroup mixer)
     {
         name = clip.name;
         this.channel = channel;
@@ -25,6 +29,7 @@ public class AudioTrack
         source.clip = clip;
         source.loop = loop;
         source.volume = startingVolume;
+        source.pitch = pitch;
 
         source.outputAudioMixerGroup = mixer;
     }
