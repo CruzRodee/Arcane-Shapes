@@ -18,6 +18,7 @@ public class VNDialogueSystem : MonoBehaviour
     private ConversationManager conversationManager;
     private TextArchitect architect;
     public bool isRunningConversation => conversationManager.isRunning;
+    public DialogueContinuePrompt prompt;
 
     public static VNDialogueSystem instance { get; private set; }
 
