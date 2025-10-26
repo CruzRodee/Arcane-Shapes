@@ -1,0 +1,28 @@
+playsfx(thunder_strong_01 -p 0.85 -v 0.3 -loop true)
+narrator "Did you know that astraphobia is the fear of thunder?"
+
+stopsfx(thunder_strong_01)
+
+
+PlayVoice(exclamation)
+enter Raelin "How scary but at least it's gone now."
+"I guess let's try to change the ambience now."
+
+PlayAmbience(RainyMood)
+PlaySong(Upbeat)
+PlayVoice(exclamation)
+
+"nice! now lets turn them off"
+
+StopAmbience(RainyMood)
+StopSong(Upbeat)
+
+"now lets try another way."
+
+PlayAmbience(RainyMood)
+PlaySong(Upbeat)
+
+"turning it off without a parameter now"
+
+StopAmbience()
+StopSong()

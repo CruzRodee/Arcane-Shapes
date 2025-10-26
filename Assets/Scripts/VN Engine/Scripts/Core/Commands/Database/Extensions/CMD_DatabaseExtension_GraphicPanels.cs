@@ -15,8 +15,6 @@ namespace COMMANDS
         private static string[] PARAM_IMMEDIATE = new string[] { "-i", "-immediate" };
         private static string[] PARAM_BLENDTEX = new string[] { "-b", "-blend", "-blendtex" };
         private static string[] PARAM_USEVIDEOAUDIO = new string[] { "-aud", "-audio" };
-
-        private const string HOMEDIRECTORY_SYMBOL = "~/";
         new public static void Extend(CommandDatabase database)
         {
             database.AddCommand("setlayermedia", new Func<string[], IEnumerator>(SetLayerMedia));
@@ -70,13 +68,13 @@ namespace COMMANDS
             parameters.TryGetValue(PARAM_USEVIDEOAUDIO, out useAudio, defaultValue: false);
 
             //Now run the logic
-            pathToGraphic = GetPathToGraphic(FilePaths.resources_backgroundImages, mediaName);
+            pathToGraphic = FilePaths.GetPathToResource(FilePaths.resources_backgroundImages, mediaName);
             graphic = Resources.Load<Texture>(pathToGraphic);
 
             // If texture not found, try to get video
             if (graphic == null)
             {
-                pathToGraphic = GetPathToGraphic(FilePaths.resources_backgroundVideos, mediaName);
+                pathToGraphic = FilePaths.GetPathToResource(FilePaths.resources_backgroundVideos, mediaName);
                 graphic = Resources.Load<VideoClip>(pathToGraphic);
             }
 
@@ -157,16 +155,6 @@ namespace COMMANDS
                 graphiclayer.Clear(transitionSpeed, blendTex, immediate);
             }
         }
-        private static string GetPathToGraphic(string defaultPath, string graphicName)
-        {
-            if (graphicName.StartsWith(HOMEDIRECTORY_SYMBOL))
-                return graphicName.Substring(HOMEDIRECTORY_SYMBOL.Length);
-
-
-
-            return defaultPath + graphicName;
-        }
-
 
     }
 }
