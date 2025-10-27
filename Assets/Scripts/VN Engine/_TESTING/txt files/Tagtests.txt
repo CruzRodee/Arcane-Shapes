@@ -4,4 +4,4 @@ Narrator "And here we have <playerName>"
 
 Narrator "The time is <time> and you are only level <playerLevel>"
 
-<playerName> "Fuggedaboutit!"
+<playerName> "Fuggedaboutit! <tempVal1>"

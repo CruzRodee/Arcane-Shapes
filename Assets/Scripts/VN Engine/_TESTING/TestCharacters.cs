@@ -18,7 +18,7 @@ namespace TESTING
             // Character Student = CharacterManager.instance.CreateCharacter("S");
             // Character Player = CharacterManager.instance.CreateCharacter("Player");
 
-            StartCoroutine(Test());
+            StartCoroutine(Test2());
         }
 
         IEnumerator Test()
@@ -76,6 +76,23 @@ namespace TESTING
             Debug.Log("Finished");
         }
 
+
+        IEnumerator Test2()
+        {
+            CharacterManager cm = CharacterManager.instance;
+            Character Monk = cm.CreateCharacter("Monk as Generic");
+
+            yield return Monk.Say("Normal dialogue configuration.");
+
+            Monk.SetDialogueColor(Color.red);
+            Monk.SetNameColor(Color.green);
+
+            yield return Monk.Say("Modified dialogue configuration.");
+
+            Monk.ResetConfigurationData();
+
+            yield return Monk.Say("Reset dialogue configuration.");
+        }
         // Update is called once per frame
         void Update()
         {

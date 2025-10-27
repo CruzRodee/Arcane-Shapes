@@ -76,7 +76,7 @@ namespace CHARACTERS
         public void SetNameFont(TMP_FontAsset font) => config.nameFont = font;
         public void SetDialogueColor(Color color) => config.dialogueColor = color;
         public void SetDialogueFont(TMP_FontAsset font) => config.dialogueFont = font;
-        public void ResetConfigurationData() => config = CharacterManager.instance.GetCharacterConfig(name);
+        public void ResetConfigurationData() => config = CharacterManager.instance.GetCharacterConfig(name, getOriginal: true);
 
         // Force update the dialogue container with the current config values
         public void UpdateTextCustomizationsOnScreen() => dialogueSystem.ApplySpeakerDataToDialogueContainer(config);

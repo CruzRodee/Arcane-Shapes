@@ -49,3 +49,12 @@ MonoBehaviour:
     dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     nameFontScale: 1
     dialogueFontScale: 1
+  - name: <playerName>
+    alias: player
+    characterType: 2
+    nameColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
+    nameFontScale: 1
+    dialogueFontScale: 1

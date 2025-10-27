@@ -1,6 +1,10 @@
-CreateCharacter(Raelin), CreateCharacter(Guard1 -enabled true)
+CreateCharacter(Raelin), CreateCharacter("Monk as Generic" -enabled true)
 
-Show(Raelin Guard1 -immediate false)
+[wait]Show(Raelin Monk -immediate false)
+
+[wait]Raelin.SetSprite(A2)
+
+[wait]Monk.SetSprite("Monk")
 
 Narrator "Showing characters."
 

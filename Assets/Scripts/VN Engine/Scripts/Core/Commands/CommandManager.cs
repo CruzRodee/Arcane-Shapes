@@ -112,7 +112,6 @@ namespace COMMANDS
                 case Character.CharacterType.Sprite:
                 case Character.CharacterType.SpriteSheet:
                     db = subDatabases[DATABASE_CHARACTERS_SPRITE];
-
                     break;
                 case Character.CharacterType.Live2D:
                     db = subDatabases[DATABASE_CHARACTERS_LIVE2D];

@@ -26,8 +26,14 @@ namespace CHARACTERS
             instance = this;
         }
 
-        public CharacterConfigData GetCharacterConfig(string characterName)
+        public CharacterConfigData GetCharacterConfig(string characterName, bool getOriginal = false)
         {
+            if (!getOriginal)
+            {
+                Character character = GetCharacter(characterName);
+                if (character != null)
+                    return character.config;
+            }
             return config.GetConfig(characterName);
         }
 
@@ -61,7 +67,7 @@ namespace CHARACTERS
                 return null;
             }
 
-            characters.Add(characterName.ToLower(), character);
+            characters.Add(info.name.ToLower(), character);
             Debug.Log($"[CharacterManager] Character {characterName} created and added to CharacterManager.");
 
             if (revealAfterCreation)
