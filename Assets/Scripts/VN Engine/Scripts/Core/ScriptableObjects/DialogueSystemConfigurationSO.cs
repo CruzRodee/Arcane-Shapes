@@ -11,6 +11,7 @@ namespace DIALOGUE
         public CharacterConfigSO characterConfigurationAsset;
 
         public Color defaultTextColor = Color.white;
+        public Color defaultNameColor = Color.black;
         public TMP_FontAsset defaultFont;
 
         public float dialogueFontScale = 1f;

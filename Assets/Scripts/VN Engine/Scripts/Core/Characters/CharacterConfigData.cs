@@ -36,7 +36,8 @@ namespace CHARACTERS
             return result;
         }
 
-        private static Color defaultColor => VNDialogueSystem.instance.config.defaultTextColor;
+        private static Color defaultNameColor => VNDialogueSystem.instance.config.defaultNameColor;
+        private static Color defaultTextColor => VNDialogueSystem.instance.config.defaultTextColor;
         private static TMP_FontAsset defaultFont => VNDialogueSystem.instance.config.defaultFont;
 
         public static CharacterConfigData Default
@@ -51,8 +52,8 @@ namespace CHARACTERS
 
                 result.nameFont = defaultFont;
                 result.dialogueFont = defaultFont;
-                result.nameColor = defaultColor;
-                result.dialogueColor = defaultColor;
+                result.nameColor = defaultNameColor;
+                result.dialogueColor = defaultTextColor;
 
                 result.dialogueFontScale = 1f;
                 result.nameFontScale = 1f;
