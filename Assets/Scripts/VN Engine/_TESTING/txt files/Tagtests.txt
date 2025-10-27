@@ -1,0 +1,7 @@
+Narrator "And here we have <playerName>"
+
+<playerName> "My name is <playerName>. {c} What time is it?"
+
+Narrator "The time is <time> and you are only level <playerLevel>"
+
+<playerName> "Fuggedaboutit!"
