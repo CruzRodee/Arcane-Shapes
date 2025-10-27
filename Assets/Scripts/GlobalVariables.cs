@@ -164,6 +164,8 @@ public static class GlobalVariables
                     introLen = 5f;
                     outroLen = 5.5f;
                     break;
+                //Case 7-9 default
+                //Case 10-12 default
                 default:
                     introLen = 5f;
                     outroLen = 5f;

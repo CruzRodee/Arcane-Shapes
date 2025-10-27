@@ -34,11 +34,11 @@ public class VideoPlayerScript : MonoBehaviour
     };
 
     private readonly string[] triangleSpells = {
-        "Triangle/Shelter", "Triangle/Sandwich", "Triangle/Ice"
+        "Triangle/Shelter", "Triangle/Sandwich", "Triangle/Campfire"
     };
 
     private readonly string[] circleSpells = {
-        "Circle/Portal", "Circle/Light", "Circle/Missile"
+        "Circle/Light", "Circle/Missile", "Circle/Portal"
     };
 
     private readonly string[] semiCircleSpells = {
