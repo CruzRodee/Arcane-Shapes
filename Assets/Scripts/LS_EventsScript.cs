@@ -96,15 +96,15 @@ public class LS_EventsScript : MonoBehaviour
                 int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
                 if(savedGame.totalLOLevel >= maxLOLevel)
                 {
-                    //Reset Levels
-                    GlobalVariables.level = 0;
+                    //Reset Levels, Do not show walang datos
+                    GlobalVariables.level = 1;
                     GlobalVariables.percent = 0f;
-                    savedGame.totalLOLevel = 0;
-                    savedGame.squareLvl = 0;
-                    savedGame.rectLvl = 0;
-                    savedGame.triLvl = 0;
-                    savedGame.circleLvl = 0;
-                    savedGame.scircleLvl = 0;
+                    savedGame.totalLOLevel = 1;
+                    savedGame.squareLvl = 1;
+                    savedGame.rectLvl = 1;
+                    savedGame.triLvl = 1;
+                    savedGame.circleLvl = 1;
+                    savedGame.scircleLvl = 1;
 
                     savedGame.loPres++; //Increase pres level
                 }

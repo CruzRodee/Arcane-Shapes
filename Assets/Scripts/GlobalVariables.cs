@@ -18,6 +18,111 @@ public static class GlobalVariables
     private static readonly int thresholdHO = 2;
     public static readonly int NUM_LO_LEVELS = 3;
 
+    public static float[] GetLOProblemMeasures()
+    {
+        float[] valArray = new float[2];
+
+        switch (loSelectedShape)
+        {
+            case GameBehaviour.SHAPES.SQUARE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 2;
+                        valArray[1] = 2;
+                        break;
+                    case 2:
+                        valArray[0] = 7.5f;
+                        valArray[1] = 7.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 4.5f;
+                        valArray[1] = 4.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.RECTANGLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 2;
+                        valArray[1] = 6;
+                        break;
+                    case 2:
+                        valArray[0] = 5f;
+                        valArray[1] = 2.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 7.5f;
+                        valArray[1] = 1.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.TRIANGLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 5;
+                        valArray[1] = 5;
+                        break;
+                    case 2:
+                        valArray[0] = 3f;
+                        valArray[1] = 1.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 1.5f;
+                        valArray[1] = 4.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.CIRCLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 4;
+                        valArray[1] = 4;
+                        break;
+                    case 2:
+                        valArray[0] = 7f;
+                        valArray[1] = 7f;
+                        break;
+                    case 3:
+                        valArray[0] = 5f;
+                        valArray[1] = 5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 6;
+                        valArray[1] = 6;
+                        break;
+                    case 2:
+                        valArray[0] = 3.0f;
+                        valArray[1] = 3.0f;
+                        break;
+                    case 3:
+                        valArray[0] = 7f;
+                        valArray[1] = 7f;
+                        break;
+                }
+                break;
+        }
+        
+        return valArray;
+    }
+
     public static bool IsHOUnlocked(GameData save)
     {
         if(save.loPres > 0) //If already completed 1 loop, HO unlocked

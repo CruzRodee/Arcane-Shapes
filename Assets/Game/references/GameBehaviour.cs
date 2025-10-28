@@ -1292,29 +1292,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void InitProblem()
     {
-        float measure1 = 1f, measure2 = 1f;
-        bool isCircleShape = GlobalVariables.loSelectedShape == SHAPES.CIRCLE ||
-                           GlobalVariables.loSelectedShape == SHAPES.SEMI_CIRCLE;
+        float[] measures = GlobalVariables.GetLOProblemMeasures();
 
-        float[] measureArray = isCircleShape ? currentCircleMeasureArray : currentMeasureArray;
-        int arrayLength = measureArray != null ? measureArray.Length : 1;
-
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        if (measureArray != null && arrayLength > 0)
-        {
-            measure1 = measureArray[rand.Next(arrayLength)];
-            measure2 = measureArray[rand.Next(arrayLength)];
-        }
-
-        if (GlobalVariables.loSelectedShape == SHAPES.RECTANGLE && measure1 == measure2)
-        {
-            if (rand.Next(2) == 0)
-                measure1 = Mathf.Max(1, measure1 - 1);
-            else
-                measure2 = Mathf.Max(1, measure2 - 1);
-        }
-
-        SetManualProblem(GlobalVariables.loSelectedShape, measure1, measure2);
+        SetManualProblem(GlobalVariables.loSelectedShape, measures[0], measures[1]);
     }
     #endregion
 }

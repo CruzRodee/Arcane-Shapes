@@ -24,7 +24,7 @@ public class GameData
     public int rectLvl;
     public float triPercent;
     public int triLvl;
-    public int totalLOLevel = 0;
+    public int totalLOLevel = 1;
     public int loPres = 0;
 
     //COMPOUND
