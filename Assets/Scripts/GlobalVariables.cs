@@ -282,7 +282,16 @@ public static class GlobalVariables
         {
             switch (level)
             {
-                //NO levels yet
+                //Level 2-4 default
+                case 1:
+                    introLen = 5f;
+                    outroLen = 5.5f;
+                    break;
+                case 5:
+                    introLen = 5f;
+                    outroLen = 6f;
+                    break;
+                //Level 6 default
                 default:
                     introLen = 5f;
                     outroLen = 5f;
