@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using CHARACTERS;
 using COMMANDS;
-using Unity.Sentis;
+using DIALOGUE.LogicalLines;
 using UnityEngine;
 
 namespace DIALOGUE
@@ -17,6 +16,7 @@ namespace DIALOGUE
         private bool userPrompt = false;
 
         private TagManager tagManager = new TagManager();
+        private LogicalLineManager logicalLineManager;
 
         public ConversationManager(TextArchitect architect)
         {
@@ -24,6 +24,7 @@ namespace DIALOGUE
             dialogueSystem.onUserPrompt_Next += OnUserPrompt_Next;
 
             tagManager = new TagManager();
+            logicalLineManager = new LogicalLineManager();
         }
 
         private void OnUserPrompt_Next()
@@ -60,24 +61,31 @@ namespace DIALOGUE
                     continue;
                 DIALOGUE_LINE line = DialogueParser.Parse(conversation[i]);
 
-                // Show Dialogue
-                if (line.hasDialogue)
-                    yield return Line_RunDialogue(line);
-
-                // Run Commands
-                if (line.hasCommands)
-                    yield return Line_RunCommands(line);
-
-                // Wait for user input if dialogue was in this line
-                if (line.hasDialogue)
+                if (logicalLineManager.TryGetLogic(line, out Coroutine logic))
                 {
-                    // Wait for user input
-                    yield return WaitForUserInput();
-                    // The code below autoplays the next line after 1 second
-                    // Remove it if you want to force user input for every line
-                    // yield return new WaitForSeconds(1);
+                    yield return logic;
+                }
+                else
+                {
+                    // Show Dialogue
+                    if (line.hasDialogue)
+                        yield return Line_RunDialogue(line);
 
-                    CommandManager.instance.StopAllProcess();
+                    // Run Commands
+                    if (line.hasCommands)
+                        yield return Line_RunCommands(line);
+
+                    // Wait for user input if dialogue was in this line
+                    if (line.hasDialogue)
+                    {
+                        // Wait for user input
+                        yield return WaitForUserInput();
+                        // The code below autoplays the next line after 1 second
+                        // Remove it if you want to force user input for every line
+                        // yield return new WaitForSeconds(1);
+
+                        CommandManager.instance.StopAllProcess();
+                    }
                 }
             }
 

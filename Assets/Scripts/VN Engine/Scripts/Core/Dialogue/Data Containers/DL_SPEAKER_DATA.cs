@@ -7,6 +7,7 @@ namespace DIALOGUE
 {
     public class DL_SPEAKER_DATA
     {
+        public string rawData { get; private set; } = string.Empty;
         public string name, castName;
         public string displayname => string.IsNullOrEmpty(castName) ? name : castName;
         public Vector2 castPosition;
@@ -29,6 +30,7 @@ namespace DIALOGUE
 
         private string ProcessKeywords(string rawSpeaker)
         {
+            rawData = rawSpeaker;
             if (rawSpeaker.StartsWith(ENTER_KEYWORD))
             {
                 rawSpeaker = rawSpeaker.Substring(ENTER_KEYWORD.Length);
