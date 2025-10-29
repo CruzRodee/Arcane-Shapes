@@ -19,17 +19,6 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "94165659-98cf-4a60-ae4f-378f8aaf2260",
-                    "path": "<Touchscreen>/Press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Next",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f02f79ae-b484-4784-8a76-8380f759a0b3",
                     "path": "<Keyboard>/space",
                     "interactions": "",

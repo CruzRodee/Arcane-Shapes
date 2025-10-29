@@ -17,7 +17,9 @@ public class VNDialogueSystem : MonoBehaviour
     public DialogueContainer dialogueContainer;// = new DialogueContainer();
     private ConversationManager conversationManager;
     private TextArchitect architect;
+    private AutoReader autoReader;
     [SerializeField] private CanvasGroup mainCanvas;
+
     public static VNDialogueSystem instance { get; private set; }
     public delegate void DialogueSystemEvent();
     public event DialogueSystemEvent onUserPrompt_Next;
@@ -56,9 +58,29 @@ public class VNDialogueSystem : MonoBehaviour
 
         cgController = new CanvasGroupController(this, mainCanvas);
         dialogueContainer.Initialize();
+
+        if (TryGetComponent(out autoReader))
+        {
+            Debug.Log("[VNDialogueSystem] AutoReader component found! Initializing...");
+            autoReader.Initialize(conversationManager);
+        }
+        else
+        {
+            Debug.LogError("[VNDialogueSystem] AutoReader component NOT found on this GameObject!");
+        }
     }
 
     public void OnUserPrompt_Next()
+    {
+        onUserPrompt_Next?.Invoke();
+
+        if (autoReader != null && autoReader.isOn)
+        {
+            autoReader.Disable();
+        }
+    }
+
+    public void OnSystemPrompt_Next()
     {
         onUserPrompt_Next?.Invoke();
     }

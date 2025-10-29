@@ -13,7 +13,7 @@ namespace DIALOGUE
         private VNDialogueSystem dialogueSystem => VNDialogueSystem.instance;
         private Coroutine process = null;
         public bool isRunning = false;
-        private TextArchitect architect = null;
+        public TextArchitect architect = null;
         private bool userPrompt = false;
 
         private TagManager tagManager = new TagManager();
@@ -51,6 +51,8 @@ namespace DIALOGUE
 
         IEnumerator RunningConversation(List<string> conversation)
         {
+            isRunning = true;
+
             for (int i = 0; i < conversation.Count; i++)
             {
                 //Skip blank lines
@@ -78,6 +80,8 @@ namespace DIALOGUE
                     CommandManager.instance.StopAllProcess();
                 }
             }
+
+            isRunning = false;
         }
 
         IEnumerator Line_RunDialogue(DIALOGUE_LINE line)
@@ -170,6 +174,7 @@ namespace DIALOGUE
             }
         }
 
+        public bool isWaitingOnAutoTimer { get; private set; } = false;
         IEnumerator WaitForDialogueSegmentSignalToBeTriggered(DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment)
         {
             switch (segment.startSignal)
@@ -180,7 +185,9 @@ namespace DIALOGUE
                     break;
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.WC:
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.WA:
+                    isWaitingOnAutoTimer = true;
                     yield return new WaitForSeconds(segment.signalDelay);
+                    isWaitingOnAutoTimer = false;
                     break;
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.NONE:
                 default:
