@@ -1,0 +1,12 @@
+CreateCharacter(Raelin -e true -i true)
+
+Raelin "Everything seems to be working smoothly now{wa 0.35}—stable build."
+Raelin "I think the background layers are loading faster than before.{a} Nice optimization."
+Raelin "Let's push this system a bit further{wa 0.45} and see what breaks."
+Raelin "If this were a real mission, we’d already be surrounded by enemies{wa 0.6} so keep your guard up."
+Raelin "The blend effect looks subtle{wa 0.2} just how I like it."
+Raelin "I’ll take note of that color shift{wa 0.3} it’s a nice touch."
+Raelin "Feels strange talking to myself like this but it’s for testing, I guess."
+Raelin "Do you think anyone’s actually reading these logs.{a} Hello, future me."
+Raelin "If this crashes again, I’m blaming the command handler{wa 0.4} no offense."
+Raelin "Alright, one more test{wa 0.3} and I’m done for the day."

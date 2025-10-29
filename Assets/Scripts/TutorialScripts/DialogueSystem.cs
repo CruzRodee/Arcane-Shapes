@@ -31,8 +31,8 @@ public class DialogueSystem : MonoBehaviour
     private string lastChoice = ""; //to track last choice made
 
     private bool talking = true;
-    private bool muted = false; //no voiceover
-    private int msgIndex = 0; //pointer of msg list
+    // private bool muted = false; //no voiceover
+    // private int msgIndex = 0; //pointer of msg list
     private string whoPlayer;
     private string whoCaller;
 

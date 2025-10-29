@@ -1,0 +1,15 @@
+CreateCharacter(Raelin), CreateCharacter("Monk as Generic" -enabled true)
+
+[wait]Show(Raelin Monk -immediate false)
+
+[wait]Raelin.SetSprite(A2)
+
+[wait]Monk.SetSprite("Monk")
+
+Narrator "Showing characters."
+
+enter Raelin as ??? at 1 [1:A_Smile] "How is everyone doing today?"
+
+enter Female Student 2 at -0.1 "Fine.{wa 0.5} Couldn't be better."
+
+Female Student 2 [female student 2 - happy] "How about you?"
