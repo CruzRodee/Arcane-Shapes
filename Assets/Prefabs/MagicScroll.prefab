@@ -1359,7 +1359,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ( 1/2 B x H )
+  m_Text: "( B x H \xF7 2 )"
 --- !u!1 &4927322501150389926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,7 +1593,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ( 1/2 (pi ( R x R ) )
+  m_Text: "( R x R x \u03C0 \xF7 2 )"
 --- !u!1 &6465950669706869168
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,7 +2076,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ( pi ( R x R ) )
+  m_Text: "( R x R x \u03C0 )"
 --- !u!1 &7939991042099972628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2155,7 +2155,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ( B x H )
+  m_Text: ( L x W )
 --- !u!1 &9209941966064403143
 GameObject:
   m_ObjectHideFlags: 0
