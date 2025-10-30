@@ -5353,6 +5353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1536098300}
   - component: {fileID: 1536098301}
+  - component: {fileID: 1536098302}
   m_Layer: 0
   m_Name: ConversationQueue Testing
   m_TagString: Untagged
@@ -5382,11 +5383,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536098299}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89260afe5be324c42b66cdc2c9ae5b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1536098302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536098299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ba95edddfec6040b22b5c7734c4c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileToRead: {fileID: 4900000, guid: 0711b4567492e4d4ca4c67c27418f70a, type: 3}
 --- !u!1 &1544236302
 GameObject:
   m_ObjectHideFlags: 0
@@ -12431,7 +12445,7 @@ PrefabInstance:
     - target: {fileID: 3645648296518226435, guid: 81d31906ac4e33948a2a9de6fa5d13a2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -90.3
+      value: -90.29999
       objectReference: {fileID: 0}
     - target: {fileID: 3645648296518226435, guid: 81d31906ac4e33948a2a9de6fa5d13a2,
         type: 3}

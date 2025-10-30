@@ -114,6 +114,7 @@ public class ChoicePanel : MonoBehaviour
     public void Hide()
     {
         cg.Hide();
+        cg.SetInteractableState(active: false);
     }
 
     private void AcceptAnswer(int index)
