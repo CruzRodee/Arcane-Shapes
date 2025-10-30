@@ -1,0 +1,34 @@
+PlayAmbience(RainyMood), wait(1)
+
+enter Player "So, tell me, do you like dogs or cats?"
+
+Player [happy] "Let's answer that."
+
+choice "What Pet Do You Prefer?"
+{
+    -Dogs 
+        <playerName> "Dogs are pretty neat. They're so energetic and give us so much undeserved love."
+        narrator "You have a dog?"
+        <playerName> "Nope but it would be nice!"
+    -Cats 
+        <playerName> "I love cats{a} Well, {wa 0.5} when they aren't knocking over things. . ."
+        "But they can be so graceful at times."
+        ". . .{c}Except when they're knocking over things, haha!"
+    - Arachnids
+        <playerName> "That's pretty wild. Why spiders?"
+        choice "Why Spiders?"
+        {
+            - Have you ever seen a baby jumping spider?
+                <playerName> "Oh I guess they are pretty cute."
+            - Spiders aren't the only arachnids you know.
+                <playerName> "It's close enough!"
+            - They're cool
+                <playerName> "You do you man."
+                "Can't say I want any of that."
+        }
+     - I Prefer Chinchillas
+        <playerName> "I like Chinchillas they're cute"
+        "Did you know they take dust baths? I had no idea!"
+}
+
+Narrator "You just finished the choices!"

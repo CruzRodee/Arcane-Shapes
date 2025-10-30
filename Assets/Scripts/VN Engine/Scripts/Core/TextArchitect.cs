@@ -1,8 +1,6 @@
 using System.Collections; // For coroutines (if needed elsewhere)
 using UnityEngine;        // Unity engine base classes
-using TMPro;
-using UnityEngine.UI;
-using System;              // TextMeshPro for advanced text rendering
+using TMPro;              // TextMeshPro for advanced text rendering
 
 /// <summary>
 /// TextArchitect handles the progressive display of text (typewriter, instant, fade) for both UI and world-space TextMeshPro components.
