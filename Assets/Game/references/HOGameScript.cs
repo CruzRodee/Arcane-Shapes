@@ -521,6 +521,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 if (var1Text) var1Text.text = "S";
+                if (var2Text) var2Text.text = "S";
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 if (var1Text) var1Text.text = "L";
@@ -532,9 +533,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
         }
     }
