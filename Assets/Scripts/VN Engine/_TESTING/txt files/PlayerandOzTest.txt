@@ -1,6 +1,10 @@
 PlayAmbience(RainyMood), wait(1)
+PlaySong(Upbeat), wait(1)
 
-enter Player "So, tell me, do you like dogs or cats?"
+SetLayerMedia(background -m 03_1)
+
+enter Player "So, tell me, do you like dogs or cats?"'
+[wait]Player.FaceRight(), [wait]Player.FaceLeft()
 
 Player [happy] "Let's answer that."
 
@@ -15,6 +19,7 @@ choice "What Pet Do You Prefer?"
         "But they can be so graceful at times."
         ". . .{c}Except when they're knocking over things, haha!"
     - Arachnids
+        PlaySFX(Static)
         <playerName> "That's pretty wild. Why spiders?"
         choice "Why Spiders?"
         {
@@ -22,9 +27,13 @@ choice "What Pet Do You Prefer?"
                 <playerName> "Oh I guess they are pretty cute."
             - Spiders aren't the only arachnids you know.
                 <playerName> "It's close enough!"
+                "Let's not immediately go into Spiderlevel.txt"
+                Load(Spiderlover -enqueue true)
             - They're cool
                 <playerName> "You do you man."
                 "Can't say I want any of that."
+                "Let's immediately go into Spiderlevel.txt"
+                Load(Spiderlover -enqueue false)
         }
      - I Prefer Chinchillas
         <playerName> "I like Chinchillas they're cute"
@@ -32,3 +41,10 @@ choice "What Pet Do You Prefer?"
 }
 
 Narrator "You just finished the choices!"
+"The next conversation should start if you chose spiders as your favorite animal."
+HideDB(-spd 1)
+Player.Move(1.5 -spd 2), Player.Flip(), Player.Hide()
+wait(0.75)
+ClearLayerMedia(background), wait(1)
+StopSong(), StopAmbience()
+wait(1)

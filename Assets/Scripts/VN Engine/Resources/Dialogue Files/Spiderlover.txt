@@ -1,0 +1,2 @@
+Narrator "Welcome to spiderlover.txt"
+"If you're here it means loading other dialogues are working just fine!"

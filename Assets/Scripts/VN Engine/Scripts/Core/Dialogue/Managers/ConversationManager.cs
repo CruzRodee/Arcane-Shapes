@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CHARACTERS;
 using COMMANDS;
 using DIALOGUE.LogicalLines;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DIALOGUE
@@ -44,6 +45,7 @@ namespace DIALOGUE
         public Coroutine StartConversation(Conversation conversation)
         {
             StopConversation();
+            conversationQueue.Clear();
 
             Enqueue(conversation);
 
