@@ -1,11 +1,15 @@
-PlayAmbience(RainyMood), wait(1)
 PlaySong(Upbeat), wait(1)
 
 SetLayerMedia(background -m 03_1)
 
 Input "What is your name?"
 
-enter Player "So, <input>, tell me, do you like dogs or cats?"'
+CreateCharacter(Player -e true)
+
+[wait]Player.Move(-x 0.2 -y 0.5)
+
+enter Oz at 0.8 "So, <input>, tell me, do you like dogs or cats?"
+
 [wait]Player.FaceRight(), [wait]Player.FaceLeft()
 
 Player [happy] "Let's answer that."
@@ -21,7 +25,6 @@ choice "What Pet Do You Prefer?"
         "But they can be so graceful at times."
         ". . .{c}Except when they're knocking over things, haha!"
     - Arachnids
-        PlaySFX(Static)
         <playerName> "That's pretty wild. Why spiders?"
         choice "Why Spiders?"
         {
@@ -46,6 +49,7 @@ Narrator "You just finished the choices!"
 "The next conversation should start if you chose spiders as your favorite animal."
 HideDB(-spd 1)
 Player.Move(1.5 -spd 2), Player.Flip(), Player.Hide()
+Oz.Move(1.5 -spd 2), Oz.Flip(), Oz.Hide()
 wait(0.75)
 ClearLayerMedia(background), wait(1)
 StopSong(), StopAmbience()
