@@ -46,6 +46,9 @@ namespace COMMANDS
             // Add character specific databases
             CommandDatabase spriteCommands = CommandManager.instance.CreateSubDatabase(CommandManager.DATABASE_CHARACTERS_SPRITE);
             spriteCommands.AddCommand("setsprite", new Func<string[], IEnumerator>(SetSprite));
+            spriteCommands.AddCommand("flip", new Func<string[], IEnumerator>(Flip));
+            spriteCommands.AddCommand("faceleft", new Func<string[], IEnumerator>(FaceLeft));
+            spriteCommands.AddCommand("faceright", new Func<string[], IEnumerator>(FaceRight));
         }
 
         #region GLOBAL COMMANDS
@@ -587,6 +590,126 @@ namespace COMMANDS
             {
                 CommandManager.instance.AddTerminationActionToCurrentProcess(() => { character?.SetSprite(sprite, layer); });
                 yield return character.TransitionSprite(sprite, layer, speed);
+            }
+        }
+
+        public static IEnumerator Flip(string[] data)
+        {
+            Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
+            float speed;
+            bool immediate;
+
+            if (character == null)
+            {
+                Debug.LogWarning($"[CMD_DatabaseExtension_Characters] Flip: Character '{data[0]}' not found.");
+                yield break;
+            }
+
+            // Grab extra parameters
+            var parameters = ConvertDataToParameters(data, startingIndex: 1);
+
+            // Try to get speed of transition
+            bool specifiedSpeed = parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1f);
+
+            // Try to get immediate flag
+            if (!specifiedSpeed)
+                parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
+            else
+                immediate = false;
+
+            if (immediate)
+            {
+                character.Flip(immediate: true);
+            }
+            else
+            {
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    if (character != null)
+                        character.Flip(immediate: true);
+                });
+
+                yield return character.Flip(speed);
+            }
+        }
+
+        public static IEnumerator FaceLeft(string[] data)
+        {
+            Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
+            float speed;
+            bool immediate;
+
+            if (character == null)
+            {
+                Debug.LogWarning($"[CMD_DatabaseExtension_Characters] FaceLeft: Character '{data[0]}' not found.");
+                yield break;
+            }
+
+            // Grab extra parameters
+            var parameters = ConvertDataToParameters(data, startingIndex: 1);
+
+            // Try to get speed of transition
+            bool specifiedSpeed = parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1f);
+
+            // Try to get immediate flag
+            if (!specifiedSpeed)
+                parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
+            else
+                immediate = false;
+
+            if (immediate)
+            {
+                character.FaceLeft(immediate: true);
+            }
+            else
+            {
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    if (character != null)
+                        character.FaceLeft(immediate: true);
+                });
+
+                yield return character.FaceLeft(speed);
+            }
+        }
+
+        public static IEnumerator FaceRight(string[] data)
+        {
+            Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
+            float speed;
+            bool immediate;
+
+            if (character == null)
+            {
+                Debug.LogWarning($"[CMD_DatabaseExtension_Characters] FaceRight: Character '{data[0]}' not found.");
+                yield break;
+            }
+
+            // Grab extra parameters
+            var parameters = ConvertDataToParameters(data, startingIndex: 1);
+
+            // Try to get speed of transition
+            bool specifiedSpeed = parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1f);
+
+            // Try to get immediate flag
+            if (!specifiedSpeed)
+                parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
+            else
+                immediate = false;
+
+            if (immediate)
+            {
+                character.FaceRight(immediate: true);
+            }
+            else
+            {
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    if (character != null)
+                        character.FaceRight(immediate: true);
+                });
+
+                yield return character.FaceRight(speed);
             }
         }
 

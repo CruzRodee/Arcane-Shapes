@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using CHARACTERS;
 using COMMANDS;
-using Unity.Sentis;
+using DIALOGUE.LogicalLines;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace DIALOGUE
@@ -17,6 +17,11 @@ namespace DIALOGUE
         private bool userPrompt = false;
 
         private TagManager tagManager = new TagManager();
+        private LogicalLineManager logicalLineManager;
+
+        public Conversation conversation => (conversationQueue.IsEmpty() ? null : conversationQueue.top);
+        public int conversationProgress => (conversationQueue.IsEmpty() ? -1 : conversationQueue.top.GetProgress());
+        private ConversationQueue conversationQueue;
 
         public ConversationManager(TextArchitect architect)
         {
@@ -24,18 +29,27 @@ namespace DIALOGUE
             dialogueSystem.onUserPrompt_Next += OnUserPrompt_Next;
 
             tagManager = new TagManager();
+            logicalLineManager = new LogicalLineManager();
+
+            conversationQueue = new ConversationQueue();
         }
+
+        public void Enqueue(Conversation conversation) => conversationQueue.Enqueue(conversation);
+        public void EnqueuePriority(Conversation conversation) => conversationQueue.EnqueuePriority(conversation);
 
         private void OnUserPrompt_Next()
         {
             userPrompt = true;
         }
 
-        public Coroutine StartConversation(List<string> conversation)
+        public Coroutine StartConversation(Conversation conversation)
         {
             StopConversation();
+            conversationQueue.Clear();
 
-            process = dialogueSystem.StartCoroutine(RunningConversation(conversation));
+            Enqueue(conversation);
+
+            process = dialogueSystem.StartCoroutine(RunningConversation());
 
             return process;
         }
@@ -49,39 +63,74 @@ namespace DIALOGUE
             isRunning = false;
         }
 
-        IEnumerator RunningConversation(List<string> conversation)
+        IEnumerator RunningConversation()
         {
             isRunning = true;
 
-            for (int i = 0; i < conversation.Count; i++)
+            while (!conversationQueue.IsEmpty())
             {
-                //Skip blank lines
-                if (string.IsNullOrWhiteSpace(conversation[i]))
-                    continue;
-                DIALOGUE_LINE line = DialogueParser.Parse(conversation[i]);
+                Conversation currentConversation = conversation;
 
-                // Show Dialogue
-                if (line.hasDialogue)
-                    yield return Line_RunDialogue(line);
-
-                // Run Commands
-                if (line.hasCommands)
-                    yield return Line_RunCommands(line);
-
-                // Wait for user input if dialogue was in this line
-                if (line.hasDialogue)
+                if (currentConversation.hasReachedEnd())
                 {
-                    // Wait for user input
-                    yield return WaitForUserInput();
-                    // The code below autoplays the next line after 1 second
-                    // Remove it if you want to force user input for every line
-                    // yield return new WaitForSeconds(1);
-
-                    CommandManager.instance.StopAllProcess();
+                    conversationQueue.Dequeue();
+                    continue;
                 }
+
+                string rawLine = currentConversation.CurrentLine();
+
+                //Skip blank lines
+                if (string.IsNullOrWhiteSpace(rawLine))
+                {
+                    TryAdvanceConversation(currentConversation);
+                    continue;
+                }
+
+                DIALOGUE_LINE line = DialogueParser.Parse(rawLine);
+
+                if (logicalLineManager.TryGetLogic(line, out Coroutine logic))
+                {
+                    yield return logic;
+                }
+                else
+                {
+                    // Show Dialogue
+                    if (line.hasDialogue)
+                        yield return Line_RunDialogue(line);
+
+                    // Run Commands
+                    if (line.hasCommands)
+                        yield return Line_RunCommands(line);
+
+                    // Wait for user input if dialogue was in this line
+                    if (line.hasDialogue)
+                    {
+                        // Wait for user input
+                        yield return WaitForUserInput();
+                        // The code below autoplays the next line after 1 second
+                        // Remove it if you want to force user input for every line
+                        // yield return new WaitForSeconds(1);
+
+                        CommandManager.instance.StopAllProcess();
+                    }
+                }
+
+                TryAdvanceConversation(currentConversation);
             }
 
+            process = null;
             isRunning = false;
+        }
+
+        private void TryAdvanceConversation(Conversation conversation)
+        {
+            conversation.IncrementProgress();
+
+            if (conversation != conversationQueue.top)
+                return;
+
+            if (conversation.hasReachedEnd())
+                conversationQueue.Dequeue();
         }
 
         IEnumerator Line_RunDialogue(DIALOGUE_LINE line)

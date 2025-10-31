@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CanvasGroupController
@@ -15,6 +16,7 @@ public class CanvasGroupController
     public bool isFading => isShowing || isHiding;
 
     public bool isVisible => co_showing != null || rootCG.alpha >= 1f;
+    public float alpha { get { return rootCG.alpha; } set { rootCG.alpha = value; } }
 
     public CanvasGroupController(MonoBehaviour owner, CanvasGroup rootCG)
     {
@@ -67,5 +69,11 @@ public class CanvasGroupController
 
         co_showing = null;
         co_hiding = null;
+    }
+
+    public void SetInteractableState(bool active)
+    {
+        rootCG.interactable = active;
+        rootCG.blocksRaycasts = active;
     }
 }
