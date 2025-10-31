@@ -3,7 +3,9 @@ PlaySong(Upbeat), wait(1)
 
 SetLayerMedia(background -m 03_1)
 
-enter Player "So, tell me, do you like dogs or cats?"'
+Input "What is your name?"
+
+enter Player "So, <input>, tell me, do you like dogs or cats?"'
 [wait]Player.FaceRight(), [wait]Player.FaceLeft()
 
 Player [happy] "Let's answer that."
