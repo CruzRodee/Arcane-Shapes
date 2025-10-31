@@ -494,12 +494,15 @@ MonoBehaviour:
   calcBtnObj: {fileID: 362505965}
   backspaceButton: {fileID: 421292810}
   sqVarDisp1: {fileID: 474118244}
+  sqVarDisp2: {fileID: 7153304723704840610}
   rectVarDisp1: {fileID: 355739697}
   rectVarDisp2: {fileID: 562844631}
   triVarDisp1: {fileID: 332733892}
   triVarDisp2: {fileID: 198614207}
   cirVarDisp1: {fileID: 61287100}
+  cirVarDisp2: {fileID: 7153304723704840611}
   semiVarDisp1: {fileID: 1985195790}
+  semiVarDisp2: {fileID: 7153304723704840612}
   soundPlayerObj: {fileID: 1103245039}
   undoBtnImg: {fileID: 912679216145673851}
   undoBtnLogo: {fileID: 912679216145673853}
@@ -4265,6 +4268,24 @@ PrefabInstance:
 --- !u!224 &7153304723704840609 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3459985443222739542, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 7153304723704840608}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7153304723704840610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3262829953104116594, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 7153304723704840608}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7153304723704840611 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 713606481645659019, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 7153304723704840608}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7153304723704840612 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9201553422938471209, guid: 760b825cd35d7dc46935c80d39b0f0ce,
     type: 3}
   m_PrefabInstance: {fileID: 7153304723704840608}
   m_PrefabAsset: {fileID: 0}

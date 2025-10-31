@@ -159,11 +159,11 @@ public class HOGameScript : MonoBehaviour
 
     #region Variable Display References
     [Header("Variable Display Objects")]
-    public GameObject sqVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2;
     public GameObject rectVarDisp1, rectVarDisp2;
     public GameObject triVarDisp1, triVarDisp2;
-    public GameObject cirVarDisp1;
-    public GameObject semiVarDisp1;
+    public GameObject cirVarDisp1, cirVarDisp2;
+    public GameObject semiVarDisp1, semiVarDisp2;
 
     private GameObject var1Display, var2Display;
     #endregion
@@ -487,7 +487,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
-                var2Display = null;
+                var2Display = sqVarDisp2;
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -499,11 +499,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
-                var2Display = null;
+                var2Display = cirVarDisp2;
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
-                var2Display = null;
+                var2Display = semiVarDisp2;
                 break;
             default:
                 var1Display = null;
@@ -1042,6 +1042,16 @@ public class HOGameScript : MonoBehaviour
         if (var2Display != null)
         {
             var text2 = var2Display.GetComponent<Text>();
+
+            switch (currentShape) //Match value 1 for display 2 if single line
+            {
+                case GameBehaviour.SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    text2.text = lineSnapper.value1;
+                    return;
+            }
+
             if (text2 != null) text2.text = lineSnapper.value2;
         }
     }

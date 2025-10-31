@@ -113,7 +113,7 @@ public class GameBehaviour : MonoBehaviour
     public GameObject backspaceButton;
 
     [Header("Variable Displays")]
-    public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, cirVarDisp2, semiVarDisp1, semiVarDisp2;
 
     [Header("Sound")]
     public GameObject soundPlayerObj;
@@ -354,6 +354,7 @@ public class GameBehaviour : MonoBehaviour
         {
             case SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
+                var2Display = sqVarDisp2;
                 break;
             case SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -365,9 +366,11 @@ public class GameBehaviour : MonoBehaviour
                 break;
             case SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
+                var2Display = cirVarDisp2;
                 break;
             case SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
+                var2Display = semiVarDisp2;
                 break;
         }
     }
@@ -824,6 +827,15 @@ public class GameBehaviour : MonoBehaviour
             var1Display.GetComponent<Text>().text = lineSnapper?.value1;
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper?.value2;
+
+        switch (GlobalVariables.loSelectedShape) //Match value 1 for display 2 if single line
+        {
+            case SHAPES.SQUARE:
+            case SHAPES.CIRCLE:
+            case SHAPES.SEMI_CIRCLE:
+                var2Display.GetComponent<Text>().text = lineSnapper?.value1;
+                break;
+        }
 
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper?.ToggleLineText();
