@@ -916,8 +916,11 @@ public class GameBehaviour : MonoBehaviour
 
     private IEnumerator DelayedCastAnimation()
     {
+        //Reduce the BGM volume
+        soundPlayer.setBGMVolume(soundPlayer.GetBGMVolume() / 2);
+
         yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
-        
+
         HideNewUI();
 
         int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
