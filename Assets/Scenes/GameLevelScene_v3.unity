@@ -2330,6 +2330,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1215671720 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 9119701883312795731, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1271243417
 GameObject:
   m_ObjectHideFlags: 0
@@ -3006,6 +3012,7 @@ MonoBehaviour:
   shapeGenerator: {fileID: 0}
   shapeClickManager: {fileID: 0}
   script: {fileID: 1934672891}
+  panelCastingCanvasGroup: {fileID: 1215671720}
 --- !u!1 &1972608089
 GameObject:
   m_ObjectHideFlags: 0

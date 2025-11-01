@@ -4796,6 +4796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2738087312591496953}
+  - component: {fileID: 9119701883312795731}
   m_Layer: 5
   m_Name: PanelCasting 1
   m_TagString: Untagged
@@ -4832,6 +4833,18 @@ RectTransform:
   m_AnchoredPosition: {x: 600, y: 130}
   m_SizeDelta: {x: 1100, y: 620}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &9119701883312795731
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7798477045051261550}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8119063065725818469
 GameObject:
   m_ObjectHideFlags: 0

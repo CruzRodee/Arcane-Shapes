@@ -751,6 +751,9 @@ public class HOGameScript : MonoBehaviour
     {
         hideDiaBoxWhileMeasuring();
 
+        //Make panel opaque
+        hoGameBeh.SetPanelCastingTranslucent(false);
+
         // Batch UI updates
         if (btnConfirmSpell != null) btnConfirmSpell.gameObject.SetActive(false);
         if (panelMagicScroll != null) panelMagicScroll.SetActive(false);
@@ -1267,6 +1270,9 @@ public class HOGameScript : MonoBehaviour
 
         if (hoGameBeh?.spellCastEvent != null)
             hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+
+        //Make panelCasting translucent during shape selection
+        hoGameBeh.SetPanelCastingTranslucent(true);
     }
 
     private void ProcessAllShapesSolved()
@@ -1277,6 +1283,9 @@ public class HOGameScript : MonoBehaviour
         if (btnMeasure != null) btnMeasure.gameObject.SetActive(false);
 
         isAllSolved = true;
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessFinalAnswer()
@@ -1355,6 +1364,10 @@ public class HOGameScript : MonoBehaviour
             animScript.VideoPlayerScript.Stop();
             animScript.VideoPlayerScript.PlayBGAnim();
         }
+
+        //Make panelCasting translucent;
+        hoGameBeh.SetPanelCastingTranslucent(true);
+
         ModifiedToUI();
     }
 
@@ -1432,6 +1445,9 @@ public class HOGameScript : MonoBehaviour
             i++;
             ProcessCompoundShape(i, dict.Key.shape, dict.Value, n);
         }
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessCompoundShape(int index, GameBehaviour.SHAPES shape, float value, int n)
