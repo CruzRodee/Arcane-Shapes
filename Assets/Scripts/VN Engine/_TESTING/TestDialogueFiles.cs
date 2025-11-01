@@ -1,6 +1,8 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class TestDialogueFiles : MonoBehaviour
@@ -9,27 +11,24 @@ public class TestDialogueFiles : MonoBehaviour
     [SerializeField] private TextAsset fileToRead = null;
     void Start()
     {
-        StartConversation();
+        StartCoroutine(Running());
     }
 
-    void StartConversation()
+    IEnumerator Running()
     {
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
-        // foreach (string line in lines)
+        yield return VNDialogueSystem.instance.Say(lines);
+
+        // // Wait until the conversation actually finishes
+        // while (VNDialogueSystem.instance.isRunningConversation)
         // {
-        //     if (string.IsNullOrWhiteSpace(line))
-        //         continue;
-
-        //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
-
-        //     for (int i = 0; i < dl.commandData.commands.Count; i++)
-        //     {
-        //         DL_COMMAND_DATA.Command command = dl.commandData.commands[i];
-        //         Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
-        //     }
+        //     yield return null;
         // }
 
-        VNDialogueSystem.instance.Say(lines);
+        // Debug.Log("Finished reading dialogue file.");
+
+        // SceneManager.LoadScene("MainMenu");
+
     }
 }

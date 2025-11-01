@@ -1,0 +1,62 @@
+HideDB()
+
+SetLayerMedia(background -m 03_1)
+
+PlaySong(Upbeat), wait(1)
+
+enter Player [happy] at 0.5 "Grabe! Nandito na talaga ako sa Arcana Academy!"
+
+"Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana."
+
+"Hindi pa rin ako makapaniwala. . . estudyante na ako dito!"
+
+"Hmm. . . Saan kaya ako magsisimula?"
+
+[wait]Player.FaceRight(), [wait]Player.FaceLeft()
+
+Oz "Oy! Lumayo ka muna diyan!"
+
+Player [surprise1] "Huh?"
+
+HideUI()
+
+Player [sad] "Aray!"
+
+Player.SetPosition(-x 0.2 -y 0.2)
+
+CreateCharacter(Oz)
+
+Oz.SetPosition(-x 1.5 -y 0.5)
+
+ShowUI()
+
+Oz.Show(), [wait]Oz.Move(-x 0.8)
+
+Oz [surprised] "Ay, pasensya na! Halos tamaan ka ng lumilipad kong scroll" 
+
+Oz [sighsad] "Minsan parang may sarili silang utak, hays."
+
+Oz [talk] "Bago ka lang dito, 'no? Kita ko pa sa'yo yung kislap sa mata mo!"
+
+"Ako nga pala si Propesor Oz! Oo, wizard ako, pero wag kang mag-alala, hindi ako nangangagat!"
+
+"Ikaw? Anong pangalan mo?"
+
+Player [surprise2] "Ah. . . Ako si. . ."
+
+Input "Ano ang iyong pangalan?"
+
+Player [happy] "Ako si <input>! Astig makilala ka, Propesor Oz!"
+
+Oz "Aba, magaling, <input>! Maligayang pagdating sa Arcana Academy!"
+
+"Oh sige, dahil bago ka lang dito, ako na maghahatid sayo sa klase. Halika na, at alam kong di mo pa alam ang daan daan dito."
+
+HideDB(-spd 1)
+Player.Move(1.5 -spd 2), Player.Hide()
+Oz.Move(1.5 -spd 2), Oz.Hide()
+wait(0.75)
+ClearLayerMedia(background), wait(1)
+StopSong(), StopAmbience()
+Load(Chapter1_Intro2 -enqueue false)
+
