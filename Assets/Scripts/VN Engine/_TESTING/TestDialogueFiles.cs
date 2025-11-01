@@ -18,17 +18,17 @@ public class TestDialogueFiles : MonoBehaviour
     {
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
-        VNDialogueSystem.instance.Say(lines);
+        yield return VNDialogueSystem.instance.Say(lines);
 
-        // Wait until the conversation actually finishes
-        while (VNDialogueSystem.instance.isRunningConversation)
-        {
-            yield return null;
-        }
+        // // Wait until the conversation actually finishes
+        // while (VNDialogueSystem.instance.isRunningConversation)
+        // {
+        //     yield return null;
+        // }
 
-        Debug.Log("Finished reading dialogue file.");
+        // Debug.Log("Finished reading dialogue file.");
 
-        SceneManager.LoadScene("MainMenu");
+        // SceneManager.LoadScene("MainMenu");
 
     }
 }
