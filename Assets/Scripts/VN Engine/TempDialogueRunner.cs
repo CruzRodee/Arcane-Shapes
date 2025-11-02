@@ -28,7 +28,28 @@ public class TempDialogueRunner : MonoBehaviour
 
         Debug.Log("Finished reading dialogue file.");
 
-        SceneManager.LoadScene("MainMenu");
+        // Test PlayerDataManager directly
+        // Debug.Log("=== Testing PlayerDataManager Directly ===");
 
+        // if (PlayerDataManager.instance != null)
+        // {
+        //     Debug.Log("PlayerDataManager instance found!");
+
+        //     // Print data before saving
+        //     Debug.Log("Data BEFORE calling EndSession:");
+        //     PlayerDataManager.instance.PrintCurrentSession();
+
+        //     // Save the data
+        //     Debug.Log("Calling EndSession to save data...");
+        //     PlayerDataManager.instance.EndSession();
+
+        //     Debug.Log("EndSession completed!");
+        // }
+        // else
+        // {
+        //     Debug.LogError("PlayerDataManager instance is NULL!");
+        // }
+
+        //SceneManager.LoadScene("MainMenu");
     }
 }

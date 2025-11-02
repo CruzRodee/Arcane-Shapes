@@ -8,7 +8,7 @@ using UnityEngine;
 public class VariableStore
 {
     private const string DEFAULT_DATABASE_NAME = "Default";
-    private const char DATABASE_VARIABLE_RELATIONAL_ID = '.';
+    public const char DATABASE_VARIABLE_RELATIONAL_ID = '.';
     public static readonly string REGEX_VARIABLE_IDS = @"[!]?\$[a-zA-Z0-9_.]+";
     public const char VARIABLE_ID = '$';
 
@@ -54,7 +54,70 @@ public class VariableStore
 
         public override object Get() => getter();
 
-        public override void Set(object value) => setter((T)value);
+        public override void Set(object value)
+        {
+            // Try to convert the value to the correct type
+            if (value is T typedValue)
+            {
+                setter(typedValue);
+            }
+            else if (TryConvert(value, out T convertedValue))
+            {
+                setter(convertedValue);
+            }
+            else
+            {
+                Debug.LogError($"Cannot convert value '{value}' of type {value?.GetType()} to {typeof(T)}");
+            }
+        }
+
+        private bool TryConvert(object value, out T result)
+        {
+            result = default;
+
+            if (value == null)
+                return false;
+
+            try
+            {
+                // Handle string to primitive type conversions
+                if (typeof(T) == typeof(int) && value is string strValue)
+                {
+                    if (int.TryParse(strValue, out int intResult))
+                    {
+                        result = (T)(object)intResult;
+                        return true;
+                    }
+                }
+                else if (typeof(T) == typeof(float) && value is string strFloat)
+                {
+                    if (float.TryParse(strFloat, out float floatResult))
+                    {
+                        result = (T)(object)floatResult;
+                        return true;
+                    }
+                }
+                else if (typeof(T) == typeof(bool) && value is string strBool)
+                {
+                    if (bool.TryParse(strBool, out bool boolResult))
+                    {
+                        result = (T)(object)boolResult;
+                        return true;
+                    }
+                }
+                else if (typeof(T) == typeof(string))
+                {
+                    result = (T)(object)value.ToString();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return false;
+        }
     }
 
     private static Dictionary<string, Database> databases = new Dictionary<string, Database>() { { DEFAULT_DATABASE_NAME, new Database(DEFAULT_DATABASE_NAME) } };

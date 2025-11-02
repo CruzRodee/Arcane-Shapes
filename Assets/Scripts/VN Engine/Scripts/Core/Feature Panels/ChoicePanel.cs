@@ -28,11 +28,6 @@ public class ChoicePanel : MonoBehaviour
     private void Awake()
     {
         instance = this;
-    }
-
-    //Start is called before the first frame update
-    void Start()
-    {
         cg = new CanvasGroupController(this, canvasGroup);
 
         cg.alpha = 0;

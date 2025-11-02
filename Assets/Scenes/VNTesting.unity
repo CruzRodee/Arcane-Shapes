@@ -379,6 +379,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statusText: {fileID: 341833613}
+--- !u!1 &33347176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 33347177}
+  - component: {fileID: 33347178}
+  m_Layer: 0
+  m_Name: PlayerData Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &33347177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33347176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 220981119}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &33347178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33347176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9644e85b25795814186c488294d57834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &73295299
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,7 +639,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &149054863
 Transform:
   m_ObjectHideFlags: 0
@@ -712,12 +756,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164997498}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0ba95edddfec6040b22b5c7734c4c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileToRead: {fileID: 4900000, guid: 41b950a26ef4b8348b9be63017083917, type: 3}
+  fileToRead: {fileID: 4900000, guid: e1dfb03f369062d479e933624d6c9b3a, type: 3}
 --- !u!1 &184541940
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,6 +1085,7 @@ Transform:
   - {fileID: 244233747}
   - {fileID: 829289591}
   - {fileID: 1389542147}
+  - {fileID: 33347177}
   - {fileID: 474126169}
   m_Father: {fileID: 547356409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
