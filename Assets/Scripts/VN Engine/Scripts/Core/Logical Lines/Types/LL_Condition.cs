@@ -36,7 +36,7 @@ namespace DIALOGUE.LogicalLines
 
             VNDialogueSystem.instance.conversationManager.conversation.SetProgress(ifData.endingIndex);
             EncapsulatedData selectData = conditionResult ? ifData : elseData;
-            if (selectData.lines.Count > 0)
+            if (!selectData.isNull && selectData.lines.Count > 0)
             {
                 Conversation newConversation = new Conversation(selectData.lines);
                 VNDialogueSystem.instance.conversationManager.EnqueuePriority(newConversation);
