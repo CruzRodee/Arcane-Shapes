@@ -15,8 +15,12 @@ public class VideoPlayerScript : MonoBehaviour
 {
     #region Constants
 
-    private const string LO_BG_PATH = "Lo-Bg-Shader_Comp.mp4";
-    private const string HO_BG_PATH = "Ho-Bg-Shader_Comp.mp4";
+    private readonly string[] bgShaders = {
+        "BG_LO_School.mp4", "BG_LO_Dungeon.mp4", "BG_LO_Forest.mp4", "BG_LO_Corrupt.mp4", "BG_LO_Field.mp4",
+        "BG_HO_Field.mp4", "BG_HO_School.mp4", "BG_HO_Dark.mp4"
+
+    };
+
     private const string LO_SCENE_NAME = "GameLevelScene_v1";
     private const string SPELLS_FOLDERS = "Videos/Spells";
     private const string SHADERS_FOLDERS = "Videos/Shaders";
@@ -210,10 +214,25 @@ public class VideoPlayerScript : MonoBehaviour
 
         if (IsLowOrderScene())
         {
-            switch (GlobalVariables.level)
+            switch (GlobalVariables.loSelectedShape)
             {
+                case GameBehaviour.SHAPES.SQUARE:
+                    path = AndroidPathCombine(path, bgShaders[0]);
+                    break;
+                case GameBehaviour.SHAPES.RECTANGLE:
+                    path = AndroidPathCombine(path, bgShaders[1]);
+                    break;
+                case GameBehaviour.SHAPES.TRIANGLE:
+                    path = AndroidPathCombine(path, bgShaders[2]);
+                    break;
+                case GameBehaviour.SHAPES.CIRCLE:
+                    path = AndroidPathCombine(path, bgShaders[3]);
+                    break;
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    path = AndroidPathCombine(path, bgShaders[4]);
+                    break;
                 default:
-                    path = AndroidPathCombine(path, LO_BG_PATH);
+                    path = AndroidPathCombine(path, bgShaders[0]);
                     break;
             }
         }
@@ -221,8 +240,21 @@ public class VideoPlayerScript : MonoBehaviour
         {
             switch (GlobalVariables.level)
             {
+                case 0:
+                case 1:
+                case 2:
+                    path = AndroidPathCombine(path, bgShaders[5]);
+                    break;
+                case 3:
+                case 4:
+                    path = AndroidPathCombine(path, bgShaders[6]);
+                    break;
+                case 5:
+                case 6:
+                    path = AndroidPathCombine(path, bgShaders[7]);
+                    break;
                 default:
-                    path = AndroidPathCombine(path, HO_BG_PATH);
+                    path = AndroidPathCombine(path, bgShaders[5]);
                     break;
             }
         }
@@ -449,8 +481,9 @@ public class VideoPlayerScript : MonoBehaviour
         string bgPath = SHADERS_FOLDERS;
 
         // Add both LO and HO background videos
-        videosToCache.Add(AndroidPathCombine(bgPath, LO_BG_PATH));
-        videosToCache.Add(AndroidPathCombine(bgPath, HO_BG_PATH));
+        foreach (string bgShader in bgShaders) {
+            videosToCache.Add(AndroidPathCombine(bgPath, bgShader));
+        }
     }
 
     private void AddAllSpellVideosToCacheList(List<string> videosToCache)
