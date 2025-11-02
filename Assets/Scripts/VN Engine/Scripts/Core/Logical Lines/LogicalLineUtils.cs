@@ -59,7 +59,6 @@ namespace DIALOGUE.LogicalLines
 
         }
 
-
         public static class Expressions
         {
             public static HashSet<string> OPERATORS = new HashSet<string>() { "-", "-=", "+", "+=", "*", "*=", "/", "/=", "=" };
@@ -189,11 +188,107 @@ namespace DIALOGUE.LogicalLines
                     else if (bool.TryParse(value, out bool boolValue))
                         return negate ? !boolValue : boolValue;
                     else
+                    {
+                        value = TagManager.Inject(value, injectTags: true, injectVariables: true);
                         return value;
+                    }
+
                 }
 
             }
         }
 
+        public static class Conditions
+        {
+            public static readonly string REGEX_CONDITIONAL_OPERATORS = @"(==|!=|<=|>=|<|>|&&|\|\|)";
+
+            public static bool EvaluateCondition(string condition)
+            {
+                condition = TagManager.Inject(condition, injectTags: true, injectVariables: true);
+
+                string[] parts = Regex.Split(condition, REGEX_CONDITIONAL_OPERATORS)
+                    .Select(part => part.Trim()).ToArray();
+
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    if (parts[i].StartsWith("\"") && parts[i].EndsWith("\""))
+                        parts[i] = parts[i].Substring(1, parts[i].Length - 2);
+                }
+
+                if (parts.Length == 1)
+                {
+                    if (bool.TryParse(parts[0], out bool result))
+                        return result;
+                    else
+                    {
+                        Debug.LogError($"[LogicalLineUtils.Conditions] Unable to evaluate condition: '{condition}'");
+                        return false;
+                    }
+                }
+
+                else if (parts.Length == 3)
+                {
+                    return EvaluateExpression(parts[0], parts[1], parts[2]);
+                }
+                else
+                {
+                    Debug.LogError($"[LogicalLineUtils.Conditions] Unable to evaluate complex condition: '{condition}'");
+                    return false;
+                }
+
+            }
+
+            private delegate bool OperatorFunc<t>(t left, t right);
+
+            private static Dictionary<string, OperatorFunc<bool>> boolOperators = new Dictionary<string, OperatorFunc<bool>>()
+            {
+                { "&&", (left, right) => left && right },
+                { "||", (left, right) => left || right },
+                { "==", (left, right) => left == right },
+                { "!=", (left, right) => left != right }
+            };
+
+            private static Dictionary<string, OperatorFunc<float>> floatOperators = new Dictionary<string, OperatorFunc<float>>()
+            {
+                { "<", (left, right) => left < right },
+                { ">", (left, right) => left > right },
+                { "<=", (left, right) => left <= right },
+                { ">=", (left, right) => left >= right },
+                { "==", (left, right) => left == right },
+                { "!=", (left, right) => left != right }
+            };
+
+            private static Dictionary<string, OperatorFunc<int>> intOperators = new Dictionary<string, OperatorFunc<int>>()
+            {
+                { "<", (left, right) => left < right },
+                { ">", (left, right) => left > right },
+                { "<=", (left, right) => left <= right },
+                { ">=", (left, right) => left >= right },
+                { "==", (left, right) => left == right },
+                { "!=", (left, right) => left != right }
+            };
+
+            private static bool EvaluateExpression(string left, string op, string right)
+            {
+                if (bool.TryParse(left, out bool leftBool) && bool.TryParse(right, out bool rightBool))
+                    return boolOperators[op](leftBool, rightBool);
+                else if (float.TryParse(left, out float leftFloat) && float.TryParse(right, out float rightFloat))
+                    return floatOperators[op](leftFloat, rightFloat);
+                else if (int.TryParse(left, out int leftInt) && int.TryParse(right, out int rightInt))
+                    return intOperators[op](leftInt, rightInt);
+
+                switch (op)
+                {
+                    case "==":
+                        return left == right;
+                    case "!=":
+                        return left != right;
+                    default:
+                        Debug.LogError($"[LogicalLineUtils.Conditions] Invalid operator '{op}' for string comparison.");
+                        return false;
+                }
+
+            }
+        }
     }
 }
