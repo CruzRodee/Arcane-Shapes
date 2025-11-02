@@ -292,6 +292,7 @@ public class FormulaAnalyzer : MonoBehaviour
                     if (gb != null)
                     {
                         gb.NotifyMismatchedAnswer();
+                     
                     }
                     //Notify hgb of invalid answer
                     if (hgb != null)
