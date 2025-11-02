@@ -4,7 +4,7 @@ SetLayerMedia(background -m 03_1)
 
 PlaySong(Upbeat), wait(1)
 
-enter Player [happy] at 0.5 "Grabe! Nandito na talaga ako sa Arcana Academy!"
+enter Player as <playerName> [happy] at 0.5 "Grabe! Nandito na talaga ako sa Arcana Academy!"
 
 "Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana."
 
@@ -46,9 +46,11 @@ Player [surprise2] "Ah. . . Ako si. . ."
 
 Input "Ano ang iyong pangalan?"
 
-Player [happy] "Ako si <input>! Astig makilala ka, Propesor Oz!"
+$PlayerData.playerName = "<input>"
 
-Oz "Aba, magaling, <input>! Maligayang pagdating sa Arcana Academy!"
+Player [happy] "Ako si $PlayerData.playerName! Astig makilala ka, Propesor Oz!"
+
+Oz "Aba, magaling, $PlayerData.playerName! Maligayang pagdating sa Arcana Academy!"
 
 "Oh sige, dahil bago ka lang dito, ako na maghahatid sayo sa klase. Halika na, at alam kong di mo pa alam ang daan daan dito."
 
@@ -59,4 +61,3 @@ wait(0.75)
 ClearLayerMedia(background), wait(1)
 StopSong(), StopAmbience()
 Load(Chapter1_Intro2 -enqueue false)
-

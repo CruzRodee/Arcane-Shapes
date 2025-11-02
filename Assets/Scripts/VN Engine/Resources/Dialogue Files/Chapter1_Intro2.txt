@@ -36,16 +36,22 @@ Player.SetSprite(neutral)
 
 Input "Ilang taon ka na?"
 
+$PlayerData.playerAge = "<input>"
+
 "Ang bata mo pa pala! Sige, anong grade ka naman?"
 
 Input "Anong grade ka na?"
+
+$PlayerData.playerGrade = "<input>"
 
 "Hmm. Sige, medyo malabo rin mata ko. . . Babae ka ba o lalake?"
 
 choice "Babae ka ba o Lalake?"
 {
     -Babae
+        $PlayerData.playerSex = "Babae"
     -Lalaki
+        $PlayerData.playerSex = "Lalaki"
 }
 
 "Okay! Sige, kilala na kita!"
@@ -57,22 +63,27 @@ choice "Babae ka ba o Lalake?"
 choice "Alam mo ba kung ano ang area?"
 {
     -Opo
+        $PlayerData.areaKnown = true
         [wait]Player.SetSprite(happy)
         "Magaling! Para lang sure, uulitin ko lang sayo ang ibisabihin nito"
         [wait]Player.SetSprite(neutral)
     -Hindi
+        $PlayerData.areaKnown = false
         "Okay lang yan! Lahat tayo ay nagsisimula sa ganyan. Kaya ako andito para turuan ka!"
 }
 
 "Ganito nalang isipin mo. Ang <b>AREA</b> ay ang SUKAT ng espasyong sakop sa loob ng isang hugis."
 
-"Isipin mo na ang sahig na may GRID (maliliit na SQUARE). Ilan sa maliliit na parisukat ang nakapaloob? ‘Yon ang AREA."
+"Isipin mo na ang sahig na may GRID (maliliit na SQUARE). Ilan sa maliliit na parisukat ang nakapaloob? 'Yon ang AREA."
 
 "Kung ito'y nakakalito parin, pumasok na tayo sa classroom at mas malalim kong ituturo sayo!"
 
 SetLayerMedia(background -m Classroom)
 
 "Magsimula na tayo!"
+
+PrintPlayerData()
+SavePlayerData()
 
 HideUI()
 StopSong(), StopAmbience()

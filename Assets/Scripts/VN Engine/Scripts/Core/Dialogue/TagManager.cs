@@ -9,22 +9,21 @@ public class TagManager
 {
     private static readonly Dictionary<string, Func<string>> tags = new Dictionary<string, Func<string>>()
     {
-        {"<playerName>", () => "Player" },
+        {"<playerName>", () => PlayerDataManager.instance != null ? PlayerDataManager.instance.GetPlayerName() : "Player" },
         {"<time>", () => DateTime.Now.ToString("hh:mm tt") },
         {"<playerLevel>", () => "15" },
         {"<input>", () => InputPanel.instance.lastInput },
         {"<tempVal1>", () => "42"}
     };
     private static readonly Regex tagRegex = new Regex("<\\w+>");
+
     public static string Inject(string text, bool injectTags = true, bool injectVariables = true)
     {
-
         if (injectTags)
             text = InjectTags(text);
 
         if (injectVariables)
             text = InjectVariables(text);
-
 
         return text;
     }
