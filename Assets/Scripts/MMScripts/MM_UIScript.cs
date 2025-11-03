@@ -49,17 +49,17 @@ public class MM_UIScript : MonoBehaviour
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
         overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
 
-        if(!Debug.isDebugBuild) //Disable all debug stuff
+        if (!Debug.isDebugBuild) //Disable all debug stuff
         {
             //Disable and Remove Graphy when not debug
-            if( graphy != null)
+            if (graphy != null)
             {
                 graphy.SetActive(false);
                 Destroy(graphy);
             }
-            
+
             Debug.unityLogger.logEnabled = false;
-        }   
+        }
     }
     void Start()
     {
@@ -184,7 +184,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoCredits()
     {
-        
+
         if (panelCredits.activeInHierarchy)
         {
             panelCredits.SetActive(false);
@@ -225,7 +225,7 @@ public class MM_UIScript : MonoBehaviour
 
     private void DelayedTut1()
     {
-        SceneManager.LoadScene("Tutorial1");
+        SceneManager.LoadScene("VNFormative 1");
     }
     private void DelayedHall()
     {
@@ -234,9 +234,9 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoQuit() // For quit button
     {
-        if(!canQuit)
+        if (!canQuit)
             return;
-        
+
         Debug.Log("Quitting Game");
         try
         {
