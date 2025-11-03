@@ -44,7 +44,7 @@ MonoBehaviour:
     alias: player
     characterType: 1
     nameColor: {r: 0, g: 0, b: 0, a: 1}
-    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 0, g: 0, b: 0, a: 1}
     nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     nameFontScale: 1
@@ -53,7 +53,7 @@ MonoBehaviour:
     alias: Oz
     characterType: 1
     nameColor: {r: 0, g: 0, b: 0, a: 1}
-    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
+    dialogueColor: {r: 0, g: 0, b: 0, a: 1}
     nameFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     dialogueFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
     nameFontScale: 1

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterConfigurationAsset: {fileID: 11400000, guid: 8a5b53bebc9727446a74cbe5d04bc585,
     type: 2}
-  defaultTextColor: {r: 1, g: 1, b: 1, a: 1}
+  defaultTextColor: {r: 0, g: 0, b: 0, a: 1}
+  defaultNameColor: {r: 0, g: 0, b: 0, a: 1}
   defaultFont: {fileID: 11400000, guid: 5eb699bb9596cf3408b699de133e25e0, type: 2}
   dialogueFontScale: 1
   defaultDialogueFontSize: 36
