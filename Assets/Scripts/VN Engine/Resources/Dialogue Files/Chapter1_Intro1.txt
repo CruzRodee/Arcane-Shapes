@@ -6,7 +6,7 @@ PlaySong(Upbeat), wait(1)
 
 enter Player as <playerName> [happy] at 0.5 "Grabe! Nandito na talaga ako sa Arcana Academy!"
 
-"Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay gamit lang ang anyo at mana."
+"Sabi nila dito mo matututunan kung paano lumikha ng mga mahiwagang bagay. . .{c} gamit lang ang anyo at mana!"
 
 "Hindi pa rin ako makapaniwala. . . estudyante na ako dito!"
 
@@ -22,7 +22,7 @@ HideUI()
 
 Player [sad] "Aray!"
 
-Player.SetPosition(-x 0.2 -y 0.2)
+Player.SetPosition(-x 0 -y 0.2)
 
 CreateCharacter(Oz)
 
@@ -30,7 +30,7 @@ Oz.SetPosition(-x 1.5 -y 0.5)
 
 ShowUI()
 
-Oz.Show(), [wait]Oz.Move(-x 0.8)
+Oz.Show(), [wait]Oz.Move(-x 1)
 
 Oz [surprised] "Ay, pasensya na! Halos tamaan ka ng lumilipad kong scroll" 
 
@@ -38,7 +38,7 @@ Oz [sighsad] "Minsan parang may sarili silang utak, hays."
 
 Oz [talk] "Bago ka lang dito, 'no? Kita ko pa sa'yo yung kislap sa mata mo!"
 
-"Ako nga pala si Propesor Oz! Oo, wizard ako, pero wag kang mag-alala, hindi ako nangangagat!"
+"Ako nga pala si Propesor Oz! {c} Oo, wizard ako, pero wag kang mag-alala, {wc 0.2} hindi ako nangangagat!"
 
 "Ikaw? Anong pangalan mo?"
 
@@ -48,11 +48,11 @@ Input "Ano ang iyong pangalan?"
 
 $PlayerData.playerName = "<input>"
 
-Player [happy] "Ako si $PlayerData.playerName! Astig makilala ka, Propesor Oz!"
+Player [happy] "Ako si $PlayerData.playerName! {c} Astig makilala ka, Propesor Oz!"
 
 Oz "Aba, magaling, $PlayerData.playerName! Maligayang pagdating sa Arcana Academy!"
 
-"Oh sige, dahil bago ka lang dito, ako na maghahatid sayo sa klase. Halika na, at alam kong di mo pa alam ang daan daan dito."
+"Oh sige, dahil bago ka lang dito, ako na maghahatid sayo sa klase. {c} Halika na, at alam kong di mo pa alam ang daan daan dito."
 
 HideDB(-spd 1)
 Player.Move(1.5 -spd 2), Player.Hide()
