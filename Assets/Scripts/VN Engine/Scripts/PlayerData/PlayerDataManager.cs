@@ -7,8 +7,8 @@ using UnityEngine;
 public class PlayerSessionData
 {
     public string playerName = "";
-    public int playerAge = 0;
-    public int playerGrade = 0;
+    public string playerAge = "";
+    public string playerGrade = "";
     public string playerSex = "";
     public bool areaKnown = false;
     public Dictionary<string, string> choices = new Dictionary<string, string>();

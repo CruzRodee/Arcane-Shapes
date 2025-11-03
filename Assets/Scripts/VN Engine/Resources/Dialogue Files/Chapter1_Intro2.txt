@@ -10,15 +10,15 @@ Player.SetPosition(x -0.5), Oz.SetPosition(x -0.5), [wait]Oz.Flip(-i true)
 
 Player.Show(), Oz.Show(), [wait]Oz.Move(-x 0.8), [wait]Player.Move(-x 0.2), [wait]Oz.Flip(-i true)
 
-Oz [talk] "Nandito na tayo! Ako rin pala magiging guro mo sa klaseng ito. {wa 0.5}Kaya maganda rin na sabay na rin tayong dumating! Hehe."
+Oz [talk] "Nandito na tayo! Ako rin pala magiging guro mo sa klaseng ito. {c}Kaya maganda rin na sabay na rin tayong dumating! Hehe."
 
 Player [surprise2] "Magkaklase na po tayo agad?"
 
 Player.SetSprite(happy)
 
-Oz "Syempre! Wag tayong magsayang ng oras, hehe. Pero di naman kita papabayaan. Bago tayo pumasok, may mga tanong muna ako."
+Oz "Syempre! Wag tayong magsayang ng oras, hehe. {c}Pero di naman kita papabayaan. Bago tayo pumasok, may mga tanong muna ako."
 
-"Ready ka na ba? Pakinggan mo ako ng maigi ah!"
+"Ready ka na ba? {wa 0.5} Pakinggan mo ako ng maigi ah!"
 
 choice "Ready ka na ba?"
 {
@@ -56,7 +56,7 @@ choice "Babae ka ba o Lalake?"
 
 "Okay! Sige, kilala na kita!"
 
-"Ngayon, magsimula tayo sa isang napakahalagang konsepto: {a}<b>AREA</b>."
+"Ngayon, magsimula tayo sa isang napakahalagang konsepto: {c} {a}<b>AREA</b>."
 
 "Alam mo na ba kung ano ang area?"
 
@@ -65,16 +65,16 @@ choice "Alam mo ba kung ano ang area?"
     -Opo
         $PlayerData.areaKnown = true
         [wait]Player.SetSprite(happy)
-        "Magaling! Para lang sure, uulitin ko lang sayo ang ibisabihin nito"
+        "Magaling! Para lang sure, uulitin ko lang sayo ang ibig-sabihin nito"
         [wait]Player.SetSprite(neutral)
     -Hindi
         $PlayerData.areaKnown = false
         "Okay lang yan! Lahat tayo ay nagsisimula sa ganyan. Kaya ako andito para turuan ka!"
 }
 
-"Ganito nalang isipin mo. Ang <b>AREA</b> ay ang SUKAT ng espasyong sakop sa loob ng isang hugis."
+"Ganito nalang isipin mo. {c} Ang <b>AREA</b> ay ang SUKAT ng espasyong sakop sa loob ng isang hugis."
 
-"Isipin mo na ang sahig na may GRID (maliliit na SQUARE). Ilan sa maliliit na parisukat ang nakapaloob? 'Yon ang AREA."
+"Isipin mo na ang sahig na may GRID (maliliit na SQUARE). {c} Ilan sa maliliit na parisukat ang nakapaloob? 'Yon ang AREA."
 
 "Kung ito'y nakakalito parin, pumasok na tayo sa classroom at mas malalim kong ituturo sayo!"
 
