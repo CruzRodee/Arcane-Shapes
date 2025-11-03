@@ -18,11 +18,11 @@ namespace COMMANDS
             if (PlayerDataManager.instance != null)
             {
                 PlayerDataManager.instance.EndSession();
-                Debug.Log("[CMD] Player data saved successfully.");
+                Debug.Log("[CMD_DatabaseExtension_PlayerData] Player data saved successfully.");
             }
             else
             {
-                Debug.LogError("[CMD] PlayerDataManager instance not found!");
+                Debug.LogError("[CMD_DatabaseExtension_PlayerData] PlayerDataManager instance not found!");
             }
         }
 
@@ -34,7 +34,7 @@ namespace COMMANDS
             }
             else
             {
-                Debug.LogError("[CMD] PlayerDataManager instance not found!");
+                Debug.LogError("[CMD_DatabaseExtension_PlayerData] PlayerDataManager instance not found!");
             }
         }
     }

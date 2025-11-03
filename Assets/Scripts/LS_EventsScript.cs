@@ -94,7 +94,7 @@ public class LS_EventsScript : MonoBehaviour
             {
                 savedGame.totalLOLevel++;
                 int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
-                if(savedGame.totalLOLevel >= maxLOLevel)
+                if (savedGame.totalLOLevel >= maxLOLevel)
                 {
                     //Reset Levels, Do not show walang datos
                     GlobalVariables.level = 1;
@@ -108,7 +108,7 @@ public class LS_EventsScript : MonoBehaviour
 
                     savedGame.loPres++; //Increase pres level
                 }
-                
+
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -172,6 +172,7 @@ public class LS_EventsScript : MonoBehaviour
             btnTriangle.interactable = false;
             btnRectangle.interactable = false;
             */
+            btnLO.interactable = false;
         }
 
 
@@ -223,7 +224,7 @@ public class LS_EventsScript : MonoBehaviour
 
         //Determine what shape of LO right now
         int level = 0;
-        if(savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
+        if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             level = savedGame.squareLvl;
             loShapeTxt.text = "Square";
@@ -387,11 +388,11 @@ public class LS_EventsScript : MonoBehaviour
         GlobalVariables.nextLevel = "GameLevelScene_v3";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
-    
+
     public void enterLowOrder()
     {
         GlobalVariables.enteringLO = true; //Mark as LO room
-        
+
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             enterSquare();
