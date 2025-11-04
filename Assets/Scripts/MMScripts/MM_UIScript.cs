@@ -49,17 +49,17 @@ public class MM_UIScript : MonoBehaviour
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
         overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
 
-        if(!Debug.isDebugBuild) //Disable all debug stuff
+        if (!Debug.isDebugBuild) //Disable all debug stuff
         {
             //Disable and Remove Graphy when not debug
-            if( graphy != null)
+            if (graphy != null)
             {
                 graphy.SetActive(false);
                 Destroy(graphy);
             }
-            
+
             Debug.unityLogger.logEnabled = false;
-        }   
+        }
     }
     void Start()
     {
@@ -122,28 +122,28 @@ public class MM_UIScript : MonoBehaviour
         // PASS HIGHER: COMPOUND
 
         panelInputPass.SetActive(false);
-        if (passwordInputField.text == "ALL")
+        if (passwordInputField.text.ToLower() == "all")
         {
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "SIMPLE")
+        else if (passwordInputField.text.ToLower() == "simple")
         {
             mode = 1;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "COMPOUND")
+        else if (passwordInputField.text.ToLower() == "compound")
         {
             mode = 2;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "RESET")
+        else if (passwordInputField.text.ToLower() == "reset")
         {
             notifyDeleteGame();
         }
@@ -184,7 +184,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoCredits()
     {
-        
+
         if (panelCredits.activeInHierarchy)
         {
             panelCredits.SetActive(false);
@@ -234,9 +234,9 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoQuit() // For quit button
     {
-        if(!canQuit)
+        if (!canQuit)
             return;
-        
+
         Debug.Log("Quitting Game");
         try
         {
