@@ -122,28 +122,28 @@ public class MM_UIScript : MonoBehaviour
         // PASS HIGHER: COMPOUND
 
         panelInputPass.SetActive(false);
-        if (passwordInputField.text == "ALL")
+        if (passwordInputField.text.ToLower() == "all")
         {
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "SIMPLE")
+        else if (passwordInputField.text.ToLower() == "simple")
         {
             mode = 1;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "COMPOUND")
+        else if (passwordInputField.text.ToLower() == "compound")
         {
             mode = 2;
             // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "RESET")
+        else if (passwordInputField.text.ToLower() == "reset")
         {
             notifyDeleteGame();
         }
