@@ -129,6 +129,7 @@ public class HOGameScript : MonoBehaviour
     public Text textHUD;
     public Text textFinish;
     public Text undoText;
+    public GameObject measureCounter;
 
     [Header("UI Components - OCR & Formula")]
     public GameObject ocrInput;
@@ -765,6 +766,13 @@ public class HOGameScript : MonoBehaviour
         if (lineSnapper != null) lineSnapper.gameObject.SetActive(true);
         if (btnUndo != null) btnUndo.gameObject.SetActive(true);
 
+        //Display measure counter
+        measureCounter.SetActive(true);
+
+        //Update Measurements
+        if (measureCounter.activeInHierarchy)
+            measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {lineSnapper.GetMaxLinesForShape() - lineSnapper.lineCount}";
+
         ShowEquationForShape(chosenShape);
     }
 
@@ -1025,6 +1033,9 @@ public class HOGameScript : MonoBehaviour
         //Change to back to avoid confusion
         undoText.text = undoBtnText3;
 
+        //Turn off measure Counter
+        measureCounter.SetActive(false);
+
         if (textFinish != null) textFinish.text = castBtnText2;
         if (calcBtnObj != null) calcBtnObj.SetActive(true);
 
@@ -1085,6 +1096,9 @@ public class HOGameScript : MonoBehaviour
 
             //Revert to Undo
             undoText.text = undoBtnText1;
+
+            //Turn on measure Counter
+            measureCounter.SetActive(true);
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;
@@ -1396,6 +1410,10 @@ public class HOGameScript : MonoBehaviour
         {
             lineSnapper.OnUndoPressed();
             lineSnapper.OnUndoPressed();
+
+            //Turn off measure Counter
+            measureCounter.SetActive(false);
+
             lineSnapper.gameObject.SetActive(false);
         }
 

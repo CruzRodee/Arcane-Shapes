@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class LineSnapper : MonoBehaviour
@@ -342,6 +343,12 @@ public class LineSnapper : MonoBehaviour
                 secondLineText = CreateValueText(end, value);
             }
             lineCount++;
+
+            //Update Measurements
+            if (main != null)
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+            else
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
         }
         else
         {
@@ -370,6 +377,13 @@ public class LineSnapper : MonoBehaviour
         if (lineCount <= 0)
         {
             lineCount = 0;
+
+            //Update Measurements
+            if (main != null)
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+            else
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+
             return;
         }
 
@@ -380,6 +394,12 @@ public class LineSnapper : MonoBehaviour
             hoMain.UndoMeasure();
 
         lineCount--; // Reduce lines by one if there is > 0 lines
+
+        //Update Measurements
+        if (main != null)
+            main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+        else
+            hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
 
         //Reset shape fill
         if (hoMain != null)

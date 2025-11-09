@@ -75,6 +75,7 @@ public class GameBehaviour : MonoBehaviour
     public Text confirmText;
     public Text textHUD;
     public Text undoText;
+    public GameObject measureCounter;
 
     [Header("Hint System")]
     public GameObject textHint;
@@ -684,6 +685,13 @@ public class GameBehaviour : MonoBehaviour
             pDiaButtons?.SetActive(true);
             lineSnapper?.gameObject.SetActive(true);
 
+            //Display measure counter
+            measureCounter.SetActive(true);
+
+            //Update Measurements
+            if (measureCounter.activeInHierarchy)
+                measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {lineSnapper.GetMaxLinesForShape() - lineSnapper.lineCount}";
+
             ActivateEquationForShape(chosenShape);
         }
         else
@@ -823,6 +831,9 @@ public class GameBehaviour : MonoBehaviour
         //Change to back to avoid confusion
         undoText.text = undoBtnText3;
 
+        //Turn off measure Counter
+        measureCounter.SetActive(false);
+
         if (textFinish != null) textFinish.text = castBtnText2;
 
         if (GlobalVariables.level < 3)
@@ -863,6 +874,9 @@ public class GameBehaviour : MonoBehaviour
 
             //Revert to Undo
             undoText.text = undoBtnText1;
+
+            //Turn on measure Counter
+            measureCounter.SetActive(true);
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;

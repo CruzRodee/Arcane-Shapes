@@ -463,6 +463,7 @@ MonoBehaviour:
   confirmText: {fileID: 2132351602}
   textHUD: {fileID: 2132351601}
   undoText: {fileID: 912679216145673852}
+  measureCounter: {fileID: 2132351600}
   textHint: {fileID: 1227770533}
   textHintSpell: {fileID: 938249565}
   textHintUndo: {fileID: 759931215}
@@ -2965,6 +2966,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550e1410dbd94764399e5bd86456141b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2132351600 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2132865307339157809, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 2132351595}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2132351601 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8215035514663976283, guid: 40fa2b9ef7b71f946a94cbaaf33cb7bf,

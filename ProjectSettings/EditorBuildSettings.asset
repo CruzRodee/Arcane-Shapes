@@ -12,11 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 4c08af241e31b754b8f5c4c96744e844
   - enabled: 1
-    path: Assets/Scenes/VNFormative 1.unity
-    guid: 2d346b7ccfb8aca4aa839e366acd0368
-  - enabled: 0
-    path: Assets/Scenes/Tutorial1.unity
-    guid: c9b1b8003b2d283449727b3c416dace4
+    path: Assets/Scenes/VNTesting.unity
+    guid: 9e1574f53be9dbd449c7f60fa8dae55d
   - enabled: 1
     path: Assets/Scenes/LevelSelect.unity
     guid: d123ea784b5e12c4c8816d2b22feff4a
