@@ -156,9 +156,9 @@ public class LineSnapper : MonoBehaviour
 
         //Save values
         if (lineCount >= 1)
-            value2 = value.ToString("F2");
+            value2 = value.ToString("0.##");
         if (lineCount < 1)
-            value1 = value.ToString("F2");
+            value1 = value.ToString("0.##");
 
         return textObj;
     }

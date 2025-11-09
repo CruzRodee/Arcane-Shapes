@@ -22,6 +22,7 @@ public class GameBehaviour : MonoBehaviour
     private const string castBtnText2 = "Erase";
     private const string undoBtnText1 = "Undo";
     private const string undoBtnText2 = "Cast";
+    private const string undoBtnText3 = "Back";
     private const string wrongShapeMsg = "Ang shape na pinili ay mali. Subukan ulit.";
     private const string invalidFormulaMsg = "Hindi wasto ang ibinigay na formula.";
     private const string mismatchedAnswerMsg = "Hindi tugma sa formula ang ibinigay na sagot.";
@@ -297,7 +298,7 @@ public class GameBehaviour : MonoBehaviour
         }
         else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
         {
-            undoText.text = undoBtnText1;
+            undoText.text = undoBtnText3;
             undoBtnImg.color = Color.red;
             undoBtnLogo.sprite = undoLogoDefault;
         }
@@ -754,12 +755,12 @@ public class GameBehaviour : MonoBehaviour
 
         if (fa.calcMode)
         {
-            if (calcBtnText != null) calcBtnText.text = "Calculator";
+            if (calcBtnText != null) calcBtnText.text = "Calculate";
             fa.ExitCalc();
         }
         else
         {
-            if (calcBtnText != null) calcBtnText.text = "Formula Input";
+            if (calcBtnText != null) calcBtnText.text = "Input Formula";
             fa.EnterCalc();
         }
     }
@@ -805,7 +806,7 @@ public class GameBehaviour : MonoBehaviour
         if (correctionPerc != null)
         {
             stringBuilder.Clear();
-            stringBuilder.Append("Error: ");
+            stringBuilder.Append("Level Failed! \n Error: ");
             stringBuilder.Append(Math.Round(Math.Abs(error), 2));
             stringBuilder.Append("%");
             correctionPerc.text = stringBuilder.ToString();
@@ -818,6 +819,10 @@ public class GameBehaviour : MonoBehaviour
     public void DoneMeasure()
     {
         isDoneMeasuring = true;
+
+        //Change to back to avoid confusion
+        undoText.text = undoBtnText3;
+
         if (textFinish != null) textFinish.text = castBtnText2;
 
         if (GlobalVariables.level < 3)
@@ -855,6 +860,9 @@ public class GameBehaviour : MonoBehaviour
         {
             StartCoroutine(SlideOCRBoard(false));
             Invoke(nameof(ToggleLineDelay), OCRSLIDETIME);
+
+            //Revert to Undo
+            undoText.text = undoBtnText1;
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;

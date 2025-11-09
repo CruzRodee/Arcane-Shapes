@@ -29,6 +29,7 @@ public class HOGameScript : MonoBehaviour
     private const string castBtnText2 = "Erase";
     private const string undoBtnText1 = "Undo";
     private const string undoBtnText2 = "Cast";
+    private const string undoBtnText3 = "Back";
 
     // Dialogue constants - cached to avoid GC
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin";
@@ -331,7 +332,7 @@ public class HOGameScript : MonoBehaviour
         }
         else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
         {
-            undoText.text = undoBtnText1;
+            undoText.text = undoBtnText3;
             undoBtnImg.color = Color.red;
             undoBtnLogo.sprite = undoLogoDefault;
             if (isAllSolved)
@@ -957,12 +958,12 @@ public class HOGameScript : MonoBehaviour
 
         if (fa.calcMode)
         {
-            if (calcBtnText != null) calcBtnText.text = "Calculator";
+            if (calcBtnText != null) calcBtnText.text = "Calculate";
             fa.ExitCalc();
         }
         else
         {
-            if (calcBtnText != null) calcBtnText.text = "Formula Input";
+            if (calcBtnText != null) calcBtnText.text = "Input Formula";
             fa.EnterCalc();
         }
     }
@@ -1021,6 +1022,9 @@ public class HOGameScript : MonoBehaviour
     {
         isDoneMeasuring = true;
 
+        //Change to back to avoid confusion
+        undoText.text = undoBtnText3;
+
         if (textFinish != null) textFinish.text = castBtnText2;
         if (calcBtnObj != null) calcBtnObj.SetActive(true);
 
@@ -1078,6 +1082,9 @@ public class HOGameScript : MonoBehaviour
         {
             StartCoroutine(SlideOCRBoard(false));
             Invoke(nameof(ToggleLineDelay), OCRSLIDETIME);
+
+            //Revert to Undo
+            undoText.text = undoBtnText1;
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;
@@ -1215,7 +1222,7 @@ public class HOGameScript : MonoBehaviour
     {
         if (correctionPerc != null)
         {
-            correctionPerc.text = $"Error: {roundedError}%";
+            correctionPerc.text = $"Level Failed! \n Error: {roundedError}%";
             correctionPerc.gameObject.SetActive(true);
         }
 
