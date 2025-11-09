@@ -92,7 +92,9 @@ public class LS_EventsScript : MonoBehaviour
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
-                savedGame.totalLOLevel++;
+                if(GlobalVariables.playerWin)
+                    savedGame.totalLOLevel++;
+
                 int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
                 if (savedGame.totalLOLevel >= maxLOLevel)
                 {

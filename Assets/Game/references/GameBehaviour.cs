@@ -836,8 +836,7 @@ public class GameBehaviour : MonoBehaviour
 
         if (textFinish != null) textFinish.text = castBtnText2;
 
-        if (GlobalVariables.level < 3)
-            calcBtnObj?.SetActive(true);
+        calcBtnObj?.SetActive(true);
 
         if (var1Display != null)
             var1Display.GetComponent<Text>().text = lineSnapper?.value1;

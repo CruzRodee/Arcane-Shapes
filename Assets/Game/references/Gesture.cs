@@ -151,7 +151,7 @@ public class LineSnapper : MonoBehaviour
         textObj.transform.position = position + new Vector3(0.2f, 0.2f, 0);
 
         TextMesh textMesh = textObj.AddComponent<TextMesh>();
-        textMesh.text = value.ToString("F2");  // Standardized to 2 decimal places
+        textMesh.text = value.ToString("0.##");  // Standardized to 2 decimal places
         textMesh.characterSize = 0.4f;
         textMesh.anchor = TextAnchor.MiddleCenter;
 
