@@ -690,7 +690,7 @@ public class GameBehaviour : MonoBehaviour
 
             //Update Measurements
             if (measureCounter.activeInHierarchy)
-                measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {lineSnapper.GetMaxLinesForShape() - lineSnapper.lineCount}";
+                measureCounter.GetComponent<TextMeshProUGUI>().text = lineSnapper.GetMeasuresLeftText();
 
             ActivateEquationForShape(chosenShape);
         }

@@ -166,12 +166,9 @@ public class LineSnapper : MonoBehaviour
 
     void Update()
     {
-        if (lineCount >= GetMaxLinesForShape())
-        {
-            //main.SetCastingState(true);
+        //Check for Maxed out lines or UI blocking
+        if (lineCount >= GetMaxLinesForShape() || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             return;
-        }
-        //else { main.SetCastingState(false); }
 
         if (lineCount == 0)
             currentLine = firstLine;
@@ -323,6 +320,11 @@ public class LineSnapper : MonoBehaviour
         return 0f;
     }
 
+    public string GetMeasuresLeftText()
+    {
+        return $"Measurements: {GetMaxLinesForShape() - lineCount}";
+    }
+
     void FinishLine()
     {
         Vector3 start = currentLine.GetPosition(0);
@@ -346,9 +348,9 @@ public class LineSnapper : MonoBehaviour
 
             //Update Measurements
             if (main != null)
-                main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
             else
-                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
         }
         else
         {
@@ -380,9 +382,9 @@ public class LineSnapper : MonoBehaviour
 
             //Update Measurements
             if (main != null)
-                main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
             else
-                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
 
             return;
         }
@@ -397,9 +399,9 @@ public class LineSnapper : MonoBehaviour
 
         //Update Measurements
         if (main != null)
-            main.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+            main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
         else
-            hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = $"Measurements: {GetMaxLinesForShape() - lineCount}";
+            hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
 
         //Reset shape fill
         if (hoMain != null)
