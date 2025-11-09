@@ -8,6 +8,7 @@ using UnityEngine.UI;   //text
 public class MM_UIScript : MonoBehaviour
 {
     private Text overlayText;
+    private string VNSceneName = "VNTesting"; //The first VN Scene to load for new games        
     public GameObject overlayPanel;
     public Button btnContinue;
     public GameObject panelNotify;
@@ -124,23 +125,17 @@ public class MM_UIScript : MonoBehaviour
         panelInputPass.SetActive(false);
         if (passwordInputField.text.ToLower() == "all")
         {
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
         else if (passwordInputField.text.ToLower() == "simple")
         {
             mode = 1;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
         else if (passwordInputField.text.ToLower() == "compound")
         {
             mode = 2;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
         else if (passwordInputField.text.ToLower() == "reset")
@@ -150,9 +145,8 @@ public class MM_UIScript : MonoBehaviour
 
         else
         {
-            passwordWrong();
-
             //notify screen say PASSWORD INVALID. PLS ASK COORDINATOR FOR PASSWORD
+            passwordWrong();
         }
 
     }
@@ -201,7 +195,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void LoadFirstScene()
     {
-        Debug.Log("new game");
+        Debug.Log("New Game Has Been Started");
         panelNotify.SetActive(true);
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
@@ -225,7 +219,7 @@ public class MM_UIScript : MonoBehaviour
 
     private void DelayedTut1()
     {
-        SceneManager.LoadScene("Tutorial1");
+        SceneManager.LoadScene(VNSceneName);
     }
     private void DelayedHall()
     {
