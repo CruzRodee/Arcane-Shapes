@@ -79,8 +79,6 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level = 1; //Set level to 1 after playing
             if (GlobalVariables.playerWin && GlobalVariables.level < 6 && !GlobalVariables.isLOGame)
                 GlobalVariables.level++; //Level up after win until 6 for HO
-            else if (GlobalVariables.playerWin && GlobalVariables.level < 3)
-                GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Prestige/Loop again through HO Levels mechanic
             if (GlobalVariables.playerWin && GlobalVariables.level > 6 && !GlobalVariables.isLOGame)
@@ -92,11 +90,27 @@ public class LS_EventsScript : MonoBehaviour
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
-                if(GlobalVariables.playerWin)
-                    savedGame.totalLOLevel++;
+                int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5; //3 levels, 5 shapes, 1 extra to ensure all done
 
-                int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
-                if (savedGame.totalLOLevel >= maxLOLevel)
+                if (GlobalVariables.playerWin)
+                    savedGame.totalLOLevel += GlobalVariables.NUM_LO_LEVELS; //Skip to different shapes level 1 first
+
+                if(savedGame.totalLOLevel > maxLOLevel) //Only level after all shapes done
+                {
+                    if (GlobalVariables.playerWin)
+                        GlobalVariables.level++; //Level up after win until 3 for LO then reset
+
+                    //Update shape levels
+                    savedGame.squareLvl = GlobalVariables.level;
+                    savedGame.rectLvl = GlobalVariables.level;
+                    savedGame.triLvl = GlobalVariables.level;
+                    savedGame.circleLvl = GlobalVariables.level;
+                    savedGame.scircleLvl = GlobalVariables.level;
+
+                    savedGame.totalLOLevel -= maxLOLevel; //Go to level 2 of shapes
+                }
+                
+                if (GlobalVariables.level >= 4)
                 {
                     //Reset Levels, Do not show walang datos
                     GlobalVariables.level = 1;

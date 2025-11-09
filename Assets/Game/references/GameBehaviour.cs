@@ -814,9 +814,15 @@ public class GameBehaviour : MonoBehaviour
         if (correctionPerc != null)
         {
             stringBuilder.Clear();
-            stringBuilder.Append("Level Failed! \n Error: ");
-            stringBuilder.Append(Math.Round(Math.Abs(error), 2));
-            stringBuilder.Append("%");
+            if (error != 0)
+            {
+                stringBuilder.Append("Casting Failed! \n Error: ");
+                stringBuilder.Append(Math.Round(Math.Abs(error), 2));
+                stringBuilder.Append("%");
+            }
+            else
+                stringBuilder.Append("Spell Complete");
+
             correctionPerc.text = stringBuilder.ToString();
             correctionPerc.gameObject.SetActive(true);
         }
