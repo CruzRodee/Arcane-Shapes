@@ -55,4 +55,24 @@ public class GameLevelSoundPlayer : MonoBehaviour
         if (sfxSet.Length > 0 && sfxSet[clipIndex] != null)
             sfxSource.PlayOneShot(sfxSet[clipIndex], volume * volumeFactor);
     }
+
+    public float GetBGMVolume()
+    {
+        return bgmSource.volume;
+    }
+
+    public float GetSFXVolume()
+    {
+        return sfxSource.volume;
+    }
+
+    public void setBGMVolume(float volume)
+    {
+        bgmSource.volume = volume * volumeFactor;
+    }
+
+    public void setSFXVolume(float volume)
+    {
+        sfxSource.volume = volume * volumeFactor;
+    }
 }

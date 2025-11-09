@@ -10,13 +10,14 @@ public class HOGameBeh : MonoBehaviour
     public ShapeGenerator shapeGenerator;
     public ShapeClickManager shapeClickManager;
     public HOGameScript script;
+    public CanvasGroup panelCastingCanvasGroup;
 
-
-
-    void Start()
+    public void SetPanelCastingTranslucent(bool value)
     {
-
-
+        if (value)
+            panelCastingCanvasGroup.alpha = 0.3f;
+        else
+            panelCastingCanvasGroup.alpha = 1f;
     }
 
     public void Initiate()

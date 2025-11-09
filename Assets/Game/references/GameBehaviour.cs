@@ -13,8 +13,7 @@ public class GameBehaviour : MonoBehaviour
 
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
-    private float ENDDELAY = 4.0f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
 
     // OPTIMIZATION: Cached strings to avoid allocations
@@ -114,7 +113,7 @@ public class GameBehaviour : MonoBehaviour
     public GameObject backspaceButton;
 
     [Header("Variable Displays")]
-    public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, cirVarDisp2, semiVarDisp1, semiVarDisp2;
 
     [Header("Sound")]
     public GameObject soundPlayerObj;
@@ -174,7 +173,7 @@ public class GameBehaviour : MonoBehaviour
     private static readonly Vector3 normalScale = new Vector3(1f, 1f, 1f);
     private static readonly Vector3 smallScale = new Vector3(0.9f, 0.9f, 0.9f);
 
-    private static readonly WaitForSeconds blinkDelay = new WaitForSeconds(STARTDELAY + 0.4f);
+    private static  WaitForSeconds blinkDelay = new WaitForSeconds(GlobalVariables.introLen + 0.4f);
     private static readonly WaitForSeconds dialogueWait = new WaitForSeconds(DIALOGUESLIDETIME);
     private static readonly WaitForSeconds ocrWait = new WaitForSeconds(OCRSLIDETIME);
 
@@ -355,6 +354,7 @@ public class GameBehaviour : MonoBehaviour
         {
             case SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
+                var2Display = sqVarDisp2;
                 break;
             case SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -366,9 +366,11 @@ public class GameBehaviour : MonoBehaviour
                 break;
             case SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
+                var2Display = cirVarDisp2;
                 break;
             case SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
+                var2Display = semiVarDisp2;
                 break;
         }
     }
@@ -826,6 +828,15 @@ public class GameBehaviour : MonoBehaviour
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper?.value2;
 
+        switch (GlobalVariables.loSelectedShape) //Match value 1 for display 2 if single line
+        {
+            case SHAPES.SQUARE:
+            case SHAPES.CIRCLE:
+            case SHAPES.SEMI_CIRCLE:
+                var2Display.GetComponent<Text>().text = lineSnapper?.value1;
+                break;
+        }
+
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper?.ToggleLineText();
     }
@@ -905,8 +916,11 @@ public class GameBehaviour : MonoBehaviour
 
     private IEnumerator DelayedCastAnimation()
     {
+        //Reduce the BGM volume
+        soundPlayer.setBGMVolume(soundPlayer.GetBGMVolume() / 2);
+
         yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
-        
+
         HideNewUI();
 
         int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
@@ -914,10 +928,10 @@ public class GameBehaviour : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 
@@ -1293,29 +1307,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void InitProblem()
     {
-        float measure1 = 1f, measure2 = 1f;
-        bool isCircleShape = GlobalVariables.loSelectedShape == SHAPES.CIRCLE ||
-                           GlobalVariables.loSelectedShape == SHAPES.SEMI_CIRCLE;
+        float[] measures = GlobalVariables.GetLOProblemMeasures();
 
-        float[] measureArray = isCircleShape ? currentCircleMeasureArray : currentMeasureArray;
-        int arrayLength = measureArray != null ? measureArray.Length : 1;
-
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        if (measureArray != null && arrayLength > 0)
-        {
-            measure1 = measureArray[rand.Next(arrayLength)];
-            measure2 = measureArray[rand.Next(arrayLength)];
-        }
-
-        if (GlobalVariables.loSelectedShape == SHAPES.RECTANGLE && measure1 == measure2)
-        {
-            if (rand.Next(2) == 0)
-                measure1 = Mathf.Max(1, measure1 - 1);
-            else
-                measure2 = Mathf.Max(1, measure2 - 1);
-        }
-
-        SetManualProblem(GlobalVariables.loSelectedShape, measure1, measure2);
+        SetManualProblem(GlobalVariables.loSelectedShape, measures[0], measures[1]);
     }
     #endregion
 }

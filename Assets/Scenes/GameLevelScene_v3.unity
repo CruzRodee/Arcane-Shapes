@@ -1818,6 +1818,24 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &1060874738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9201553422938471209, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1060874739 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 713606481645659019, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1060874740 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3262829953104116594, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1133333003
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2312,6 +2330,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1215671720 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 9119701883312795731, guid: 760b825cd35d7dc46935c80d39b0f0ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 289898860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1271243417
 GameObject:
   m_ObjectHideFlags: 0
@@ -2714,13 +2738,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751519863}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5004493, y: -0.49955034, z: 0.500327, w: 0.49967283}
-  m_LocalPosition: {x: 1.6000004, y: -0.8499999, z: 0.9}
-  m_LocalScale: {x: 0.87, y: 31.60001, z: 0.8999999}
+  m_LocalRotation: {x: -0.5000612, y: -0.49993882, z: 0.49993882, w: 0.5000612}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2062185999}
-  m_LocalEulerAnglesHint: {x: -179.986, y: 90, z: -89.91101}
+  m_LocalEulerAnglesHint: {x: -179.986, y: 90, z: -90}
 --- !u!64 &1751519865
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2947,12 +2971,15 @@ MonoBehaviour:
   notifyTextObj: {fileID: 2068019611}
   canvasScript: {fileID: 2132351598}
   sqVarDisp1: {fileID: 289898862}
+  sqVarDisp2: {fileID: 1060874740}
   rectVarDisp1: {fileID: 288221753}
   rectVarDisp2: {fileID: 288221752}
   triVarDisp1: {fileID: 288221751}
   triVarDisp2: {fileID: 288221750}
   cirVarDisp1: {fileID: 288221749}
+  cirVarDisp2: {fileID: 1060874739}
   semiVarDisp1: {fileID: 288221748}
+  semiVarDisp2: {fileID: 1060874738}
   error: 100
   isFinalAnswer: 0
 --- !u!4 &1934672892
@@ -2985,6 +3012,7 @@ MonoBehaviour:
   shapeGenerator: {fileID: 0}
   shapeClickManager: {fileID: 0}
   script: {fileID: 1934672891}
+  panelCastingCanvasGroup: {fileID: 1215671720}
 --- !u!1 &1972608089
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,7 +3041,7 @@ Transform:
   m_GameObject: {fileID: 1972608089}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 1.43, y: -0.37, z: 1.06}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
