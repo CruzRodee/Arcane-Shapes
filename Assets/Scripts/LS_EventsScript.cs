@@ -174,20 +174,19 @@ public class LS_EventsScript : MonoBehaviour
         // 0 PASS UNLOCK ALL: ALL
         // 1 PASS LOWER: SIMPLE
         // 2 PASS HIGHER: COMPOUND
-        if (savedGame.mode == 1)
+        if(savedGame.mode == 0)
+            btnCompound.interactable = true;
+        else if (savedGame.mode == 1)
         {
-            btnCompound.interactable = false;
             //disable compound shapes button
+            btnCompound.interactable = false;
+
+            //Re-enable compound button when finish one level for each LO shape
+            if (GlobalVariables.IsHOUnlocked(savedGame))
+                btnCompound.interactable = true;
         }
         else if (savedGame.mode == 2)
         {
-            /*
-            btnSemiCircle.interactable = false;
-            btnCircle.interactable = false;
-            btnSquare.interactable = false;
-            btnTriangle.interactable = false;
-            btnRectangle.interactable = false;
-            */
             btnLO.interactable = false;
         }
 
@@ -284,9 +283,6 @@ public class LS_EventsScript : MonoBehaviour
                 break;
         }
 
-        // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
-        // {
-        btnCompound.GetComponent<Button>().interactable = true; // Activate button
         hoLevel.text = "Lvl " + data.compLvl;
         GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
         switch (data.compLvl)
