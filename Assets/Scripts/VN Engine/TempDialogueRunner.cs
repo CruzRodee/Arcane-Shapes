@@ -27,6 +27,7 @@ public class TempDialogueRunner : MonoBehaviour
         }
 
         Debug.Log("Finished reading dialogue file.");
+        //PlayerDataManager.instance.EndSession();
 
         // Test PlayerDataManager directly
         // Debug.Log("=== Testing PlayerDataManager Directly ===");
@@ -50,6 +51,6 @@ public class TempDialogueRunner : MonoBehaviour
         //     Debug.LogError("PlayerDataManager instance is NULL!");
         // }
 
-        //SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("LevelSelect");
     }
 }

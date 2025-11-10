@@ -54,6 +54,8 @@ Oz "Aba, magaling, $PlayerData.playerName! Maligayang pagdating sa Arcana Academ
 
 "Oh sige, dahil bago ka lang dito, ako na maghahatid sayo sa klase. {c} Halika na, at alam kong di mo pa alam ang daan daan dito."
 
+SaveCheckpoint(Chapter1_Intro1)
+
 HideDB(-spd 1)
 Player.Move(1.5 -spd 2), Player.Hide()
 Oz.Move(1.5 -spd 2), Oz.Hide()

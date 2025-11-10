@@ -64,6 +64,9 @@ public class MM_UIScript : MonoBehaviour
     }
     void Start()
     {
+        // THIS IS OUR DATA GATHERING SCRIPT
+        PlayerDataManager.EnsureInstance();
+
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
@@ -159,6 +162,12 @@ public class MM_UIScript : MonoBehaviour
 
         overlayText.text = "Saved game Loaded!";
         //Jump to the game immediately (load all saved data)
+
+        // Start PlayerData session for continuing players
+        if (PlayerDataManager.instance != null)
+        {
+            PlayerDataManager.instance.StartNewSession();
+        }
         LoadHallScene(); //Data loaded at start, continue button disabled by default so fast fingers cant press accidentalt
     }
 
@@ -202,6 +211,13 @@ public class MM_UIScript : MonoBehaviour
 
         saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 0, 0);
         Debug.Log("New Game with mode: " + mode);
+
+        // Start PlayerData session AFTER saving old game data
+        if (PlayerDataManager.instance != null)
+        {
+            PlayerDataManager.instance.StartNewSession();
+        }
+
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
 
