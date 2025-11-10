@@ -1,0 +1,7 @@
+Narrator "If you're in this dialogue, you're either testing--"
+
+Test "Or something has gone terribly wrong."
+
+"Hopefully you're just testing."
+
+"Otherwise, double-check if you're passing stuff correctly."
