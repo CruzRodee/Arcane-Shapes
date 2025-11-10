@@ -141,10 +141,17 @@ public class MM_UIScript : MonoBehaviour
             mode = 2;
             LoadFirstScene();
         }
+
+        else if (passwordInputField.text.ToLower() == "skip")
+        {
+            mode = 0;
+            LoadHallScene();
+        }
         else if (passwordInputField.text.ToLower() == "reset")
         {
             notifyDeleteGame();
         }
+
 
         else
         {
