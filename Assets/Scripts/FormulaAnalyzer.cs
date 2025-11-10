@@ -377,6 +377,27 @@ public class FormulaAnalyzer : MonoBehaviour
         return false; //Default response
     }
 
+    //Used for evaluating calculator input on click
+    private string CalculatorEvaluate()
+    {
+        string evalResult = "Invalid Input"; //Default to invalid
+
+        try
+        {          
+            bool isValidExpression = ExpressionEvaluator.Evaluate(tempEval, out float evaluatorReturn);
+
+            //Round evalAnswer to 2 decimal places, do same for all answers
+            if (isValidExpression)
+                evalResult = ((float)System.Math.Round(evaluatorReturn, 2)).ToString();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e); //Logs exception
+        }
+
+        return evalResult;
+    }
+
     //Evualutaes the string formula with NCalc Expression.Evaluate(), stores answer in evalAnswer formula validity in isValidFormula
     private void EvaluateFormula()
     {
@@ -420,6 +441,8 @@ public class FormulaAnalyzer : MonoBehaviour
         //Display default text based on mode
         if (!calcMode && displayString.Length < 1)
             formulaDispGUI.text = formulaDefaultText;
+        else if (calcMode && calcDispString.Length < 1 && tempEval.Length > 1)
+            formulaDispGUI.text = $"Answer: {CalculatorEvaluate()}";
         else if (calcMode && calcDispString.Length < 1)
             formulaDispGUI.text = calculatorDefaultText;
     }

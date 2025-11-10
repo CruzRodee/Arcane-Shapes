@@ -19,7 +19,7 @@ public class HOGameScript : MonoBehaviour
     private const int INITIAL_POOL_SIZE = 10;
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
@@ -159,11 +159,11 @@ public class HOGameScript : MonoBehaviour
 
     #region Variable Display References
     [Header("Variable Display Objects")]
-    public GameObject sqVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2;
     public GameObject rectVarDisp1, rectVarDisp2;
     public GameObject triVarDisp1, triVarDisp2;
-    public GameObject cirVarDisp1;
-    public GameObject semiVarDisp1;
+    public GameObject cirVarDisp1, cirVarDisp2;
+    public GameObject semiVarDisp1, semiVarDisp2;
 
     private GameObject var1Display, var2Display;
     #endregion
@@ -176,7 +176,6 @@ public class HOGameScript : MonoBehaviour
     private GameBehaviour.SHAPES currentShape;
     private string chosenShape;
     private float inputAnswer = 0f;
-    private float ENDDELAY = 4.0f;
 
     // State flags
     private bool STARTUP = true;
@@ -488,7 +487,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
-                var2Display = null;
+                var2Display = sqVarDisp2;
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -500,11 +499,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
-                var2Display = null;
+                var2Display = cirVarDisp2;
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
-                var2Display = null;
+                var2Display = semiVarDisp2;
                 break;
             default:
                 var1Display = null;
@@ -522,6 +521,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 if (var1Text) var1Text.text = "S";
+                if (var2Text) var2Text.text = "S";
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 if (var1Text) var1Text.text = "L";
@@ -533,9 +533,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
         }
     }
@@ -748,6 +750,9 @@ public class HOGameScript : MonoBehaviour
     private void ProcessCorrectShapeSelection()
     {
         hideDiaBoxWhileMeasuring();
+
+        //Make panel opaque
+        hoGameBeh.SetPanelCastingTranslucent(false);
 
         // Batch UI updates
         if (btnConfirmSpell != null) btnConfirmSpell.gameObject.SetActive(false);
@@ -1043,6 +1048,16 @@ public class HOGameScript : MonoBehaviour
         if (var2Display != null)
         {
             var text2 = var2Display.GetComponent<Text>();
+
+            switch (currentShape) //Match value 1 for display 2 if single line
+            {
+                case GameBehaviour.SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    text2.text = lineSnapper.value1;
+                    return;
+            }
+
             if (text2 != null) text2.text = lineSnapper.value2;
         }
     }
@@ -1255,6 +1270,9 @@ public class HOGameScript : MonoBehaviour
 
         if (hoGameBeh?.spellCastEvent != null)
             hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+
+        //Make panelCasting translucent during shape selection
+        hoGameBeh.SetPanelCastingTranslucent(true);
     }
 
     private void ProcessAllShapesSolved()
@@ -1265,6 +1283,9 @@ public class HOGameScript : MonoBehaviour
         if (btnMeasure != null) btnMeasure.gameObject.SetActive(false);
 
         isAllSolved = true;
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessFinalAnswer()
@@ -1343,6 +1364,10 @@ public class HOGameScript : MonoBehaviour
             animScript.VideoPlayerScript.Stop();
             animScript.VideoPlayerScript.PlayBGAnim();
         }
+
+        //Make panelCasting translucent;
+        hoGameBeh.SetPanelCastingTranslucent(true);
+
         ModifiedToUI();
     }
 
@@ -1420,6 +1445,9 @@ public class HOGameScript : MonoBehaviour
             i++;
             ProcessCompoundShape(i, dict.Key.shape, dict.Value, n);
         }
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessCompoundShape(int index, GameBehaviour.SHAPES shape, float value, int n)
@@ -1565,6 +1593,9 @@ public class HOGameScript : MonoBehaviour
 
     private IEnumerator DelayedCastAnimation()
     {
+        //Reduce the BGM volume
+        soundPlayer.setBGMVolume(soundPlayer.GetBGMVolume() / 2);
+
         yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
 
         HideNewUI();
@@ -1574,10 +1605,10 @@ public class HOGameScript : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 

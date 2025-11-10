@@ -94,21 +94,21 @@ public class LS_EventsScript : MonoBehaviour
             {
                 savedGame.totalLOLevel++;
                 int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
-                if(savedGame.totalLOLevel >= maxLOLevel)
+                if (savedGame.totalLOLevel >= maxLOLevel)
                 {
-                    //Reset Levels
-                    GlobalVariables.level = 0;
+                    //Reset Levels, Do not show walang datos
+                    GlobalVariables.level = 1;
                     GlobalVariables.percent = 0f;
-                    savedGame.totalLOLevel = 0;
-                    savedGame.squareLvl = 0;
-                    savedGame.rectLvl = 0;
-                    savedGame.triLvl = 0;
-                    savedGame.circleLvl = 0;
-                    savedGame.scircleLvl = 0;
+                    savedGame.totalLOLevel = 1;
+                    savedGame.squareLvl = 1;
+                    savedGame.rectLvl = 1;
+                    savedGame.triLvl = 1;
+                    savedGame.circleLvl = 1;
+                    savedGame.scircleLvl = 1;
 
                     savedGame.loPres++; //Increase pres level
                 }
-                
+
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -172,6 +172,7 @@ public class LS_EventsScript : MonoBehaviour
             btnTriangle.interactable = false;
             btnRectangle.interactable = false;
             */
+            btnLO.interactable = false;
         }
 
 
@@ -223,7 +224,7 @@ public class LS_EventsScript : MonoBehaviour
 
         //Determine what shape of LO right now
         int level = 0;
-        if(savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
+        if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             level = savedGame.squareLvl;
             loShapeTxt.text = "Square";
@@ -376,18 +377,22 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedRoomEnter()
     {
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v1";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
 
     private void DelayedHORoomEnter()
     {
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v3";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
-    
+
     public void enterLowOrder()
     {
+        GlobalVariables.enteringLO = true; //Mark as LO room
+
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             enterSquare();
@@ -473,6 +478,7 @@ public class LS_EventsScript : MonoBehaviour
     {
         UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
+        GlobalVariables.enteringLO = false; // Mark as HO room
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room
         saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");
