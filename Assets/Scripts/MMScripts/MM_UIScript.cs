@@ -8,7 +8,7 @@ using UnityEngine.UI;   //text
 public class MM_UIScript : MonoBehaviour
 {
     private Text overlayText;
-    private string VNSceneName = "VNTesting"; //The first VN Scene to load for new games        
+    private string TutorialIntroFile = "Chapter1_Intro1"; //The first VN txt file to load for new games        
     public GameObject overlayPanel;
     public Button btnContinue;
     public GameObject panelNotify;
@@ -235,7 +235,7 @@ public class MM_UIScript : MonoBehaviour
 
     private void DelayedTut1()
     {
-        SceneManager.LoadScene(VNSceneName);
+        VNSceneManager.instance.LoadVNSceneByPath(TutorialIntroFile, null, "LevelSelect");
     }
     private void DelayedHall()
     {
