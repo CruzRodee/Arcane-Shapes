@@ -29,24 +29,10 @@ public class CheckpointData
     public float timeFromSessionStart;
     public float timeFromLastCheckpoint;
 
-    // Changed to a serializable list
-    public List<DataPair> dataSnapshot = new List<DataPair>();
+    // Simple dictionary - will serialize cleanly with Newtonsoft
+    public Dictionary<string, string> dataSnapshot = new Dictionary<string, string>();
 }
 
-
-// NEW: Serializable key-value pair
-[Serializable]
-public class DataPair
-{
-    public string key;
-    public string value; // Store as string - you can parse it later if needed
-
-    public DataPair(string key, string value)
-    {
-        this.key = key;
-        this.value = value;
-    }
-}
 
 public class PlayerDataManager : MonoBehaviour
 {
@@ -191,7 +177,7 @@ public class PlayerDataManager : MonoBehaviour
             timestamp = DateTime.Now,
             timeFromSessionStart = currentTime,
             timeFromLastCheckpoint = timeFromLast,
-            dataSnapshot = new List<DataPair>()
+            dataSnapshot = new Dictionary<string, string>()
         };
 
         // Add any additional data
@@ -199,7 +185,7 @@ public class PlayerDataManager : MonoBehaviour
         {
             foreach (var kvp in additionalData)
             {
-                checkpoint.dataSnapshot.Add(new DataPair(kvp.Key, kvp.Value?.ToString() ?? "null"));
+                checkpoint.dataSnapshot[kvp.Key] = kvp.Value?.ToString() ?? "null";
             }
         }
 
@@ -257,7 +243,9 @@ public class PlayerDataManager : MonoBehaviour
         try
         {
             // Save entire session to the SAME file (overwrites previous state)
-            string json = JsonUtility.ToJson(currentSession, true);
+            // string json = JsonUtility.ToJson(currentSession, true);
+            // Use Newtonsoft.Json for cleaner output
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(currentSession, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(currentSessionFilePath, json);
 
             Debug.Log($"[PlayerData] Session updated: {currentSession.checkpoints.Count} checkpoints");
