@@ -28,7 +28,24 @@ public class CheckpointData
     public DateTime timestamp;
     public float timeFromSessionStart;
     public float timeFromLastCheckpoint;
-    public Dictionary<string, object> dataSnapshot = new Dictionary<string, object>();
+
+    // Changed to a serializable list
+    public List<DataPair> dataSnapshot = new List<DataPair>();
+}
+
+
+// NEW: Serializable key-value pair
+[Serializable]
+public class DataPair
+{
+    public string key;
+    public string value; // Store as string - you can parse it later if needed
+
+    public DataPair(string key, string value)
+    {
+        this.key = key;
+        this.value = value;
+    }
 }
 
 public class PlayerDataManager : MonoBehaviour
@@ -174,22 +191,15 @@ public class PlayerDataManager : MonoBehaviour
             timestamp = DateTime.Now,
             timeFromSessionStart = currentTime,
             timeFromLastCheckpoint = timeFromLast,
-            dataSnapshot = new Dictionary<string, object>()
+            dataSnapshot = new List<DataPair>()
         };
-
-        // Capture current VariableStore state
-        checkpoint.dataSnapshot["playerName"] = currentSession.playerName;
-        checkpoint.dataSnapshot["playerAge"] = currentSession.playerAge;
-        checkpoint.dataSnapshot["playerGrade"] = currentSession.playerGrade;
-        checkpoint.dataSnapshot["playerSex"] = currentSession.playerSex;
-        checkpoint.dataSnapshot["areaKnown"] = currentSession.areaKnown;
 
         // Add any additional data
         if (additionalData != null)
         {
             foreach (var kvp in additionalData)
             {
-                checkpoint.dataSnapshot[kvp.Key] = kvp.Value;
+                checkpoint.dataSnapshot.Add(new DataPair(kvp.Key, kvp.Value?.ToString() ?? "null"));
             }
         }
 
@@ -197,9 +207,10 @@ public class PlayerDataManager : MonoBehaviour
 
         Debug.Log($"[PlayerData] Checkpoint '{checkpointName}' saved at {checkpoint.timestamp}\n" +
                   $"  Time from session start: {checkpoint.timeFromSessionStart:F2}s\n" +
-                  $"  Time from last checkpoint: {checkpoint.timeFromLastCheckpoint:F2}s");
+                  $"  Time from last checkpoint: {checkpoint.timeFromLastCheckpoint:F2}s\n" +
+                  $"  Data entries: {checkpoint.dataSnapshot.Count}");
 
-        // Auto-save if enabled - updates the SAME file
+        // Auto-save if enabled
         if (autoSaveOnCheckpoint)
         {
             SaveSessionData();
