@@ -1,12 +1,23 @@
-Oz "Bago natin talakayin ang AREA ng mga hugis. . ."
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
+Oz [talk] "Bago natin talakayin ang AREA ng mga hugis. . ."
 
 "Kailangan alam mo muna ang mga tawag sa kanila!"
 
 "Naaalala mo pa ba?"
 
+SetLayerMedia(background -m Intro_Square1)
+
 "Anong tawag sa hugis na ito?"
 
+HideDB(), Oz.Hide()
+
 wait(2)
+
+ClearLayerMedia(cinematic)
 
 $correct = false
 
@@ -19,18 +30,20 @@ choice "Ano ang tawag sa hugis na ito?"
     -Triangle
 }
 
+Oz.Show()
+
 if($correct)
 {
-    "Tama! Magaling!"
+    Oz [surprised] "Tama! Magaling!"
 }
 else
 {
-    "Mali! Ang tawag dito ay SQUARE."
+    Oz [sighsad] "Mali! Ang tawag dito ay SQUARE."
 }
 
-"Sige, ngayon pagusapan natin ang AREA!"
+Oz [talk] "Sige, ngayon pagusapan natin ang AREA!"
 
-""Alam mo ba kung ano ang ibig sabihin ng AREA?"
+"Alam mo ba kung ano ang ibig sabihin ng AREA?"
 
 "Ang AREA ay kung gaano kalaki ang sakop ng isang hugis."
 
@@ -42,6 +55,8 @@ else
 
 "Dito natin ginagamit ang GRID."
 
+SetLayerMedia(background -m Intro_Square2)
+
 "Ang GRID ay parang papel na may mga kahon--tinatawag nating mga SQUARES."
 
 "Bawat SQUARE ay isang maliit na parte ng espasyo. Isang unit ng AREA."
@@ -50,11 +65,15 @@ else
 
 "Halimbawa, kung apat na SQUARE ang sakop, ang area ay 4!"
 
+SetLayerMedia(background -m Intro_Square6)
+
 "Simple lang ‘di ba? Bibilangin mo lang kung ilang kahon ang sakop ng hugis."
 
 "Subukan natin ito ngayon!"
 
 "Bilangin mo ito ng mabuti."
+
+SetLayerMedia(background -m Intro_Square2)
 
 "Nabilang mo na?"
 
@@ -68,16 +87,21 @@ $answer = "<input>"
 
 if ($answer == 4)
 {
-    "Ang galing mo! Tama!"
+    Oz [surprised] "Ang galing mo! Tama!"
 }
 else
 {
-    "Hmm. Mali. Tingnan nating mabuti. Bawat maliit na kahon ay isa. {c}Bilangin natin ulit nang sabay."
+    Oz [sighsad] "Hmm. Mali. Tingnan nating mabuti. Bawat maliit na kahon ay isa. {c}Bilangin natin ulit nang sabay."
+    SetLayerMedia(background -m Intro_Square3)
     "Isa"
+    SetLayerMedia(background -m Intro_Square4)
     "Dalawa"
+    SetLayerMedia(background -m Intro_Square5)
     "Tatlo"
+    SetLayerMedia(background -m Intro_Square6)
     "Apat!"
-    "Ang tamang sagot ay 4!"
+    Oz [talk] "Ang tamang sagot ay 4!"
+    SetLayerMedia(background -m Intro_Square2)
 }
 
 "Nagets mo na kung ano ang AREA?"
@@ -85,12 +109,14 @@ else
 choice "Nagets mo na kung ano ang AREA?"
 {
     -Opo
-        "Magaling!"
+        Oz [surprised] "Magaling!"
     -Hindi
-        "Hala. . . Sige wag ka magalala, pero makinig ka mabuti!"
+        Oz [sighsad] "Hala. . . Sige wag ka magalala, pero makinig ka mabuti!"
 }
 
-"Marami pa akong ituturo sayo!"
+Oz [talk] "Marami pa akong ituturo sayo!"
+
+SetLayerMedia(background -m Intro_Rectangle2)
 
 "Ngayon, kung mas malaki naman ang hugis. . .halimbawa ay RECTANGLE{c}—pwede parin natin gamitin ang grid."
 
@@ -102,17 +128,27 @@ $answer = "<input>"
 
 if ($answer == 6)
 {
+    SetLayerMedia(background -m Intro_Rectangle3)
     "Tatlong kahon ang lapad, dalawang kahon ang taas."
     "Kaya 3 x 2 = 6! Tama!"
 }
 else
 {
+    SetLayerMedia(background -m Intro_Rectangle3)
     "Tatlong kahon ang lapad, dalawang kahon ang taas."
     "Kaya 3 x 2 = 6!"
     "Nagkamali ka ba ng bilang? Dibale"
 }
 
+SetLayerMedia(background -m Intro_Rectangle2)
+
 "Sige, ngayon, paano naman kung sobrang laki na ng hugis?"
+
+SetLayerMedia(background -m Intro_Impossible)
+
+HideDB(), Oz.Hide()
+
+wait(3), Oz.Show()
 
 "Bibilangin mo parin ba isa-isa? Baka abutin tayo ng gabi!"
 
@@ -120,24 +156,28 @@ else
 
 "Dito papasok ang mga FORMULA. {c}Mas mabilis, mas madali, at gumagana kahit anong hugis man yan!"
 
+SetLayerMedia(background -m Intro_Square2)
+
 "Tignan mo itong SQUARE. Baka may idea ka na kung ano ang formula."
 
 choice "Ano ang FORMULA ng SQUARE?"
 {
     - S x S
-        "Ang galing mo ah! Alam mo na agad!"
+        Oz [surprised] "Ang galing mo ah! Alam mo na agad!"
     - L x W
-        "Mali. . . yan ay para sa RECTANGLE!"
+        Oz [sighsad] "Mali. . . yan ay para sa RECTANGLE!"
         "Maganda ang hula, kasi pareho rin itong sukat pahalang at patayo."
     - B x H 
-        "Mali! Para yan sa TRIANGLE!"
+        Oz [sighsad] "Mali! Para yan sa TRIANGLE!"
         "Mamaya na natin yan pagusapan."
     - r x r x 3.14
-        "Mali! Para yan sa CIRCLE!"
+        Oz [sighsad] "Mali! Para yan sa CIRCLE!"
         "Mamaya na natin yan pagusapan."
 }
 
-"Alam mo ba kung bakit S x S?"
+Oz [talk] "Alam mo ba kung bakit S x S?"
+
+SetLayerMedia(background -m Intro_Square7)
 
 "Ang S ay ibig sabihin SIDE. Iyon ang haba ng SQUARE sa kahit aling SIDE nito."
 
