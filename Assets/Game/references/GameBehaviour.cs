@@ -143,6 +143,7 @@ public class GameBehaviour : MonoBehaviour
     private GameData savedGame;
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
+    [HideInInspector] public GameLevelDataModel levelData;
 
     // Cached RectTransform references
     private RectTransform rtDialogue;
@@ -230,6 +231,9 @@ public class GameBehaviour : MonoBehaviour
             ocrStartTransform = rightStartTransform;
             ocrEndTransform = rightEndTransform;
         }
+
+        //Start Data recording
+        levelData = new GameLevelDataModel();
     }
 
     void Start()
@@ -457,6 +461,10 @@ public class GameBehaviour : MonoBehaviour
             spriteHintImgSpell.color = spellColor;
         }
 
+        //Save Data, counts as new attempt and marks previous as loss,
+        error = 999; //To indicate restart
+        levelData.GameEndDataEntry(false, (GameBehaviour)this);
+
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
 
@@ -467,7 +475,7 @@ public class GameBehaviour : MonoBehaviour
 
     public void onQuit()
     {
-        error = 100f;
+        error = 444f;
         screenFadeAnimator?.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY);
     }
@@ -544,6 +552,9 @@ public class GameBehaviour : MonoBehaviour
         chosenShape = shape;
         hideAllEquation();
         equation?.SetActive(true);
+
+        //Update numChooseShape
+        levelData.numChooseShape++;
     }
 
     public void btnNo()
@@ -725,6 +736,9 @@ public class GameBehaviour : MonoBehaviour
     public void notifyWrongShape()
     {
         if (pNotify != null) pNotify.SetActive(true);
+
+        //Update Data collection
+        levelData.numWrongShape++;
     }
 
     private void ResumeOCR()
@@ -740,6 +754,9 @@ public class GameBehaviour : MonoBehaviour
             pNotify.SetActive(true);
             pNotifyText.text = invalidFormulaMsg;
         }
+
+        //Update Data collection
+        levelData.numInvalidFormula++;
     }
 
     public void NotifyMismatchedAnswer()
@@ -750,6 +767,9 @@ public class GameBehaviour : MonoBehaviour
             pNotify.SetActive(true);
             pNotifyText.text = mismatchedAnswerMsg;
         }
+
+        //Update Data collection
+        levelData.numMismatchCalc++;
     }
     #endregion
 
@@ -988,6 +1008,9 @@ public class GameBehaviour : MonoBehaviour
 
         GlobalVariables.gameFinished = true;
         GlobalVariables.isLOGame = true;
+
+        //Save Data
+        levelData.GameEndDataEntry(isWin, (GameBehaviour)this);
 
         SceneManager.LoadScene("LevelSelect");
     }

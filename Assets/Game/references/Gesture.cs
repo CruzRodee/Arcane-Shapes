@@ -17,6 +17,8 @@ public class LineSnapper : MonoBehaviour
     private GameBehaviour main;
     public string value1 = "???", value2 = "???";
 
+    public bool isReset = false; //Flag for counting if undo presses count
+
     //NEW
     public AnimScript animScript;
 
@@ -362,16 +364,23 @@ public class LineSnapper : MonoBehaviour
             else
             {
                 Destroy(currentLine.gameObject);
+
+                //End early to avoid counting broken lines
+                isDrawing = false;
+                return;
             }
         }
         isDrawing = false;
 
-        //NEW Note: Discard this since this cannot be seen anyways
-        //animScript.playerScript.GoodTrace(UnityEngine.Random.Range(0, 4)); //Random player animation
-
         //Play Finish SFX after stopping any current sfx
         sfxSource.Stop();
         PlaySFX(1, 1, 4);
+
+        //Update number of lines drawn
+        if (main != null)
+            main.levelData.measureLinesDrawn++;
+        else if (hoMain != null)
+            hoMain.levelData.measureLinesDrawn++;
     }
 
     public void OnUndoPressed()
@@ -391,9 +400,18 @@ public class LineSnapper : MonoBehaviour
 
         //Toggle Dialogue Box, reset button, flag and dialogue text
         if (hoMain == null)
+        {
             main.UndoMeasure();
-        else
+            if(!isReset)
+                main.levelData.numUndoUsed++;
+        }
+            
+        else if (hoMain != null)
+        {
             hoMain.UndoMeasure();
+            if (!isReset)
+                hoMain.levelData.numUndoUsed++;
+        }
 
         lineCount--; // Reduce lines by one if there is > 0 lines
 
