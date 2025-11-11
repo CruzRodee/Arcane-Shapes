@@ -32,7 +32,7 @@ public class FormulaAnalyzer : MonoBehaviour
     private TextMeshProUGUI formulaDispGUI; //Set this during Start() with get component
 
     private const string formulaDefaultText = "Isulat ang formula sa Board";
-    private const string calculatorDefaultText = "Calculator";
+    private const string calculatorDefaultText = "Calculate";
 
     //Magic regex runes, the rest in AreaFormulaParser
 

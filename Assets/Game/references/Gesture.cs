@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class LineSnapper : MonoBehaviour
@@ -150,27 +151,24 @@ public class LineSnapper : MonoBehaviour
         textObj.transform.position = position + new Vector3(0.2f, 0.2f, 0);
 
         TextMesh textMesh = textObj.AddComponent<TextMesh>();
-        textMesh.text = value.ToString("F2");  // Standardized to 2 decimal places
+        textMesh.text = value.ToString("0.##");  // Standardized to 2 decimal places
         textMesh.characterSize = 0.4f;
         textMesh.anchor = TextAnchor.MiddleCenter;
 
         //Save values
         if (lineCount >= 1)
-            value2 = value.ToString("F2");
+            value2 = value.ToString("0.##");
         if (lineCount < 1)
-            value1 = value.ToString("F2");
+            value1 = value.ToString("0.##");
 
         return textObj;
     }
 
     void Update()
     {
-        if (lineCount >= GetMaxLinesForShape())
-        {
-            //main.SetCastingState(true);
+        //Check for Maxed out lines or UI blocking
+        if (lineCount >= GetMaxLinesForShape() || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             return;
-        }
-        //else { main.SetCastingState(false); }
 
         if (lineCount == 0)
             currentLine = firstLine;
@@ -322,6 +320,11 @@ public class LineSnapper : MonoBehaviour
         return 0f;
     }
 
+    public string GetMeasuresLeftText()
+    {
+        return $"Measurements: {GetMaxLinesForShape() - lineCount}";
+    }
+
     void FinishLine()
     {
         Vector3 start = currentLine.GetPosition(0);
@@ -342,6 +345,12 @@ public class LineSnapper : MonoBehaviour
                 secondLineText = CreateValueText(end, value);
             }
             lineCount++;
+
+            //Update Measurements
+            if (main != null)
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
+            else
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
         }
         else
         {
@@ -370,6 +379,13 @@ public class LineSnapper : MonoBehaviour
         if (lineCount <= 0)
         {
             lineCount = 0;
+
+            //Update Measurements
+            if (main != null)
+                main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
+            else
+                hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
+
             return;
         }
 
@@ -380,6 +396,12 @@ public class LineSnapper : MonoBehaviour
             hoMain.UndoMeasure();
 
         lineCount--; // Reduce lines by one if there is > 0 lines
+
+        //Update Measurements
+        if (main != null)
+            main.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
+        else
+            hoMain.measureCounter.GetComponent<TextMeshProUGUI>().text = GetMeasuresLeftText();
 
         //Reset shape fill
         if (hoMain != null)

@@ -22,6 +22,7 @@ public class GameBehaviour : MonoBehaviour
     private const string castBtnText2 = "Erase";
     private const string undoBtnText1 = "Undo";
     private const string undoBtnText2 = "Cast";
+    private const string undoBtnText3 = "Back";
     private const string wrongShapeMsg = "Ang shape na pinili ay mali. Subukan ulit.";
     private const string invalidFormulaMsg = "Hindi wasto ang ibinigay na formula.";
     private const string mismatchedAnswerMsg = "Hindi tugma sa formula ang ibinigay na sagot.";
@@ -74,6 +75,7 @@ public class GameBehaviour : MonoBehaviour
     public Text confirmText;
     public Text textHUD;
     public Text undoText;
+    public GameObject measureCounter;
 
     [Header("Hint System")]
     public GameObject textHint;
@@ -297,7 +299,7 @@ public class GameBehaviour : MonoBehaviour
         }
         else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
         {
-            undoText.text = undoBtnText1;
+            undoText.text = undoBtnText3;
             undoBtnImg.color = Color.red;
             undoBtnLogo.sprite = undoLogoDefault;
         }
@@ -683,6 +685,13 @@ public class GameBehaviour : MonoBehaviour
             pDiaButtons?.SetActive(true);
             lineSnapper?.gameObject.SetActive(true);
 
+            //Display measure counter
+            measureCounter.SetActive(true);
+
+            //Update Measurements
+            if (measureCounter.activeInHierarchy)
+                measureCounter.GetComponent<TextMeshProUGUI>().text = lineSnapper.GetMeasuresLeftText();
+
             ActivateEquationForShape(chosenShape);
         }
         else
@@ -754,12 +763,12 @@ public class GameBehaviour : MonoBehaviour
 
         if (fa.calcMode)
         {
-            if (calcBtnText != null) calcBtnText.text = "Calculator";
+            if (calcBtnText != null) calcBtnText.text = "Calculate";
             fa.ExitCalc();
         }
         else
         {
-            if (calcBtnText != null) calcBtnText.text = "Formula Input";
+            if (calcBtnText != null) calcBtnText.text = "Input Formula";
             fa.EnterCalc();
         }
     }
@@ -805,9 +814,15 @@ public class GameBehaviour : MonoBehaviour
         if (correctionPerc != null)
         {
             stringBuilder.Clear();
-            stringBuilder.Append("Error: ");
-            stringBuilder.Append(Math.Round(Math.Abs(error), 2));
-            stringBuilder.Append("%");
+            if (error != 0)
+            {
+                stringBuilder.Append("Casting Failed! \n Error: ");
+                stringBuilder.Append(Math.Round(Math.Abs(error), 2));
+                stringBuilder.Append("%");
+            }
+            else
+                stringBuilder.Append("Spell Complete");
+
             correctionPerc.text = stringBuilder.ToString();
             correctionPerc.gameObject.SetActive(true);
         }
@@ -818,10 +833,16 @@ public class GameBehaviour : MonoBehaviour
     public void DoneMeasure()
     {
         isDoneMeasuring = true;
+
+        //Change to back to avoid confusion
+        undoText.text = undoBtnText3;
+
+        //Turn off measure Counter
+        measureCounter.SetActive(false);
+
         if (textFinish != null) textFinish.text = castBtnText2;
 
-        if (GlobalVariables.level < 3)
-            calcBtnObj?.SetActive(true);
+        calcBtnObj?.SetActive(true);
 
         if (var1Display != null)
             var1Display.GetComponent<Text>().text = lineSnapper?.value1;
@@ -855,6 +876,12 @@ public class GameBehaviour : MonoBehaviour
         {
             StartCoroutine(SlideOCRBoard(false));
             Invoke(nameof(ToggleLineDelay), OCRSLIDETIME);
+
+            //Revert to Undo
+            undoText.text = undoBtnText1;
+
+            //Turn on measure Counter
+            measureCounter.SetActive(true);
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;
