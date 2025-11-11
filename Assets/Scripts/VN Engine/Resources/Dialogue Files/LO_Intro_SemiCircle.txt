@@ -1,0 +1,56 @@
+Oz "Ngayon naman, SEMI-CIRCLE tayo!"
+
+"Ano ba ang SEMI? Ibigsabihin nito ay HALF! KALAHATI!"
+
+"Kaya ang SEMI-CIRCLE ay HALF-CIRCLE!"
+
+"Kaya pag sinabi na SEMI-CIRCLE. . .{c} ito ay CIRCLE pero kalahati lang."
+
+"Ibig sabihin, kung kaya mong kunin ang area ng isang buong CIRCLE, madali na rin ito!"
+
+"Ang formula ng CIRCLE ay r x r x 3.14."
+"Para sa SEMI-CIRCLE, gagawin mo lang itong kalahati — kaya hatiin sa 2!"
+"Kaya ang formula ay r x r x 3.14 ÷ 2."
+
+"Ang r ay RADIUS, tulad ng dati — ang sukat mula sa gitna hanggang sa gilid ng bilog."
+
+choice "Ano ang FORMULA ng SEMI-CIRCLE?"
+{
+- r x r x 3.14 ÷ 2
+"Tama! Dahil kalahati lang ng CIRCLE, hatiin lang natin sa 2."
+- r x r x 3.14
+"Mali. Iyan ay para sa buong CIRCLE."
+- L x W
+"Mali. Para iyon sa RECTANGLE."
+- B x H ÷ 2
+"Mali. Para iyon sa TRIANGLE."
+}
+
+"Subukan natin gamitin ang formula!"
+
+input "Kung r = 4, ano ang AREA ng SEMI-CIRCLE? (NUMERO LAMANG, gamit ang 3.14)"
+$ans1 = "<input>"
+
+if ($ans1 == 25.12)
+{
+"Tama! (4 x 4 x 3.14) ÷ 2 = 25.12."
+}
+else
+{
+"Hindi pa tama. Tandaan: (r x r x 3.14) ÷ 2."
+"(4 x 4 x 3.14) ÷ 2 = 25.12."
+}
+
+input "Isa pa. Kung r = 2, ano ang AREA? (NUMERO LAMANG, gamit ang 3.14)"
+$ans2 = "<input>"
+
+if ($ans2 == 6.28)
+{
+"Magaling! (2 x 2 x 3.14) ÷ 2 = 6.28."
+}
+else
+{
+"Mali. Ulitin natin: (2 x 2 x 3.14) ÷ 2 = 6.28."
+}
+
+"Sige! Tandaan: ang SEMI-CIRCLE ay kalahati lang ng CIRCLE — kaya hatiin lang sa 2!"

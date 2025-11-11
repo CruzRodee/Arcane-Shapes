@@ -145,6 +145,16 @@ public class MM_UIScript : MonoBehaviour
         else if (passwordInputField.text.ToLower() == "skip")
         {
             mode = 0;
+            // CREATE SAVE FILE BEFORE SKIPPING TO LEVEL SELECT
+            Debug.Log("Skip mode - Creating save file");
+            saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 1, 0);
+
+            // Start PlayerData session
+            if (PlayerDataManager.instance != null)
+            {
+                PlayerDataManager.instance.StartNewSession();
+            }
+
             LoadHallScene();
         }
         else if (passwordInputField.text.ToLower() == "reset")

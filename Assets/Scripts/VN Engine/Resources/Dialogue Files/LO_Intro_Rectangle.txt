@@ -1,0 +1,50 @@
+Oz "Ngayon naman, RECTANGLE tayo."
+
+"Ang AREA ay kung gaano kalaki ang sakop ng hugis. Para sa RECTANGLE, may dalawang sukat: HABA at LAPAD."
+"HABA = Length (L). LAPAD = Width (W)."
+
+"Mas madali kung formula ang gagamitin kaysa magbilang ng kahon."
+"Ang formula ng RECTANGLE ay L x W. Ibig sabihin, HABA times LAPAD."
+
+choice "Ano ang FORMULA ng RECTANGLE?"
+{
+- L x W
+"Tama! Length x Width ang area ng RECTANGLE."
+- S x S
+"Mali. Para iyon sa SQUARE."
+- B x H
+"Mali. Para iyon sa TRIANGLE."
+- r x r x 3.14
+"Mali. Para iyon sa CIRCLE."
+}
+
+"Subukan natin gamit ang formula. Tandaan: HABA = Length, LAPAD = Width."
+
+
+input "Kung L = 5 at W = 3, ano ang AREA? (NUMERO LAMANG)"
+$ans1 = "<input>"
+
+if ($ans1 == 15)
+{
+"Tama! 5 x 3 = 15."
+}
+else
+{
+"Hindi pa tama. Gamitin ang formula L x W."
+"5 x 3 = 15."
+}
+
+
+input "Isa pa. Kung L = 7 at W = 2, ano ang AREA? (NUMERO LAMANG)"
+$ans2 = "<input>"
+
+if ($ans2 == 14)
+{
+"Ayos! Tama ang iyong sagot. 7 x 2 = 14."
+}
+else
+{
+"Mali. . . L x W = 7 x 2 = 14."
+}
+
+"Sige! Handa ka na sa RECTANGLE levels. Ulitin lang sa isip: L x W. HABA x LAPAD."

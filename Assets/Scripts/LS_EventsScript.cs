@@ -50,19 +50,23 @@ public class LS_EventsScript : MonoBehaviour
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
         savedGame = saverLoader.loadGame(savePath);
 
+        // Initialize screenFade FIRST
+        screenFade = GameObject.Find("ScreenFade")?.GetComponent<Animator>();
+
         //Load Save data stuff onto GlobalVariables
         savedGame = saverLoader.loadGame(savePath);
         if (savedGame == null)          // prevent NREs downstream, quit to main menu
         {
-            //SceneChange to main menu
-            screenFade.SetTrigger("sceneOut");  //NAG EERROR HERE
+            Debug.LogError("[LS_EventsScript] No save data found! Returning to main menu.");
+
+            if (screenFade != null)
+                screenFade.SetTrigger("sceneOut");
+
             Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
             return;
         }
 
         GlobalVariables.isMute = savedGame.prefMute;
-        screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
-
         btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
     }
     void Start()
@@ -95,7 +99,7 @@ public class LS_EventsScript : MonoBehaviour
                 if (GlobalVariables.playerWin)
                     savedGame.totalLOLevel += GlobalVariables.NUM_LO_LEVELS; //Skip to different shapes level 1 first
 
-                if(savedGame.totalLOLevel > maxLOLevel) //Only level after all shapes done
+                if (savedGame.totalLOLevel > maxLOLevel) //Only level after all shapes done
                 {
                     if (GlobalVariables.playerWin)
                         GlobalVariables.level++; //Level up after win until 3 for LO then reset
@@ -109,7 +113,7 @@ public class LS_EventsScript : MonoBehaviour
 
                     savedGame.totalLOLevel -= maxLOLevel; //Go to level 2 of shapes
                 }
-                
+
                 if (GlobalVariables.level >= 4)
                 {
                     //Reset Levels, Do not show walang datos
@@ -174,7 +178,7 @@ public class LS_EventsScript : MonoBehaviour
         // 0 PASS UNLOCK ALL: ALL
         // 1 PASS LOWER: SIMPLE
         // 2 PASS HIGHER: COMPOUND
-        if(savedGame.mode == 0)
+        if (savedGame.mode == 0)
             btnCompound.interactable = true;
         else if (savedGame.mode == 1)
         {
@@ -389,6 +393,10 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedRoomEnter()
     {
+        // Save before transitioning!
+        saverLoader.saveGame(savePath, savedGame);
+
+        Debug.Log($"[LS_EventsScript] Transitioning to game. Level: {GlobalVariables.level}, Shape: {GlobalVariables.loSelectedShape}");
         GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v1";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
@@ -407,24 +415,64 @@ public class LS_EventsScript : MonoBehaviour
 
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
+            // Only play intro if this is their FIRST time playing Square (level 1)
+            if (savedGame.squareLvl == 1)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Square", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.SQUARE, savedGame.squareLvl, "SQUARE");
+                return;
+            }
             enterSquare();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 2 + 1) //Rect
         {
+            if (savedGame.rectLvl == 1)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Rectangle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.RECTANGLE, savedGame.rectLvl, "RECTANGLE");
+                return;
+            }
             enterRectangle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 3 + 1) //Tri
         {
+            if (savedGame.triLvl == 1)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Triangle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.TRIANGLE, savedGame.triLvl, "TRIANGLE");
+                return;
+            }
             enterTriangle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 4 + 1) //Circ
         {
+            if (savedGame.circleLvl == 1)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Circle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.CIRCLE, savedGame.circleLvl, "CIRCLE");
+                return;
+            }
             enterCircle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 5 + 1) //Semicirc
         {
+            if (savedGame.scircleLvl == 1)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_SemiCircle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.SEMI_CIRCLE, savedGame.scircleLvl, "SEMI_CIRCLE");
+                return;
+            }
             enterSemiCircle();
         }
+    }
+
+    private void SetupShapeTransition(GameBehaviour.SHAPES shape, int level, string roomName)
+    {
+        GlobalVariables.loSelectedShape = shape;
+        GlobalVariables.level = level;
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, roomName);
+        GlobalVariables.GetVideoLens(savedGame);
+        GlobalVariables.nextLevel = "GameLevelScene_v1";
     }
 
     public void enterRectangle()
