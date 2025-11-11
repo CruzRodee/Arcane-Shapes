@@ -1,0 +1,55 @@
+Oz "Ngayon naman, pag-usapan natin ang TRIANGLE."
+
+"Naalala mo kung paano natin ginamit ang GRID para bilangin ang mga SQUARES?"
+"Madali iyon para sa SQUARE at RECTANGLE, pero mahirap na kapag TRIANGLE na."
+
+"Tingnan mo ito. Kita mo? Ang TRIANGLE ay hindi eksaktong pumapantay sa mga kahon ng grid."
+"May mga kalahating kahon, at may mga parte na hindi sakop nang buo."
+
+"Kaya hindi na puwedeng basta bilangin ang mga SQUARES para makuha ang area."
+"Mas mahalaga ngayon ang paggamit ng FORMULA!"
+
+"Ang formula ng TRIANGLE ay B x H ÷ 2."
+"Ibig sabihin, BASE times HEIGHT divided by 2."
+
+"BASE o B ay ang haba ng ilalim ng TRIANGLE, at HEIGHT o H ay ang taas nito mula sa base pataas."
+
+choice "Ano ang FORMULA ng TRIANGLE?"
+{
+- B x H ÷ 2
+"Tama! BASE x HEIGHT ÷ 2 ang formula ng TRIANGLE."
+- L x W
+"Mali. Iyan ay para sa RECTANGLE."
+- S x S
+"Mali. Para iyon sa SQUARE."
+- r x r x 3.14
+"Mali. Iyan ay para sa CIRCLE."
+}
+
+"Subukan natin gamitin ang formula!"
+input "Kung B = 4 at H = 3, ano ang AREA ng TRIANGLE? (NUMERO LAMANG)"
+$ans1 = "<input>"
+
+if ($ans1 == 6)
+{
+"Tama! 4 x 3 ÷ 2 = 6."
+}
+else
+{
+"Hindi pa tama. Tandaan: BASE x HEIGHT ÷ 2."
+"4 x 3 ÷ 2 = 6."
+}
+
+input "Isa pa. Kung B = 8 at H = 5, ano ang AREA? (NUMERO LAMANG)"
+$ans2 = "<input>"
+
+if ($ans2 == 20)
+{
+"Galing! 8 x 5 ÷ 2 = 20."
+}
+else
+{
+"Mali. Ulitin natin: 8 x 5 ÷ 2 = 20."
+}
+
+"Sige! Handa ka na sa TRIANGLE levels. {c}Tandaan: gamitin ang formula B x H ÷ 2 dahil hindi lahat ng hugis sakto sa mga kahon."
