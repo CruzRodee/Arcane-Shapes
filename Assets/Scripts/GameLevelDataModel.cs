@@ -7,6 +7,7 @@ public class GameLevelDataModel
     public int level;
     public bool isLowOrder;
     public GameBehaviour.SHAPES loSelectedShape;
+    public int numPressHelp;
     public int numChooseShape;
     public int numWrongShape;
     public int measureLinesDrawn;
@@ -28,6 +29,7 @@ public class GameLevelDataModel
         loSelectedShape = GlobalVariables.loSelectedShape;
 
         // Set default values
+        numPressHelp = 0;
         numChooseShape = 0;
         numWrongShape = 0;
         measureLinesDrawn = 0;
@@ -62,11 +64,15 @@ public class GameLevelDataModel
             return;
         }
 
+        numPressHelp = GlobalVariables.helpPressCounter; //Pull data from global variables
+        GlobalVariables.helpPressCounter = 0; //Reset Global VariableData
+
         Dictionary<string, object> currentLevelData = new Dictionary<string, object>();
 
         currentLevelData.Add("level", level);
         currentLevelData.Add("isLowOrder", isLowOrder);
         currentLevelData.Add("loSelectedShape", loSelectedShape);
+        currentLevelData.Add("numPressHelp", numPressHelp);
         currentLevelData.Add("numChooseShape", numChooseShape);
         currentLevelData.Add("numWrongShape", numWrongShape);
         currentLevelData.Add("measureLinesDrawn", measureLinesDrawn);

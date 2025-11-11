@@ -261,6 +261,7 @@ MonoBehaviour:
   gridSystem: {fileID: 0}
   value1: ???
   value2: ???
+  isReset: 0
   animScript: {fileID: 0}
   lineMaterial: {fileID: -876546973899608171, guid: 212f1497642bc214da878864c76b9ffd,
     type: 3}
@@ -3750,7 +3751,7 @@ PrefabInstance:
     - target: {fileID: 7872885263476138395, guid: b9a1b62a063df1645ac1398a52701a1e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7951667442596436139, guid: b9a1b62a063df1645ac1398a52701a1e,
         type: 3}

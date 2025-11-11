@@ -255,6 +255,7 @@ public static class GlobalVariables
     public static bool isStartUp = true;
     public static string nextLevel = ""; //Use this to send the next level name to loading
     public static int sessionGameId = 0; //Use this to label the game data in order of play during a session
+    public static int helpPressCounter = 0;
 
     public static float introLen = 5f, outroLen = 5f;
     public static bool enteringLO = true;
