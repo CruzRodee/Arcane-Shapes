@@ -1,0 +1,132 @@
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
+Oz [talk] "Wow! Ang galing mo na! Nasa COMPOUND classes ka na!"
+
+"Sige, may bago nanaman akong ituturo sayo, magbasa maigi ha!"
+
+"Kung napansin mo, lahat ng mga hugis na pinag-aralan natin--{c}tulad ng SQUARE, RECTANGLE, TRIANGLE, at CIRCLE ay mga SIMPLENG hugis."
+"Pero sa totoong buhay, madalas ay hindi ganoon kasimple ang mga hugis!"
+
+"May mga hugis na gawa sa dalawa o higit pang simpleng hugis. Ang tawag doon ay COMPOUND SHAPES."
+
+SetLayerMedia(background -m Intro_Compound1)
+
+"Tingnan mo ito!"
+
+SetLayerMedia(background -m Intro_Compound2)
+
+"Makikita mo, parang pinagdugtong lang ang dalawang hugis para makabuo ng bago."
+
+SetLayerMedia(background -m Intro_Compound3)
+
+"Para makuha ang AREA ng COMPOUND SHAPE. . . {c}Kailangan lang natin hatiin ito sa mga simpleng hugis na kilala na natin."
+
+[wait]SetLayerMedia(background -m Intro_Compound4)
+[wait]SetLayerMedia(background -m Intro_Compound5)
+[wait]SetLayerMedia(background -m Intro_Compound6)
+
+"Pagkatapos, kunin ang area ng bawat bahagi gamit ang kanilang formula, {c}at pagsamahin para makuha ang kabuuang area."
+
+choice "Halimbawa, kung ang isang hugis ay gawa sa RECTANGLE at TRIANGLE, ano ang dapat mong gawin?"
+{
+    - Kuhanin ang area ng RECTANGLE at TRIANGLE, tapos pagsamahin
+        Oz [surprised] "Tama! Kuhanin ang area ng bawat bahagi, tapos i-add para makuha ang total area."
+    - Bilangin lang lahat ng mga kahon
+        Oz [sighsad] "Hindi sapat ang grid dito, kailangan mo nang gamitin ang mga formula."
+        Oz "Kailangan mo gamitin ang formula ng bawat HUGIS/SHAPE"
+        Oz "Kuhanin mo ang kanilang area at IPAGSAMA!"
+    - Gumamit ng isang formula lang
+        Oz [sighsad] "Hindi pwede. Iba-iba ang formula ng bawat bahagi."
+        Oz "Kailangan mo gamitin ang formula ng bawat HUGIS/SHAPE"
+        Oz "Kuhanin mo ang kanilang area at IPAGSAMA!"
+}
+
+Oz [talk] "Ganun lang kasimple! Hatiin, sukatin, at pagsamahin."
+
+"Subukan nga natin!"
+
+"Ang SQUARE ay may sukat na 2 x 2."
+"Kaya ang AREA ng SQUARE ay 4."
+
+"Ang TRIANGLE naman ay may BASE = 2 at HEIGHT = 1."
+"Kaya ang AREA nito ay (B x H) ÷ 2 = (2 x 1) ÷ 2 = 1."
+
+input "Kung ang area ng SQUARE ay 4 at ang area ng TRIANGLE ay 1, ano ang total AREA ng buong hugis? (NUMERO LAMANG)"
+$ans1 = "<input>"
+
+if ($ans1 == 5)
+{
+    Oz [surprised] "Tama! 4 + 1 = 5. Pinagsama lang natin ang mga area ng dalawang hugis."
+}
+else
+{
+    Oz [sighsad] "Mali. Tandaan: 4 + 1 = 5. I-add ang mga area ng SQUARE at TRIANGLE."
+}
+
+SetLayerMedia(background -m Intro_Compound7)
+
+Oz [talk] "Pero minsan, may COMPOUND SHAPE na may butas o kulang na bahagi."
+
+SetLayerMedia(background -m Intro_Compound8)
+
+"Paano na natin kukunin iyan?"
+
+"Sa ganitong kaso, halos parehas lang sa ginawa natin kanina."
+
+[wait]SetLayerMedia(background -m Intro_Compound10)
+
+"IPAGHIWALAY ang dalawang hugis."
+
+[wait]SetLayerMedia(background -m Intro_Compound9)
+
+"Sa ganitong kaso, imbes na pagsamahin, ibinabawas natin ang area ng hugis na butas."
+
+[wait]SetLayerMedia(background -m Intro_Compound7)
+
+"Kung gusto natin makuha ang kabuuang AREA nito, ano ulit dapat nating gawin?"
+
+choice "Paano makukuha ang AREA ng hugis na may RECTANGLE at bilog na butas?"
+{
+    - Area ng RECTANGLE minus Area ng CIRCLE
+        Oz [surprised] "Tama! Dahil may butas sa gitna, ibinabawas natin ang area ng CIRCLE."
+    - Area ng RECTANGLE plus Area ng CIRCLE
+        Oz [sighsad] "Mali. Hindi ito pinagsama; may butas sa loob, kaya dapat ibawas."
+    - Area ng RECTANGLE lang
+        Oz [sighsad] "Hindi rin. Kailangan bawasan mo ng area ng CIRCLE para tama ang sukat."
+}
+
+Oz [talk] "Ngayon, gamitin natin ang mga formula na alam mo na!"
+"Ang RECTANGLE ay L x W. Ang CIRCLE ay r x r x 3.14."
+
+"Sabihin nating ang RECTANGLE ay may sukat na 2 x 2, kaya area = 4."
+"At ang CIRCLE sa gitna ay may radius na 1, kaya area = 3.14."
+
+input "Kung 4 ang area ng RECTANGLE at 3.14 ang area ng CIRCLE, ano ang kabuuang area ng hugis? (NUMERO LAMANG)"
+$ans1 = "<input>"
+
+if ($ans1 == 0.86)
+{
+    Oz [surprised] "Tama! 4 - 3.14 = 0.86."
+}
+else
+{
+    Oz [sighsad] "Hindi pa tama. Tandaan: may butas sa gitna, kaya 4 - 3.14 = 0.86."
+}
+
+Oz [talk] "Oh sige, ihinto ko na yung turo ko ngayon. Basta tandaan. . ."
+
+Oz [talk] "Ang sa madaling sabi:"
+
+SetLayerMedia(background -m Intro_Compound2)
+"Kung pinagsama, i-add."
+SetLayerMedia(background -m Intro_Compound7)
+"Kung may butas, i-minus."
+
+"Magagamit mo na lahat ng natutunan mong formula—SQUARE, RECTANGLE, TRIANGLE, CIRCLE—{c}Para masolusyunan ang kahit anong COMPOUND SHAPE!"
+
+"Handa ka na? Tara, subukan natin sa mga susunod na puzzles!"
+
+StopSong(), StopAmbience()
