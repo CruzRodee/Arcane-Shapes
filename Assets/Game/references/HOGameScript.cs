@@ -197,6 +197,7 @@ public class HOGameScript : MonoBehaviour
     private GameData savedGame;
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
+    [HideInInspector] public GameLevelDataModel levelData;
     #endregion
 
     #region Object Pooling
@@ -213,6 +214,9 @@ public class HOGameScript : MonoBehaviour
         InitializeSaveSystem();
         InitializeComponents();
         SetupInitialState();
+
+        //Start Data recording
+        levelData = new GameLevelDataModel();
 
         // Activate Left handed mode based on save data
         if (savedGame.isLeftHanded)
@@ -566,8 +570,15 @@ public class HOGameScript : MonoBehaviour
         if (lineSnapper != null)
         {
             lineSnapper.gameObject.SetActive(false);
+
+            //Mark as reset so data collection dont count
+            lineSnapper.isReset = true;
+
             lineSnapper.OnUndoPressed();
             lineSnapper.OnUndoPressed();
+
+            //Unmark as reset
+            lineSnapper.isReset = false;
         }
 
         if (btnUndo != null) btnUndo.gameObject.SetActive(false);
@@ -598,6 +609,11 @@ public class HOGameScript : MonoBehaviour
     {
         if (formulaDisplay != null) formulaDisplay.SetActive(false);
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("sceneOut");
+
+        //Save Data, counts as new attempt and marks previous as loss,
+        error = 999; //Indicate restart
+        levelData.GameEndDataEntry(false, null, (HOGameScript)this);
+
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
 
@@ -608,7 +624,7 @@ public class HOGameScript : MonoBehaviour
 
     public void onQuit()
     {
-        error = 100f;
+        error = 444f;
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY);
     }
@@ -655,30 +671,45 @@ public class HOGameScript : MonoBehaviour
     #region Shape Selection
     public void chooseSquare()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.SQUARE];
         ShowEquationPanel(pEquationSquare);
     }
 
     public void chooseSemiCircle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.SEMI_CIRCLE];
         ShowEquationPanel(pEquationSCircle);
     }
 
     public void chooseCircle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.CIRCLE];
         ShowEquationPanel(pEquationCircle);
     }
 
     public void chooseRectangle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.RECTANGLE];
         ShowEquationPanel(pEquationRectangle);
     }
 
     public void chooseTriangle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.TRIANGLE];
         ShowEquationPanel(pEquationTriangle);
     }
@@ -804,18 +835,27 @@ public class HOGameScript : MonoBehaviour
     {
         if (pNotify != null)
             pNotify.SetActive(true);
+
+        //Update Data collection
+        levelData.numWrongShape++;
     }
 
     public void NotifyInvalidFormula()
     {
         if (ocrScript != null) ocrScript.processing = true;
         ShowNotification("Hindi wasto ang ibinigay na formula.");
+
+        //Update Data collection
+        levelData.numInvalidFormula++;
     }
 
     public void NotifyMismatchedAnswer()
     {
         if (ocrScript != null) ocrScript.processing = true;
         ShowNotification("Hindi tugma sa formula ang ibinigay na sagot.");
+
+        //Update Data collection
+        levelData.numMismatchCalc++;
     }
 
     private void ShowNotification(string message)
@@ -1408,8 +1448,14 @@ public class HOGameScript : MonoBehaviour
 
         if (lineSnapper != null)
         {
+            //Mark as reset so data collection dont count
+            lineSnapper.isReset = true;
+
             lineSnapper.OnUndoPressed();
             lineSnapper.OnUndoPressed();
+
+            //Unmark as reset
+            lineSnapper.isReset = false;
 
             //Turn off measure Counter
             measureCounter.SetActive(false);
@@ -1664,6 +1710,9 @@ public class HOGameScript : MonoBehaviour
         }
 
         GlobalVariables.gameFinished = true;
+
+        //Save Data
+        levelData.GameEndDataEntry(GlobalVariables.playerWin, null, (HOGameScript)this);
 
         SceneManager.LoadScene("LevelSelect");
     }

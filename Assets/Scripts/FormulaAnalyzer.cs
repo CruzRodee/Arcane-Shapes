@@ -130,6 +130,16 @@ public class FormulaAnalyzer : MonoBehaviour
         //Clear data
         ResetAnalyzer();
 
+        //Update data collection on numCalcUsed
+        if(gb != null)
+        {
+            gb.levelData.numCalcUsed++;
+        }
+        else if (hgb != null)
+        {
+            hgb.levelData.numCalcUsed++;
+        }
+
         if (DEBUG) DebugDisplay();
     }
 
@@ -163,6 +173,16 @@ public class FormulaAnalyzer : MonoBehaviour
     //Method for appending to the input string variables
     public void InputString(string input)
     {
+        //Update data collection on numOCRInput
+        if (gb != null)
+        {
+            gb.levelData.numOCRInput++;
+        }
+        else if (hgb != null)
+        {
+            hgb.levelData.numOCRInput++;
+        }
+
         //Check for the non-number inputs that may be different between evalString and displayString
         //Else, number strings are same in both
         //Special function for switching to comparing if equ is input
