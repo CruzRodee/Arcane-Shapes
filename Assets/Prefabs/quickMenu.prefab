@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -16.147207, y: -222}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &383005371001812419
 CanvasRenderer:
@@ -157,6 +157,216 @@ MonoBehaviour:
   m_Text: 'TUTORIAL
 
 '
+--- !u!1 &1694817442620865676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9191885884336009388}
+  - component: {fileID: 7594942518227033927}
+  - component: {fileID: 8546813925960400020}
+  m_Layer: 5
+  m_Name: TutorialExplanation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9191885884336009388
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694817442620865676}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6284153354771230680}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 163}
+  m_SizeDelta: {x: 700, y: 70}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7594942518227033927
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694817442620865676}
+  m_CullTransparentMesh: 1
+--- !u!114 &8546813925960400020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694817442620865676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Explain Here
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: d0ee6e93669b35d40b0d2cc825fb0b16, type: 2}
+  m_sharedMaterial: {fileID: -8659432324645155994, guid: d0ee6e93669b35d40b0d2cc825fb0b16,
+    type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 26
+  m_fontSizeBase: 26
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1734231021260632373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1035389070810927985}
+  - component: {fileID: 6615310134812292497}
+  - component: {fileID: 6134589707150732120}
+  m_Layer: 5
+  m_Name: TutorialImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1035389070810927985
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734231021260632373}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6284153354771230680}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 700, y: 300}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6615310134812292497
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734231021260632373}
+  m_CullTransparentMesh: 1
+--- !u!114 &6134589707150732120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734231021260632373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: d6b56e191dc62db46bf87f25682fcd36, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2465480890205450762
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,14 +726,73 @@ MonoBehaviour:
   nextButton: {fileID: 8806551589409428827}
   previousButton: {fileID: 5118531178813712588}
   pageDisplay: {fileID: 8864045409537414050}
+  tutorialImage: {fileID: 6134589707150732120}
+  tutorialTextplanation: {fileID: 8546813925960400020}
   nextSounds: {fileID: 8580063043488776901}
   prevSounds: {fileID: 4257838756562601392}
   quickMenuSounds:
   - {fileID: 3886585873312197460}
   - {fileID: 6375435044836513688}
   - {fileID: 4079842436316619009}
-  loImages: []
-  hoImages: []
+  loImages:
+  - {fileID: 21300000, guid: 0331ad7453f103e4c881e7e6151a41fb, type: 3}
+  - {fileID: 21300000, guid: 3076cda141a6f104fa5fa16dd906472c, type: 3}
+  - {fileID: 21300000, guid: 9c827a6c9bf13be4091c0dce1282856e, type: 3}
+  - {fileID: 21300000, guid: 2a44bf7d0fce18e4f80efc68126fe220, type: 3}
+  - {fileID: 21300000, guid: 7cae1cff66e1ac04f99eb537c8a85f64, type: 3}
+  - {fileID: 21300000, guid: 9d2ae2c604d1bb84ea8f5771d0d5c8b3, type: 3}
+  - {fileID: 21300000, guid: 5fb624ad445e0174b8cb1ec581ce3ad6, type: 3}
+  - {fileID: 21300000, guid: cce10428ff19d934bb952572e58708a4, type: 3}
+  - {fileID: 21300000, guid: b2baa542fc390d645874257e2d102657, type: 3}
+  - {fileID: 21300000, guid: 7775d45292332394d986eafe208e2eae, type: 3}
+  - {fileID: 21300000, guid: 64af662eacd14cc499e0e19004b88393, type: 3}
+  - {fileID: 21300000, guid: 0548d4431654c3e4e9e50e0703272e8c, type: 3}
+  - {fileID: 21300000, guid: 43944b23cf94e514595e126babc507e3, type: 3}
+  - {fileID: 21300000, guid: 3d7058a1a2370904c8198a65a04a2fe4, type: 3}
+  - {fileID: 21300000, guid: fdecdbbac232ce64da51f343607bc380, type: 3}
+  - {fileID: 21300000, guid: d569cbb8f34f4654d8122f14425b0a65, type: 3}
+  hoImages:
+  - {fileID: 21300000, guid: f4cc02823abf6ce498c045d10ea4a11b, type: 3}
+  - {fileID: 21300000, guid: f4eced1c74674d5468bdc626c2007f1e, type: 3}
+  - {fileID: 21300000, guid: 3f372e60e2f53c44f814ed916b811f65, type: 3}
+  - {fileID: 21300000, guid: 70badca299614934996b85fd72051ea1, type: 3}
+  - {fileID: 21300000, guid: e0bed206f6ad49747ae18701110aa53c, type: 3}
+  - {fileID: 21300000, guid: 13caba66a58484c44858fad0949017fb, type: 3}
+  - {fileID: 21300000, guid: e49b3a1f25202414f8b03a6286edd436, type: 3}
+  - {fileID: 21300000, guid: ac88f83a5c0fe4d49b94a357855a199f, type: 3}
+  loExplain:
+  - Piliin ang tamang hugis at formula
+  - Sukatin ang hugis gamin ng daliri
+  - Makikita sa ibaba kung ilan ang kailangan na linya
+  - Pindutin ang "Undo" kung nagkamali ng sukat
+  - Isulat ang formula na nakalista sa baba, kung tama ang sukat, tama ang formula
+  - Isa-isang letra o simbolo lang ang dapat isulat, maghintay hangang lumabas sa
+    baba
+  - Maaaring pindutin ang "Erase" kapag nagkamali ng sulat
+  - Kapag tapos na ang formula, maaaring pindutin ang "Calculate" para makuha ang
+    sagot
+  - Pindutin ang "Input Formula" para maisulat ang sagot
+  - Isulat ang sagot at pindutin ang "Cast" para tapusin ang level
+  - Kung hindi niyo alam paano sukatin ang mga hugis at kung ano ang mga ito, ipapakita
+    namin sa inyo
+  - 'Square: S = Side'
+  - 'Rectangle: L=Length | W=Width'
+  - 'Triangle: B=Base | H=Height'
+  - 'Circle: R=Radius'
+  - 'SemiCircle: R=Radius'
+  hoExplain:
+  - Halos kapareho ito nung unang gamemode, kailangan lang kuhanin ang Area ng compound
+    hugis gamit ng mga simple na hugis
+  - Piliin ang unang hugis na iyong sasagutin
+  - Kapareho lang ang proceso nito doon sa unang gamemode
+  - Pagkatapos noon, sagutan ang mga iba pang hugis
+  - Pagkatapos noon, makikita mo ang mga area ng mga nasagutan na hugis
+  - Ang mga Area ng mga hugis na ito ay dapat i-add sa isa't-isa upang makuha ang
+    area ng compound na hugis
+  - Mayroon din na mga hugis na gray or violet na negatibo ang Area dahil sila ay
+    mga butas o intersection sa hugis
+  - Ang mga ito ay dapat i-subtract sa mga Area ng ibang mga hugis para makuha ang
+    sagot
 --- !u!1 &3215891115097098548
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,7 +1158,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
@@ -1117,7 +1386,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00058746, y: -0.000043392}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 354.71, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4442937334230070434
@@ -1161,7 +1430,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '1
+  m_Text: '1/10
 
 '
 --- !u!1 &6730957886556224161
@@ -1426,6 +1695,8 @@ RectTransform:
   - {fileID: 220326034971099325}
   - {fileID: 7292436826956883594}
   - {fileID: 7678757919220620}
+  - {fileID: 1035389070810927985}
+  - {fileID: 9191885884336009388}
   m_Father: {fileID: 2813144324643742928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

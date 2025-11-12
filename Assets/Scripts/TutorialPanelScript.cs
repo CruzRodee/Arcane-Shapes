@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,15 +14,20 @@ public class TutorialPanelScript : MonoBehaviour
     public Button nextButton;
     public Button previousButton;
     public Text pageDisplay;
+    public Image tutorialImage;
+    public TextMeshProUGUI tutorialTextplanation;
 
     public ButtonSFXPlayer nextSounds;
     public ButtonSFXPlayer prevSounds;
     public ButtonSFXPlayer[] quickMenuSounds;
 
-    public Image[] loImages;
-    public Image[] hoImages;
+    public Sprite[] loImages;
+    public Sprite[] hoImages;
+    public string[] loExplain;
+    public string[] hoExplain;
 
-    private Image[] currentImages;
+    private Sprite[] currentImages;
+    private string[] currentText;
     private int currentPage = 1; //Remember to use currentPage - 1 for the array
     private const float defaultVolume = 1f;
     
@@ -33,11 +39,21 @@ public class TutorialPanelScript : MonoBehaviour
         nextButton.onClick.AddListener(NextPage);
         previousButton.onClick.AddListener(PrevPage);
 
-        //Determine which images to use
+        //Determine which images and text to use
         if (GlobalVariables.enteringLO)
+        {
             currentImages = loImages;
+            currentText = loExplain;
+        }
+
         else
+        {
             currentImages = hoImages;
+            currentText = hoExplain;
+        }
+
+        //Update Page display by calling change page on same page
+        ChangePage(currentPage);
     }
 
     private void ChangePage(int page)
@@ -74,8 +90,10 @@ public class TutorialPanelScript : MonoBehaviour
         else if(currentPage > currentImages.Length)
             currentPage = currentImages.Length;
 
-        //Logic for changing image and pageDisplay
-        pageDisplay.text = currentPage.ToString();
+        //Logic for changing image, text, and pageDisplay
+        pageDisplay.text = $"{currentPage.ToString()}/{currentImages.Length}";
+        tutorialImage.sprite = currentImages[currentPage - 1];
+        tutorialTextplanation.text = currentText[currentPage - 1];
 
         Debug.Log($"CurrentPage: {currentPage}");
     }
