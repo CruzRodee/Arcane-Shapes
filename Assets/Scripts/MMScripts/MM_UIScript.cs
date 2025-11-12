@@ -8,6 +8,7 @@ using UnityEngine.UI;   //text
 public class MM_UIScript : MonoBehaviour
 {
     private Text overlayText;
+    private string TutorialIntroFile = "Chapter1_Intro1"; //The first VN txt file to load for new games        
     public GameObject overlayPanel;
     public Button btnContinue;
     public GameObject panelNotify;
@@ -49,20 +50,23 @@ public class MM_UIScript : MonoBehaviour
         screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
         overlayText = GameObject.Find("TextOverlay").GetComponent<Text>(); //Cache this instead of too many Find() calls
 
-        if(!Debug.isDebugBuild) //Disable all debug stuff
+        if (!Debug.isDebugBuild) //Disable all debug stuff
         {
             //Disable and Remove Graphy when not debug
-            if( graphy != null)
+            if (graphy != null)
             {
                 graphy.SetActive(false);
                 Destroy(graphy);
             }
-            
+
             Debug.unityLogger.logEnabled = false;
-        }   
+        }
     }
     void Start()
     {
+        // THIS IS OUR DATA GATHERING SCRIPT
+        PlayerDataManager.EnsureInstance();
+
         screenFade.SetTrigger("sceneIn"); //Fade-in animation
 
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
@@ -122,37 +126,47 @@ public class MM_UIScript : MonoBehaviour
         // PASS HIGHER: COMPOUND
 
         panelInputPass.SetActive(false);
-        if (passwordInputField.text == "ALL")
+        if (passwordInputField.text.ToLower() == "all")
         {
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 0); //ON SECOND THOUGHTSCRAP THIS LAWL
             mode = 0;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "SIMPLE")
+        else if (passwordInputField.text.ToLower() == "simple")
         {
             mode = 1;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 1);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "COMPOUND")
+        else if (passwordInputField.text.ToLower() == "compound")
         {
             mode = 2;
-            // saverLoader.updateMode(Path.Combine(Application.persistentDataPath, "saveData.json"), mode);
-            // saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), 2);
             LoadFirstScene();
         }
-        else if (passwordInputField.text == "RESET")
+
+        else if (passwordInputField.text.ToLower() == "skip")
+        {
+            mode = 0;
+            // CREATE SAVE FILE BEFORE SKIPPING TO LEVEL SELECT
+            Debug.Log("Skip mode - Creating save file");
+            saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 1, 0);
+
+            // Start PlayerData session
+            if (PlayerDataManager.instance != null)
+            {
+                PlayerDataManager.instance.StartNewSession();
+            }
+
+            LoadHallScene();
+        }
+        else if (passwordInputField.text.ToLower() == "reset")
         {
             notifyDeleteGame();
         }
 
+
         else
         {
-            passwordWrong();
-
             //notify screen say PASSWORD INVALID. PLS ASK COORDINATOR FOR PASSWORD
+            passwordWrong();
         }
 
     }
@@ -165,6 +179,12 @@ public class MM_UIScript : MonoBehaviour
 
         overlayText.text = "Saved game Loaded!";
         //Jump to the game immediately (load all saved data)
+
+        // Start PlayerData session for continuing players
+        if (PlayerDataManager.instance != null)
+        {
+            PlayerDataManager.instance.StartNewSession();
+        }
         LoadHallScene(); //Data loaded at start, continue button disabled by default so fast fingers cant press accidentalt
     }
 
@@ -184,7 +204,7 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoCredits()
     {
-        
+
         if (panelCredits.activeInHierarchy)
         {
             panelCredits.SetActive(false);
@@ -201,13 +221,20 @@ public class MM_UIScript : MonoBehaviour
 
     public void LoadFirstScene()
     {
-        Debug.Log("new game");
+        Debug.Log("New Game Has Been Started");
         panelNotify.SetActive(true);
 
         overlayText.text = "Handa nang magsimula ng bagong game!";
 
-        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 0, 0);
+        saverLoader.saveGame(Path.Combine(Application.persistentDataPath, "saveData.json"), "You", false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "NONE", mode, false, 1, 0);
         Debug.Log("New Game with mode: " + mode);
+
+        // Start PlayerData session AFTER saving old game data
+        if (PlayerDataManager.instance != null)
+        {
+            PlayerDataManager.instance.StartNewSession();
+        }
+
         Invoke(nameof(DelayedSceneOut), TRANSITIONDELAY - 0.5f);
         Invoke(nameof(DelayedTut1), TRANSITIONDELAY);
 
@@ -225,7 +252,7 @@ public class MM_UIScript : MonoBehaviour
 
     private void DelayedTut1()
     {
-        SceneManager.LoadScene("Tutorial1");
+        VNSceneManager.instance.LoadVNSceneByPath(TutorialIntroFile, null, "LevelSelect");
     }
     private void DelayedHall()
     {
@@ -234,9 +261,9 @@ public class MM_UIScript : MonoBehaviour
 
     public void DoQuit() // For quit button
     {
-        if(!canQuit)
+        if (!canQuit)
             return;
-        
+
         Debug.Log("Quitting Game");
         try
         {

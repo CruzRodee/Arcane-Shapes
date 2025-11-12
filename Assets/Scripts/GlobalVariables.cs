@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public static class GlobalVariables
@@ -16,6 +17,111 @@ public static class GlobalVariables
 
     private static readonly int thresholdHO = 2;
     public static readonly int NUM_LO_LEVELS = 3;
+
+    public static float[] GetLOProblemMeasures()
+    {
+        float[] valArray = new float[2];
+
+        switch (loSelectedShape)
+        {
+            case GameBehaviour.SHAPES.SQUARE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 2;
+                        valArray[1] = 2;
+                        break;
+                    case 2:
+                        valArray[0] = 7.5f;
+                        valArray[1] = 7.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 4.5f;
+                        valArray[1] = 4.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.RECTANGLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 2;
+                        valArray[1] = 6;
+                        break;
+                    case 2:
+                        valArray[0] = 5f;
+                        valArray[1] = 2.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 7.5f;
+                        valArray[1] = 1.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.TRIANGLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 5;
+                        valArray[1] = 5;
+                        break;
+                    case 2:
+                        valArray[0] = 3f;
+                        valArray[1] = 1.5f;
+                        break;
+                    case 3:
+                        valArray[0] = 1.5f;
+                        valArray[1] = 4.5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.CIRCLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 4;
+                        valArray[1] = 4;
+                        break;
+                    case 2:
+                        valArray[0] = 7f;
+                        valArray[1] = 7f;
+                        break;
+                    case 3:
+                        valArray[0] = 5f;
+                        valArray[1] = 5f;
+                        break;
+                }
+                break;
+
+            case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                switch (level)
+                {
+                    case 0:
+                    case 1:
+                        valArray[0] = 6;
+                        valArray[1] = 6;
+                        break;
+                    case 2:
+                        valArray[0] = 3.0f;
+                        valArray[1] = 3.0f;
+                        break;
+                    case 3:
+                        valArray[0] = 7f;
+                        valArray[1] = 7f;
+                        break;
+                }
+                break;
+        }
+        
+        return valArray;
+    }
 
     public static bool IsHOUnlocked(GameData save)
     {
@@ -148,6 +254,53 @@ public static class GlobalVariables
     public static float defaultBGMVolume = 0.5f;
     public static bool isStartUp = true;
     public static string nextLevel = ""; //Use this to send the next level name to loading
+    public static int sessionGameId = 0; //Use this to label the game data in order of play during a session
+    public static int helpPressCounter = 0;
+
+    public static float introLen = 5f, outroLen = 5f;
+    public static bool enteringLO = true;
+    public static void GetVideoLens(GameData save)
+    {
+        if (enteringLO)
+        {
+            switch (save.totalLOLevel)
+            {
+                //Case 0 and 1 is default
+                //Case 2-5 is default
+                case 6:
+                    introLen = 5f;
+                    outroLen = 5.5f;
+                    break;
+                //Case 7-9 default
+                //Case 10-12 default
+                //Case 13-15 default
+                default:
+                    introLen = 5f;
+                    outroLen = 5f;
+                    break;
+            }
+        }
+        else 
+        {
+            switch (level)
+            {
+                //Level 2-4 default
+                case 1:
+                    introLen = 5f;
+                    outroLen = 5.5f;
+                    break;
+                case 5:
+                    introLen = 5f;
+                    outroLen = 6f;
+                    break;
+                //Level 6 default
+                default:
+                    introLen = 5f;
+                    outroLen = 5f;
+                    break;
+            }
+        }
+    }
 
     //------------------
 

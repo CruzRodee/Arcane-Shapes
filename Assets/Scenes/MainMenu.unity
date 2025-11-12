@@ -2121,7 +2121,249 @@ MonoBehaviour:
     FX
     time freeze
 
-    v0idation (Freesound)'
+    v0idation (Freesound)
+
+
+    deltarune explosion - Meme Sound
+    Effect Button for Soundboard
+
+    @InTheHorizons
+
+    https://tuna.voicemod.net/sound/587fae86-5aa0-4024-9420-b94926efda3a
+
+
+
+    Rising
+    Drone Noise
+
+    DoritoDew (Freesound)
+
+    https://pixabay.com/sound-effects/rising-drone-noise-94374/
+
+
+
+    Turning
+    down power
+
+    watisthis (Freesound)
+
+    https://pixabay.com/sound-effects/turning-down-power-48657/
+
+
+
+    step_sound.wav
+
+    TheOnlyPKMNmaster
+    (Freesound)
+
+    https://pixabay.com/sound-effects/step-soundwav-14903/
+
+
+
+    Phone
+    Notification
+
+    storegraphic
+
+    https://pixabay.com/sound-effects/phone-notification-309242/
+
+
+
+    FLY
+    BY
+
+    olenchic
+
+    https://pixabay.com/sound-effects/fly-by-155028/
+
+
+
+    Cartoon
+    Slide Whistle Up 2
+
+    floraphonic
+
+    https://pixabay.com/sound-effects/cartoon-slide-whistle-up-2-176650/
+
+
+
+    Simple
+    Whoosh
+
+    DRAGON-STUDIO
+
+    https://pixabay.com/sound-effects/simple-whoosh-382724/
+
+
+
+    New
+    Notification 020
+
+    Universfield
+
+    https://pixabay.com/sound-effects/new-notification-020-352772/
+
+
+
+    Footsteps
+    Dirt Gravel
+
+    revolt2563 (Freesound)
+
+    https://pixabay.com/sound-effects/footsteps-dirt-gravel-6823/
+
+
+
+    Forest
+    ambience
+
+    AudioPapkin
+
+    https://pixabay.com/sound-effects/forest-ambience-296528/
+
+
+
+    Eat
+    a Cracker
+
+    D4XX (Freesound)
+
+    https://pixabay.com/sound-effects/eat-a-cracker-95783/
+
+
+
+    stomachgrumble
+
+    jshine7
+    (Freesound)
+
+    https://pixabay.com/sound-effects/stomachgrumble-68544/
+
+
+
+    Sound
+    Effect - Summer Afternoon Coniferous Forest Chaffinch Blackbird
+
+    Farshad_hamzavi
+
+    https://pixabay.com/sound-effects/sound-effect-summer-afternoon-coniferous-forest-chaffinch-blackbird-416525/
+
+
+
+    Crackle
+    Fireplace Campfire
+
+    CapaholiczSFX
+
+    https://pixabay.com/sound-effects/crackle-fireplace-campfire-402289/
+
+
+
+    Countryside
+    Night Ambience
+
+    Alex_Jauk
+
+    https://pixabay.com/sound-effects/countryside-night-ambience-234022/
+
+
+
+    SFX
+    - Warp Core Engine Room Ambience 05
+
+    Fronbondi_Skegs
+
+    https://pixabay.com/sound-effects/sfx-warp-core-engine-room-ambience-05-358463/
+
+
+
+    Lamp
+    key sfx
+
+    kakaist
+
+    https://pixabay.com/sound-effects/lamp-key-sfx-312914/
+
+
+
+    Factory
+    Fluorescent light buzz
+
+    janbezouska (Freesound)
+
+    https://pixabay.com/sound-effects/factory-fluorescent-light-buzz-6871/
+
+
+
+    Wheat
+    in the Wind
+
+    bdvictor (Freesound)
+
+    https://pixabay.com/sound-effects/wheat-in-the-wind-7159/
+
+
+
+    Rain
+    Falling - 30 Seconds
+
+    DRAGON-STUDIO
+
+    https://pixabay.com/sound-effects/rain-falling-30-seconds-329727/
+
+
+
+    Boing
+
+    Chilljeremy
+    (Freesound)
+
+    https://pixabay.com/sound-effects/boing-101318/
+
+
+
+    Simple
+    Zaps
+
+    SomeSine (Freesound)
+
+    https://pixabay.com/sound-effects/simple-zaps-48138/
+
+
+
+    Sword
+    Slash and Swing
+
+    DavidDumaisAudio
+
+    https://pixabay.com/sound-effects/sword-slash-and-swing-185432/
+
+
+
+    Distorted
+    808
+
+    dantheman5491 (Freesound)
+
+    https://pixabay.com/sound-effects/distorted-808-93329/
+
+
+
+    Shooting
+    Star 2
+
+    plasterbrain (Freesound)
+
+    https://pixabay.com/sound-effects/shooting-star-2-104073/
+
+
+
+    heavy
+    thunder sound effect - no copyright
+
+    PoorArtistt
+
+    https://pixabay.com/sound-effects/heavy-thunder-sound-effect-no-copyright-338980/'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d0ee6e93669b35d40b0d2cc825fb0b16, type: 2}
   m_sharedMaterial: {fileID: -8659432324645155994, guid: d0ee6e93669b35d40b0d2cc825fb0b16,
@@ -3525,7 +3767,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Juan Luna
+  m_Text: PASSWORD
 --- !u!222 &1399026818
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4627,7 +4869,25 @@ MonoBehaviour:
     Textures and Materials\r\nNobiax / Yughues\r\nhttps://assetstore.unity.com\n\nHandwritten
     math symbols dataset\r\nXai Nano\r\nhttps://www.kaggle.com\r\n\r\nHandwritten
     math symbol and digit dataset\r\nclarence zhao\r\nhttps://www.kaggle.com\n\n[Graphy]
-    - Ultimate FPS Counter - Stats Monitor & Debugger\r\nTayx\nhttps://assetstore.unity.com"
+    - Ultimate FPS Counter - Stats Monitor & Debugger\r\nTayx\nhttps://assetstore.unity.com\n\nEmotes
+    speech bubble pack (32x32)\r\nPooklea\r\nhttps://pooklea.itch.io/emote-speech-bubble-32p\r\n\r\nPixel
+    Art VFX - Priest - FREE Version\r\nFrostwindz\r\nhttps://frostwindz.itch.io/pixel-art-vfx-priest\r\n\r\nvfx-free-pack\r\nCodeManu\r\nhttps://codemanu.itch.io/vfx-free-pack\r\n\r\nPixel
+    Art Gems/Crystals\r\nma9ici4n\r\nhttps://ma9ici4n.itch.io/gems\r\n\r\nExplosion
+    Spriteanim Sheet Minipack\r\nReactorcore\r\nhttps://reactorcore.itch.io/explosion-spriteanim-sheet-minipack\r\n\r\nPixel
+    Fire Asset Pack 2\r\nDevkidd\r\nhttps://devkidd.itch.io/pixel-fire-asset-pack-2\r\n\r\npixelart-effect-pack\r\nCodeManu\r\nhttps://codemanu.itch.io/pixelart-effect-pack\r\n\r\nDungeon
+    brick wall background\r\nCat_Sopelka\r\nhttps://cat-sopelka.itch.io/dungeon-brick-wall\r\n\r\nAutumn
+    Woods Pixel Art Background\r\nJoshua Briggs\r\nhttps://joshua-briggs.itch.io/autumn-woods-pixel-art-background\r\n\r\nMonsters
+    Creatures Fantasy\r\nLuizMelo\r\nhttps://luizmelo.itch.io/monsters-creatures-fantasy\r\n\r\nPixel
+    Ancient Statues \u2014 FREE\r\nPixelmate AI\r\nhttps://pixelmateai.itch.io/ancient-statues2\r\n\r\nForest
+    Background in Pixel Art: Parallax Ready for 2D Platformer / Sidescroller\r\nsaukgp\r\nhttps://saurabhkgp.itch.io/pixel-art-forest-background-simple-seamless-parallax-ready-for-2d-platformer-s\r\n\r\nAnimated
+    pixel campfire (FREE)\r\nSMStudios\r\nhttps://simon-develop.itch.io/2d-campfire-free\r\n\r\nGHOST
+    Asset Pack\r\nSegnah\r\nhttps://segnah.itch.io/ghost-asset-pack\r\n\r\npipoya-free-vfx-warp-portal\r\nPipoya\r\nhttps://pipoya.itch.io/pipoya-free-vfx-warp-portal\r\n\r\nFarm
+    & Field Background Pack\r\nVina\r\nhttps://vgdr.itch.io/farm-field-background-pack\r\n\r\nLightning
+    FX\r\nPerzval.px\r\nhttps://perzvalpx.itch.io/lightning-fx\r\n\r\nPixel Art VFX
+    - Warrior - FREE Version\r\nFrostwindz\r\nhttps://frostwindz.itch.io/pixel-art-skill-animations-warrior\r\n\r\nA
+    Smoke Sprite Sheet\r\nmoonriver\r\nhttps://ohyhei.itch.io/a-smoke-sprite-sheet\r\n\r\nPixel
+    Art Wood\r\nFrostwindz\r\nhttps://frostwindz.itch.io/pixel-art-wood\r\n\r\nStar
+    Animation\r\n@nyk_nck\r\nhttps://nyknck.itch.io/staranimation\r\n\r\nFlying Obelisk\r\nCreativeKind\r\nhttps://creativekind.itch.io/flying-obelisk\r\n\r\npipoya-free-vfx-time-magic\r\nPipoya\r\nhttps://pipoya.itch.io/pipoya-free-vfx-time-magic"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d0ee6e93669b35d40b0d2cc825fb0b16, type: 2}
   m_sharedMaterial: {fileID: -8659432324645155994, guid: d0ee6e93669b35d40b0d2cc825fb0b16,
@@ -4769,7 +5029,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 1
@@ -5316,6 +5576,11 @@ PrefabInstance:
       value: '2D ASSETS & MISC
 
 '
+      objectReference: {fileID: 0}
+    - target: {fileID: 7078722925680794579, guid: 27821379989754448bda0c574f9cbc3d,
+        type: 3}
+      propertyPath: m_Text
+      value: SOUNDS
       objectReference: {fileID: 0}
     - target: {fileID: 8558739193889327257, guid: 27821379989754448bda0c574f9cbc3d,
         type: 3}

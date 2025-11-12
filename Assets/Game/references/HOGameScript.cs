@@ -19,7 +19,7 @@ public class HOGameScript : MonoBehaviour
     private const int INITIAL_POOL_SIZE = 10;
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
     private const float DIALOGUESLIDETIME = 0.25f;
     private const float OCRSLIDETIME = 0.35f;
@@ -29,6 +29,7 @@ public class HOGameScript : MonoBehaviour
     private const string castBtnText2 = "Erase";
     private const string undoBtnText1 = "Undo";
     private const string undoBtnText2 = "Cast";
+    private const string undoBtnText3 = "Back";
 
     // Dialogue constants - cached to avoid GC
     public const string charDialogue1 = "Kailangan ko pumili ng hugis na aking sasagutin";
@@ -128,6 +129,7 @@ public class HOGameScript : MonoBehaviour
     public Text textHUD;
     public Text textFinish;
     public Text undoText;
+    public GameObject measureCounter;
 
     [Header("UI Components - OCR & Formula")]
     public GameObject ocrInput;
@@ -159,11 +161,11 @@ public class HOGameScript : MonoBehaviour
 
     #region Variable Display References
     [Header("Variable Display Objects")]
-    public GameObject sqVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2;
     public GameObject rectVarDisp1, rectVarDisp2;
     public GameObject triVarDisp1, triVarDisp2;
-    public GameObject cirVarDisp1;
-    public GameObject semiVarDisp1;
+    public GameObject cirVarDisp1, cirVarDisp2;
+    public GameObject semiVarDisp1, semiVarDisp2;
 
     private GameObject var1Display, var2Display;
     #endregion
@@ -176,7 +178,6 @@ public class HOGameScript : MonoBehaviour
     private GameBehaviour.SHAPES currentShape;
     private string chosenShape;
     private float inputAnswer = 0f;
-    private float ENDDELAY = 4.0f;
 
     // State flags
     private bool STARTUP = true;
@@ -196,6 +197,7 @@ public class HOGameScript : MonoBehaviour
     private GameData savedGame;
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
+    [HideInInspector] public GameLevelDataModel levelData;
     #endregion
 
     #region Object Pooling
@@ -212,6 +214,9 @@ public class HOGameScript : MonoBehaviour
         InitializeSaveSystem();
         InitializeComponents();
         SetupInitialState();
+
+        //Start Data recording
+        levelData = new GameLevelDataModel();
 
         // Activate Left handed mode based on save data
         if (savedGame.isLeftHanded)
@@ -332,7 +337,7 @@ public class HOGameScript : MonoBehaviour
         }
         else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
         {
-            undoText.text = undoBtnText1;
+            undoText.text = undoBtnText3;
             undoBtnImg.color = Color.red;
             undoBtnLogo.sprite = undoLogoDefault;
             if (isAllSolved)
@@ -488,7 +493,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
-                var2Display = null;
+                var2Display = sqVarDisp2;
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -500,11 +505,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
-                var2Display = null;
+                var2Display = cirVarDisp2;
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
-                var2Display = null;
+                var2Display = semiVarDisp2;
                 break;
             default:
                 var1Display = null;
@@ -522,6 +527,7 @@ public class HOGameScript : MonoBehaviour
         {
             case GameBehaviour.SHAPES.SQUARE:
                 if (var1Text) var1Text.text = "S";
+                if (var2Text) var2Text.text = "S";
                 break;
             case GameBehaviour.SHAPES.RECTANGLE:
                 if (var1Text) var1Text.text = "L";
@@ -533,9 +539,11 @@ public class HOGameScript : MonoBehaviour
                 break;
             case GameBehaviour.SHAPES.CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
             case GameBehaviour.SHAPES.SEMI_CIRCLE:
                 if (var1Text) var1Text.text = "R";
+                if (var2Text) var2Text.text = "R";
                 break;
         }
     }
@@ -562,8 +570,15 @@ public class HOGameScript : MonoBehaviour
         if (lineSnapper != null)
         {
             lineSnapper.gameObject.SetActive(false);
+
+            //Mark as reset so data collection dont count
+            lineSnapper.isReset = true;
+
             lineSnapper.OnUndoPressed();
             lineSnapper.OnUndoPressed();
+
+            //Unmark as reset
+            lineSnapper.isReset = false;
         }
 
         if (btnUndo != null) btnUndo.gameObject.SetActive(false);
@@ -594,6 +609,11 @@ public class HOGameScript : MonoBehaviour
     {
         if (formulaDisplay != null) formulaDisplay.SetActive(false);
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("sceneOut");
+
+        //Save Data, counts as new attempt and marks previous as loss,
+        error = 999; //Indicate restart
+        levelData.GameEndDataEntry(false, null, (HOGameScript)this);
+
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
 
@@ -604,7 +624,7 @@ public class HOGameScript : MonoBehaviour
 
     public void onQuit()
     {
-        error = 100f;
+        error = 444f;
         if (screenFadeAnimator != null) screenFadeAnimator.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY);
     }
@@ -651,30 +671,45 @@ public class HOGameScript : MonoBehaviour
     #region Shape Selection
     public void chooseSquare()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.SQUARE];
         ShowEquationPanel(pEquationSquare);
     }
 
     public void chooseSemiCircle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.SEMI_CIRCLE];
         ShowEquationPanel(pEquationSCircle);
     }
 
     public void chooseCircle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.CIRCLE];
         ShowEquationPanel(pEquationCircle);
     }
 
     public void chooseRectangle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.RECTANGLE];
         ShowEquationPanel(pEquationRectangle);
     }
 
     public void chooseTriangle()
     {
+        //Update numChooseShape
+        levelData.numChooseShape++;
+
         chosenShape = shapeStrings[GameBehaviour.SHAPES.TRIANGLE];
         ShowEquationPanel(pEquationTriangle);
     }
@@ -749,6 +784,9 @@ public class HOGameScript : MonoBehaviour
     {
         hideDiaBoxWhileMeasuring();
 
+        //Make panel opaque
+        hoGameBeh.SetPanelCastingTranslucent(false);
+
         // Batch UI updates
         if (btnConfirmSpell != null) btnConfirmSpell.gameObject.SetActive(false);
         if (panelMagicScroll != null) panelMagicScroll.SetActive(false);
@@ -758,6 +796,13 @@ public class HOGameScript : MonoBehaviour
         // Enable measurement tools
         if (lineSnapper != null) lineSnapper.gameObject.SetActive(true);
         if (btnUndo != null) btnUndo.gameObject.SetActive(true);
+
+        //Display measure counter
+        measureCounter.SetActive(true);
+
+        //Update Measurements
+        if (measureCounter.activeInHierarchy)
+            measureCounter.GetComponent<TextMeshProUGUI>().text = lineSnapper.GetMeasuresLeftText();
 
         ShowEquationForShape(chosenShape);
     }
@@ -790,18 +835,27 @@ public class HOGameScript : MonoBehaviour
     {
         if (pNotify != null)
             pNotify.SetActive(true);
+
+        //Update Data collection
+        levelData.numWrongShape++;
     }
 
     public void NotifyInvalidFormula()
     {
         if (ocrScript != null) ocrScript.processing = true;
         ShowNotification("Hindi wasto ang ibinigay na formula.");
+
+        //Update Data collection
+        levelData.numInvalidFormula++;
     }
 
     public void NotifyMismatchedAnswer()
     {
         if (ocrScript != null) ocrScript.processing = true;
         ShowNotification("Hindi tugma sa formula ang ibinigay na sagot.");
+
+        //Update Data collection
+        levelData.numMismatchCalc++;
     }
 
     private void ShowNotification(string message)
@@ -952,12 +1006,12 @@ public class HOGameScript : MonoBehaviour
 
         if (fa.calcMode)
         {
-            if (calcBtnText != null) calcBtnText.text = "Calculator";
+            if (calcBtnText != null) calcBtnText.text = "Calculate";
             fa.ExitCalc();
         }
         else
         {
-            if (calcBtnText != null) calcBtnText.text = "Formula Input";
+            if (calcBtnText != null) calcBtnText.text = "Input Formula";
             fa.EnterCalc();
         }
     }
@@ -1016,6 +1070,12 @@ public class HOGameScript : MonoBehaviour
     {
         isDoneMeasuring = true;
 
+        //Change to back to avoid confusion
+        undoText.text = undoBtnText3;
+
+        //Turn off measure Counter
+        measureCounter.SetActive(false);
+
         if (textFinish != null) textFinish.text = castBtnText2;
         if (calcBtnObj != null) calcBtnObj.SetActive(true);
 
@@ -1043,6 +1103,16 @@ public class HOGameScript : MonoBehaviour
         if (var2Display != null)
         {
             var text2 = var2Display.GetComponent<Text>();
+
+            switch (currentShape) //Match value 1 for display 2 if single line
+            {
+                case GameBehaviour.SHAPES.SQUARE:
+                case GameBehaviour.SHAPES.CIRCLE:
+                case GameBehaviour.SHAPES.SEMI_CIRCLE:
+                    text2.text = lineSnapper.value1;
+                    return;
+            }
+
             if (text2 != null) text2.text = lineSnapper.value2;
         }
     }
@@ -1063,6 +1133,12 @@ public class HOGameScript : MonoBehaviour
         {
             StartCoroutine(SlideOCRBoard(false));
             Invoke(nameof(ToggleLineDelay), OCRSLIDETIME);
+
+            //Revert to Undo
+            undoText.text = undoBtnText1;
+
+            //Turn on measure Counter
+            measureCounter.SetActive(true);
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;
@@ -1200,7 +1276,7 @@ public class HOGameScript : MonoBehaviour
     {
         if (correctionPerc != null)
         {
-            correctionPerc.text = $"Error: {roundedError}%";
+            correctionPerc.text = $"Level Failed! \n Error: {roundedError}%";
             correctionPerc.gameObject.SetActive(true);
         }
 
@@ -1255,6 +1331,9 @@ public class HOGameScript : MonoBehaviour
 
         if (hoGameBeh?.spellCastEvent != null)
             hoGameBeh.spellCastEvent.setHiddenStateAllShapes(false);
+
+        //Make panelCasting translucent during shape selection
+        hoGameBeh.SetPanelCastingTranslucent(true);
     }
 
     private void ProcessAllShapesSolved()
@@ -1265,6 +1344,9 @@ public class HOGameScript : MonoBehaviour
         if (btnMeasure != null) btnMeasure.gameObject.SetActive(false);
 
         isAllSolved = true;
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessFinalAnswer()
@@ -1343,6 +1425,10 @@ public class HOGameScript : MonoBehaviour
             animScript.VideoPlayerScript.Stop();
             animScript.VideoPlayerScript.PlayBGAnim();
         }
+
+        //Make panelCasting translucent;
+        hoGameBeh.SetPanelCastingTranslucent(true);
+
         ModifiedToUI();
     }
 
@@ -1362,8 +1448,18 @@ public class HOGameScript : MonoBehaviour
 
         if (lineSnapper != null)
         {
+            //Mark as reset so data collection dont count
+            lineSnapper.isReset = true;
+
             lineSnapper.OnUndoPressed();
             lineSnapper.OnUndoPressed();
+
+            //Unmark as reset
+            lineSnapper.isReset = false;
+
+            //Turn off measure Counter
+            measureCounter.SetActive(false);
+
             lineSnapper.gameObject.SetActive(false);
         }
 
@@ -1420,6 +1516,9 @@ public class HOGameScript : MonoBehaviour
             i++;
             ProcessCompoundShape(i, dict.Key.shape, dict.Value, n);
         }
+
+        //Shape selection done, full alpha
+        hoGameBeh.SetPanelCastingTranslucent(false);
     }
 
     private void ProcessCompoundShape(int index, GameBehaviour.SHAPES shape, float value, int n)
@@ -1565,6 +1664,9 @@ public class HOGameScript : MonoBehaviour
 
     private IEnumerator DelayedCastAnimation()
     {
+        //Reduce the BGM volume
+        soundPlayer.setBGMVolume(soundPlayer.GetBGMVolume() / 2);
+
         yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
 
         HideNewUI();
@@ -1574,10 +1676,10 @@ public class HOGameScript : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 
@@ -1608,6 +1710,9 @@ public class HOGameScript : MonoBehaviour
         }
 
         GlobalVariables.gameFinished = true;
+
+        //Save Data
+        levelData.GameEndDataEntry(GlobalVariables.playerWin, null, (HOGameScript)this);
 
         SceneManager.LoadScene("LevelSelect");
     }

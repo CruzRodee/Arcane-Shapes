@@ -1,0 +1,5 @@
+narrator "What is your name?"
+
+input "Type Your Name In Here."
+
+narrator "Nice to meet you, <input>!"

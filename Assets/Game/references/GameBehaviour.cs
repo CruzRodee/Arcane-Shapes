@@ -13,8 +13,7 @@ public class GameBehaviour : MonoBehaviour
 
     private const float TRANSITIONTIME = 0.4f;
     private const float FILLTIMEAPROX = 1.5f;
-    private const float STARTDELAY = 3.4f;
-    private float ENDDELAY = 4.0f;
+    private float STARTDELAY = GlobalVariables.introLen;
     private const float TRANSITIONDELAY = 0.5f;
 
     // OPTIMIZATION: Cached strings to avoid allocations
@@ -23,6 +22,7 @@ public class GameBehaviour : MonoBehaviour
     private const string castBtnText2 = "Erase";
     private const string undoBtnText1 = "Undo";
     private const string undoBtnText2 = "Cast";
+    private const string undoBtnText3 = "Back";
     private const string wrongShapeMsg = "Ang shape na pinili ay mali. Subukan ulit.";
     private const string invalidFormulaMsg = "Hindi wasto ang ibinigay na formula.";
     private const string mismatchedAnswerMsg = "Hindi tugma sa formula ang ibinigay na sagot.";
@@ -75,6 +75,7 @@ public class GameBehaviour : MonoBehaviour
     public Text confirmText;
     public Text textHUD;
     public Text undoText;
+    public GameObject measureCounter;
 
     [Header("Hint System")]
     public GameObject textHint;
@@ -114,7 +115,7 @@ public class GameBehaviour : MonoBehaviour
     public GameObject backspaceButton;
 
     [Header("Variable Displays")]
-    public GameObject sqVarDisp1, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, semiVarDisp1;
+    public GameObject sqVarDisp1, sqVarDisp2, rectVarDisp1, rectVarDisp2, triVarDisp1, triVarDisp2, cirVarDisp1, cirVarDisp2, semiVarDisp1, semiVarDisp2;
 
     [Header("Sound")]
     public GameObject soundPlayerObj;
@@ -142,6 +143,7 @@ public class GameBehaviour : MonoBehaviour
     private GameData savedGame;
     private SaveLoadController saverLoader = new SaveLoadController();
     private string savePath;
+    [HideInInspector] public GameLevelDataModel levelData;
 
     // Cached RectTransform references
     private RectTransform rtDialogue;
@@ -174,7 +176,7 @@ public class GameBehaviour : MonoBehaviour
     private static readonly Vector3 normalScale = new Vector3(1f, 1f, 1f);
     private static readonly Vector3 smallScale = new Vector3(0.9f, 0.9f, 0.9f);
 
-    private static readonly WaitForSeconds blinkDelay = new WaitForSeconds(STARTDELAY + 0.4f);
+    private static  WaitForSeconds blinkDelay = new WaitForSeconds(GlobalVariables.introLen + 0.4f);
     private static readonly WaitForSeconds dialogueWait = new WaitForSeconds(DIALOGUESLIDETIME);
     private static readonly WaitForSeconds ocrWait = new WaitForSeconds(OCRSLIDETIME);
 
@@ -229,6 +231,9 @@ public class GameBehaviour : MonoBehaviour
             ocrStartTransform = rightStartTransform;
             ocrEndTransform = rightEndTransform;
         }
+
+        //Start Data recording
+        levelData = new GameLevelDataModel();
     }
 
     void Start()
@@ -298,7 +303,7 @@ public class GameBehaviour : MonoBehaviour
         }
         else if (!fa.GetIsEquMode() && undoBtnImg.color != Color.red) //Change to Red on not final answer
         {
-            undoText.text = undoBtnText1;
+            undoText.text = undoBtnText3;
             undoBtnImg.color = Color.red;
             undoBtnLogo.sprite = undoLogoDefault;
         }
@@ -355,6 +360,7 @@ public class GameBehaviour : MonoBehaviour
         {
             case SHAPES.SQUARE:
                 var1Display = sqVarDisp1;
+                var2Display = sqVarDisp2;
                 break;
             case SHAPES.RECTANGLE:
                 var1Display = rectVarDisp1;
@@ -366,9 +372,11 @@ public class GameBehaviour : MonoBehaviour
                 break;
             case SHAPES.CIRCLE:
                 var1Display = cirVarDisp1;
+                var2Display = cirVarDisp2;
                 break;
             case SHAPES.SEMI_CIRCLE:
                 var1Display = semiVarDisp1;
+                var2Display = semiVarDisp2;
                 break;
         }
     }
@@ -453,6 +461,10 @@ public class GameBehaviour : MonoBehaviour
             spriteHintImgSpell.color = spellColor;
         }
 
+        //Save Data, counts as new attempt and marks previous as loss,
+        error = 999; //To indicate restart
+        levelData.GameEndDataEntry(false, (GameBehaviour)this);
+
         Invoke(nameof(LoadSceneDelay), TRANSITIONDELAY);
     }
 
@@ -463,7 +475,7 @@ public class GameBehaviour : MonoBehaviour
 
     public void onQuit()
     {
-        error = 100f;
+        error = 444f;
         screenFadeAnimator?.SetTrigger("sceneOut");
         Invoke(nameof(EndGameFunctions), TRANSITIONDELAY);
     }
@@ -540,6 +552,9 @@ public class GameBehaviour : MonoBehaviour
         chosenShape = shape;
         hideAllEquation();
         equation?.SetActive(true);
+
+        //Update numChooseShape
+        levelData.numChooseShape++;
     }
 
     public void btnNo()
@@ -681,6 +696,13 @@ public class GameBehaviour : MonoBehaviour
             pDiaButtons?.SetActive(true);
             lineSnapper?.gameObject.SetActive(true);
 
+            //Display measure counter
+            measureCounter.SetActive(true);
+
+            //Update Measurements
+            if (measureCounter.activeInHierarchy)
+                measureCounter.GetComponent<TextMeshProUGUI>().text = lineSnapper.GetMeasuresLeftText();
+
             ActivateEquationForShape(chosenShape);
         }
         else
@@ -714,6 +736,9 @@ public class GameBehaviour : MonoBehaviour
     public void notifyWrongShape()
     {
         if (pNotify != null) pNotify.SetActive(true);
+
+        //Update Data collection
+        levelData.numWrongShape++;
     }
 
     private void ResumeOCR()
@@ -729,6 +754,9 @@ public class GameBehaviour : MonoBehaviour
             pNotify.SetActive(true);
             pNotifyText.text = invalidFormulaMsg;
         }
+
+        //Update Data collection
+        levelData.numInvalidFormula++;
     }
 
     public void NotifyMismatchedAnswer()
@@ -739,6 +767,9 @@ public class GameBehaviour : MonoBehaviour
             pNotify.SetActive(true);
             pNotifyText.text = mismatchedAnswerMsg;
         }
+
+        //Update Data collection
+        levelData.numMismatchCalc++;
     }
     #endregion
 
@@ -752,12 +783,12 @@ public class GameBehaviour : MonoBehaviour
 
         if (fa.calcMode)
         {
-            if (calcBtnText != null) calcBtnText.text = "Calculator";
+            if (calcBtnText != null) calcBtnText.text = "Calculate";
             fa.ExitCalc();
         }
         else
         {
-            if (calcBtnText != null) calcBtnText.text = "Formula Input";
+            if (calcBtnText != null) calcBtnText.text = "Input Formula";
             fa.EnterCalc();
         }
     }
@@ -803,9 +834,15 @@ public class GameBehaviour : MonoBehaviour
         if (correctionPerc != null)
         {
             stringBuilder.Clear();
-            stringBuilder.Append("Error: ");
-            stringBuilder.Append(Math.Round(Math.Abs(error), 2));
-            stringBuilder.Append("%");
+            if (error != 0)
+            {
+                stringBuilder.Append("Casting Failed! \n Error: ");
+                stringBuilder.Append(Math.Round(Math.Abs(error), 2));
+                stringBuilder.Append("%");
+            }
+            else
+                stringBuilder.Append("Spell Complete");
+
             correctionPerc.text = stringBuilder.ToString();
             correctionPerc.gameObject.SetActive(true);
         }
@@ -816,15 +853,30 @@ public class GameBehaviour : MonoBehaviour
     public void DoneMeasure()
     {
         isDoneMeasuring = true;
+
+        //Change to back to avoid confusion
+        undoText.text = undoBtnText3;
+
+        //Turn off measure Counter
+        measureCounter.SetActive(false);
+
         if (textFinish != null) textFinish.text = castBtnText2;
 
-        if (GlobalVariables.level < 3)
-            calcBtnObj?.SetActive(true);
+        calcBtnObj?.SetActive(true);
 
         if (var1Display != null)
             var1Display.GetComponent<Text>().text = lineSnapper?.value1;
         if (var2Display != null)
             var2Display.GetComponent<Text>().text = lineSnapper?.value2;
+
+        switch (GlobalVariables.loSelectedShape) //Match value 1 for display 2 if single line
+        {
+            case SHAPES.SQUARE:
+            case SHAPES.CIRCLE:
+            case SHAPES.SEMI_CIRCLE:
+                var2Display.GetComponent<Text>().text = lineSnapper?.value1;
+                break;
+        }
 
         StartCoroutine(SlideOCRBoard(true));
         lineSnapper?.ToggleLineText();
@@ -844,6 +896,12 @@ public class GameBehaviour : MonoBehaviour
         {
             StartCoroutine(SlideOCRBoard(false));
             Invoke(nameof(ToggleLineDelay), OCRSLIDETIME);
+
+            //Revert to Undo
+            undoText.text = undoBtnText1;
+
+            //Turn on measure Counter
+            measureCounter.SetActive(true);
         }
 
         if (textFinish != null) textFinish.text = castBtnText1;
@@ -905,8 +963,11 @@ public class GameBehaviour : MonoBehaviour
 
     private IEnumerator DelayedCastAnimation()
     {
+        //Reduce the BGM volume
+        soundPlayer.setBGMVolume(soundPlayer.GetBGMVolume() / 2);
+
         yield return new WaitForSeconds(TRANSITIONTIME + 0.1f);
-        
+
         HideNewUI();
 
         int state = (error > 0) ? 0 : (error < 0) ? 1 : 2;
@@ -914,10 +975,10 @@ public class GameBehaviour : MonoBehaviour
 
         yield return new WaitUntil(() => animScript.VideoPlayerScript.videoPlayer.isPrepared);
 
-        float len = animScript.VideoPlayerScript.GetVideoLength();
-        float sd = state == 2 ? len : 0f;
+        if(error != 0f) //All default error anims are 5f len
+            GlobalVariables.outroLen = 5f;
 
-        yield return new WaitForSeconds(sd + ENDDELAY);
+        yield return new WaitForSeconds(GlobalVariables.outroLen);
 
         FadeDelay();
 
@@ -947,6 +1008,9 @@ public class GameBehaviour : MonoBehaviour
 
         GlobalVariables.gameFinished = true;
         GlobalVariables.isLOGame = true;
+
+        //Save Data
+        levelData.GameEndDataEntry(isWin, (GameBehaviour)this);
 
         SceneManager.LoadScene("LevelSelect");
     }
@@ -1293,29 +1357,9 @@ public class GameBehaviour : MonoBehaviour
 
     private void InitProblem()
     {
-        float measure1 = 1f, measure2 = 1f;
-        bool isCircleShape = GlobalVariables.loSelectedShape == SHAPES.CIRCLE ||
-                           GlobalVariables.loSelectedShape == SHAPES.SEMI_CIRCLE;
+        float[] measures = GlobalVariables.GetLOProblemMeasures();
 
-        float[] measureArray = isCircleShape ? currentCircleMeasureArray : currentMeasureArray;
-        int arrayLength = measureArray != null ? measureArray.Length : 1;
-
-        System.Random rand = new System.Random((int)DateTime.Now.Ticks);
-        if (measureArray != null && arrayLength > 0)
-        {
-            measure1 = measureArray[rand.Next(arrayLength)];
-            measure2 = measureArray[rand.Next(arrayLength)];
-        }
-
-        if (GlobalVariables.loSelectedShape == SHAPES.RECTANGLE && measure1 == measure2)
-        {
-            if (rand.Next(2) == 0)
-                measure1 = Mathf.Max(1, measure1 - 1);
-            else
-                measure2 = Mathf.Max(1, measure2 - 1);
-        }
-
-        SetManualProblem(GlobalVariables.loSelectedShape, measure1, measure2);
+        SetManualProblem(GlobalVariables.loSelectedShape, measures[0], measures[1]);
     }
     #endregion
 }

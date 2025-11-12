@@ -32,7 +32,7 @@ public class FormulaAnalyzer : MonoBehaviour
     private TextMeshProUGUI formulaDispGUI; //Set this during Start() with get component
 
     private const string formulaDefaultText = "Isulat ang formula sa Board";
-    private const string calculatorDefaultText = "Calculator";
+    private const string calculatorDefaultText = "Calculate";
 
     //Magic regex runes, the rest in AreaFormulaParser
 
@@ -130,6 +130,16 @@ public class FormulaAnalyzer : MonoBehaviour
         //Clear data
         ResetAnalyzer();
 
+        //Update data collection on numCalcUsed
+        if(gb != null)
+        {
+            gb.levelData.numCalcUsed++;
+        }
+        else if (hgb != null)
+        {
+            hgb.levelData.numCalcUsed++;
+        }
+
         if (DEBUG) DebugDisplay();
     }
 
@@ -163,6 +173,16 @@ public class FormulaAnalyzer : MonoBehaviour
     //Method for appending to the input string variables
     public void InputString(string input)
     {
+        //Update data collection on numOCRInput
+        if (gb != null)
+        {
+            gb.levelData.numOCRInput++;
+        }
+        else if (hgb != null)
+        {
+            hgb.levelData.numOCRInput++;
+        }
+
         //Check for the non-number inputs that may be different between evalString and displayString
         //Else, number strings are same in both
         //Special function for switching to comparing if equ is input
@@ -377,6 +397,27 @@ public class FormulaAnalyzer : MonoBehaviour
         return false; //Default response
     }
 
+    //Used for evaluating calculator input on click
+    private string CalculatorEvaluate()
+    {
+        string evalResult = "Invalid Input"; //Default to invalid
+
+        try
+        {          
+            bool isValidExpression = ExpressionEvaluator.Evaluate(tempEval, out float evaluatorReturn);
+
+            //Round evalAnswer to 2 decimal places, do same for all answers
+            if (isValidExpression)
+                evalResult = ((float)System.Math.Round(evaluatorReturn, 2)).ToString();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e); //Logs exception
+        }
+
+        return evalResult;
+    }
+
     //Evualutaes the string formula with NCalc Expression.Evaluate(), stores answer in evalAnswer formula validity in isValidFormula
     private void EvaluateFormula()
     {
@@ -420,6 +461,8 @@ public class FormulaAnalyzer : MonoBehaviour
         //Display default text based on mode
         if (!calcMode && displayString.Length < 1)
             formulaDispGUI.text = formulaDefaultText;
+        else if (calcMode && calcDispString.Length < 1 && tempEval.Length > 1)
+            formulaDispGUI.text = $"Answer: {CalculatorEvaluate()}";
         else if (calcMode && calcDispString.Length < 1)
             formulaDispGUI.text = calculatorDefaultText;
     }

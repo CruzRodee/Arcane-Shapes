@@ -1,0 +1,25 @@
+$money = 50
+
+The IRS "Your money. Give it to me now. Give me your money now. it's $money right now?"
+
+$money -= 55
+
+"Not anymore. It's $money now."
+
+$lightSwitch = true
+
+narrator "Flip!"
+
+$lightSwitch = !$lightSwitch
+
+narrator "The light is on? $lightSwitch"
+
+input "What is your name?"
+
+$name = "The Amazing <input>"
+
+narrator "You are $name!"
+
+$name += " From Outer Space"
+
+narrator "You are now $name"

@@ -20,7 +20,7 @@ public class DebugToFile : MonoBehaviour
     [System.NonSerialized] private bool isInitialized = false;
 
     private static DebugToFile instance;
-    private static bool applicationIsQuitting = false;
+    // private static bool applicationIsQuitting = false;
 
     void Awake()
     {

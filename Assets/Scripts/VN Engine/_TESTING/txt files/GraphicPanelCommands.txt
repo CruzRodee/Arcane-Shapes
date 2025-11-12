@@ -1,0 +1,37 @@
+wait(1)
+
+SetLayerMedia(background "Fantasy Landscape" -aud true -spd 0.7 -blend hurricane -i true)
+
+CreateCharacter(Raelin -e true -i true)
+
+Raelin.SetPosition(1)
+
+Raelin "Welcome to the Barracks!"
+
+SetLayerMedia(cinematic -m "village festival")
+
+SetLayerMedia(cinematic -m "~/Graphics/Gallery/flower)
+
+Raelin "Look at this cinematic layer!"
+
+ClearLayerMedia(cinematic)
+
+Raelin "The cinematic layer should be cleared!"
+
+wait(1)
+
+SetLayerMedia(background -layer 1 SpaceshipInterior)
+
+Raelin "Let's test removing the overlay layer"
+
+ClearLayerMedia(background 1)
+
+Raelin "We did it."
+
+SetLayerMedia(background -layer 1 SpaceshipInterior -blend hurricane)
+Raelin "Let's test clearing both backgrounds now with a blend."
+
+ClearLayerMedia(background -blend hypno)
+
+Raelin: "Looks like everything is working."
+

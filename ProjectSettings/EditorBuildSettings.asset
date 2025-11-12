@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 4c08af241e31b754b8f5c4c96744e844
   - enabled: 1
-    path: Assets/Scenes/Tutorial1.unity
-    guid: c9b1b8003b2d283449727b3c416dace4
+    path: Assets/Scenes/VisualNovelScene.unity
+    guid: b61d3fced6ed37f4389472ac71a2caf1
   - enabled: 1
     path: Assets/Scenes/LevelSelect.unity
     guid: d123ea784b5e12c4c8816d2b22feff4a
@@ -23,6 +23,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameLevelScene_v3.unity
     guid: 473a96a4bfce9b54994edd3b76a2621c
+  - enabled: 0
+    path: Assets/Scenes/Tutorial1.unity
+    guid: c9b1b8003b2d283449727b3c416dace4
+  - enabled: 0
+    path: Assets/Scenes/VNFormative 1.unity
+    guid: 2d346b7ccfb8aca4aa839e366acd0368
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
       guid: 12d96e7169aa8814b8d8ddd036c632d4, type: 2}

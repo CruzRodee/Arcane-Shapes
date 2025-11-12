@@ -1,0 +1,91 @@
+HideDB()
+
+PlaySong(Upbeat), wait(1)
+
+SetLayerMedia(background -m BG_Hallway)
+
+CreateCharacter(Oz), CreateCharacter(Player)
+
+Player.SetPosition(x -0.5), Oz.SetPosition(x -0.5), [wait]Oz.Flip(-i true)
+
+Player.Show(), Oz.Show(), [wait]Oz.Move(-x 0.8), [wait]Player.Move(-x 0.2), [wait]Oz.Flip(-i true)
+
+Oz [talk] "Nandito na tayo! Ako rin pala magiging guro mo sa klaseng ito. {c}Kaya maganda rin na sabay na rin tayong dumating! Hehe."
+
+Player [surprise2] "Magkaklase na po tayo agad?"
+
+Player.SetSprite(happy)
+
+Oz "Syempre! Wag tayong magsayang ng oras, hehe. {c}Pero di naman kita papabayaan. Bago tayo pumasok, may mga tanong muna ako."
+
+"Ready ka na ba? {wa 0.5} Pakinggan mo ako ng maigi ah!"
+
+choice "Ready ka na ba?"
+{
+    - Opo
+        Oz "Ayan! Ganyan ang gusto ko, handa at masigasig!"
+        "May plus points ka saakin agad!"
+    - Hindi
+        Oz [sighsad] "Ay, hindi ba? Well, wala kang choice! Haha!"
+        Player.SetSprite(sad)
+}
+
+Oz [talk] "Sige, ilang taon ka na ba?"
+
+Player.SetSprite(neutral)
+
+Input "Ilang taon ka na?"
+
+$PlayerData.playerAge = "<input>"
+
+"Ang bata mo pa pala! Sige, anong grade ka naman?"
+
+Input "Anong grade ka na?"
+
+$PlayerData.playerGrade = "<input>"
+
+"Hmm. Sige, medyo malabo rin mata ko. . . Babae ka ba o lalake?"
+
+choice "Babae ka ba o Lalake?"
+{
+    -Babae
+        $PlayerData.playerSex = "Babae"
+    -Lalaki
+        $PlayerData.playerSex = "Lalaki"
+}
+
+"Okay! Sige, kilala na kita!"
+
+"Ngayon, magsimula tayo sa isang napakahalagang konsepto: {c} {a}<b>AREA</b>."
+
+"Alam mo na ba kung ano ang area?"
+
+choice "Alam mo ba kung ano ang area?"
+{
+    -Opo
+        $PlayerData.areaKnown = true
+        [wait]Player.SetSprite(happy)
+        "Magaling! Para lang sure, uulitin ko lang sayo ang ibig-sabihin nito"
+        [wait]Player.SetSprite(neutral)
+    -Hindi
+        $PlayerData.areaKnown = false
+        "Okay lang yan! Lahat tayo ay nagsisimula sa ganyan. Kaya ako andito para turuan ka!"
+}
+
+"Ganito nalang isipin mo. {c} Ang <b>AREA</b> ay ang SUKAT ng espasyong sakop sa loob ng isang hugis."
+
+"Isipin mo na ang sahig na may GRID (maliliit na SQUARE). {c} Ilan sa maliliit na parisukat ang nakapaloob? 'Yon ang AREA."
+
+"Kung ito'y nakakalito parin, pumasok na tayo sa classroom at mas malalim kong ituturo sayo!"
+
+SetLayerMedia(background -m Classroom)
+
+"Magsimula na tayo!"
+
+
+PrintPlayerData()
+SaveCheckpoint(Chapter1_Intro2)
+
+HideUI()
+StopSong(), StopAmbience()
+wait(1)

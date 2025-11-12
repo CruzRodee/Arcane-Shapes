@@ -1,4 +1,5 @@
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -30,6 +31,10 @@ public class LS_EventsScript : MonoBehaviour
     //UI active
     public GameObject panelHallway;
     public GameObject panelDialogue;
+    private Text dialogueText;
+    // Level Tracker Texts
+    public TextMeshProUGUI LOLevelTracker;
+    public TextMeshProUGUI HOLevelTracker;
 
     //NOTIFY SCREENS
     public GameObject pConfirmHome;
@@ -50,20 +55,34 @@ public class LS_EventsScript : MonoBehaviour
         savePath = Path.Combine(Application.persistentDataPath, "saveData.json");
         savedGame = saverLoader.loadGame(savePath);
 
+        // Initialize screenFade FIRST
+        screenFade = GameObject.Find("ScreenFade")?.GetComponent<Animator>();
+
         //Load Save data stuff onto GlobalVariables
         savedGame = saverLoader.loadGame(savePath);
         if (savedGame == null)          // prevent NREs downstream, quit to main menu
         {
-            //SceneChange to main menu
-            screenFade.SetTrigger("sceneOut");  //NAG EERROR HERE
+            Debug.LogError("[LS_EventsScript] No save data found! Returning to main menu.");
+
+            if (screenFade != null)
+                screenFade.SetTrigger("sceneOut");
+
             Invoke(nameof(DelayedHomeLoad), TRANSITIONDELAY);
             return;
         }
 
         GlobalVariables.isMute = savedGame.prefMute;
-        screenFade = GameObject.Find("ScreenFade").GetComponent<Animator>();
-
         btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
+
+        GameObject dialogueTextObj = panelDialogue.transform.Find("DialogueText")?.gameObject;
+        if (dialogueTextObj != null)
+        {
+            dialogueText = dialogueTextObj.GetComponent<Text>();
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] DialogueText not found as child of panelDialogue!");
+        }
     }
     void Start()
     {
@@ -79,8 +98,6 @@ public class LS_EventsScript : MonoBehaviour
                 GlobalVariables.level = 1; //Set level to 1 after playing
             if (GlobalVariables.playerWin && GlobalVariables.level < 6 && !GlobalVariables.isLOGame)
                 GlobalVariables.level++; //Level up after win until 6 for HO
-            else if (GlobalVariables.playerWin && GlobalVariables.level < 3)
-                GlobalVariables.level++; //Level up after win until 3 for LO
 
             //Prestige/Loop again through HO Levels mechanic
             if (GlobalVariables.playerWin && GlobalVariables.level > 6 && !GlobalVariables.isLOGame)
@@ -92,23 +109,41 @@ public class LS_EventsScript : MonoBehaviour
             //Save to GameData
             if (GlobalVariables.isLOGame) //Saving for LO game
             {
-                savedGame.totalLOLevel++;
-                int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5 + 1; //3 levels, 5 shapes, 1 extra to ensure all done
-                if(savedGame.totalLOLevel >= maxLOLevel)
+                int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5; //3 levels, 5 shapes, 1 extra to ensure all done
+
+                if (GlobalVariables.playerWin)
+                    savedGame.totalLOLevel += GlobalVariables.NUM_LO_LEVELS; //Skip to different shapes level 1 first
+
+                if (savedGame.totalLOLevel > maxLOLevel) //Only level after all shapes done
                 {
-                    //Reset Levels
-                    GlobalVariables.level = 0;
+                    if (GlobalVariables.playerWin)
+                        GlobalVariables.level++; //Level up after win until 3 for LO then reset
+
+                    //Update shape levels
+                    savedGame.squareLvl = GlobalVariables.level;
+                    savedGame.rectLvl = GlobalVariables.level;
+                    savedGame.triLvl = GlobalVariables.level;
+                    savedGame.circleLvl = GlobalVariables.level;
+                    savedGame.scircleLvl = GlobalVariables.level;
+
+                    savedGame.totalLOLevel -= maxLOLevel; //Go to level 2 of shapes
+                }
+
+                if (GlobalVariables.level >= 4)
+                {
+                    //Reset Levels, Do not show walang datos
+                    GlobalVariables.level = 1;
                     GlobalVariables.percent = 0f;
-                    savedGame.totalLOLevel = 0;
-                    savedGame.squareLvl = 0;
-                    savedGame.rectLvl = 0;
-                    savedGame.triLvl = 0;
-                    savedGame.circleLvl = 0;
-                    savedGame.scircleLvl = 0;
+                    savedGame.totalLOLevel = 1;
+                    savedGame.squareLvl = 1;
+                    savedGame.rectLvl = 1;
+                    savedGame.triLvl = 1;
+                    savedGame.circleLvl = 1;
+                    savedGame.scircleLvl = 1;
 
                     savedGame.loPres++; //Increase pres level
                 }
-                
+
                 switch (GlobalVariables.loSelectedShape)
                 {
                     case GameBehaviour.SHAPES.SQUARE:
@@ -155,25 +190,41 @@ public class LS_EventsScript : MonoBehaviour
         UnityEngine.Debug.Log(savedGame.playerName);
         initLevels(savedGame);
 
+        // Update Level Trackers
+        UpdateLevelTrackers();
+
         // 0 PASS UNLOCK ALL: ALL
         // 1 PASS LOWER: SIMPLE
         // 2 PASS HIGHER: COMPOUND
-        if (savedGame.mode == 1)
+        if (savedGame.mode == 0)
         {
-            btnCompound.interactable = false;
+            btnCompound.interactable = true;
+            SetDialogueText("Pwede ko na i-try ang COMPOUND! Pero pwede ko parin pasukan yung mas mahirap na mga SIMPLE na klase");
+        }
+        else if (savedGame.mode == 1)
+        {
             //disable compound shapes button
+            btnCompound.interactable = false;
+            SetDialogueText("Kailangan ko muna pasukan ang ibang SIMPLE na klase bago ang COMPOUND!");
+
+            //Re-enable compound button when finish one level for each LO shape
+            if (GlobalVariables.IsHOUnlocked(savedGame))
+            {
+                btnCompound.interactable = true;
+                SetDialogueText("Pwede ko na i-try ang COMPOUND! Pero pwede ko parin pasukan yung mas mahirap na mga SIMPLE na klase");
+                // Update Level Trackers
+                UpdateLevelTrackers();
+            }
+
         }
         else if (savedGame.mode == 2)
         {
-            /*
-            btnSemiCircle.interactable = false;
-            btnCircle.interactable = false;
-            btnSquare.interactable = false;
-            btnTriangle.interactable = false;
-            btnRectangle.interactable = false;
-            */
+            SetDialogueText("Masyado na akong magaling! COMPOUND nalang pwede kong pasukan!");
+            btnLO.interactable = false;
         }
 
+        // Update Level Trackers visibility and values
+        UpdateLevelTrackers();
 
         playerNameText = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
 
@@ -204,10 +255,98 @@ public class LS_EventsScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the LOLevelTracker and HOLevelTracker texts based on player progress.
+    /// Hides trackers if corresponding buttons are disabled.
+    /// </summary>
+    /// <summary>
+    /// Updates the LOLevelTracker and HOLevelTracker texts based on player progress.
+    /// Hides trackers if corresponding buttons are disabled.
+    /// </summary>
+    private void UpdateLevelTrackers()
+    {
+        if (savedGame == null)
+        {
+            Debug.LogWarning("[LS_EventsScript] savedGame is null, cannot update level trackers.");
+            return;
+        }
+
+        // Calculate actual completed levels for LO (Simple Shapes)
+        // Each shape has 3 levels, so we need to count how many levels across all shapes are done
+        int currentLOLevel = 0;
+        int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5; // 3 levels * 5 shapes = 15 total
+
+        // Count completed levels for each shape (level 0 means not started, so subtract 1)
+        // But only count if level > 0
+        if (savedGame.squareLvl > 0)
+            currentLOLevel += savedGame.squareLvl;
+        if (savedGame.rectLvl > 0)
+            currentLOLevel += savedGame.rectLvl;
+        if (savedGame.triLvl > 0)
+            currentLOLevel += savedGame.triLvl;
+        if (savedGame.circleLvl > 0)
+            currentLOLevel += savedGame.circleLvl;
+        if (savedGame.scircleLvl > 0)
+            currentLOLevel += savedGame.scircleLvl;
+
+        // Calculate current HO level
+        int currentHOLevel = savedGame.compLvl;
+        int maxHOLevel = 6; // Based on the level system (1-6)
+
+        // Update LO Level Tracker
+        if (LOLevelTracker != null)
+        {
+            if (btnLO != null && btnLO.interactable)
+            {
+                LOLevelTracker.gameObject.SetActive(true);
+                LOLevelTracker.text = $"SIMPLE SHAPES:\nLevel {currentLOLevel}/{maxLOLevel}";
+            }
+            else
+            {
+                LOLevelTracker.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] LOLevelTracker is not assigned!");
+        }
+
+        // Update HO Level Tracker
+        if (HOLevelTracker != null)
+        {
+            if (btnCompound != null && btnCompound.interactable)
+            {
+                HOLevelTracker.gameObject.SetActive(true);
+                HOLevelTracker.text = $"COMPOUND SHAPES:\nLevel {currentHOLevel}/{maxHOLevel}";
+            }
+            else
+            {
+                HOLevelTracker.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] HOLevelTracker is not assigned!");
+        }
+
+        Debug.Log($"[LS_EventsScript] Updated Level Trackers - LO: {currentLOLevel}/{maxLOLevel}, HO: {currentHOLevel}/{maxHOLevel}");
+    }
+
     // Update is called once per frame
     void Update()
     {
 
+    }
+    private void SetDialogueText(string message)
+    {
+        if (dialogueText != null)
+        {
+            dialogueText.text = message;
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] dialogueText is null! Cannot set dialogue.");
+        }
     }
 
     void initLevels(GameData data)
@@ -223,7 +362,7 @@ public class LS_EventsScript : MonoBehaviour
 
         //Determine what shape of LO right now
         int level = 0;
-        if(savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
+        if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             level = savedGame.squareLvl;
             loShapeTxt.text = "Square";
@@ -267,9 +406,6 @@ public class LS_EventsScript : MonoBehaviour
                 break;
         }
 
-        // if (GlobalVariables.IsHOUnlocked(savedGame)) // Unlock HO button     //NOTE: I removed the lock for the teacher's demo, pero we still need to lock it with scheduler once kids na
-        // {
-        btnCompound.GetComponent<Button>().interactable = true; // Activate button
         hoLevel.text = "Lvl " + data.compLvl;
         GameObject.Find("TextCompound").GetComponent<Text>().text = "Compound";
         switch (data.compLvl)
@@ -376,38 +512,86 @@ public class LS_EventsScript : MonoBehaviour
 
     private void DelayedRoomEnter()
     {
+        // Save before transitioning!
+        saverLoader.saveGame(savePath, savedGame);
+
+        Debug.Log($"[LS_EventsScript] Transitioning to game. Level: {GlobalVariables.level}, Shape: {GlobalVariables.loSelectedShape}");
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v1";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
 
     private void DelayedHORoomEnter()
     {
+        GlobalVariables.GetVideoLens(savedGame); //Load video lengths
         GlobalVariables.nextLevel = "GameLevelScene_v3";
         SceneManager.LoadScene("LoadingScreen"); //Load Level scene
     }
-    
+
     public void enterLowOrder()
     {
+        GlobalVariables.enteringLO = true; //Mark as LO room
+
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
+            // Only play intro if this is their FIRST time playing Square (level 1)
+            if (savedGame.squareLvl == 0)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Square", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.SQUARE, savedGame.squareLvl, "SQUARE");
+                return;
+            }
             enterSquare();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 2 + 1) //Rect
         {
+            if (savedGame.rectLvl == 0)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Rectangle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.RECTANGLE, savedGame.rectLvl, "RECTANGLE");
+                return;
+            }
             enterRectangle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 3 + 1) //Tri
         {
+            if (savedGame.triLvl == 0)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Triangle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.TRIANGLE, savedGame.triLvl, "TRIANGLE");
+                return;
+            }
             enterTriangle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 4 + 1) //Circ
         {
+            if (savedGame.circleLvl == 0)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Circle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.CIRCLE, savedGame.circleLvl, "CIRCLE");
+                return;
+            }
             enterCircle();
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 5 + 1) //Semicirc
         {
+            if (savedGame.scircleLvl == 0)
+            {
+                VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_SemiCircle", null, "LoadingScreen");
+                SetupShapeTransition(GameBehaviour.SHAPES.SEMI_CIRCLE, savedGame.scircleLvl, "SEMI_CIRCLE");
+                return;
+            }
             enterSemiCircle();
         }
+    }
+
+    private void SetupShapeTransition(GameBehaviour.SHAPES shape, int level, string roomName)
+    {
+        GlobalVariables.loSelectedShape = shape;
+        GlobalVariables.level = level;
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, roomName);
+        GlobalVariables.GetVideoLens(savedGame);
+        GlobalVariables.nextLevel = "GameLevelScene_v1";
     }
 
     public void enterRectangle()
@@ -473,6 +657,7 @@ public class LS_EventsScript : MonoBehaviour
     {
         UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
+        GlobalVariables.enteringLO = false; // Mark as HO room
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room
         saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");
