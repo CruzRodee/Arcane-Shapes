@@ -1,3 +1,8 @@
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
 Oz "Ngayon naman, CIRCLE tayo."
 
 "Katulad ng TRIANGLE, hindi natin puwedeng basta bilangin ang mga SQUARE sa grid para makuha ang area ng CIRCLE."

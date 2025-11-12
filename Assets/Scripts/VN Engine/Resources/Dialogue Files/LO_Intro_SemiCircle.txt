@@ -1,3 +1,8 @@
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
 Oz "Ngayon naman, SEMI-CIRCLE tayo!"
 
 "Ano ba ang SEMI? Ibigsabihin nito ay HALF! KALAHATI!"
