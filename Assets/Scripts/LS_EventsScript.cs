@@ -447,7 +447,7 @@ public class LS_EventsScript : MonoBehaviour
         if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 1 + 1) //Square
         {
             // Only play intro if this is their FIRST time playing Square (level 1)
-            if (savedGame.squareLvl == 1)
+            if (savedGame.squareLvl == 0)
             {
                 VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Square", null, "LoadingScreen");
                 SetupShapeTransition(GameBehaviour.SHAPES.SQUARE, savedGame.squareLvl, "SQUARE");
@@ -457,7 +457,7 @@ public class LS_EventsScript : MonoBehaviour
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 2 + 1) //Rect
         {
-            if (savedGame.rectLvl == 1)
+            if (savedGame.rectLvl == 0)
             {
                 VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Rectangle", null, "LoadingScreen");
                 SetupShapeTransition(GameBehaviour.SHAPES.RECTANGLE, savedGame.rectLvl, "RECTANGLE");
@@ -467,7 +467,7 @@ public class LS_EventsScript : MonoBehaviour
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 3 + 1) //Tri
         {
-            if (savedGame.triLvl == 1)
+            if (savedGame.triLvl == 0)
             {
                 VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Triangle", null, "LoadingScreen");
                 SetupShapeTransition(GameBehaviour.SHAPES.TRIANGLE, savedGame.triLvl, "TRIANGLE");
@@ -477,7 +477,7 @@ public class LS_EventsScript : MonoBehaviour
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 4 + 1) //Circ
         {
-            if (savedGame.circleLvl == 1)
+            if (savedGame.circleLvl == 0)
             {
                 VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_Circle", null, "LoadingScreen");
                 SetupShapeTransition(GameBehaviour.SHAPES.CIRCLE, savedGame.circleLvl, "CIRCLE");
@@ -487,7 +487,7 @@ public class LS_EventsScript : MonoBehaviour
         }
         else if (savedGame.totalLOLevel < GlobalVariables.NUM_LO_LEVELS * 5 + 1) //Semicirc
         {
-            if (savedGame.scircleLvl == 1)
+            if (savedGame.scircleLvl == 0)
             {
                 VNSceneManager.instance.LoadVNSceneByPath("LO_Intro_SemiCircle", null, "LoadingScreen");
                 SetupShapeTransition(GameBehaviour.SHAPES.SEMI_CIRCLE, savedGame.scircleLvl, "SEMI_CIRCLE");
