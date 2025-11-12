@@ -1,38 +1,52 @@
-Oz "Ngayon naman, CIRCLE tayo."
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
+SetLayerMedia(background -m Intro_Circle1)
+
+Oz [talk] "Ngayon naman, CIRCLE tayo."
+
+SetLayerMedia(background -m Intro_Circle2)
 
 "Katulad ng TRIANGLE, hindi natin puwedeng basta bilangin ang mga SQUARE sa grid para makuha ang area ng CIRCLE."
-"Makakatulong ang grid para makita ang hugis, pero hindi sapat. Kaya mas mahalaga ngayon ang FORMULA."
+
+SetLayerMedia(background -m Intro_Circle3)
+
+"Makakatulong ang grid para makita ang hugis at sukat, pero hindi sapat. Kaya mas mahalaga ngayon ang FORMULA."
+
+SetLayerMedia(background -m Intro_Circle4)
 
 "Ang formula ng CIRCLE ay r x r x 3.14."
 "Minsan sinusulat ito bilang πr². {c}Ang PI o π ay isang espesyal na numero na ginagamit para sa mga bilog."
 "Palagi itong halos 3.14, {c}kaya ginagamit natin ang 3.14 para gawing mas madali ang pag-compute."
-"Ang r naman ay RADIUS, ang sukat mula sa gitna ng bilog hanggang sa gilid nito."
+"Ang r naman ay RADIUS, ang sukat mula sa gitna ng bilog hanggang sa kahit anong gilid nito."
 
 choice "Ano ang FORMULA ng CIRCLE?"
 {
-- r x r x 3.14
-"Tama! RADIUS x RADIUS x 3.14 ang area ng CIRCLE."
-- L x W
-"Mali. Iyan ay para sa RECTANGLE."
-- S x S
-"Mali. Para iyon sa SQUARE."
-- B x H ÷ 2
-"Mali. Para iyon sa TRIANGLE."
+    - r x r x 3.14
+        Oz [surprised] "Tama! RADIUS x RADIUS x 3.14 ang area ng CIRCLE."
+    - L x W
+        Oz [sighsad] "Mali. Iyan ay para sa RECTANGLE."
+    - S x S
+        Oz [sighsad] "Mali. Para iyon sa SQUARE."
+    - B x H ÷ 2
+        Oz [sighsad] "Mali. Para iyon sa TRIANGLE."
 }
 
-"Subukan natin gamitin ang formula!"
+Oz [talk] "Subukan natin gamitin ang formula!"
 
 input "Kung r = 2, ano ang AREA ng CIRCLE? (NUMERO LAMANG, gamit ang 3.14)"
 $ans1 = "<input>"
 
 if ($ans1 == 12.56)
 {
-"Tama! 2 x 2 x 3.14 = 12.56."
+    Oz [surprised] "Tama! 2 x 2 x 3.14 = 12.56."
 }
 else
 {
-"Hindi pa tama. Tandaan: r x r x 3.14."
-"2 x 2 x 3.14 = 12.56."
+    Oz [sighsad] "Hindi pa tama. Tandaan: r x r x 3.14."
+    "2 x 2 x 3.14 = 12.56."
 }
 
 input "Isa pa. Kung r = 4, ano ang AREA? (NUMERO LAMANG, gamit ang 3.14)"
@@ -40,12 +54,14 @@ $ans2 = "<input>"
 
 if ($ans2 == 50.24)
 {
-"Ayos! 4 x 4 x 3.14 = 50.24."
+    Oz [surprised] "Ayos! 4 x 4 x 3.14 = 50.24."
 }
 else
 {
-"Mali. Ulitin natin: 4 x 4 x 3.14 = 50.24."
+    Oz [sighsad] "Mali. Ulitin natin: 4 x 4 x 3.14 = 50.24."
 }
 
-"Sige! Tandaan: para sa CIRCLE, gamitin ang RADIUS at ang PI."
+Oz [talk] "Sige! Tandaan: para sa CIRCLE, gamitin ang RADIUS at ang PI."
 "Kahit hindi mo mabilang ang mga kahon, {c}kaya mo pa rin makuha ang area gamit ang formula: r x r x 3.14."
+
+StopSong(), StopAmbience()

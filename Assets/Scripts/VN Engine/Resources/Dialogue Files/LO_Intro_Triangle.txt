@@ -1,43 +1,64 @@
-Oz "Ngayon naman, pag-usapan natin ang TRIANGLE."
+SetLayerMedia(background -m Classroom)
+CreateCharacter(Oz)
+Oz.SetPosition(-x 1), Oz.Show()
+PlaySong(Upbeat)
+
+Oz [talk] "Ngayon naman, pag-usapan natin ang TRIANGLE."
+
+SetLayerMedia(background -m Intro_Square6)
 
 "Naalala mo kung paano natin ginamit ang GRID para bilangin ang mga SQUARES?"
+
+SetLayerMedia(background -m Intro_Triangle1)
+
 "Madali iyon para sa SQUARE at RECTANGLE, pero mahirap na kapag TRIANGLE na."
 
+SetLayerMedia(background -m Intro_Triangle2)
+
 "Tingnan mo ito. Kita mo? Ang TRIANGLE ay hindi eksaktong pumapantay sa mga kahon ng grid."
+
+SetLayerMedia(background -m Intro_Triangle3)
+
 "May mga kalahating kahon, at may mga parte na hindi sakop nang buo."
 
 "Kaya hindi na puwedeng basta bilangin ang mga SQUARES para makuha ang area."
 "Mas mahalaga ngayon ang paggamit ng FORMULA!"
 
+SetLayerMedia(background -m Intro_Triangle4)
+
+HideDB()
+
+wait(2)
+
 "Ang formula ng TRIANGLE ay B x H ÷ 2."
 "Ibig sabihin, BASE times HEIGHT divided by 2."
 
-"BASE o B ay ang haba ng ilalim ng TRIANGLE, at HEIGHT o H ay ang taas nito mula sa base pataas."
+"BASE o B ay ang haba ng ilalim ng TRIANGLE, at HEIGHT o H ay ang taas nito mula sa BASE pataas."
 
 choice "Ano ang FORMULA ng TRIANGLE?"
 {
-- B x H ÷ 2
-"Tama! BASE x HEIGHT ÷ 2 ang formula ng TRIANGLE."
-- L x W
-"Mali. Iyan ay para sa RECTANGLE."
-- S x S
-"Mali. Para iyon sa SQUARE."
-- r x r x 3.14
-"Mali. Iyan ay para sa CIRCLE."
+    - B x H ÷ 2
+        Oz [surprised] "Tama! BASE x HEIGHT ÷ 2 ang formula ng TRIANGLE."
+    - L x W
+        Oz [sighsad] "Mali. Iyan ay para sa RECTANGLE."
+    - S x S
+        Oz [sighsad] "Mali. Para iyon sa SQUARE."
+    - r x r x 3.14
+        Oz [sighsad] "Mali. Iyan ay para sa CIRCLE."
 }
 
-"Subukan natin gamitin ang formula!"
+Oz [talk] "Subukan natin gamitin ang formula!"
 input "Kung B = 4 at H = 3, ano ang AREA ng TRIANGLE? (NUMERO LAMANG)"
 $ans1 = "<input>"
 
 if ($ans1 == 6)
 {
-"Tama! 4 x 3 ÷ 2 = 6."
+    Oz [surprised] "Tama! 4 x 3 ÷ 2 = 6."
 }
 else
 {
-"Hindi pa tama. Tandaan: BASE x HEIGHT ÷ 2."
-"4 x 3 ÷ 2 = 6."
+    Oz [sighsad] "Hindi pa tama. Tandaan: BASE x HEIGHT ÷ 2."
+    "4 x 3 ÷ 2 = 6."
 }
 
 input "Isa pa. Kung B = 8 at H = 5, ano ang AREA? (NUMERO LAMANG)"
@@ -45,11 +66,13 @@ $ans2 = "<input>"
 
 if ($ans2 == 20)
 {
-"Galing! 8 x 5 ÷ 2 = 20."
+    Oz [surprised] "Galing! 8 x 5 ÷ 2 = 20."
 }
 else
 {
-"Mali. Ulitin natin: 8 x 5 ÷ 2 = 20."
+    Oz [sighsad] "Mali. Ulitin natin: 8 x 5 ÷ 2 = 20."
 }
 
-"Sige! Handa ka na sa TRIANGLE levels. {c}Tandaan: gamitin ang formula B x H ÷ 2 dahil hindi lahat ng hugis sakto sa mga kahon."
+Oz [talk] "Sige! Handa ka na sa TRIANGLE levels. {c}Tandaan: gamitin ang formula B x H ÷ 2 dahil hindi lahat ng hugis sakto sa mga kahon."
+
+StopSong(), StopAmbience()
