@@ -658,12 +658,30 @@ public class LS_EventsScript : MonoBehaviour
         UnityEngine.Debug.Log("Compound Floor, needs a lock for when lalaruin na nung mga kids");
 
         GlobalVariables.enteringLO = false; // Mark as HO room
+
+        // Only play intro if this is their FIRST time playing Compound (level 0)
+        if (savedGame.compLvl == 0)
+        {
+            VNSceneManager.instance.LoadVNSceneByPath("HO_Intro_Compound", null, "LoadingScreen");
+            SetupCompoundTransition(savedGame.compLvl, "COMPOUND");
+            return;
+        }
+
+        // If not first time, go directly to compound gameplay
         GlobalVariables.level = savedGame.compLvl; //LOAD LEVEL DATA
         //Set text as compound room
         saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, "COMPOUND");
 
         screenFade.SetTrigger("sceneOut");
         Invoke(nameof(DelayedHORoomEnter), TRANSITIONDELAY);
+    }
+
+    private void SetupCompoundTransition(int level, string roomName)
+    {
+        GlobalVariables.level = level;
+        saverLoader.updateRoom(Path.Combine(Application.persistentDataPath, "saveData.json"), savedGame, roomName);
+        GlobalVariables.GetVideoLens(savedGame);
+        GlobalVariables.nextLevel = "GameLevelScene_v3"; // HO scene for compound
     }
 
     /*
