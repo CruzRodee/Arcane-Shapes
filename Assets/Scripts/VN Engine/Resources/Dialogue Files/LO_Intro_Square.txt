@@ -188,3 +188,5 @@ SetLayerMedia(background -m Intro_Square7)
 "Madali di ba? SIDE lang ang kailangan sa SQUARE, kaya S x S."
 
 "Pero masyado na akong dumaldal! Subukan na natin ito!"
+
+StopSong(), StopAmbience()

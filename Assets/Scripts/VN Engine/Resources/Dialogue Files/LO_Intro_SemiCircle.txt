@@ -59,3 +59,5 @@ else
 }
 
 "Sige! Tandaan: ang SEMI-CIRCLE ay kalahati lang ng CIRCLE — kaya hatiin lang sa 2!"
+
+StopSong(), StopAmbience()

@@ -54,3 +54,5 @@ else
 }
 
 Oz [talk] "Sige! Handa ka na sa RECTANGLE levels. Ulitin lang sa isip: L x W. HABA x LAPAD."
+
+StopSong(), StopAmbience()
