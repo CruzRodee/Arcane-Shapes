@@ -30,6 +30,7 @@ public class LS_EventsScript : MonoBehaviour
     //UI active
     public GameObject panelHallway;
     public GameObject panelDialogue;
+    private Text dialogueText;
 
     //NOTIFY SCREENS
     public GameObject pConfirmHome;
@@ -68,6 +69,16 @@ public class LS_EventsScript : MonoBehaviour
 
         GlobalVariables.isMute = savedGame.prefMute;
         btnMuteImg = btnMute.GetComponent<Image>(); //Get Image component
+
+        GameObject dialogueTextObj = panelDialogue.transform.Find("DialogueText")?.gameObject;
+        if (dialogueTextObj != null)
+        {
+            dialogueText = dialogueTextObj.GetComponent<Text>();
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] DialogueText not found as child of panelDialogue!");
+        }
     }
     void Start()
     {
@@ -179,18 +190,27 @@ public class LS_EventsScript : MonoBehaviour
         // 1 PASS LOWER: SIMPLE
         // 2 PASS HIGHER: COMPOUND
         if (savedGame.mode == 0)
+        {
             btnCompound.interactable = true;
+            SetDialogueText("Pwede ko na i-try ang COMPOUND! Pero pwede ko parin pasukan yung mas mahirap na mga SIMPLE na klase");
+        }
         else if (savedGame.mode == 1)
         {
             //disable compound shapes button
             btnCompound.interactable = false;
+            SetDialogueText("Kailangan ko muna pasukan ang ibang SIMPLE na klase bago ang COMPOUND!");
 
             //Re-enable compound button when finish one level for each LO shape
             if (GlobalVariables.IsHOUnlocked(savedGame))
+            {
                 btnCompound.interactable = true;
+                SetDialogueText("Pwede ko na i-try ang COMPOUND! Pero pwede ko parin pasukan yung mas mahirap na mga SIMPLE na klase");
+            }
+
         }
         else if (savedGame.mode == 2)
         {
+            SetDialogueText("Masyado na akong magaling! COMPOUND nalang pwede kong pasukan!");
             btnLO.interactable = false;
         }
 
@@ -228,6 +248,17 @@ public class LS_EventsScript : MonoBehaviour
     void Update()
     {
 
+    }
+    private void SetDialogueText(string message)
+    {
+        if (dialogueText != null)
+        {
+            dialogueText.text = message;
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] dialogueText is null! Cannot set dialogue.");
+        }
     }
 
     void initLevels(GameData data)
