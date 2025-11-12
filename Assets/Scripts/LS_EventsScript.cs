@@ -1,4 +1,5 @@
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -31,6 +32,9 @@ public class LS_EventsScript : MonoBehaviour
     public GameObject panelHallway;
     public GameObject panelDialogue;
     private Text dialogueText;
+    // Level Tracker Texts
+    public TextMeshProUGUI LOLevelTracker;
+    public TextMeshProUGUI HOLevelTracker;
 
     //NOTIFY SCREENS
     public GameObject pConfirmHome;
@@ -186,6 +190,9 @@ public class LS_EventsScript : MonoBehaviour
         UnityEngine.Debug.Log(savedGame.playerName);
         initLevels(savedGame);
 
+        // Update Level Trackers
+        UpdateLevelTrackers();
+
         // 0 PASS UNLOCK ALL: ALL
         // 1 PASS LOWER: SIMPLE
         // 2 PASS HIGHER: COMPOUND
@@ -205,6 +212,8 @@ public class LS_EventsScript : MonoBehaviour
             {
                 btnCompound.interactable = true;
                 SetDialogueText("Pwede ko na i-try ang COMPOUND! Pero pwede ko parin pasukan yung mas mahirap na mga SIMPLE na klase");
+                // Update Level Trackers
+                UpdateLevelTrackers();
             }
 
         }
@@ -214,6 +223,8 @@ public class LS_EventsScript : MonoBehaviour
             btnLO.interactable = false;
         }
 
+        // Update Level Trackers visibility and values
+        UpdateLevelTrackers();
 
         playerNameText = GameObject.Find("DialogueCharNameText").GetComponent<Text>();
 
@@ -242,6 +253,83 @@ public class LS_EventsScript : MonoBehaviour
                 btnMuteImg.sprite = btnMutedSprite;
             bgmSrc.volume = 0f;
         }
+    }
+
+    /// <summary>
+    /// Updates the LOLevelTracker and HOLevelTracker texts based on player progress.
+    /// Hides trackers if corresponding buttons are disabled.
+    /// </summary>
+    /// <summary>
+    /// Updates the LOLevelTracker and HOLevelTracker texts based on player progress.
+    /// Hides trackers if corresponding buttons are disabled.
+    /// </summary>
+    private void UpdateLevelTrackers()
+    {
+        if (savedGame == null)
+        {
+            Debug.LogWarning("[LS_EventsScript] savedGame is null, cannot update level trackers.");
+            return;
+        }
+
+        // Calculate actual completed levels for LO (Simple Shapes)
+        // Each shape has 3 levels, so we need to count how many levels across all shapes are done
+        int currentLOLevel = 0;
+        int maxLOLevel = GlobalVariables.NUM_LO_LEVELS * 5; // 3 levels * 5 shapes = 15 total
+
+        // Count completed levels for each shape (level 0 means not started, so subtract 1)
+        // But only count if level > 0
+        if (savedGame.squareLvl > 0)
+            currentLOLevel += savedGame.squareLvl;
+        if (savedGame.rectLvl > 0)
+            currentLOLevel += savedGame.rectLvl;
+        if (savedGame.triLvl > 0)
+            currentLOLevel += savedGame.triLvl;
+        if (savedGame.circleLvl > 0)
+            currentLOLevel += savedGame.circleLvl;
+        if (savedGame.scircleLvl > 0)
+            currentLOLevel += savedGame.scircleLvl;
+
+        // Calculate current HO level
+        int currentHOLevel = savedGame.compLvl;
+        int maxHOLevel = 6; // Based on the level system (1-6)
+
+        // Update LO Level Tracker
+        if (LOLevelTracker != null)
+        {
+            if (btnLO != null && btnLO.interactable)
+            {
+                LOLevelTracker.gameObject.SetActive(true);
+                LOLevelTracker.text = $"SIMPLE SHAPES:\nLevel {currentLOLevel}/{maxLOLevel}";
+            }
+            else
+            {
+                LOLevelTracker.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] LOLevelTracker is not assigned!");
+        }
+
+        // Update HO Level Tracker
+        if (HOLevelTracker != null)
+        {
+            if (btnCompound != null && btnCompound.interactable)
+            {
+                HOLevelTracker.gameObject.SetActive(true);
+                HOLevelTracker.text = $"COMPOUND SHAPES:\nLevel {currentHOLevel}/{maxHOLevel}";
+            }
+            else
+            {
+                HOLevelTracker.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[LS_EventsScript] HOLevelTracker is not assigned!");
+        }
+
+        Debug.Log($"[LS_EventsScript] Updated Level Trackers - LO: {currentLOLevel}/{maxLOLevel}, HO: {currentHOLevel}/{maxHOLevel}");
     }
 
     // Update is called once per frame
