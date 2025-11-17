@@ -623,6 +623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   percentageText: {fileID: 1453059397}
+  preloadedShaders: {fileID: 20000000, guid: deb9a525e5035034996145f57da42281, type: 2}
 --- !u!1 &1659036220
 GameObject:
   m_ObjectHideFlags: 0
