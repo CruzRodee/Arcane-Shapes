@@ -31,7 +31,6 @@ public class TutorialPanelScript : MonoBehaviour
     private string[] currentText;
     private int currentPage = 1; //Remember to use currentPage - 1 for the array
     private const float defaultVolume = 1f;
-    private const float startDelayOnForceRead = 5f;
     
     void Awake()
     {
@@ -68,7 +67,7 @@ public class TutorialPanelScript : MonoBehaviour
     {
         exitButton.interactable = false;
         exitSounds.volume = 0f;
-        Invoke(nameof(HelpButtonFunction), startDelayOnForceRead);
+        HelpButtonFunction();
     }
 
     private void FinishedRead()
