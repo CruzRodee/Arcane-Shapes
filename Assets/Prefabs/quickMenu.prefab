@@ -730,6 +730,7 @@ MonoBehaviour:
   tutorialTextplanation: {fileID: 8546813925960400020}
   nextSounds: {fileID: 8580063043488776901}
   prevSounds: {fileID: 4257838756562601392}
+  exitSounds: {fileID: 1759750604598622866}
   quickMenuSounds:
   - {fileID: 3886585873312197460}
   - {fileID: 6375435044836513688}

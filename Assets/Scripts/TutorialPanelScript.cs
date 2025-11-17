@@ -19,6 +19,7 @@ public class TutorialPanelScript : MonoBehaviour
 
     public ButtonSFXPlayer nextSounds;
     public ButtonSFXPlayer prevSounds;
+    public ButtonSFXPlayer exitSounds;
     public ButtonSFXPlayer[] quickMenuSounds;
 
     public Sprite[] loImages;
@@ -30,6 +31,7 @@ public class TutorialPanelScript : MonoBehaviour
     private string[] currentText;
     private int currentPage = 1; //Remember to use currentPage - 1 for the array
     private const float defaultVolume = 1f;
+    private const float startDelayOnForceRead = 5f;
     
     void Awake()
     {
@@ -51,6 +53,28 @@ public class TutorialPanelScript : MonoBehaviour
             currentImages = hoImages;
             currentText = hoExplain;
         }
+    }
+
+    void Start()
+    {
+        // Force Read on level 0 LO or HO
+        if (GlobalVariables.enteringLO && GlobalVariables.loSelectedShape == GameBehaviour.SHAPES.SQUARE && GlobalVariables.level <= 0)
+            ForceReadTutorial();
+        else if (!GlobalVariables.enteringLO && GlobalVariables.level <= 0)
+            ForceReadTutorial();
+    }
+
+    private void ForceReadTutorial()
+    {
+        exitButton.interactable = false;
+        exitSounds.volume = 0f;
+        Invoke(nameof(HelpButtonFunction), startDelayOnForceRead);
+    }
+
+    private void FinishedRead()
+    {
+        exitButton.interactable = true;
+        exitSounds.volume = defaultVolume;
     }
 
     private void ChangePage(int page)
@@ -91,6 +115,10 @@ public class TutorialPanelScript : MonoBehaviour
         pageDisplay.text = $"{currentPage.ToString()}/{currentImages.Length}";
         tutorialImage.sprite = currentImages[currentPage - 1];
         tutorialTextplanation.text = currentText[currentPage - 1];
+
+        //Re-enable exit button on finish read
+        if(currentPage >= currentImages.Length)
+            FinishedRead();
 
         Debug.Log($"CurrentPage: {currentPage}");
     }
