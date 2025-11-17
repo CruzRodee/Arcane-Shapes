@@ -752,6 +752,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 3d7058a1a2370904c8198a65a04a2fe4, type: 3}
   - {fileID: 21300000, guid: fdecdbbac232ce64da51f343607bc380, type: 3}
   - {fileID: 21300000, guid: d569cbb8f34f4654d8122f14425b0a65, type: 3}
+  - {fileID: 21300000, guid: 50bbbc50ff3158a47b7644086805e706, type: 3}
   hoImages:
   - {fileID: 21300000, guid: f4cc02823abf6ce498c045d10ea4a11b, type: 3}
   - {fileID: 21300000, guid: f4eced1c74674d5468bdc626c2007f1e, type: 3}
@@ -761,6 +762,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 13caba66a58484c44858fad0949017fb, type: 3}
   - {fileID: 21300000, guid: e49b3a1f25202414f8b03a6286edd436, type: 3}
   - {fileID: 21300000, guid: ac88f83a5c0fe4d49b94a357855a199f, type: 3}
+  - {fileID: 21300000, guid: 50bbbc50ff3158a47b7644086805e706, type: 3}
   loExplain:
   - Piliin ang tamang hugis at formula
   - Sukatin ang hugis gamin ng daliri
@@ -781,6 +783,7 @@ MonoBehaviour:
   - 'Triangle: B=Base | H=Height'
   - 'Circle: R=Radius'
   - 'SemiCircle: R=Radius'
+  - Kung gusto mo uli basahin ito, pindutin ang hint button
   hoExplain:
   - Halos kapareho ito nung unang gamemode, kailangan lang kuhanin ang Area ng compound
     hugis gamit ng mga simple na hugis
@@ -794,6 +797,7 @@ MonoBehaviour:
     mga butas o intersection sa hugis
   - Ang mga ito ay dapat i-subtract sa mga Area ng ibang mga hugis para makuha ang
     sagot
+  - Kung gusto mo uli basahin ito, pindutin ang hint button
 --- !u!1 &3215891115097098548
 GameObject:
   m_ObjectHideFlags: 0
