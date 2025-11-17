@@ -51,9 +51,6 @@ public class TutorialPanelScript : MonoBehaviour
             currentImages = hoImages;
             currentText = hoExplain;
         }
-
-        //Update Page display by calling change page on same page
-        ChangePage(currentPage);
     }
 
     private void ChangePage(int page)
@@ -124,13 +121,13 @@ public class TutorialPanelScript : MonoBehaviour
         {
             sound.volume = 0;
         }
+
+        //Update Page display by calling change page on same page
+        ChangePage(currentPage);
     }
 
     private void ExitButtonFunction()
     {
-        // Reset variables
-        currentPage = 1;
-
         // Close Panel
         tutorialPanel.SetActive(false);
 
