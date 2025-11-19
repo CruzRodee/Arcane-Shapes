@@ -2568,8 +2568,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: LS_EventsScript, Assembly-CSharp
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedComponents:
+    - {fileID: 6174461720245455023, guid: b9a1b62a063df1645ac1398a52701a1e, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 5227396640912771860, guid: b9a1b62a063df1645ac1398a52701a1e, type: 3}
+    - {fileID: 7872885263476138395, guid: b9a1b62a063df1645ac1398a52701a1e, type: 3}
+    - {fileID: 8639971883249802458, guid: b9a1b62a063df1645ac1398a52701a1e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9a1b62a063df1645ac1398a52701a1e, type: 3}
