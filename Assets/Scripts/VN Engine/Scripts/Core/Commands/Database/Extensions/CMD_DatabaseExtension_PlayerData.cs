@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -46,13 +45,38 @@ namespace COMMANDS
                     string[] kvp = data[i].Split(':');
                     if (kvp.Length == 2)
                     {
-                        additionalData[kvp[0]] = kvp[1];
+                        string key = kvp[0].Trim();
+                        string value = kvp[1].Trim();
+
+                        // Check if the value is a variable reference (starts with <$ and ends with >)
+                        if (value.StartsWith("<$") && value.EndsWith(">"))
+                        {
+                            // Extract variable name (remove <$ and >)
+                            string varName = value.Substring(2, value.Length - 3);
+
+                            // Try to get the variable value from VariableStore
+                            if (VariableStore.TryGetValue(varName, out object varValue))
+                            {
+                                additionalData[key] = varValue;
+                                Debug.Log($"[CMD] Resolved variable ${varName} = {varValue}");
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"[CMD] Variable ${varName} not found in VariableStore!");
+                                additionalData[key] = value; // Store as-is if variable not found
+                            }
+                        }
+                        else
+                        {
+                            // Store as literal value
+                            additionalData[key] = value;
+                        }
                     }
                 }
             }
 
             PlayerDataManager.instance.SaveCheckpoint(checkpointName, additionalData);
-            Debug.Log($"[CMD] Checkpoint '{checkpointName}' saved.");
+            Debug.Log($"[CMD] Checkpoint '{checkpointName}' saved with {additionalData?.Count ?? 0} data entries.");
         }
 
         private static void SavePlayerData(string[] data)
