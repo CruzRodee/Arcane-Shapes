@@ -3,6 +3,8 @@ CreateCharacter(Oz)
 Oz.SetPosition(-x 1), Oz.Show()
 PlaySong(Upbeat)
 
+SaveCheckpoint(LO_Intro_Triangle_START)
+
 Oz [talk] "Ngayon naman, pag-usapan natin ang TRIANGLE."
 
 SetLayerMedia(background -m Intro_Square6)
@@ -74,5 +76,7 @@ else
 }
 
 Oz [talk] "Sige! Handa ka na sa TRIANGLE levels. {c}Tandaan: gamitin ang formula B x H ÷ 2 dahil hindi lahat ng hugis sakto sa mga kahon."
+
+SaveCheckpoint(LO_Intro_Triangle_END)
 
 StopSong(), StopAmbience()

@@ -5,6 +5,8 @@ PlaySong(Upbeat)
 
 SetLayerMedia(background -m Intro_Circle1)
 
+SaveCheckpoint(LO_Intro_Circle_START)
+
 Oz [talk] "Ngayon naman, CIRCLE tayo."
 
 SetLayerMedia(background -m Intro_Circle2)
@@ -63,5 +65,7 @@ else
 
 Oz [talk] "Sige! Tandaan: para sa CIRCLE, gamitin ang RADIUS at ang PI."
 "Kahit hindi mo mabilang ang mga kahon, {c}kaya mo pa rin makuha ang area gamit ang formula: r x r x 3.14."
+
+SaveCheckpoint(LO_Intro_Circle_END)
 
 StopSong(), StopAmbience()

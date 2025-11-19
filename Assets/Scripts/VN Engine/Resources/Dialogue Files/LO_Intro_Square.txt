@@ -3,6 +3,8 @@ CreateCharacter(Oz)
 Oz.SetPosition(-x 1), Oz.Show()
 PlaySong(Upbeat)
 
+SaveCheckpoint(LO_Intro_Square_START)
+
 Oz [talk] "Bago natin talakayin ang AREA ng mga hugis. . ."
 
 "Kailangan alam mo muna ang mga tawag sa kanila!"
@@ -188,5 +190,7 @@ SetLayerMedia(background -m Intro_Square7)
 "Madali di ba? SIDE lang ang kailangan sa SQUARE, kaya S x S."
 
 "Pero masyado na akong dumaldal! Subukan na natin ito!"
+
+SaveCheckpoint(LO_Intro_Square_END)
 
 StopSong(), StopAmbience()

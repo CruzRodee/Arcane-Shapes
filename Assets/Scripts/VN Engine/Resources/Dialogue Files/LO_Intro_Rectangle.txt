@@ -3,6 +3,8 @@ CreateCharacter(Oz)
 Oz.SetPosition(-x 1), Oz.Show()
 PlaySong(Upbeat)
 
+SaveCheckpoint(LO_Intro_Rectangle_START)
+
 Oz [talk] "Ngayon naman, RECTANGLE tayo."
 
 SetLayerMedia(background -m Intro_Rectangle4)
@@ -54,5 +56,7 @@ else
 }
 
 Oz [talk] "Sige! Handa ka na sa RECTANGLE levels. Ulitin lang sa isip: L x W. HABA x LAPAD."
+
+SaveCheckpoint(LO_Intro_Rectangle_END)
 
 StopSong(), StopAmbience()

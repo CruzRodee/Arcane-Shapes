@@ -5,6 +5,8 @@ PlaySong(Upbeat)
 
 SetLayerMedia(background -m Intro_Circle1)
 
+SaveCheckpoint(LO_Intro_Semicircle_START)
+
 Oz [talk] "Ngayon naman, SEMI-CIRCLE tayo!"
 
 "Ano ba ang SEMI? Ibigsabihin nito ay HALF! KALAHATI!"
@@ -67,5 +69,7 @@ else
 }
 
 Oz [talk] "Sige! Tandaan: ang SEMI-CIRCLE ay kalahati lang ng CIRCLE — kaya hatiin lang sa 2!"
+
+SaveCheckpoint(LO_Intro_Semicircle_END)
 
 StopSong(), StopAmbience()

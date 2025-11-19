@@ -3,6 +3,8 @@ CreateCharacter(Oz)
 Oz.SetPosition(-x 1), Oz.Show()
 PlaySong(Upbeat)
 
+SaveCheckpoint(HO_Intro_Compound_START)
+
 Oz [talk] "Wow! Ang galing mo na! Nasa COMPOUND classes ka na!"
 
 "Sige, may bago nanaman akong ituturo sayo, magbasa maigi ha!"
@@ -128,5 +130,7 @@ SetLayerMedia(background -m Intro_Compound7)
 "Magagamit mo na lahat ng natutunan mong formula—SQUARE, RECTANGLE, TRIANGLE, CIRCLE—{c}Para masolusyunan ang kahit anong COMPOUND SHAPE!"
 
 "Handa ka na? Tara, subukan natin sa mga susunod na puzzles!"
+
+SaveCheckpoint(HO_Intro_Compound_END)
 
 StopSong(), StopAmbience()
