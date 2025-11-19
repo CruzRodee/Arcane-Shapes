@@ -7,6 +7,10 @@ SetLayerMedia(background -m Intro_Circle1)
 
 SaveCheckpoint(LO_Intro_Circle_START)
 
+$formulaQuestion = ""
+$question1 = 0
+$question2 = 0
+
 Oz [talk] "Ngayon naman, CIRCLE tayo."
 
 SetLayerMedia(background -m Intro_Circle2)
@@ -28,18 +32,23 @@ choice "Ano ang FORMULA ng CIRCLE?"
 {
     - r x r x 3.14
         Oz [surprised] "Tama! RADIUS x RADIUS x 3.14 ang area ng CIRCLE."
+        $formulaQuestion = "rxrx3.14"
     - L x W
         Oz [sighsad] "Mali. Iyan ay para sa RECTANGLE."
+        $formulaQuestion = "LxW"
     - S x S
         Oz [sighsad] "Mali. Para iyon sa SQUARE."
+        $formulaQuestion = "SxS"
     - B x H ÷ 2
         Oz [sighsad] "Mali. Para iyon sa TRIANGLE."
+        $formulaQuestion = "BxHdiv2"
 }
 
 Oz [talk] "Subukan natin gamitin ang formula!"
 
 input "Kung r = 2, ano ang AREA ng CIRCLE? (NUMERO LAMANG, gamit ang 3.14)"
 $ans1 = "<input>"
+$question1 = $ans1
 
 if ($ans1 == 12.56)
 {
@@ -53,6 +62,7 @@ else
 
 input "Isa pa. Kung r = 4, ano ang AREA? (NUMERO LAMANG, gamit ang 3.14)"
 $ans2 = "<input>"
+$question2 = $ans2
 
 if ($ans2 == 50.24)
 {
@@ -66,6 +76,6 @@ else
 Oz [talk] "Sige! Tandaan: para sa CIRCLE, gamitin ang RADIUS at ang PI."
 "Kahit hindi mo mabilang ang mga kahon, {c}kaya mo pa rin makuha ang area gamit ang formula: r x r x 3.14."
 
-SaveCheckpoint(LO_Intro_Circle_END)
+SaveCheckpoint(LO_Intro_Circle_END formulaQuestion:<$formulaQuestion> question1:<$question1> question2:<$question2>)
 
 StopSong(), StopAmbience()

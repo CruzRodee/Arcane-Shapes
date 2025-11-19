@@ -7,6 +7,10 @@ SetLayerMedia(background -m Intro_Circle1)
 
 SaveCheckpoint(LO_Intro_Semicircle_START)
 
+$formulaQuestion = ""
+$question1 = 0
+$question2 = 0
+
 Oz [talk] "Ngayon naman, SEMI-CIRCLE tayo!"
 
 "Ano ba ang SEMI? Ibigsabihin nito ay HALF! KALAHATI!"
@@ -33,18 +37,23 @@ choice "Ano ang FORMULA ng SEMI-CIRCLE?"
 {
     - r x r x 3.14 ÷ 2
         Oz [surprised] "Tama! Dahil kalahati lang ng CIRCLE, hatiin lang natin sa 2."
+        $formulaQuestion = "rxrx3.14div2"
     - r x r x 3.14
         Oz [sighsad] "Mali. Iyan ay para sa buong CIRCLE."
+        $formulaQuestion = "rxrx3.14"
     - L x W
         Oz [sighsad] "Mali. Para iyon sa RECTANGLE."
+        $formulaQuestion = "LxW"
     - B x H ÷ 2
         Oz [sighsad] "Mali. Para iyon sa TRIANGLE."
+        $formulaQuestion = "BxHdiv2"
 }
 
 Oz [talk] "Subukan natin gamitin ang formula!"
 
 input "Kung r = 4, ano ang AREA ng SEMI-CIRCLE? (NUMERO LAMANG, gamit ang 3.14)"
 $ans1 = "<input>"
+$question1 = $ans1
 
 if ($ans1 == 25.12)
 {
@@ -58,6 +67,7 @@ else
 
 input "Isa pa. Kung r = 2, ano ang AREA? (NUMERO LAMANG, gamit ang 3.14)"
 $ans2 = "<input>"
+$question2 = $ans2
 
 if ($ans2 == 6.28)
 {
@@ -70,6 +80,6 @@ else
 
 Oz [talk] "Sige! Tandaan: ang SEMI-CIRCLE ay kalahati lang ng CIRCLE — kaya hatiin lang sa 2!"
 
-SaveCheckpoint(LO_Intro_Semicircle_END)
+SaveCheckpoint(LO_Intro_Semicircle_END formulaQuestion:<$formulaQuestion> question1:<$question1> question2:<$question2>)
 
 StopSong(), StopAmbience()

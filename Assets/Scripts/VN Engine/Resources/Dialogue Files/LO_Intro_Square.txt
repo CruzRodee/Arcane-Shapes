@@ -5,6 +5,12 @@ PlaySong(Upbeat)
 
 SaveCheckpoint(LO_Intro_Square_START)
 
+$shapeIdentification = ""
+$areaQuestion1 = 0
+$areaUnderstanding = ""
+$rectangleQuestion = 0
+$formulaQuestion = ""
+
 Oz [talk] "Bago natin talakayin ang AREA ng mga hugis. . ."
 
 "Kailangan alam mo muna ang mga tawag sa kanila!"
@@ -27,9 +33,13 @@ choice "Ano ang tawag sa hugis na ito?"
 {
     -Square
         $correct = true
+        $shapeIdentification = "Square"
     -Rectangle
+        $shapeIdentification = "Rectangle"
     -Circle
+        $shapeIdentification = "Circle"
     -Triangle
+        $shapeIdentification = "Triangle"
 }
 
 Oz.Show()
@@ -53,7 +63,7 @@ Oz [talk] "Sige, ngayon pagusapan natin ang AREA!"
 
 "Kapag gusto nating malaman kung gaano kalawak ang isang hugis, {c}sinusukat natin ang espasyo sa loob nito."
 
-"Pero minsan, mahirap sukatin kung ‘space’ lang ang titingnan natin."
+"Pero minsan, mahirap sukatin kung 'space' lang ang titingnan natin."
 
 "Dito natin ginagamit ang GRID."
 
@@ -69,7 +79,7 @@ SetLayerMedia(background -m Intro_Square2)
 
 SetLayerMedia(background -m Intro_Square6)
 
-"Simple lang ‘di ba? Bibilangin mo lang kung ilang kahon ang sakop ng hugis."
+"Simple lang 'di ba? Bibilangin mo lang kung ilang kahon ang sakop ng hugis."
 
 "Subukan natin ito ngayon!"
 
@@ -86,6 +96,7 @@ $answer = 0
 input "Ano ang AREA ng SQUARE? (NUMERO LAMANG)"
 
 $answer = "<input>"
+$areaQuestion1 = $answer
 
 if ($answer == 4)
 {
@@ -112,8 +123,10 @@ choice "Nagets mo na kung ano ang AREA?"
 {
     -Opo
         Oz [surprised] "Magaling!"
+        $areaUnderstanding = "Opo"
     -Hindi
         Oz [sighsad] "Hala. . . Sige wag ka magalala, pero makinig ka mabuti!"
+        $areaUnderstanding = "Hindi"
 }
 
 Oz [talk] "Marami pa akong ituturo sayo!"
@@ -127,6 +140,7 @@ SetLayerMedia(background -m Intro_Rectangle2)
 input "Ano ang AREA ng RECTANGLE? (NUMERO LAMANG)"
 
 $answer = "<input>"
+$rectangleQuestion = $answer
 
 if ($answer == 6)
 {
@@ -166,15 +180,19 @@ choice "Ano ang FORMULA ng SQUARE?"
 {
     - S x S
         Oz [surprised] "Ang galing mo ah! Alam mo na agad!"
+        $formulaQuestion = "SxS"
     - L x W
         Oz [sighsad] "Mali. . . yan ay para sa RECTANGLE!"
         "Maganda ang hula, kasi pareho rin itong sukat pahalang at patayo."
+        $formulaQuestion = "LxW"
     - B x H 
         Oz [sighsad] "Mali! Para yan sa TRIANGLE!"
         "Mamaya na natin yan pagusapan."
+        $formulaQuestion = "BxH"
     - r x r x 3.14
         Oz [sighsad] "Mali! Para yan sa CIRCLE!"
         "Mamaya na natin yan pagusapan."
+        $formulaQuestion = "rxrx3.14"
 }
 
 Oz [talk] "Alam mo ba kung bakit S x S?"
@@ -191,6 +209,6 @@ SetLayerMedia(background -m Intro_Square7)
 
 "Pero masyado na akong dumaldal! Subukan na natin ito!"
 
-SaveCheckpoint(LO_Intro_Square_END)
+SaveCheckpoint(LO_Intro_Square_END shapeIdentification:<$shapeIdentification> areaQuestion1:<$areaQuestion1> areaUnderstanding:<$areaUnderstanding> rectangleQuestion:<$rectangleQuestion> formulaQuestion:<$formulaQuestion>)
 
 StopSong(), StopAmbience()

@@ -5,6 +5,10 @@ PlaySong(Upbeat)
 
 SaveCheckpoint(LO_Intro_Rectangle_START)
 
+$formulaQuestion = ""
+$question1 = 0
+$question2 = 0
+
 Oz [talk] "Ngayon naman, RECTANGLE tayo."
 
 SetLayerMedia(background -m Intro_Rectangle4)
@@ -19,18 +23,23 @@ choice "Ano ang FORMULA ng RECTANGLE?"
 {
     - L x W
         Oz [surprised] "Tama! Length x Width ang area ng RECTANGLE."
+        $formulaQuestion = "LxW"
     - S x S
         Oz [sighsad] "Mali. Para iyon sa SQUARE."
+        $formulaQuestion = "SxS"
     - B x H
         Oz [sighsad] "Mali. Para iyon sa TRIANGLE."
+        $formulaQuestion = "BxH"
     - r x r x 3.14
         Oz [sighsad] "Mali. Para iyon sa CIRCLE."
+        $formulaQuestion = "rxrx3.14"
 }
 
 Oz [talk] "Subukan natin gamit ang formula. Tandaan: HABA = Length, LAPAD = Width."
 
 input "Kung L = 5 at W = 3, ano ang AREA? (NUMERO LAMANG)"
 $ans1 = "<input>"
+$question1 = $ans1
 
 if ($ans1 == 15)
 {
@@ -45,6 +54,7 @@ else
 
 input "Isa pa. Kung L = 7 at W = 2, ano ang AREA? (NUMERO LAMANG)"
 $ans2 = "<input>"
+$question2 = $ans2
 
 if ($ans2 == 14)
 {
@@ -57,6 +67,6 @@ else
 
 Oz [talk] "Sige! Handa ka na sa RECTANGLE levels. Ulitin lang sa isip: L x W. HABA x LAPAD."
 
-SaveCheckpoint(LO_Intro_Rectangle_END)
+SaveCheckpoint(LO_Intro_Rectangle_END formulaQuestion:<$formulaQuestion> question1:<$question1> question2:<$question2>)
 
 StopSong(), StopAmbience()

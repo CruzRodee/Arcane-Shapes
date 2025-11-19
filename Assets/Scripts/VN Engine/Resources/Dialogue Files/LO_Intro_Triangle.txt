@@ -5,6 +5,10 @@ PlaySong(Upbeat)
 
 SaveCheckpoint(LO_Intro_Triangle_START)
 
+$formulaQuestion = ""
+$question1 = 0
+$question2 = 0
+
 Oz [talk] "Ngayon naman, pag-usapan natin ang TRIANGLE."
 
 SetLayerMedia(background -m Intro_Square6)
@@ -41,17 +45,22 @@ choice "Ano ang FORMULA ng TRIANGLE?"
 {
     - B x H ÷ 2
         Oz [surprised] "Tama! BASE x HEIGHT ÷ 2 ang formula ng TRIANGLE."
+        $formulaQuestion = "BxHdiv2"
     - L x W
         Oz [sighsad] "Mali. Iyan ay para sa RECTANGLE."
+        $formulaQuestion = "LxW"
     - S x S
         Oz [sighsad] "Mali. Para iyon sa SQUARE."
+        $formulaQuestion = "SxS"
     - r x r x 3.14
         Oz [sighsad] "Mali. Iyan ay para sa CIRCLE."
+        $formulaQuestion = "rxrx3.14"
 }
 
 Oz [talk] "Subukan natin gamitin ang formula!"
 input "Kung B = 4 at H = 3, ano ang AREA ng TRIANGLE? (NUMERO LAMANG)"
 $ans1 = "<input>"
+$question1 = $ans1
 
 if ($ans1 == 6)
 {
@@ -65,6 +74,7 @@ else
 
 input "Isa pa. Kung B = 8 at H = 5, ano ang AREA? (NUMERO LAMANG)"
 $ans2 = "<input>"
+$question2 = $ans2
 
 if ($ans2 == 20)
 {
@@ -77,6 +87,6 @@ else
 
 Oz [talk] "Sige! Handa ka na sa TRIANGLE levels. {c}Tandaan: gamitin ang formula B x H ÷ 2 dahil hindi lahat ng hugis sakto sa mga kahon."
 
-SaveCheckpoint(LO_Intro_Triangle_END)
+SaveCheckpoint(LO_Intro_Triangle_END formulaQuestion:<$formulaQuestion> question1:<$question1> question2:<$question2>)
 
 StopSong(), StopAmbience()

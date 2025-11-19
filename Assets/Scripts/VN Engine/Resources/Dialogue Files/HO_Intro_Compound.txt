@@ -5,6 +5,11 @@ PlaySong(Upbeat)
 
 SaveCheckpoint(HO_Intro_Compound_START)
 
+$conceptQuestion1 = ""
+$additionQuestion = 0
+$conceptQuestion2 = ""
+$subtractionQuestion = 0
+
 Oz [talk] "Wow! Ang galing mo na! Nasa COMPOUND classes ka na!"
 
 "Sige, may bago nanaman akong ituturo sayo, magbasa maigi ha!"
@@ -36,14 +41,17 @@ choice "Halimbawa, kung ang isang hugis ay gawa sa RECTANGLE at TRIANGLE, ano an
 {
     - Kuhanin ang area ng RECTANGLE at TRIANGLE, tapos pagsamahin
         Oz [surprised] "Tama! Kuhanin ang area ng bawat bahagi, tapos i-add para makuha ang total area."
+        $conceptQuestion1 = "AddAreas"
     - Bilangin lang lahat ng mga kahon
         Oz [sighsad] "Hindi sapat ang grid dito, kailangan mo nang gamitin ang mga formula."
         Oz "Kailangan mo gamitin ang formula ng bawat HUGIS/SHAPE"
         Oz "Kuhanin mo ang kanilang area at IPAGSAMA!"
+        $conceptQuestion1 = "CountSquares"
     - Gumamit ng isang formula lang
         Oz [sighsad] "Hindi pwede. Iba-iba ang formula ng bawat bahagi."
         Oz "Kailangan mo gamitin ang formula ng bawat HUGIS/SHAPE"
         Oz "Kuhanin mo ang kanilang area at IPAGSAMA!"
+        $conceptQuestion1 = "OneFormula"
 }
 
 Oz [talk] "Ganun lang kasimple! Hatiin, sukatin, at pagsamahin."
@@ -58,6 +66,7 @@ Oz [talk] "Ganun lang kasimple! Hatiin, sukatin, at pagsamahin."
 
 input "Kung ang area ng SQUARE ay 4 at ang area ng TRIANGLE ay 1, ano ang total AREA ng buong hugis? (NUMERO LAMANG)"
 $ans1 = "<input>"
+$additionQuestion = $ans1
 
 if ($ans1 == 5)
 {
@@ -94,10 +103,13 @@ choice "Paano makukuha ang AREA ng hugis na may RECTANGLE at bilog na butas?"
 {
     - Area ng RECTANGLE minus Area ng CIRCLE
         Oz [surprised] "Tama! Dahil may butas sa gitna, ibinabawas natin ang area ng CIRCLE."
+        $conceptQuestion2 = "SubtractAreas"
     - Area ng RECTANGLE plus Area ng CIRCLE
         Oz [sighsad] "Mali. Hindi ito pinagsama; may butas sa loob, kaya dapat ibawas."
+        $conceptQuestion2 = "AddAreas"
     - Area ng RECTANGLE lang
         Oz [sighsad] "Hindi rin. Kailangan bawasan mo ng area ng CIRCLE para tama ang sukat."
+        $conceptQuestion2 = "RectangleOnly"
 }
 
 Oz [talk] "Ngayon, gamitin natin ang mga formula na alam mo na!"
@@ -107,9 +119,10 @@ Oz [talk] "Ngayon, gamitin natin ang mga formula na alam mo na!"
 "At ang CIRCLE sa gitna ay may radius na 1, kaya area = 3.14."
 
 input "Kung 4 ang area ng RECTANGLE at 3.14 ang area ng CIRCLE, ano ang kabuuang area ng hugis? (NUMERO LAMANG)"
-$ans1 = "<input>"
+$ans2 = "<input>"
+$subtractionQuestion = $ans2
 
-if ($ans1 == 0.86)
+if ($ans2 == 0.86)
 {
     Oz [surprised] "Tama! 4 - 3.14 = 0.86."
 }
@@ -131,6 +144,6 @@ SetLayerMedia(background -m Intro_Compound7)
 
 "Handa ka na? Tara, subukan natin sa mga susunod na puzzles!"
 
-SaveCheckpoint(HO_Intro_Compound_END)
+SaveCheckpoint(HO_Intro_Compound_END conceptQuestion1:<$conceptQuestion1> additionQuestion:<$additionQuestion> conceptQuestion2:<$conceptQuestion2> subtractionQuestion:<$subtractionQuestion>)
 
 StopSong(), StopAmbience()
